@@ -95,8 +95,8 @@ module Aws::ApplicationSignals
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::ApplicationSignals
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::ApplicationSignals
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::ApplicationSignals
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::ApplicationSignals
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::ApplicationSignals
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::ApplicationSignals
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::ApplicationSignals
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -470,6 +474,60 @@ module Aws::ApplicationSignals
 
     # @!group API Operations
 
+    # Deletes multiple instrumentation configurations in a single request.
+    # Supports two mutually exclusive selection methods:
+    #
+    # * By scope: Delete all configurations matching a Service + Environment
+    #   + InstrumentationType
+    # * By ARN list: Delete specific configurations by providing a list of
+    #   resource ARNs
+    #
+    # @option params [required, Types::BatchDeleteDeletionTarget] :deletion_target
+    #   The deletion target - either bulk by scope or targeted by ARN list.
+    #
+    # @return [Types::BatchDeleteInstrumentationConfigurationsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::BatchDeleteInstrumentationConfigurationsResponse#deleted_count #deleted_count} => Integer
+    #   * {Types::BatchDeleteInstrumentationConfigurationsResponse#successful_deletions #successful_deletions} => Array&lt;Types::BatchDeleteSuccessfulDeletion&gt;
+    #   * {Types::BatchDeleteInstrumentationConfigurationsResponse#errors #errors} => Array&lt;Types::BatchDeleteError&gt;
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.batch_delete_instrumentation_configurations({
+    #     deletion_target: { # required
+    #       scope: {
+    #         service: "BatchDeleteScopeServiceString", # required
+    #         environment: "BatchDeleteScopeEnvironmentString", # required
+    #         instrumentation_type: "BREAKPOINT", # required, accepts BREAKPOINT, PROBE
+    #       },
+    #       resource_arns: {
+    #         resource_arns: ["BatchDeleteByResourceArnsResourceArnsListMemberString"], # required
+    #         instrumentation_type: "BREAKPOINT", # required, accepts BREAKPOINT, PROBE
+    #       },
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.deleted_count #=> Integer
+    #   resp.successful_deletions #=> Array
+    #   resp.successful_deletions[0].resource_arn #=> String
+    #   resp.successful_deletions[0].signal_type #=> String
+    #   resp.successful_deletions[0].location_hash #=> String
+    #   resp.errors #=> Array
+    #   resp.errors[0].resource_arn #=> String
+    #   resp.errors[0].code #=> String, one of "ResourceNotFoundException", "AccessDeniedException", "InternalServiceException"
+    #   resp.errors[0].message #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/BatchDeleteInstrumentationConfigurations AWS API Documentation
+    #
+    # @overload batch_delete_instrumentation_configurations(params = {})
+    # @param [Hash] params ({})
+    def batch_delete_instrumentation_configurations(params = {}, options = {})
+      req = build_request(:batch_delete_instrumentation_configurations, params)
+      req.send_request(options)
+    end
+
     # Use this operation to retrieve one or more *service level objective
     # (SLO) budget reports*.
     #
@@ -542,6 +600,17 @@ module Aws::ApplicationSignals
     #   resp.reports[0].sli.sli_metric.metric_data_queries[0].return_data #=> Boolean
     #   resp.reports[0].sli.sli_metric.metric_data_queries[0].period #=> Integer
     #   resp.reports[0].sli.sli_metric.metric_data_queries[0].account_id #=> String
+    #   resp.reports[0].sli.sli_metric.dependency_config.dependency_key_attributes #=> Hash
+    #   resp.reports[0].sli.sli_metric.dependency_config.dependency_key_attributes["KeyAttributeName"] #=> String
+    #   resp.reports[0].sli.sli_metric.dependency_config.dependency_operation_name #=> String
+    #   resp.reports[0].sli.sli_metric.metric_source.metric_source_key_attributes #=> Hash
+    #   resp.reports[0].sli.sli_metric.metric_source.metric_source_key_attributes["KeyAttributeName"] #=> String
+    #   resp.reports[0].sli.sli_metric.metric_source.metric_source_attributes #=> Hash
+    #   resp.reports[0].sli.sli_metric.metric_source.metric_source_attributes["KeyAttributeName"] #=> String
+    #   resp.reports[0].sli.sli_metric.composite_sli_config.selection_config.type #=> String, one of "EXPLICIT", "PREFIX", "REGEX"
+    #   resp.reports[0].sli.sli_metric.composite_sli_config.selection_config.pattern #=> String
+    #   resp.reports[0].sli.sli_metric.composite_sli_config.components #=> Array
+    #   resp.reports[0].sli.sli_metric.composite_sli_config.components[0].operation_name #=> String
     #   resp.reports[0].sli.metric_threshold #=> Float
     #   resp.reports[0].sli.comparison_operator #=> String, one of "GreaterThanOrEqualTo", "GreaterThan", "LessThan", "LessThanOrEqualTo"
     #   resp.reports[0].request_based_sli.request_based_sli_metric.key_attributes #=> Hash
@@ -593,6 +662,17 @@ module Aws::ApplicationSignals
     #   resp.reports[0].request_based_sli.request_based_sli_metric.monitored_request_count_metric.bad_count_metric[0].return_data #=> Boolean
     #   resp.reports[0].request_based_sli.request_based_sli_metric.monitored_request_count_metric.bad_count_metric[0].period #=> Integer
     #   resp.reports[0].request_based_sli.request_based_sli_metric.monitored_request_count_metric.bad_count_metric[0].account_id #=> String
+    #   resp.reports[0].request_based_sli.request_based_sli_metric.dependency_config.dependency_key_attributes #=> Hash
+    #   resp.reports[0].request_based_sli.request_based_sli_metric.dependency_config.dependency_key_attributes["KeyAttributeName"] #=> String
+    #   resp.reports[0].request_based_sli.request_based_sli_metric.dependency_config.dependency_operation_name #=> String
+    #   resp.reports[0].request_based_sli.request_based_sli_metric.metric_source.metric_source_key_attributes #=> Hash
+    #   resp.reports[0].request_based_sli.request_based_sli_metric.metric_source.metric_source_key_attributes["KeyAttributeName"] #=> String
+    #   resp.reports[0].request_based_sli.request_based_sli_metric.metric_source.metric_source_attributes #=> Hash
+    #   resp.reports[0].request_based_sli.request_based_sli_metric.metric_source.metric_source_attributes["KeyAttributeName"] #=> String
+    #   resp.reports[0].request_based_sli.request_based_sli_metric.composite_sli_config.selection_config.type #=> String, one of "EXPLICIT", "PREFIX", "REGEX"
+    #   resp.reports[0].request_based_sli.request_based_sli_metric.composite_sli_config.selection_config.pattern #=> String
+    #   resp.reports[0].request_based_sli.request_based_sli_metric.composite_sli_config.components #=> Array
+    #   resp.reports[0].request_based_sli.request_based_sli_metric.composite_sli_config.components[0].operation_name #=> String
     #   resp.reports[0].request_based_sli.metric_threshold #=> Float
     #   resp.reports[0].request_based_sli.comparison_operator #=> String, one of "GreaterThanOrEqualTo", "GreaterThan", "LessThan", "LessThanOrEqualTo"
     #   resp.reports[0].goal.interval.rolling_interval.duration_unit #=> String, one of "MINUTE", "HOUR", "DAY", "MONTH"
@@ -683,6 +763,171 @@ module Aws::ApplicationSignals
     # @param [Hash] params ({})
     def batch_update_exclusion_windows(params = {}, options = {})
       req = build_request(:batch_update_exclusion_windows, params)
+      req.send_request(options)
+    end
+
+    # Creates a dynamic instrumentation configuration for a specific code or
+    # endpoint location within a service and environment. Configurations are
+    # immutable after creation.
+    #
+    # For `BREAKPOINT` type configurations, they expire after 24 hours
+    # unless a shorter expiration is provided. For `PROBE` type
+    # configurations, they persist until explicitly deleted; an expiration
+    # cannot be set for `PROBE` configurations.
+    #
+    # If a configuration already exists for the same service, environment,
+    # signal type, and location, this operation returns a conflict instead
+    # of overwriting it. Use attribute filters and capture settings to
+    # control where the instrumentation runs and which data is collected.
+    #
+    # @option params [required, String] :instrumentation_type
+    #   Type of instrumentation: BREAKPOINT (temporary) or PROBE (permanent)
+    #
+    # @option params [required, String] :service
+    #   The name of the service to instrument. This should match the
+    #   `service.name` resource attribute reported by the application.
+    #
+    # @option params [required, String] :environment
+    #   The environment that the service is running in, such as
+    #   `eks:cluster-prod/namespace` or `ec2:production`.
+    #
+    # @option params [required, String] :signal_type
+    #   The telemetry signal type to emit for this instrumentation. The
+    #   supported value is `SNAPSHOT`.
+    #
+    # @option params [required, Types::Location] :location
+    #   The location where instrumentation should be applied. Specify a
+    #   `CodeLocation` for code-level instrumentation.
+    #
+    # @option params [String] :description
+    #   An optional short description (up to 50 characters) that explains the
+    #   purpose of this instrumentation.
+    #
+    # @option params [Time,DateTime,Date,Integer,String] :expires_at
+    #   For BREAKPOINT: optional, defaults to 24 hours, must be between 5 min
+    #   and 24 hours. For PROBE: not supported. PROBE configurations are
+    #   permanent and persist until explicitly deleted.
+    #
+    # @option params [Array<Hash>] :attribute_filters
+    #   Client-side filters that target specific instances. Each object in the
+    #   array is AND-matched on its keys, and multiple objects are OR-matched
+    #   to decide where to apply the instrumentation.
+    #
+    # @option params [required, Types::CaptureConfiguration] :capture_configuration
+    #   Specifies what to capture when the instrumentation point is hit.
+    #   Specify `CodeCapture` for code-level capture settings.
+    #
+    # @option params [Array<Types::Tag>] :tags
+    #   An optional list of key-value pairs to associate with the
+    #   instrumentation configuration. Tags can help you organize and
+    #   categorize your resources.
+    #
+    # @return [Types::CreateInstrumentationConfigurationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreateInstrumentationConfigurationResponse#instrumentation_type #instrumentation_type} => String
+    #   * {Types::CreateInstrumentationConfigurationResponse#service #service} => String
+    #   * {Types::CreateInstrumentationConfigurationResponse#environment #environment} => String
+    #   * {Types::CreateInstrumentationConfigurationResponse#signal_type #signal_type} => String
+    #   * {Types::CreateInstrumentationConfigurationResponse#location #location} => Types::Location
+    #   * {Types::CreateInstrumentationConfigurationResponse#location_hash #location_hash} => String
+    #   * {Types::CreateInstrumentationConfigurationResponse#description #description} => String
+    #   * {Types::CreateInstrumentationConfigurationResponse#expires_at #expires_at} => Time
+    #   * {Types::CreateInstrumentationConfigurationResponse#attribute_filters #attribute_filters} => Array&lt;Hash&lt;String,String&gt;&gt;
+    #   * {Types::CreateInstrumentationConfigurationResponse#capture_configuration #capture_configuration} => Types::CaptureConfiguration
+    #   * {Types::CreateInstrumentationConfigurationResponse#created_at #created_at} => Time
+    #   * {Types::CreateInstrumentationConfigurationResponse#arn #arn} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_instrumentation_configuration({
+    #     instrumentation_type: "BREAKPOINT", # required, accepts BREAKPOINT, PROBE
+    #     service: "CreateInstrumentationConfigurationRequestServiceString", # required
+    #     environment: "CreateInstrumentationConfigurationRequestEnvironmentString", # required
+    #     signal_type: "SNAPSHOT", # required, accepts SNAPSHOT
+    #     location: { # required
+    #       code_location: {
+    #         language: "Java", # required, accepts Java, Python, Javascript
+    #         code_unit: "CodeLocationCodeUnitString",
+    #         class_name: "CodeLocationClassNameString",
+    #         method_name: "CodeLocationMethodNameString",
+    #         file_path: "CodeLocationFilePathString", # required
+    #         line_number: 1,
+    #       },
+    #     },
+    #     description: "CreateInstrumentationConfigurationRequestDescriptionString",
+    #     expires_at: Time.now,
+    #     attribute_filters: [
+    #       {
+    #         "DynamicInstrumentationAttributeFilterGroupKeyString" => "DynamicInstrumentationAttributeFilterGroupValueString",
+    #       },
+    #     ],
+    #     capture_configuration: { # required
+    #       code_capture: {
+    #         capture_arguments: ["CodeCaptureConfigurationCaptureArgumentsListMemberString"],
+    #         capture_return: false,
+    #         capture_stack_trace: false,
+    #         capture_locals: ["CodeCaptureConfigurationCaptureLocalsListMemberString"],
+    #         capture_limits: { # required
+    #           max_hits: 1,
+    #           max_string_length: 1,
+    #           max_collection_width: 1,
+    #           max_collection_depth: 1,
+    #           max_stack_frames: 1,
+    #           max_stack_trace_size: 1,
+    #           max_object_depth: 1,
+    #           max_fields_per_object: 1,
+    #         },
+    #       },
+    #     },
+    #     tags: [
+    #       {
+    #         key: "TagKey", # required
+    #         value: "TagValue", # required
+    #       },
+    #     ],
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.instrumentation_type #=> String, one of "BREAKPOINT", "PROBE"
+    #   resp.service #=> String
+    #   resp.environment #=> String
+    #   resp.signal_type #=> String, one of "SNAPSHOT"
+    #   resp.location.code_location.language #=> String, one of "Java", "Python", "Javascript"
+    #   resp.location.code_location.code_unit #=> String
+    #   resp.location.code_location.class_name #=> String
+    #   resp.location.code_location.method_name #=> String
+    #   resp.location.code_location.file_path #=> String
+    #   resp.location.code_location.line_number #=> Integer
+    #   resp.location_hash #=> String
+    #   resp.description #=> String
+    #   resp.expires_at #=> Time
+    #   resp.attribute_filters #=> Array
+    #   resp.attribute_filters[0] #=> Hash
+    #   resp.attribute_filters[0]["DynamicInstrumentationAttributeFilterGroupKeyString"] #=> String
+    #   resp.capture_configuration.code_capture.capture_arguments #=> Array
+    #   resp.capture_configuration.code_capture.capture_arguments[0] #=> String
+    #   resp.capture_configuration.code_capture.capture_return #=> Boolean
+    #   resp.capture_configuration.code_capture.capture_stack_trace #=> Boolean
+    #   resp.capture_configuration.code_capture.capture_locals #=> Array
+    #   resp.capture_configuration.code_capture.capture_locals[0] #=> String
+    #   resp.capture_configuration.code_capture.capture_limits.max_hits #=> Integer
+    #   resp.capture_configuration.code_capture.capture_limits.max_string_length #=> Integer
+    #   resp.capture_configuration.code_capture.capture_limits.max_collection_width #=> Integer
+    #   resp.capture_configuration.code_capture.capture_limits.max_collection_depth #=> Integer
+    #   resp.capture_configuration.code_capture.capture_limits.max_stack_frames #=> Integer
+    #   resp.capture_configuration.code_capture.capture_limits.max_stack_trace_size #=> Integer
+    #   resp.capture_configuration.code_capture.capture_limits.max_object_depth #=> Integer
+    #   resp.capture_configuration.code_capture.capture_limits.max_fields_per_object #=> Integer
+    #   resp.created_at #=> Time
+    #   resp.arn #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/CreateInstrumentationConfiguration AWS API Documentation
+    #
+    # @overload create_instrumentation_configuration(params = {})
+    # @param [Hash] params ({})
+    def create_instrumentation_configuration(params = {}, options = {})
+      req = build_request(:create_instrumentation_configuration, params)
       req.send_request(options)
     end
 
@@ -818,6 +1063,19 @@ module Aws::ApplicationSignals
     #   a metric that indicates how fast the service is consuming the error
     #   budget, relative to the attainment goal of the SLO.
     #
+    # @option params [Boolean] :create_recommended_slo
+    #   Set this to `true` to create a recommended SLO out of the box. When
+    #   set to `true`, you don't need to specify the `MetricThreshold` or
+    #   `ComparisonOperator` in the `SliConfig` or `RequestBasedSliConfig`.
+    #   The default value is `false`.
+    #
+    #   This is supported for SLOs on a service, service operation, or a
+    #   dependency.
+    #
+    # @option params [Boolean] :auto_investigation_enabled
+    #   Indicates whether DevOps Agent will automatically investigate this SLO
+    #   when it is breached
+    #
     # @return [Types::CreateServiceLevelObjectiveOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateServiceLevelObjectiveOutput#slo #slo} => Types::ServiceLevelObjective
@@ -834,8 +1092,17 @@ module Aws::ApplicationSignals
     #         },
     #         operation_name: "OperationName",
     #         metric_type: "LATENCY", # accepts LATENCY, AVAILABILITY
+    #         metric_name: "MetricName",
     #         statistic: "ServiceLevelIndicatorStatistic",
     #         period_seconds: 1,
+    #         metric_source: {
+    #           metric_source_key_attributes: { # required
+    #             "KeyAttributeName" => "KeyAttributeValue",
+    #           },
+    #           metric_source_attributes: {
+    #             "KeyAttributeName" => "KeyAttributeValue",
+    #           },
+    #         },
     #         metric_data_queries: [
     #           {
     #             id: "MetricId", # required
@@ -861,9 +1128,26 @@ module Aws::ApplicationSignals
     #             account_id: "AccountId",
     #           },
     #         ],
+    #         dependency_config: {
+    #           dependency_key_attributes: { # required
+    #             "KeyAttributeName" => "KeyAttributeValue",
+    #           },
+    #           dependency_operation_name: "OperationName", # required
+    #         },
+    #         composite_sli_config: {
+    #           selection_config: { # required
+    #             type: "EXPLICIT", # required, accepts EXPLICIT, PREFIX, REGEX
+    #             pattern: "SelectionPattern",
+    #           },
+    #           components: [
+    #             {
+    #               operation_name: "OperationName",
+    #             },
+    #           ],
+    #         },
     #       },
-    #       metric_threshold: 1.0, # required
-    #       comparison_operator: "GreaterThanOrEqualTo", # required, accepts GreaterThanOrEqualTo, GreaterThan, LessThan, LessThanOrEqualTo
+    #       metric_threshold: 1.0,
+    #       comparison_operator: "GreaterThanOrEqualTo", # accepts GreaterThanOrEqualTo, GreaterThan, LessThan, LessThanOrEqualTo
     #     },
     #     request_based_sli_config: {
     #       request_based_sli_metric_config: { # required
@@ -949,6 +1233,32 @@ module Aws::ApplicationSignals
     #             },
     #           ],
     #         },
+    #         dependency_config: {
+    #           dependency_key_attributes: { # required
+    #             "KeyAttributeName" => "KeyAttributeValue",
+    #           },
+    #           dependency_operation_name: "OperationName", # required
+    #         },
+    #         metric_source: {
+    #           metric_source_key_attributes: { # required
+    #             "KeyAttributeName" => "KeyAttributeValue",
+    #           },
+    #           metric_source_attributes: {
+    #             "KeyAttributeName" => "KeyAttributeValue",
+    #           },
+    #         },
+    #         metric_name: "MetricName",
+    #         composite_sli_config: {
+    #           selection_config: { # required
+    #             type: "EXPLICIT", # required, accepts EXPLICIT, PREFIX, REGEX
+    #             pattern: "SelectionPattern",
+    #           },
+    #           components: [
+    #             {
+    #               operation_name: "OperationName",
+    #             },
+    #           ],
+    #         },
     #       },
     #       metric_threshold: 1.0,
     #       comparison_operator: "GreaterThanOrEqualTo", # accepts GreaterThanOrEqualTo, GreaterThan, LessThan, LessThanOrEqualTo
@@ -979,6 +1289,8 @@ module Aws::ApplicationSignals
     #         look_back_window_minutes: 1, # required
     #       },
     #     ],
+    #     create_recommended_slo: false,
+    #     auto_investigation_enabled: false,
     #   })
     #
     # @example Response structure
@@ -1007,6 +1319,17 @@ module Aws::ApplicationSignals
     #   resp.slo.sli.sli_metric.metric_data_queries[0].return_data #=> Boolean
     #   resp.slo.sli.sli_metric.metric_data_queries[0].period #=> Integer
     #   resp.slo.sli.sli_metric.metric_data_queries[0].account_id #=> String
+    #   resp.slo.sli.sli_metric.dependency_config.dependency_key_attributes #=> Hash
+    #   resp.slo.sli.sli_metric.dependency_config.dependency_key_attributes["KeyAttributeName"] #=> String
+    #   resp.slo.sli.sli_metric.dependency_config.dependency_operation_name #=> String
+    #   resp.slo.sli.sli_metric.metric_source.metric_source_key_attributes #=> Hash
+    #   resp.slo.sli.sli_metric.metric_source.metric_source_key_attributes["KeyAttributeName"] #=> String
+    #   resp.slo.sli.sli_metric.metric_source.metric_source_attributes #=> Hash
+    #   resp.slo.sli.sli_metric.metric_source.metric_source_attributes["KeyAttributeName"] #=> String
+    #   resp.slo.sli.sli_metric.composite_sli_config.selection_config.type #=> String, one of "EXPLICIT", "PREFIX", "REGEX"
+    #   resp.slo.sli.sli_metric.composite_sli_config.selection_config.pattern #=> String
+    #   resp.slo.sli.sli_metric.composite_sli_config.components #=> Array
+    #   resp.slo.sli.sli_metric.composite_sli_config.components[0].operation_name #=> String
     #   resp.slo.sli.metric_threshold #=> Float
     #   resp.slo.sli.comparison_operator #=> String, one of "GreaterThanOrEqualTo", "GreaterThan", "LessThan", "LessThanOrEqualTo"
     #   resp.slo.request_based_sli.request_based_sli_metric.key_attributes #=> Hash
@@ -1058,6 +1381,17 @@ module Aws::ApplicationSignals
     #   resp.slo.request_based_sli.request_based_sli_metric.monitored_request_count_metric.bad_count_metric[0].return_data #=> Boolean
     #   resp.slo.request_based_sli.request_based_sli_metric.monitored_request_count_metric.bad_count_metric[0].period #=> Integer
     #   resp.slo.request_based_sli.request_based_sli_metric.monitored_request_count_metric.bad_count_metric[0].account_id #=> String
+    #   resp.slo.request_based_sli.request_based_sli_metric.dependency_config.dependency_key_attributes #=> Hash
+    #   resp.slo.request_based_sli.request_based_sli_metric.dependency_config.dependency_key_attributes["KeyAttributeName"] #=> String
+    #   resp.slo.request_based_sli.request_based_sli_metric.dependency_config.dependency_operation_name #=> String
+    #   resp.slo.request_based_sli.request_based_sli_metric.metric_source.metric_source_key_attributes #=> Hash
+    #   resp.slo.request_based_sli.request_based_sli_metric.metric_source.metric_source_key_attributes["KeyAttributeName"] #=> String
+    #   resp.slo.request_based_sli.request_based_sli_metric.metric_source.metric_source_attributes #=> Hash
+    #   resp.slo.request_based_sli.request_based_sli_metric.metric_source.metric_source_attributes["KeyAttributeName"] #=> String
+    #   resp.slo.request_based_sli.request_based_sli_metric.composite_sli_config.selection_config.type #=> String, one of "EXPLICIT", "PREFIX", "REGEX"
+    #   resp.slo.request_based_sli.request_based_sli_metric.composite_sli_config.selection_config.pattern #=> String
+    #   resp.slo.request_based_sli.request_based_sli_metric.composite_sli_config.components #=> Array
+    #   resp.slo.request_based_sli.request_based_sli_metric.composite_sli_config.components[0].operation_name #=> String
     #   resp.slo.request_based_sli.metric_threshold #=> Float
     #   resp.slo.request_based_sli.comparison_operator #=> String, one of "GreaterThanOrEqualTo", "GreaterThan", "LessThan", "LessThanOrEqualTo"
     #   resp.slo.evaluation_type #=> String, one of "PeriodBased", "RequestBased"
@@ -1070,6 +1404,8 @@ module Aws::ApplicationSignals
     #   resp.slo.goal.warning_threshold #=> Float
     #   resp.slo.burn_rate_configurations #=> Array
     #   resp.slo.burn_rate_configurations[0].look_back_window_minutes #=> Integer
+    #   resp.slo.metric_source_type #=> String, one of "ServiceOperation", "CloudWatchMetric", "ServiceDependency", "AppMonitor", "Canary", "Service"
+    #   resp.slo.auto_investigation_enabled #=> Boolean
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/CreateServiceLevelObjective AWS API Documentation
     #
@@ -1077,6 +1413,78 @@ module Aws::ApplicationSignals
     # @param [Hash] params ({})
     def create_service_level_objective(params = {}, options = {})
       req = build_request(:create_service_level_objective, params)
+      req.send_request(options)
+    end
+
+    # Deletes the grouping configuration for this account. This removes all
+    # custom grouping attribute definitions that were previously configured.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/DeleteGroupingConfiguration AWS API Documentation
+    #
+    # @overload delete_grouping_configuration(params = {})
+    # @param [Hash] params ({})
+    def delete_grouping_configuration(params = {}, options = {})
+      req = build_request(:delete_grouping_configuration, params)
+      req.send_request(options)
+    end
+
+    # Deletes the specified instrumentation configuration. SDKs remove the
+    # instrumentation during their next sync after the configuration is
+    # deleted or expires.
+    #
+    # @option params [required, String] :instrumentation_type
+    #   Type of instrumentation configuration (BREAKPOINT or PROBE). Required
+    #   to identify the configuration to delete.
+    #
+    # @option params [required, String] :service
+    #   Service name for the instrumentation configuration.
+    #
+    # @option params [required, String] :environment
+    #   Environment name for the instrumentation configuration.
+    #
+    # @option params [required, String] :signal_type
+    #   Signal type for the instrumentation configuration.
+    #
+    # @option params [required, Types::LocationIdentifier] :location_identifier
+    #   Location identifier - either full code location or a pre-computed
+    #   hash.
+    #
+    # @return [Types::DeleteInstrumentationConfigurationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DeleteInstrumentationConfigurationResponse#deletion_status #deletion_status} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_instrumentation_configuration({
+    #     instrumentation_type: "BREAKPOINT", # required, accepts BREAKPOINT, PROBE
+    #     service: "DeleteInstrumentationConfigurationRequestServiceString", # required
+    #     environment: "DeleteInstrumentationConfigurationRequestEnvironmentString", # required
+    #     signal_type: "SNAPSHOT", # required, accepts SNAPSHOT
+    #     location_identifier: { # required
+    #       code_location: {
+    #         language: "Java", # required, accepts Java, Python, Javascript
+    #         code_unit: "CodeLocationCodeUnitString",
+    #         class_name: "CodeLocationClassNameString",
+    #         method_name: "CodeLocationMethodNameString",
+    #         file_path: "CodeLocationFilePathString", # required
+    #         line_number: 1,
+    #       },
+    #       location_hash: "LocationIdentifierLocationHashString",
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.deletion_status #=> String, one of "DELETED"
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/DeleteInstrumentationConfiguration AWS API Documentation
+    #
+    # @overload delete_instrumentation_configuration(params = {})
+    # @param [Hash] params ({})
+    def delete_instrumentation_configuration(params = {}, options = {})
+      req = build_request(:delete_instrumentation_configuration, params)
       req.send_request(options)
     end
 
@@ -1099,6 +1507,204 @@ module Aws::ApplicationSignals
     # @param [Hash] params ({})
     def delete_service_level_objective(params = {}, options = {})
       req = build_request(:delete_service_level_objective, params)
+      req.send_request(options)
+    end
+
+    # Returns the details of a single instrumentation configuration
+    # identified by service, environment, signal type, and location. Use
+    # this to audit or display configuration details.
+    #
+    # @option params [required, String] :instrumentation_type
+    #   Type of instrumentation configuration (BREAKPOINT or PROBE). Required
+    #   to identify the configuration to retrieve.
+    #
+    # @option params [required, String] :service
+    #   Service name for the instrumentation configuration.
+    #
+    # @option params [required, String] :environment
+    #   Environment name for the instrumentation configuration.
+    #
+    # @option params [required, String] :signal_type
+    #   Signal type for the instrumentation configuration.
+    #
+    # @option params [required, Types::LocationIdentifier] :location_identifier
+    #   Location identifier - either full code location or a pre-computed
+    #   hash.
+    #
+    # @return [Types::GetInstrumentationConfigurationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetInstrumentationConfigurationResponse#configuration #configuration} => Types::InstrumentationConfiguration
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_instrumentation_configuration({
+    #     instrumentation_type: "BREAKPOINT", # required, accepts BREAKPOINT, PROBE
+    #     service: "GetInstrumentationConfigurationRequestServiceString", # required
+    #     environment: "GetInstrumentationConfigurationRequestEnvironmentString", # required
+    #     signal_type: "SNAPSHOT", # required, accepts SNAPSHOT
+    #     location_identifier: { # required
+    #       code_location: {
+    #         language: "Java", # required, accepts Java, Python, Javascript
+    #         code_unit: "CodeLocationCodeUnitString",
+    #         class_name: "CodeLocationClassNameString",
+    #         method_name: "CodeLocationMethodNameString",
+    #         file_path: "CodeLocationFilePathString", # required
+    #         line_number: 1,
+    #       },
+    #       location_hash: "LocationIdentifierLocationHashString",
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.configuration.instrumentation_type #=> String, one of "BREAKPOINT", "PROBE"
+    #   resp.configuration.service #=> String
+    #   resp.configuration.environment #=> String
+    #   resp.configuration.signal_type #=> String, one of "SNAPSHOT"
+    #   resp.configuration.location.code_location.language #=> String, one of "Java", "Python", "Javascript"
+    #   resp.configuration.location.code_location.code_unit #=> String
+    #   resp.configuration.location.code_location.class_name #=> String
+    #   resp.configuration.location.code_location.method_name #=> String
+    #   resp.configuration.location.code_location.file_path #=> String
+    #   resp.configuration.location.code_location.line_number #=> Integer
+    #   resp.configuration.location_hash #=> String
+    #   resp.configuration.description #=> String
+    #   resp.configuration.expires_at #=> Time
+    #   resp.configuration.attribute_filters #=> Array
+    #   resp.configuration.attribute_filters[0] #=> Hash
+    #   resp.configuration.attribute_filters[0]["DynamicInstrumentationAttributeFilterGroupKeyString"] #=> String
+    #   resp.configuration.capture_configuration.code_capture.capture_arguments #=> Array
+    #   resp.configuration.capture_configuration.code_capture.capture_arguments[0] #=> String
+    #   resp.configuration.capture_configuration.code_capture.capture_return #=> Boolean
+    #   resp.configuration.capture_configuration.code_capture.capture_stack_trace #=> Boolean
+    #   resp.configuration.capture_configuration.code_capture.capture_locals #=> Array
+    #   resp.configuration.capture_configuration.code_capture.capture_locals[0] #=> String
+    #   resp.configuration.capture_configuration.code_capture.capture_limits.max_hits #=> Integer
+    #   resp.configuration.capture_configuration.code_capture.capture_limits.max_string_length #=> Integer
+    #   resp.configuration.capture_configuration.code_capture.capture_limits.max_collection_width #=> Integer
+    #   resp.configuration.capture_configuration.code_capture.capture_limits.max_collection_depth #=> Integer
+    #   resp.configuration.capture_configuration.code_capture.capture_limits.max_stack_frames #=> Integer
+    #   resp.configuration.capture_configuration.code_capture.capture_limits.max_stack_trace_size #=> Integer
+    #   resp.configuration.capture_configuration.code_capture.capture_limits.max_object_depth #=> Integer
+    #   resp.configuration.capture_configuration.code_capture.capture_limits.max_fields_per_object #=> Integer
+    #   resp.configuration.created_at #=> Time
+    #   resp.configuration.arn #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/GetInstrumentationConfiguration AWS API Documentation
+    #
+    # @overload get_instrumentation_configuration(params = {})
+    # @param [Hash] params ({})
+    def get_instrumentation_configuration(params = {}, options = {})
+      req = build_request(:get_instrumentation_configuration, params)
+      req.send_request(options)
+    end
+
+    # Retrieves the status history for a single instrumentation
+    # configuration during a specified time range. The response lists when
+    # the configuration was ACTIVE, READY, ERROR, or DISABLED.
+    #
+    # If no status or time window is provided, the operation defaults to
+    # ACTIVE events from the last hour.
+    #
+    # @option params [required, String] :instrumentation_type
+    #   Type of instrumentation configuration (BREAKPOINT or PROBE). Required
+    #   to identify the configuration to retrieve.
+    #
+    # @option params [required, String] :service
+    #   Service name for the instrumentation configuration.
+    #
+    # @option params [required, String] :environment
+    #   Environment name for the instrumentation configuration.
+    #
+    # @option params [required, String] :signal_type
+    #   Signal type for the instrumentation configuration.
+    #
+    # @option params [required, Types::LocationIdentifier] :location_identifier
+    #   Location identifier - either full code location or a pre-computed
+    #   hash.
+    #
+    # @option params [String] :status
+    #   The single status to query for. If omitted, only `ACTIVE` status
+    #   events are returned.
+    #
+    # @option params [Time,DateTime,Date,Integer,String] :start_time
+    #   The start of the time range to retrieve status events for. `StartTime`
+    #   and `EndTime` must both be provided together or both be omitted. When
+    #   both are omitted, the time range defaults to the last hour.
+    #
+    # @option params [Time,DateTime,Date,Integer,String] :end_time
+    #   The end of the time range to retrieve status events for. `StartTime`
+    #   and `EndTime` must both be provided together or both be omitted. When
+    #   both are omitted, the time range defaults to the last hour.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of status events to return in one call. The default
+    #   is 60.
+    #
+    # @option params [String] :next_token
+    #   Use the token returned by a previous call to retrieve the next page of
+    #   status events.
+    #
+    # @return [Types::GetInstrumentationConfigurationStatusResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetInstrumentationConfigurationStatusResponse#service #service} => String
+    #   * {Types::GetInstrumentationConfigurationStatusResponse#environment #environment} => String
+    #   * {Types::GetInstrumentationConfigurationStatusResponse#signal_type #signal_type} => String
+    #   * {Types::GetInstrumentationConfigurationStatusResponse#location #location} => Types::Location
+    #   * {Types::GetInstrumentationConfigurationStatusResponse#status #status} => String
+    #   * {Types::GetInstrumentationConfigurationStatusResponse#events #events} => Array&lt;Types::InstrumentationStatusEvent&gt;
+    #   * {Types::GetInstrumentationConfigurationStatusResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_instrumentation_configuration_status({
+    #     instrumentation_type: "BREAKPOINT", # required, accepts BREAKPOINT, PROBE
+    #     service: "GetInstrumentationConfigurationStatusRequestServiceString", # required
+    #     environment: "GetInstrumentationConfigurationStatusRequestEnvironmentString", # required
+    #     signal_type: "SNAPSHOT", # required, accepts SNAPSHOT
+    #     location_identifier: { # required
+    #       code_location: {
+    #         language: "Java", # required, accepts Java, Python, Javascript
+    #         code_unit: "CodeLocationCodeUnitString",
+    #         class_name: "CodeLocationClassNameString",
+    #         method_name: "CodeLocationMethodNameString",
+    #         file_path: "CodeLocationFilePathString", # required
+    #         line_number: 1,
+    #       },
+    #       location_hash: "LocationIdentifierLocationHashString",
+    #     },
+    #     status: "READY", # accepts READY, ERROR, ACTIVE, DISABLED
+    #     start_time: Time.now,
+    #     end_time: Time.now,
+    #     max_results: 1,
+    #     next_token: "NextToken",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.service #=> String
+    #   resp.environment #=> String
+    #   resp.signal_type #=> String, one of "SNAPSHOT"
+    #   resp.location.code_location.language #=> String, one of "Java", "Python", "Javascript"
+    #   resp.location.code_location.code_unit #=> String
+    #   resp.location.code_location.class_name #=> String
+    #   resp.location.code_location.method_name #=> String
+    #   resp.location.code_location.file_path #=> String
+    #   resp.location.code_location.line_number #=> Integer
+    #   resp.status #=> String, one of "READY", "ERROR", "ACTIVE", "DISABLED"
+    #   resp.events #=> Array
+    #   resp.events[0].time #=> Time
+    #   resp.events[0].error_cause #=> String, one of "FILE_NOT_FOUND", "METHOD_NOT_FOUND", "LINE_NOT_EXECUTABLE", "OVERLOADED_METHODS", "LANGUAGE_MISMATCH", "RUNTIME_ERROR"
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/GetInstrumentationConfigurationStatus AWS API Documentation
+    #
+    # @overload get_instrumentation_configuration_status(params = {})
+    # @param [Hash] params ({})
+    def get_instrumentation_configuration_status(params = {}, options = {})
+      req = build_request(:get_instrumentation_configuration_status, params)
       req.send_request(options)
     end
 
@@ -1166,6 +1772,11 @@ module Aws::ApplicationSignals
     #   resp.service.attribute_maps #=> Array
     #   resp.service.attribute_maps[0] #=> Hash
     #   resp.service.attribute_maps[0]["String"] #=> String
+    #   resp.service.service_groups #=> Array
+    #   resp.service.service_groups[0].group_name #=> String
+    #   resp.service.service_groups[0].group_value #=> String
+    #   resp.service.service_groups[0].group_source #=> String
+    #   resp.service.service_groups[0].group_identifier #=> String
     #   resp.service.metric_references #=> Array
     #   resp.service.metric_references[0].namespace #=> String
     #   resp.service.metric_references[0].metric_type #=> String
@@ -1239,6 +1850,17 @@ module Aws::ApplicationSignals
     #   resp.slo.sli.sli_metric.metric_data_queries[0].return_data #=> Boolean
     #   resp.slo.sli.sli_metric.metric_data_queries[0].period #=> Integer
     #   resp.slo.sli.sli_metric.metric_data_queries[0].account_id #=> String
+    #   resp.slo.sli.sli_metric.dependency_config.dependency_key_attributes #=> Hash
+    #   resp.slo.sli.sli_metric.dependency_config.dependency_key_attributes["KeyAttributeName"] #=> String
+    #   resp.slo.sli.sli_metric.dependency_config.dependency_operation_name #=> String
+    #   resp.slo.sli.sli_metric.metric_source.metric_source_key_attributes #=> Hash
+    #   resp.slo.sli.sli_metric.metric_source.metric_source_key_attributes["KeyAttributeName"] #=> String
+    #   resp.slo.sli.sli_metric.metric_source.metric_source_attributes #=> Hash
+    #   resp.slo.sli.sli_metric.metric_source.metric_source_attributes["KeyAttributeName"] #=> String
+    #   resp.slo.sli.sli_metric.composite_sli_config.selection_config.type #=> String, one of "EXPLICIT", "PREFIX", "REGEX"
+    #   resp.slo.sli.sli_metric.composite_sli_config.selection_config.pattern #=> String
+    #   resp.slo.sli.sli_metric.composite_sli_config.components #=> Array
+    #   resp.slo.sli.sli_metric.composite_sli_config.components[0].operation_name #=> String
     #   resp.slo.sli.metric_threshold #=> Float
     #   resp.slo.sli.comparison_operator #=> String, one of "GreaterThanOrEqualTo", "GreaterThan", "LessThan", "LessThanOrEqualTo"
     #   resp.slo.request_based_sli.request_based_sli_metric.key_attributes #=> Hash
@@ -1290,6 +1912,17 @@ module Aws::ApplicationSignals
     #   resp.slo.request_based_sli.request_based_sli_metric.monitored_request_count_metric.bad_count_metric[0].return_data #=> Boolean
     #   resp.slo.request_based_sli.request_based_sli_metric.monitored_request_count_metric.bad_count_metric[0].period #=> Integer
     #   resp.slo.request_based_sli.request_based_sli_metric.monitored_request_count_metric.bad_count_metric[0].account_id #=> String
+    #   resp.slo.request_based_sli.request_based_sli_metric.dependency_config.dependency_key_attributes #=> Hash
+    #   resp.slo.request_based_sli.request_based_sli_metric.dependency_config.dependency_key_attributes["KeyAttributeName"] #=> String
+    #   resp.slo.request_based_sli.request_based_sli_metric.dependency_config.dependency_operation_name #=> String
+    #   resp.slo.request_based_sli.request_based_sli_metric.metric_source.metric_source_key_attributes #=> Hash
+    #   resp.slo.request_based_sli.request_based_sli_metric.metric_source.metric_source_key_attributes["KeyAttributeName"] #=> String
+    #   resp.slo.request_based_sli.request_based_sli_metric.metric_source.metric_source_attributes #=> Hash
+    #   resp.slo.request_based_sli.request_based_sli_metric.metric_source.metric_source_attributes["KeyAttributeName"] #=> String
+    #   resp.slo.request_based_sli.request_based_sli_metric.composite_sli_config.selection_config.type #=> String, one of "EXPLICIT", "PREFIX", "REGEX"
+    #   resp.slo.request_based_sli.request_based_sli_metric.composite_sli_config.selection_config.pattern #=> String
+    #   resp.slo.request_based_sli.request_based_sli_metric.composite_sli_config.components #=> Array
+    #   resp.slo.request_based_sli.request_based_sli_metric.composite_sli_config.components[0].operation_name #=> String
     #   resp.slo.request_based_sli.metric_threshold #=> Float
     #   resp.slo.request_based_sli.comparison_operator #=> String, one of "GreaterThanOrEqualTo", "GreaterThan", "LessThan", "LessThanOrEqualTo"
     #   resp.slo.evaluation_type #=> String, one of "PeriodBased", "RequestBased"
@@ -1302,6 +1935,8 @@ module Aws::ApplicationSignals
     #   resp.slo.goal.warning_threshold #=> Float
     #   resp.slo.burn_rate_configurations #=> Array
     #   resp.slo.burn_rate_configurations[0].look_back_window_minutes #=> Integer
+    #   resp.slo.metric_source_type #=> String, one of "ServiceOperation", "CloudWatchMetric", "ServiceDependency", "AppMonitor", "Canary", "Service"
+    #   resp.slo.auto_investigation_enabled #=> Boolean
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/GetServiceLevelObjective AWS API Documentation
     #
@@ -1309,6 +1944,456 @@ module Aws::ApplicationSignals
     # @param [Hash] params ({})
     def get_service_level_objective(params = {}, options = {})
       req = build_request(:get_service_level_objective, params)
+      req.send_request(options)
+    end
+
+    # Returns a list of audit findings that provide automated analysis of
+    # service behavior and root cause analysis. These findings help identify
+    # the most significant observations about your services, including
+    # performance issues, anomalies, and potential problems. The findings
+    # are generated using heuristic algorithms based on established
+    # troubleshooting patterns.
+    #
+    # @option params [required, Time,DateTime,Date,Integer,String] :start_time
+    #   The start of the time period to retrieve audit findings for. When used
+    #   in a raw HTTP Query API, it is formatted as epoch time in seconds. For
+    #   example, `1698778057`
+    #
+    # @option params [required, Time,DateTime,Date,Integer,String] :end_time
+    #   The end of the time period to retrieve audit findings for. When used
+    #   in a raw HTTP Query API, it is formatted as epoch time in seconds. For
+    #   example, `1698778057`
+    #
+    # @option params [Array<String>] :auditors
+    #   A list of auditor names to filter the findings by. Only findings
+    #   generated by the specified auditors will be returned.
+    #
+    #   The following auditors are available for configuration:
+    #
+    #   * `slo` - SloAuditor: Identifies SLO violations and detects breached
+    #     thresholds during the Assessment phase.
+    #
+    #   * `operation_metric` - OperationMetricAuditor: Detects anomalies in
+    #     service operation metrics from Application Signals RED metrics
+    #     during the Assessment phase
+    #
+    #     <note markdown="1"> Anomaly detection is not supported for sparse metrics (those missing
+    #     more than 80% of datapoints within the given time period).
+    #
+    #      </note>
+    #
+    #   * `service_quota` - ServiceQuotaAuditor: Monitors resource utilization
+    #     against service quotas during the Assessment phase
+    #
+    #   * `trace` - TraceAuditor: Performs deep-dive analysis of distributed
+    #     traces, correlating traces with breached SLOs or abnormal RED
+    #     metrics during the Analysis phase
+    #
+    #   * `dependency_metric` - CriticalPathAuditor: Analyzes service
+    #     dependency impacts and maps dependency relationships from
+    #     Application Signals RED metrics during the Analysis phase
+    #
+    #   * `top_contributor` - TopContributorAuditor: Identifies
+    #     infrastructure-level contributors to issues by analyzing EMF logs of
+    #     Application Signals RED metrics during the Analysis phase
+    #
+    #   * `log` - LogAuditor: Extracts insights from application logs,
+    #     categorizing error types and ranking severity by frequency during
+    #     the Analysis phase
+    #
+    #   * `change_indicator` - ChangeIndicatorAuditor: Detects change events
+    #     (deployments, configuration changes) that occurred within 10 minutes
+    #     before and during a detected anomaly, and surfaces them as findings
+    #     with deployment timestamps in the Analysis phase. When changes are
+    #     detected, the `top_contributor` auditor skips its analysis to avoid
+    #     redundancy.
+    #
+    #   <note markdown="1"> `InitAuditor` and `Summarizer` auditors are not configurable as they
+    #   are automatically triggered during the audit process.
+    #
+    #    </note>
+    #
+    # @option params [required, Array<Types::AuditTarget>] :audit_targets
+    #   A list of audit targets to filter the findings by. You can specify
+    #   services, SLOs, or service operations to limit the audit findings to
+    #   specific entities.
+    #
+    # @option params [String] :detail_level
+    #   The level of details of the audit findings. Supported values: `BRIEF`,
+    #   `DETAILED`.
+    #
+    # @option params [String] :next_token
+    #   Include this value, if it was returned by the previous operation, to
+    #   get the next set of audit findings.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of audit findings to return in one operation. If
+    #   you omit this parameter, the default of 10 is used.
+    #
+    # @return [Types::ListAuditFindingsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListAuditFindingsOutput#start_time #start_time} => Time
+    #   * {Types::ListAuditFindingsOutput#end_time #end_time} => Time
+    #   * {Types::ListAuditFindingsOutput#audit_findings #audit_findings} => Array&lt;Types::AuditFinding&gt;
+    #   * {Types::ListAuditFindingsOutput#next_token #next_token} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_audit_findings({
+    #     start_time: Time.now, # required
+    #     end_time: Time.now, # required
+    #     auditors: ["String"],
+    #     audit_targets: [ # required
+    #       {
+    #         type: "String", # required
+    #         data: { # required
+    #           service: {
+    #             type: "String",
+    #             name: "String",
+    #             environment: "String",
+    #             aws_account_id: "String",
+    #           },
+    #           slo: {
+    #             slo_name: "String",
+    #             slo_arn: "String",
+    #           },
+    #           service_operation: {
+    #             service: {
+    #               type: "String",
+    #               name: "String",
+    #               environment: "String",
+    #               aws_account_id: "String",
+    #             },
+    #             operation: "String",
+    #             metric_type: "String",
+    #           },
+    #           canary: {
+    #             canary_name: "String", # required
+    #           },
+    #         },
+    #       },
+    #     ],
+    #     detail_level: "BRIEF", # accepts BRIEF, DETAILED
+    #     next_token: "NextToken",
+    #     max_results: 1,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.start_time #=> Time
+    #   resp.end_time #=> Time
+    #   resp.audit_findings #=> Array
+    #   resp.audit_findings[0].key_attributes #=> Hash
+    #   resp.audit_findings[0].key_attributes["KeyAttributeName"] #=> String
+    #   resp.audit_findings[0].auditor_results #=> Array
+    #   resp.audit_findings[0].auditor_results[0].auditor #=> String
+    #   resp.audit_findings[0].auditor_results[0].description #=> String
+    #   resp.audit_findings[0].auditor_results[0].data #=> Hash
+    #   resp.audit_findings[0].auditor_results[0].data["String"] #=> String
+    #   resp.audit_findings[0].auditor_results[0].severity #=> String, one of "CRITICAL", "HIGH", "MEDIUM", "LOW", "NONE"
+    #   resp.audit_findings[0].operation #=> String
+    #   resp.audit_findings[0].metric_graph.metric_data_queries #=> Array
+    #   resp.audit_findings[0].metric_graph.metric_data_queries[0].id #=> String
+    #   resp.audit_findings[0].metric_graph.metric_data_queries[0].metric_stat.metric.namespace #=> String
+    #   resp.audit_findings[0].metric_graph.metric_data_queries[0].metric_stat.metric.metric_name #=> String
+    #   resp.audit_findings[0].metric_graph.metric_data_queries[0].metric_stat.metric.dimensions #=> Array
+    #   resp.audit_findings[0].metric_graph.metric_data_queries[0].metric_stat.metric.dimensions[0].name #=> String
+    #   resp.audit_findings[0].metric_graph.metric_data_queries[0].metric_stat.metric.dimensions[0].value #=> String
+    #   resp.audit_findings[0].metric_graph.metric_data_queries[0].metric_stat.period #=> Integer
+    #   resp.audit_findings[0].metric_graph.metric_data_queries[0].metric_stat.stat #=> String
+    #   resp.audit_findings[0].metric_graph.metric_data_queries[0].metric_stat.unit #=> String, one of "Microseconds", "Milliseconds", "Seconds", "Bytes", "Kilobytes", "Megabytes", "Gigabytes", "Terabytes", "Bits", "Kilobits", "Megabits", "Gigabits", "Terabits", "Percent", "Count", "Bytes/Second", "Kilobytes/Second", "Megabytes/Second", "Gigabytes/Second", "Terabytes/Second", "Bits/Second", "Kilobits/Second", "Megabits/Second", "Gigabits/Second", "Terabits/Second", "Count/Second", "None"
+    #   resp.audit_findings[0].metric_graph.metric_data_queries[0].expression #=> String
+    #   resp.audit_findings[0].metric_graph.metric_data_queries[0].label #=> String
+    #   resp.audit_findings[0].metric_graph.metric_data_queries[0].return_data #=> Boolean
+    #   resp.audit_findings[0].metric_graph.metric_data_queries[0].period #=> Integer
+    #   resp.audit_findings[0].metric_graph.metric_data_queries[0].account_id #=> String
+    #   resp.audit_findings[0].metric_graph.start_time #=> Time
+    #   resp.audit_findings[0].metric_graph.end_time #=> Time
+    #   resp.audit_findings[0].dependency_graph.nodes #=> Array
+    #   resp.audit_findings[0].dependency_graph.nodes[0].key_attributes #=> Hash
+    #   resp.audit_findings[0].dependency_graph.nodes[0].key_attributes["KeyAttributeName"] #=> String
+    #   resp.audit_findings[0].dependency_graph.nodes[0].name #=> String
+    #   resp.audit_findings[0].dependency_graph.nodes[0].node_id #=> String
+    #   resp.audit_findings[0].dependency_graph.nodes[0].operation #=> String
+    #   resp.audit_findings[0].dependency_graph.nodes[0].type #=> String
+    #   resp.audit_findings[0].dependency_graph.nodes[0].duration #=> Float
+    #   resp.audit_findings[0].dependency_graph.nodes[0].status #=> String
+    #   resp.audit_findings[0].dependency_graph.edges #=> Array
+    #   resp.audit_findings[0].dependency_graph.edges[0].source_node_id #=> String
+    #   resp.audit_findings[0].dependency_graph.edges[0].destination_node_id #=> String
+    #   resp.audit_findings[0].dependency_graph.edges[0].duration #=> Float
+    #   resp.audit_findings[0].dependency_graph.edges[0].connection_type #=> String, one of "INDIRECT", "DIRECT"
+    #   resp.audit_findings[0].type #=> String
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/ListAuditFindings AWS API Documentation
+    #
+    # @overload list_audit_findings(params = {})
+    # @param [Hash] params ({})
+    def list_audit_findings(params = {}, options = {})
+      req = build_request(:list_audit_findings, params)
+      req.send_request(options)
+    end
+
+    # Returns a list of change events for a specific entity, such as
+    # deployments, configuration changes, or other state-changing
+    # activities. This operation helps track the history of changes that may
+    # have affected service performance.
+    #
+    # @option params [required, Hash<String,String>] :entity
+    #   The entity for which to retrieve change events. This specifies the
+    #   service, resource, or other entity whose event history you want to
+    #   examine.
+    #
+    #   This is a string-to-string map. It can include the following fields.
+    #
+    #   * `Type` designates the type of object this is.
+    #
+    #   * `ResourceType` specifies the type of the resource. This field is
+    #     used only when the value of the `Type` field is `Resource` or
+    #     `AWS::Resource`.
+    #
+    #   * `Name` specifies the name of the object. This is used only if the
+    #     value of the `Type` field is `Service`, `RemoteService`, or
+    #     `AWS::Service`.
+    #
+    #   * `Identifier` identifies the resource objects of this resource. This
+    #     is used only if the value of the `Type` field is `Resource` or
+    #     `AWS::Resource`.
+    #
+    #   * `Environment` specifies the location where this object is hosted, or
+    #     what it belongs to.
+    #
+    #   * `AwsAccountId` specifies the account where this object is in.
+    #
+    #   Below is an example of a service.
+    #
+    #   `{ "Type": "Service", "Name": "visits-service", "Environment":
+    #   "petclinic-test" }`
+    #
+    #   Below is an example of a resource.
+    #
+    #   `{ "Type": "AWS::Resource", "ResourceType": "AWS::DynamoDB::Table",
+    #   "Identifier": "Customers" }`
+    #
+    # @option params [required, Time,DateTime,Date,Integer,String] :start_time
+    #   The start of the time period to retrieve change events for. When used
+    #   in a raw HTTP Query API, it is formatted as epoch time in seconds. For
+    #   example: `1698778057`
+    #
+    # @option params [required, Time,DateTime,Date,Integer,String] :end_time
+    #   The end of the time period to retrieve change events for. When used in
+    #   a raw HTTP Query API, it is formatted as epoch time in seconds. For
+    #   example: `1698778057`
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of change events to return in one operation. If you
+    #   omit this parameter, the default of 50 is used.
+    #
+    # @option params [String] :next_token
+    #   Include this value, if it was returned by the previous operation, to
+    #   get the next set of change events.
+    #
+    # @return [Types::ListEntityEventsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListEntityEventsOutput#start_time #start_time} => Time
+    #   * {Types::ListEntityEventsOutput#end_time #end_time} => Time
+    #   * {Types::ListEntityEventsOutput#change_events #change_events} => Array&lt;Types::ChangeEvent&gt;
+    #   * {Types::ListEntityEventsOutput#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_entity_events({
+    #     entity: { # required
+    #       "KeyAttributeName" => "KeyAttributeValue",
+    #     },
+    #     start_time: Time.now, # required
+    #     end_time: Time.now, # required
+    #     max_results: 1,
+    #     next_token: "NextToken",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.start_time #=> Time
+    #   resp.end_time #=> Time
+    #   resp.change_events #=> Array
+    #   resp.change_events[0].timestamp #=> Time
+    #   resp.change_events[0].account_id #=> String
+    #   resp.change_events[0].region #=> String
+    #   resp.change_events[0].entity #=> Hash
+    #   resp.change_events[0].entity["KeyAttributeName"] #=> String
+    #   resp.change_events[0].change_event_type #=> String, one of "DEPLOYMENT", "CONFIGURATION"
+    #   resp.change_events[0].event_id #=> String
+    #   resp.change_events[0].user_name #=> String
+    #   resp.change_events[0].event_name #=> String
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/ListEntityEvents AWS API Documentation
+    #
+    # @overload list_entity_events(params = {})
+    # @param [Hash] params ({})
+    def list_entity_events(params = {}, options = {})
+      req = build_request(:list_entity_events, params)
+      req.send_request(options)
+    end
+
+    # Returns the current grouping configuration for this account, including
+    # all custom grouping attribute definitions that have been configured.
+    # These definitions determine how services are logically grouped based
+    # on telemetry attributes, Amazon Web Services tags, or predefined
+    # mappings.
+    #
+    # @option params [String] :next_token
+    #   Include this value, if it was returned by the previous operation, to
+    #   get the next set of grouping attribute definitions.
+    #
+    # @option params [String] :aws_account_id
+    #   The Amazon Web Services account ID to retrieve grouping attribute
+    #   definitions for. Use this when accessing grouping configurations from
+    #   a different account in cross-account monitoring scenarios.
+    #
+    # @option params [Boolean] :include_linked_accounts
+    #   If you are using this operation in a monitoring account, specify
+    #   `true` to include grouping attributes from source accounts in the
+    #   returned data.
+    #
+    # @return [Types::ListGroupingAttributeDefinitionsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListGroupingAttributeDefinitionsOutput#grouping_attribute_definitions #grouping_attribute_definitions} => Array&lt;Types::GroupingAttributeDefinition&gt;
+    #   * {Types::ListGroupingAttributeDefinitionsOutput#updated_at #updated_at} => Time
+    #   * {Types::ListGroupingAttributeDefinitionsOutput#next_token #next_token} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_grouping_attribute_definitions({
+    #     next_token: "NextToken",
+    #     aws_account_id: "AwsAccountId",
+    #     include_linked_accounts: false,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.grouping_attribute_definitions #=> Array
+    #   resp.grouping_attribute_definitions[0].grouping_name #=> String
+    #   resp.grouping_attribute_definitions[0].grouping_source_keys #=> Array
+    #   resp.grouping_attribute_definitions[0].grouping_source_keys[0] #=> String
+    #   resp.grouping_attribute_definitions[0].default_grouping_value #=> String
+    #   resp.updated_at #=> Time
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/ListGroupingAttributeDefinitions AWS API Documentation
+    #
+    # @overload list_grouping_attribute_definitions(params = {})
+    # @param [Hash] params ({})
+    def list_grouping_attribute_definitions(params = {}, options = {})
+      req = build_request(:list_grouping_attribute_definitions, params)
+      req.send_request(options)
+    end
+
+    # Returns all active instrumentation configurations for a service and
+    # environment. SDKs use this operation to sync configurations and apply
+    # client-side filters locally.
+    #
+    # Include the previous `SyncedAt` value to perform incremental syncs.
+    # When no changes are detected, the response sets `Changed` to `false`
+    # and omits configuration details.
+    #
+    # @option params [required, String] :service
+    #   The name of the service to retrieve instrumentation configurations
+    #   for.
+    #
+    # @option params [required, String] :environment
+    #   The environment that the service is running in.
+    #
+    # @option params [required, String] :instrumentation_type
+    #   Type of instrumentation configuration (BREAKPOINT or PROBE). Required
+    #   to determine which backing store to query.
+    #
+    # @option params [Time,DateTime,Date,Integer,String] :synced_at
+    #   The timestamp from the last successful sync. When provided, the
+    #   response returns `Changed` as `false` if nothing is new since this
+    #   time, or returns the latest configurations when changes exist.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of configurations to return in one call. The
+    #   default is 50 and the maximum is 100.
+    #
+    # @option params [String] :next_token
+    #   Use the token returned by a previous call to retrieve the next page of
+    #   configurations.
+    #
+    # @return [Types::InstrumentationConfigurationsPage] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::InstrumentationConfigurationsPage#service #service} => String
+    #   * {Types::InstrumentationConfigurationsPage#environment #environment} => String
+    #   * {Types::InstrumentationConfigurationsPage#changed #changed} => Boolean
+    #   * {Types::InstrumentationConfigurationsPage#latest_configurations #latest_configurations} => Array&lt;Types::InstrumentationConfigurationWithoutServiceEnv&gt;
+    #   * {Types::InstrumentationConfigurationsPage#synced_at #synced_at} => Time
+    #   * {Types::InstrumentationConfigurationsPage#sync_interval #sync_interval} => Integer
+    #   * {Types::InstrumentationConfigurationsPage#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_instrumentation_configurations({
+    #     service: "ListInstrumentationConfigurationsRequestServiceString", # required
+    #     environment: "ListInstrumentationConfigurationsRequestEnvironmentString", # required
+    #     instrumentation_type: "BREAKPOINT", # required, accepts BREAKPOINT, PROBE
+    #     synced_at: Time.now,
+    #     max_results: 1,
+    #     next_token: "NextToken",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.service #=> String
+    #   resp.environment #=> String
+    #   resp.changed #=> Boolean
+    #   resp.latest_configurations #=> Array
+    #   resp.latest_configurations[0].instrumentation_type #=> String, one of "BREAKPOINT", "PROBE"
+    #   resp.latest_configurations[0].signal_type #=> String, one of "SNAPSHOT"
+    #   resp.latest_configurations[0].location.code_location.language #=> String, one of "Java", "Python", "Javascript"
+    #   resp.latest_configurations[0].location.code_location.code_unit #=> String
+    #   resp.latest_configurations[0].location.code_location.class_name #=> String
+    #   resp.latest_configurations[0].location.code_location.method_name #=> String
+    #   resp.latest_configurations[0].location.code_location.file_path #=> String
+    #   resp.latest_configurations[0].location.code_location.line_number #=> Integer
+    #   resp.latest_configurations[0].location_hash #=> String
+    #   resp.latest_configurations[0].description #=> String
+    #   resp.latest_configurations[0].expires_at #=> Time
+    #   resp.latest_configurations[0].attribute_filters #=> Array
+    #   resp.latest_configurations[0].attribute_filters[0] #=> Hash
+    #   resp.latest_configurations[0].attribute_filters[0]["DynamicInstrumentationAttributeFilterGroupKeyString"] #=> String
+    #   resp.latest_configurations[0].capture_configuration.code_capture.capture_arguments #=> Array
+    #   resp.latest_configurations[0].capture_configuration.code_capture.capture_arguments[0] #=> String
+    #   resp.latest_configurations[0].capture_configuration.code_capture.capture_return #=> Boolean
+    #   resp.latest_configurations[0].capture_configuration.code_capture.capture_stack_trace #=> Boolean
+    #   resp.latest_configurations[0].capture_configuration.code_capture.capture_locals #=> Array
+    #   resp.latest_configurations[0].capture_configuration.code_capture.capture_locals[0] #=> String
+    #   resp.latest_configurations[0].capture_configuration.code_capture.capture_limits.max_hits #=> Integer
+    #   resp.latest_configurations[0].capture_configuration.code_capture.capture_limits.max_string_length #=> Integer
+    #   resp.latest_configurations[0].capture_configuration.code_capture.capture_limits.max_collection_width #=> Integer
+    #   resp.latest_configurations[0].capture_configuration.code_capture.capture_limits.max_collection_depth #=> Integer
+    #   resp.latest_configurations[0].capture_configuration.code_capture.capture_limits.max_stack_frames #=> Integer
+    #   resp.latest_configurations[0].capture_configuration.code_capture.capture_limits.max_stack_trace_size #=> Integer
+    #   resp.latest_configurations[0].capture_configuration.code_capture.capture_limits.max_object_depth #=> Integer
+    #   resp.latest_configurations[0].capture_configuration.code_capture.capture_limits.max_fields_per_object #=> Integer
+    #   resp.latest_configurations[0].created_at #=> Time
+    #   resp.latest_configurations[0].arn #=> String
+    #   resp.synced_at #=> Time
+    #   resp.sync_interval #=> Integer
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/ListInstrumentationConfigurations AWS API Documentation
+    #
+    # @overload list_instrumentation_configurations(params = {})
+    # @param [Hash] params ({})
+    def list_instrumentation_configurations(params = {}, options = {})
+      req = build_request(:list_instrumentation_configurations, params)
       req.send_request(options)
     end
 
@@ -1520,11 +2605,11 @@ module Aws::ApplicationSignals
     #
     # @option params [Integer] :max_results
     #   The maximum number of results to return in one operation. If you omit
-    #   this parameter, the default of 50 is used.      </p>
+    #   this parameter, the default of 50 is used.
     #
     # @option params [String] :next_token
     #   Include this value, if it was returned by the previous operation, to
-    #   get the next set of service level objectives.      </p>
+    #   get the next set of service level objectives.
     #
     # @return [Types::ListServiceLevelObjectiveExclusionWindowsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1588,6 +2673,10 @@ module Aws::ApplicationSignals
     # @option params [String] :operation_name
     #   The name of the operation that this SLO is associated with.
     #
+    # @option params [Types::DependencyConfig] :dependency_config
+    #   Identifies the dependency using the `DependencyKeyAttributes` and
+    #   `DependencyOperationName`.
+    #
     # @option params [Integer] :max_results
     #   The maximum number of results to return in one operation. If you omit
     #   this parameter, the default of 50 is used.
@@ -1596,17 +2685,37 @@ module Aws::ApplicationSignals
     #   Include this value, if it was returned by the previous operation, to
     #   get the next set of service level objectives.
     #
+    # @option params [Array<String>] :metric_source_types
+    #   Use this optional field to only include SLOs with the specified metric
+    #   source types in the output. Supported types are:
+    #
+    #   * Service operation
+    #
+    #   * Service dependency
+    #
+    #   * Service
+    #
+    #   * CloudWatch metric
+    #
+    #   * AppMonitor
+    #
+    #   * Canary
+    #
     # @option params [Boolean] :include_linked_accounts
     #   If you are using this operation in a monitoring account, specify
     #   `true` to include SLO from source accounts in the returned data.
-    #   </p> <p>When you are monitoring an account, you can use Amazon Web
-    #   Services account ID in <code>KeyAttribute</code> filter for service
-    #   source account and <code>SloOwnerawsaccountID</code> for SLO source
-    #   account with <code>IncludeLinkedAccounts</code> to filter the returned
-    #   data to only a single source account. </p>
+    #
+    #   When you are monitoring an account, you can use Amazon Web Services
+    #   account ID in `KeyAttribute` filter for service source account and
+    #   `SloOwnerawsaccountID` for SLO source account with
+    #   `IncludeLinkedAccounts` to filter the returned data to only a single
+    #   source account.
     #
     # @option params [String] :slo_owner_aws_account_id
     #   SLO's Amazon Web Services account ID.
+    #
+    # @option params [Types::MetricSource] :metric_source
+    #   Identifies the metric source to filter SLOs by.
     #
     # @return [Types::ListServiceLevelObjectivesOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1622,10 +2731,25 @@ module Aws::ApplicationSignals
     #       "KeyAttributeName" => "KeyAttributeValue",
     #     },
     #     operation_name: "OperationName",
+    #     dependency_config: {
+    #       dependency_key_attributes: { # required
+    #         "KeyAttributeName" => "KeyAttributeValue",
+    #       },
+    #       dependency_operation_name: "OperationName", # required
+    #     },
     #     max_results: 1,
     #     next_token: "NextToken",
+    #     metric_source_types: ["ServiceOperation"], # accepts ServiceOperation, CloudWatchMetric, ServiceDependency, AppMonitor, Canary, Service
     #     include_linked_accounts: false,
     #     slo_owner_aws_account_id: "AwsAccountId",
+    #     metric_source: {
+    #       metric_source_key_attributes: { # required
+    #         "KeyAttributeName" => "KeyAttributeValue",
+    #       },
+    #       metric_source_attributes: {
+    #         "KeyAttributeName" => "KeyAttributeValue",
+    #       },
+    #     },
     #   })
     #
     # @example Response structure
@@ -1636,7 +2760,20 @@ module Aws::ApplicationSignals
     #   resp.slo_summaries[0].key_attributes #=> Hash
     #   resp.slo_summaries[0].key_attributes["KeyAttributeName"] #=> String
     #   resp.slo_summaries[0].operation_name #=> String
+    #   resp.slo_summaries[0].dependency_config.dependency_key_attributes #=> Hash
+    #   resp.slo_summaries[0].dependency_config.dependency_key_attributes["KeyAttributeName"] #=> String
+    #   resp.slo_summaries[0].dependency_config.dependency_operation_name #=> String
     #   resp.slo_summaries[0].created_time #=> Time
+    #   resp.slo_summaries[0].evaluation_type #=> String, one of "PeriodBased", "RequestBased"
+    #   resp.slo_summaries[0].metric_source_type #=> String, one of "ServiceOperation", "CloudWatchMetric", "ServiceDependency", "AppMonitor", "Canary", "Service"
+    #   resp.slo_summaries[0].metric_source.metric_source_key_attributes #=> Hash
+    #   resp.slo_summaries[0].metric_source.metric_source_key_attributes["KeyAttributeName"] #=> String
+    #   resp.slo_summaries[0].metric_source.metric_source_attributes #=> Hash
+    #   resp.slo_summaries[0].metric_source.metric_source_attributes["KeyAttributeName"] #=> String
+    #   resp.slo_summaries[0].composite_sli_config.selection_config.type #=> String, one of "EXPLICIT", "PREFIX", "REGEX"
+    #   resp.slo_summaries[0].composite_sli_config.selection_config.pattern #=> String
+    #   resp.slo_summaries[0].composite_sli_config.components #=> Array
+    #   resp.slo_summaries[0].composite_sli_config.components[0].operation_name #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/ListServiceLevelObjectives AWS API Documentation
@@ -1744,6 +2881,100 @@ module Aws::ApplicationSignals
       req.send_request(options)
     end
 
+    # Returns information about the last deployment and other change states
+    # of services. This API provides visibility into recent changes that may
+    # have affected service performance, helping with troubleshooting and
+    # change correlation.
+    #
+    # @option params [required, Time,DateTime,Date,Integer,String] :start_time
+    #   The start of the time period to retrieve service state information
+    #   for. When used in a raw HTTP Query API, it is formatted as epoch time
+    #   in seconds. For example, `1698778057`.
+    #
+    # @option params [required, Time,DateTime,Date,Integer,String] :end_time
+    #   The end of the time period to retrieve service state information for.
+    #   When used in a raw HTTP Query API, it is formatted as epoch time in
+    #   seconds. For example, `1698778057`.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of service states to return in one operation. If
+    #   you omit this parameter, the default of 20 is used.
+    #
+    # @option params [String] :next_token
+    #   Include this value, if it was returned by the previous operation, to
+    #   get the next set of service states.
+    #
+    # @option params [Boolean] :include_linked_accounts
+    #   If you are using this operation in a monitoring account, specify
+    #   `true` to include service states from source accounts in the returned
+    #   data.
+    #
+    # @option params [String] :aws_account_id
+    #   The Amazon Web Services account ID to filter service states by. Use
+    #   this to limit results to services from a specific account.
+    #
+    # @option params [Array<Types::AttributeFilter>] :attribute_filters
+    #   A list of attribute filters to narrow down the services. You can
+    #   filter by platform, environment, or other service attributes.
+    #
+    # @return [Types::ListServiceStatesOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListServiceStatesOutput#start_time #start_time} => Time
+    #   * {Types::ListServiceStatesOutput#end_time #end_time} => Time
+    #   * {Types::ListServiceStatesOutput#service_states #service_states} => Array&lt;Types::ServiceState&gt;
+    #   * {Types::ListServiceStatesOutput#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_service_states({
+    #     start_time: Time.now, # required
+    #     end_time: Time.now, # required
+    #     max_results: 1,
+    #     next_token: "NextToken",
+    #     include_linked_accounts: false,
+    #     aws_account_id: "AwsAccountId",
+    #     attribute_filters: [
+    #       {
+    #         attribute_filter_name: "AttributeFilterName", # required
+    #         attribute_filter_values: ["AttributeFilterValue"], # required
+    #       },
+    #     ],
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.start_time #=> Time
+    #   resp.end_time #=> Time
+    #   resp.service_states #=> Array
+    #   resp.service_states[0].attribute_filters #=> Array
+    #   resp.service_states[0].attribute_filters[0].attribute_filter_name #=> String
+    #   resp.service_states[0].attribute_filters[0].attribute_filter_values #=> Array
+    #   resp.service_states[0].attribute_filters[0].attribute_filter_values[0] #=> String
+    #   resp.service_states[0].service #=> Hash
+    #   resp.service_states[0].service["KeyAttributeName"] #=> String
+    #   resp.service_states[0].latest_change_events #=> Array
+    #   resp.service_states[0].latest_change_events[0].timestamp #=> Time
+    #   resp.service_states[0].latest_change_events[0].account_id #=> String
+    #   resp.service_states[0].latest_change_events[0].region #=> String
+    #   resp.service_states[0].latest_change_events[0].entity #=> Hash
+    #   resp.service_states[0].latest_change_events[0].entity["KeyAttributeName"] #=> String
+    #   resp.service_states[0].latest_change_events[0].change_event_type #=> String, one of "DEPLOYMENT", "CONFIGURATION"
+    #   resp.service_states[0].latest_change_events[0].event_id #=> String
+    #   resp.service_states[0].latest_change_events[0].user_name #=> String
+    #   resp.service_states[0].latest_change_events[0].event_name #=> String
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/ListServiceStates AWS API Documentation
+    #
+    # @overload list_service_states(params = {})
+    # @param [Hash] params ({})
+    def list_service_states(params = {}, options = {})
+      req = build_request(:list_service_states, params)
+      req.send_request(options)
+    end
+
     # Returns a list of services that have been discovered by Application
     # Signals. A service represents a minimum logical and transactional unit
     # that completes a business function. Services are discovered through
@@ -1774,7 +3005,6 @@ module Aws::ApplicationSignals
     # @option params [Boolean] :include_linked_accounts
     #   If you are using this operation in a monitoring account, specify
     #   `true` to include services from source accounts in the returned data.
-    #   </p>
     #
     # @option params [String] :aws_account_id
     #   Amazon Web Services Account ID.
@@ -1817,6 +3047,11 @@ module Aws::ApplicationSignals
     #   resp.service_summaries[0].metric_references[0].dimensions[0].value #=> String
     #   resp.service_summaries[0].metric_references[0].metric_name #=> String
     #   resp.service_summaries[0].metric_references[0].account_id #=> String
+    #   resp.service_summaries[0].service_groups #=> Array
+    #   resp.service_summaries[0].service_groups[0].group_name #=> String
+    #   resp.service_summaries[0].service_groups[0].group_value #=> String
+    #   resp.service_summaries[0].service_groups[0].group_source #=> String
+    #   resp.service_summaries[0].service_groups[0].group_identifier #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/ListServices AWS API Documentation
@@ -1870,6 +3105,115 @@ module Aws::ApplicationSignals
       req.send_request(options)
     end
 
+    # Creates or updates the grouping configuration for this account. This
+    # operation allows you to define custom grouping attributes that
+    # determine how services are logically grouped based on telemetry
+    # attributes, Amazon Web Services tags, or predefined mappings. These
+    # grouping attributes can then be used to organize and filter services
+    # in the Application Signals console and APIs.
+    #
+    # @option params [required, Array<Types::GroupingAttributeDefinition>] :grouping_attribute_definitions
+    #   An array of grouping attribute definitions that specify how services
+    #   should be grouped. Each definition includes a friendly name, source
+    #   keys to derive the grouping value from, and an optional default value.
+    #
+    # @return [Types::PutGroupingConfigurationOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::PutGroupingConfigurationOutput#grouping_configuration #grouping_configuration} => Types::GroupingConfiguration
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.put_grouping_configuration({
+    #     grouping_attribute_definitions: [ # required
+    #       {
+    #         grouping_name: "GroupingString", # required
+    #         grouping_source_keys: ["GroupingString"],
+    #         default_grouping_value: "GroupingString",
+    #       },
+    #     ],
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.grouping_configuration.grouping_attribute_definitions #=> Array
+    #   resp.grouping_configuration.grouping_attribute_definitions[0].grouping_name #=> String
+    #   resp.grouping_configuration.grouping_attribute_definitions[0].grouping_source_keys #=> Array
+    #   resp.grouping_configuration.grouping_attribute_definitions[0].grouping_source_keys[0] #=> String
+    #   resp.grouping_configuration.grouping_attribute_definitions[0].default_grouping_value #=> String
+    #   resp.grouping_configuration.updated_at #=> Time
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/PutGroupingConfiguration AWS API Documentation
+    #
+    # @overload put_grouping_configuration(params = {})
+    # @param [Hash] params ({})
+    def put_grouping_configuration(params = {}, options = {})
+      req = build_request(:put_grouping_configuration, params)
+      req.send_request(options)
+    end
+
+    # Reports the status of one or more instrumentation configurations from
+    # SDK instances. Use this to record when configurations become ready,
+    # hit errors, become active, or are disabled by limits.
+    #
+    # Report `READY`, `ERROR`, and `DISABLED` when the status changes.
+    # Report `ACTIVE` periodically (for example, every minute) while
+    # instrumentation is running.
+    #
+    # @option params [required, String] :service
+    #   The service that the reported configurations belong to.
+    #
+    # @option params [required, String] :environment
+    #   The environment that the service is running in.
+    #
+    # @option params [required, Array<Types::InstrumentationConfigurationStatusReport>] :configurations
+    #   An array of configuration status reports (up to 100) that include the
+    #   instrumentation type, signal type, location hash, status, timestamp,
+    #   and optional error cause.
+    #
+    # @return [Types::ReportInstrumentationConfigurationStatusResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ReportInstrumentationConfigurationStatusResponse#service #service} => String
+    #   * {Types::ReportInstrumentationConfigurationStatusResponse#environment #environment} => String
+    #   * {Types::ReportInstrumentationConfigurationStatusResponse#unprocessed_status_events #unprocessed_status_events} => Array&lt;Types::UnprocessedStatusEvent&gt;
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.report_instrumentation_configuration_status({
+    #     service: "ReportInstrumentationConfigurationStatusRequestServiceString", # required
+    #     environment: "ReportInstrumentationConfigurationStatusRequestEnvironmentString", # required
+    #     configurations: [ # required
+    #       {
+    #         instrumentation_type: "BREAKPOINT", # required, accepts BREAKPOINT, PROBE
+    #         signal_type: "SNAPSHOT", # required, accepts SNAPSHOT
+    #         location_hash: "InstrumentationConfigurationStatusReportLocationHashString", # required
+    #         status: "READY", # required, accepts READY, ERROR, ACTIVE, DISABLED
+    #         time: Time.now, # required
+    #         error_cause: "FILE_NOT_FOUND", # accepts FILE_NOT_FOUND, METHOD_NOT_FOUND, LINE_NOT_EXECUTABLE, OVERLOADED_METHODS, LANGUAGE_MISMATCH, RUNTIME_ERROR
+    #       },
+    #     ],
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.service #=> String
+    #   resp.environment #=> String
+    #   resp.unprocessed_status_events #=> Array
+    #   resp.unprocessed_status_events[0].instrumentation_type #=> String, one of "BREAKPOINT", "PROBE"
+    #   resp.unprocessed_status_events[0].signal_type #=> String, one of "SNAPSHOT"
+    #   resp.unprocessed_status_events[0].location_hash #=> String
+    #   resp.unprocessed_status_events[0].status #=> String, one of "READY", "ERROR", "ACTIVE", "DISABLED"
+    #   resp.unprocessed_status_events[0].time #=> Time
+    #   resp.unprocessed_status_events[0].failed_reason #=> String, one of "THROTTLED", "INTERNAL_ERROR", "VALIDATION_ERROR"
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/ReportInstrumentationConfigurationStatus AWS API Documentation
+    #
+    # @overload report_instrumentation_configuration_status(params = {})
+    # @param [Hash] params ({})
+    def report_instrumentation_configuration_status(params = {}, options = {})
+      req = build_request(:report_instrumentation_configuration_status, params)
+      req.send_request(options)
+    end
+
     # Enables this Amazon Web Services account to be able to use CloudWatch
     # Application Signals by creating the
     # *AWSServiceRoleForCloudWatchApplicationSignals* service-linked role.
@@ -1888,6 +3232,10 @@ module Aws::ApplicationSignals
     # * `tag:GetResources`
     #
     # * `autoscaling:DescribeAutoScalingGroups`
+    #
+    # A service-linked CloudTrail event channel is created to process
+    # CloudTrail events and return change event information. This includes
+    # last deployment time, userName, eventName, and other event metadata.
     #
     # After completing this step, you still need to instrument your Java and
     # Python applications to send data to Application Signals. For more
@@ -2037,6 +3385,10 @@ module Aws::ApplicationSignals
     #   a metric that indicates how fast the service is consuming the error
     #   budget, relative to the attainment goal of the SLO.
     #
+    # @option params [Boolean] :auto_investigation_enabled
+    #   Indicates whether DevOps Agent will automatically investigate this SLO
+    #   when it is breached
+    #
     # @return [Types::UpdateServiceLevelObjectiveOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::UpdateServiceLevelObjectiveOutput#slo #slo} => Types::ServiceLevelObjective
@@ -2053,8 +3405,17 @@ module Aws::ApplicationSignals
     #         },
     #         operation_name: "OperationName",
     #         metric_type: "LATENCY", # accepts LATENCY, AVAILABILITY
+    #         metric_name: "MetricName",
     #         statistic: "ServiceLevelIndicatorStatistic",
     #         period_seconds: 1,
+    #         metric_source: {
+    #           metric_source_key_attributes: { # required
+    #             "KeyAttributeName" => "KeyAttributeValue",
+    #           },
+    #           metric_source_attributes: {
+    #             "KeyAttributeName" => "KeyAttributeValue",
+    #           },
+    #         },
     #         metric_data_queries: [
     #           {
     #             id: "MetricId", # required
@@ -2080,9 +3441,26 @@ module Aws::ApplicationSignals
     #             account_id: "AccountId",
     #           },
     #         ],
+    #         dependency_config: {
+    #           dependency_key_attributes: { # required
+    #             "KeyAttributeName" => "KeyAttributeValue",
+    #           },
+    #           dependency_operation_name: "OperationName", # required
+    #         },
+    #         composite_sli_config: {
+    #           selection_config: { # required
+    #             type: "EXPLICIT", # required, accepts EXPLICIT, PREFIX, REGEX
+    #             pattern: "SelectionPattern",
+    #           },
+    #           components: [
+    #             {
+    #               operation_name: "OperationName",
+    #             },
+    #           ],
+    #         },
     #       },
-    #       metric_threshold: 1.0, # required
-    #       comparison_operator: "GreaterThanOrEqualTo", # required, accepts GreaterThanOrEqualTo, GreaterThan, LessThan, LessThanOrEqualTo
+    #       metric_threshold: 1.0,
+    #       comparison_operator: "GreaterThanOrEqualTo", # accepts GreaterThanOrEqualTo, GreaterThan, LessThan, LessThanOrEqualTo
     #     },
     #     request_based_sli_config: {
     #       request_based_sli_metric_config: { # required
@@ -2168,6 +3546,32 @@ module Aws::ApplicationSignals
     #             },
     #           ],
     #         },
+    #         dependency_config: {
+    #           dependency_key_attributes: { # required
+    #             "KeyAttributeName" => "KeyAttributeValue",
+    #           },
+    #           dependency_operation_name: "OperationName", # required
+    #         },
+    #         metric_source: {
+    #           metric_source_key_attributes: { # required
+    #             "KeyAttributeName" => "KeyAttributeValue",
+    #           },
+    #           metric_source_attributes: {
+    #             "KeyAttributeName" => "KeyAttributeValue",
+    #           },
+    #         },
+    #         metric_name: "MetricName",
+    #         composite_sli_config: {
+    #           selection_config: { # required
+    #             type: "EXPLICIT", # required, accepts EXPLICIT, PREFIX, REGEX
+    #             pattern: "SelectionPattern",
+    #           },
+    #           components: [
+    #             {
+    #               operation_name: "OperationName",
+    #             },
+    #           ],
+    #         },
     #       },
     #       metric_threshold: 1.0,
     #       comparison_operator: "GreaterThanOrEqualTo", # accepts GreaterThanOrEqualTo, GreaterThan, LessThan, LessThanOrEqualTo
@@ -2192,6 +3596,7 @@ module Aws::ApplicationSignals
     #         look_back_window_minutes: 1, # required
     #       },
     #     ],
+    #     auto_investigation_enabled: false,
     #   })
     #
     # @example Response structure
@@ -2220,6 +3625,17 @@ module Aws::ApplicationSignals
     #   resp.slo.sli.sli_metric.metric_data_queries[0].return_data #=> Boolean
     #   resp.slo.sli.sli_metric.metric_data_queries[0].period #=> Integer
     #   resp.slo.sli.sli_metric.metric_data_queries[0].account_id #=> String
+    #   resp.slo.sli.sli_metric.dependency_config.dependency_key_attributes #=> Hash
+    #   resp.slo.sli.sli_metric.dependency_config.dependency_key_attributes["KeyAttributeName"] #=> String
+    #   resp.slo.sli.sli_metric.dependency_config.dependency_operation_name #=> String
+    #   resp.slo.sli.sli_metric.metric_source.metric_source_key_attributes #=> Hash
+    #   resp.slo.sli.sli_metric.metric_source.metric_source_key_attributes["KeyAttributeName"] #=> String
+    #   resp.slo.sli.sli_metric.metric_source.metric_source_attributes #=> Hash
+    #   resp.slo.sli.sli_metric.metric_source.metric_source_attributes["KeyAttributeName"] #=> String
+    #   resp.slo.sli.sli_metric.composite_sli_config.selection_config.type #=> String, one of "EXPLICIT", "PREFIX", "REGEX"
+    #   resp.slo.sli.sli_metric.composite_sli_config.selection_config.pattern #=> String
+    #   resp.slo.sli.sli_metric.composite_sli_config.components #=> Array
+    #   resp.slo.sli.sli_metric.composite_sli_config.components[0].operation_name #=> String
     #   resp.slo.sli.metric_threshold #=> Float
     #   resp.slo.sli.comparison_operator #=> String, one of "GreaterThanOrEqualTo", "GreaterThan", "LessThan", "LessThanOrEqualTo"
     #   resp.slo.request_based_sli.request_based_sli_metric.key_attributes #=> Hash
@@ -2271,6 +3687,17 @@ module Aws::ApplicationSignals
     #   resp.slo.request_based_sli.request_based_sli_metric.monitored_request_count_metric.bad_count_metric[0].return_data #=> Boolean
     #   resp.slo.request_based_sli.request_based_sli_metric.monitored_request_count_metric.bad_count_metric[0].period #=> Integer
     #   resp.slo.request_based_sli.request_based_sli_metric.monitored_request_count_metric.bad_count_metric[0].account_id #=> String
+    #   resp.slo.request_based_sli.request_based_sli_metric.dependency_config.dependency_key_attributes #=> Hash
+    #   resp.slo.request_based_sli.request_based_sli_metric.dependency_config.dependency_key_attributes["KeyAttributeName"] #=> String
+    #   resp.slo.request_based_sli.request_based_sli_metric.dependency_config.dependency_operation_name #=> String
+    #   resp.slo.request_based_sli.request_based_sli_metric.metric_source.metric_source_key_attributes #=> Hash
+    #   resp.slo.request_based_sli.request_based_sli_metric.metric_source.metric_source_key_attributes["KeyAttributeName"] #=> String
+    #   resp.slo.request_based_sli.request_based_sli_metric.metric_source.metric_source_attributes #=> Hash
+    #   resp.slo.request_based_sli.request_based_sli_metric.metric_source.metric_source_attributes["KeyAttributeName"] #=> String
+    #   resp.slo.request_based_sli.request_based_sli_metric.composite_sli_config.selection_config.type #=> String, one of "EXPLICIT", "PREFIX", "REGEX"
+    #   resp.slo.request_based_sli.request_based_sli_metric.composite_sli_config.selection_config.pattern #=> String
+    #   resp.slo.request_based_sli.request_based_sli_metric.composite_sli_config.components #=> Array
+    #   resp.slo.request_based_sli.request_based_sli_metric.composite_sli_config.components[0].operation_name #=> String
     #   resp.slo.request_based_sli.metric_threshold #=> Float
     #   resp.slo.request_based_sli.comparison_operator #=> String, one of "GreaterThanOrEqualTo", "GreaterThan", "LessThan", "LessThanOrEqualTo"
     #   resp.slo.evaluation_type #=> String, one of "PeriodBased", "RequestBased"
@@ -2283,6 +3710,8 @@ module Aws::ApplicationSignals
     #   resp.slo.goal.warning_threshold #=> Float
     #   resp.slo.burn_rate_configurations #=> Array
     #   resp.slo.burn_rate_configurations[0].look_back_window_minutes #=> Integer
+    #   resp.slo.metric_source_type #=> String, one of "ServiceOperation", "CloudWatchMetric", "ServiceDependency", "AppMonitor", "Canary", "Service"
+    #   resp.slo.auto_investigation_enabled #=> Boolean
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/UpdateServiceLevelObjective AWS API Documentation
     #
@@ -2311,7 +3740,7 @@ module Aws::ApplicationSignals
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-applicationsignals'
-      context[:gem_version] = '1.18.0'
+      context[:gem_version] = '1.46.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

@@ -308,6 +308,14 @@ module Aws::MarketplaceCatalog
     #   Alternative field that accepts a JSON value instead of a string for
     #   `ChangeType` details. You can use either `Details` or
     #   `DetailsDocument`, but not both.
+    #
+    #   To download the "DetailsDocument" shapes, see the [Python][1] and
+    #   [Java][2] shapes on GitHub.
+    #
+    #
+    #
+    #   [1]: https://github.com/awslabs/aws-marketplace-catalog-api-shapes-for-python
+    #   [2]: https://github.com/awslabs/aws-marketplace-catalog-api-shapes-for-java/tree/main
     #   @return [Hash,Array,String,Numeric,Boolean]
     #
     # @!attribute [rw] change_name
@@ -405,6 +413,14 @@ module Aws::MarketplaceCatalog
     # @!attribute [rw] details_document
     #   The JSON value of the details specific to the change type of the
     #   requested change.
+    #
+    #   To download the "DetailsDocument" shapes, see the [Python][1] and
+    #   [Java][2] shapes on GitHub.
+    #
+    #
+    #
+    #   [1]: https://github.com/awslabs/aws-marketplace-catalog-api-shapes-for-python
+    #   [2]: https://github.com/awslabs/aws-marketplace-catalog-api-shapes-for-java/tree/main
     #   @return [Hash,Array,String,Numeric,Boolean]
     #
     # @!attribute [rw] error_detail_list
@@ -888,6 +904,14 @@ module Aws::MarketplaceCatalog
     #
     # @!attribute [rw] details_document
     #   The JSON value of the details specific to the entity.
+    #
+    #   To download "DetailsDocument" shapes, see the [Python][1] and
+    #   [Java][2] shapes on GitHub.
+    #
+    #
+    #
+    #   [1]: https://github.com/awslabs/aws-marketplace-catalog-api-shapes-for-python
+    #   [2]: https://github.com/awslabs/aws-marketplace-catalog-api-shapes-for-java/tree/main
     #   @return [Hash,Array,String,Numeric,Boolean]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/marketplace-catalog-2018-09-17/DescribeEntityResponse AWS API Documentation
@@ -1039,6 +1063,14 @@ module Aws::MarketplaceCatalog
     #   Authorization.
     #   @return [Types::ResaleAuthorizationSummary]
     #
+    # @!attribute [rw] machine_learning_product_summary
+    #   A summary of a machine learning product.
+    #   @return [Types::MachineLearningProductSummary]
+    #
+    # @!attribute [rw] offer_set_summary
+    #   An object that contains summary information about the offer set.
+    #   @return [Types::OfferSetSummary]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/marketplace-catalog-2018-09-17/EntitySummary AWS API Documentation
     #
     class EntitySummary < Struct.new(
@@ -1053,7 +1085,9 @@ module Aws::MarketplaceCatalog
       :data_product_summary,
       :saa_s_product_summary,
       :offer_summary,
-      :resale_authorization_summary)
+      :resale_authorization_summary,
+      :machine_learning_product_summary,
+      :offer_set_summary)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1086,6 +1120,16 @@ module Aws::MarketplaceCatalog
     #   A filter for Resale Authorizations.
     #   @return [Types::ResaleAuthorizationFilters]
     #
+    # @!attribute [rw] machine_learning_product_filters
+    #   The filters that you can use with the ListEntities operation to
+    #   filter machine learning products. You can filter by `EntityId`,
+    #   `astModifiedDate`, `ProductTitle`, and `Visibility`.
+    #   @return [Types::MachineLearningProductFilters]
+    #
+    # @!attribute [rw] offer_set_filters
+    #   A filter for offer sets.
+    #   @return [Types::OfferSetFilters]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/marketplace-catalog-2018-09-17/EntityTypeFilters AWS API Documentation
     #
     class EntityTypeFilters < Struct.new(
@@ -1095,6 +1139,8 @@ module Aws::MarketplaceCatalog
       :offer_filters,
       :container_product_filters,
       :resale_authorization_filters,
+      :machine_learning_product_filters,
+      :offer_set_filters,
       :unknown)
       SENSITIVE = []
       include Aws::Structure
@@ -1106,6 +1152,8 @@ module Aws::MarketplaceCatalog
       class OfferFilters < EntityTypeFilters; end
       class ContainerProductFilters < EntityTypeFilters; end
       class ResaleAuthorizationFilters < EntityTypeFilters; end
+      class MachineLearningProductFilters < EntityTypeFilters; end
+      class OfferSetFilters < EntityTypeFilters; end
       class Unknown < EntityTypeFilters; end
     end
 
@@ -1137,6 +1185,14 @@ module Aws::MarketplaceCatalog
     #   A sort for Resale Authorizations.
     #   @return [Types::ResaleAuthorizationSort]
     #
+    # @!attribute [rw] machine_learning_product_sort
+    #   The sort options for machine learning products.
+    #   @return [Types::MachineLearningProductSort]
+    #
+    # @!attribute [rw] offer_set_sort
+    #   A sort for offer sets.
+    #   @return [Types::OfferSetSort]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/marketplace-catalog-2018-09-17/EntityTypeSort AWS API Documentation
     #
     class EntityTypeSort < Struct.new(
@@ -1146,6 +1202,8 @@ module Aws::MarketplaceCatalog
       :offer_sort,
       :container_product_sort,
       :resale_authorization_sort,
+      :machine_learning_product_sort,
+      :offer_set_sort,
       :unknown)
       SENSITIVE = []
       include Aws::Structure
@@ -1157,6 +1215,8 @@ module Aws::MarketplaceCatalog
       class OfferSort < EntityTypeSort; end
       class ContainerProductSort < EntityTypeSort; end
       class ResaleAuthorizationSort < EntityTypeSort; end
+      class MachineLearningProductSort < EntityTypeSort; end
+      class OfferSetSort < EntityTypeSort; end
       class Unknown < EntityTypeSort; end
     end
 
@@ -1327,7 +1387,7 @@ module Aws::MarketplaceCatalog
     #   The type of entities to retrieve. Valid values are: `AmiProduct`,
     #   `ContainerProduct`, `DataProduct`, `SaaSProduct`,
     #   `ProcurementPolicy`, `Experience`, `Audience`, `BrandingSettings`,
-    #   `Offer`, `Seller`, `ResaleAuthorization`.
+    #   `Offer`, `OfferSet`, `Seller`, `ResaleAuthorization`, `Solution`.
     #   @return [String]
     #
     # @!attribute [rw] filter_list
@@ -1436,6 +1496,172 @@ module Aws::MarketplaceCatalog
       include Aws::Structure
     end
 
+    # The filter for machine learning product entity IDs.
+    #
+    # @!attribute [rw] value_list
+    #   A list of entity IDs to filter by. The operation returns machine
+    #   learning products with entity IDs that match the values in this
+    #   list.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/marketplace-catalog-2018-09-17/MachineLearningProductEntityIdFilter AWS API Documentation
+    #
+    class MachineLearningProductEntityIdFilter < Struct.new(
+      :value_list)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The filters that you can use with the ListEntities operation to filter
+    # machine learning products. You can filter by `EntityId`,
+    # `astModifiedDate`, `ProductTitle`, and `Visibility`.
+    #
+    # @!attribute [rw] entity_id
+    #   Filter machine learning products by their entity IDs.
+    #   @return [Types::MachineLearningProductEntityIdFilter]
+    #
+    # @!attribute [rw] last_modified_date
+    #   Filter machine learning products by their last modified date.
+    #   @return [Types::MachineLearningProductLastModifiedDateFilter]
+    #
+    # @!attribute [rw] product_title
+    #   Filter machine learning products by their product titles.
+    #   @return [Types::MachineLearningProductTitleFilter]
+    #
+    # @!attribute [rw] visibility
+    #   Filter machine learning products by their visibility status.
+    #   @return [Types::MachineLearningProductVisibilityFilter]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/marketplace-catalog-2018-09-17/MachineLearningProductFilters AWS API Documentation
+    #
+    class MachineLearningProductFilters < Struct.new(
+      :entity_id,
+      :last_modified_date,
+      :product_title,
+      :visibility)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The filter for machine learning product last modified date.
+    #
+    # @!attribute [rw] date_range
+    #   A date range to filter by. The operation returns machine learning
+    #   products with last modified dates that fall within this range.
+    #   @return [Types::MachineLearningProductLastModifiedDateFilterDateRange]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/marketplace-catalog-2018-09-17/MachineLearningProductLastModifiedDateFilter AWS API Documentation
+    #
+    class MachineLearningProductLastModifiedDateFilter < Struct.new(
+      :date_range)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A date range for filtering machine learning products by their last
+    # modified date.
+    #
+    # @!attribute [rw] after_value
+    #   The start date (inclusive) of the date range. The operation returns
+    #   machine learning products with last modified dates on or after this
+    #   date.
+    #   @return [String]
+    #
+    # @!attribute [rw] before_value
+    #   The end date (inclusive) of the date range. The operation returns
+    #   machine learning products with last modified dates on or before this
+    #   date.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/marketplace-catalog-2018-09-17/MachineLearningProductLastModifiedDateFilterDateRange AWS API Documentation
+    #
+    class MachineLearningProductLastModifiedDateFilterDateRange < Struct.new(
+      :after_value,
+      :before_value)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The sort options for machine learning products.
+    #
+    # @!attribute [rw] sort_by
+    #   The field to sort by. Valid values: `EntityId`, `LastModifiedDate`,
+    #   `ProductTitle`, and `Visibility`.
+    #   @return [String]
+    #
+    # @!attribute [rw] sort_order
+    #   The sort order. Valid values are `ASC` (ascending) and `DESC`
+    #   (descending).
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/marketplace-catalog-2018-09-17/MachineLearningProductSort AWS API Documentation
+    #
+    class MachineLearningProductSort < Struct.new(
+      :sort_by,
+      :sort_order)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A summary of a machine learning product.
+    #
+    # @!attribute [rw] product_title
+    #   The title of the machine learning product.
+    #   @return [String]
+    #
+    # @!attribute [rw] visibility
+    #   The visibility status of the machine learning product. Valid values
+    #   are `Limited`, `Public`, `Restricted`, and `Draft`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/marketplace-catalog-2018-09-17/MachineLearningProductSummary AWS API Documentation
+    #
+    class MachineLearningProductSummary < Struct.new(
+      :product_title,
+      :visibility)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The filter for machine learning product titles.
+    #
+    # @!attribute [rw] value_list
+    #   A list of product titles to filter by. The operation returns machine
+    #   learning products with titles that exactly match the values in this
+    #   list.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] wild_card_value
+    #   A wildcard value to filter product titles. The operation returns
+    #   machine learning products with titles that match this wildcard
+    #   pattern.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/marketplace-catalog-2018-09-17/MachineLearningProductTitleFilter AWS API Documentation
+    #
+    class MachineLearningProductTitleFilter < Struct.new(
+      :value_list,
+      :wild_card_value)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The filter for machine learning product visibility status.
+    #
+    # @!attribute [rw] value_list
+    #   A list of visibility values to filter by. The operation returns
+    #   machine learning products with visibility status that match the
+    #   values in this list.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/marketplace-catalog-2018-09-17/MachineLearningProductVisibilityFilter AWS API Documentation
+    #
+    class MachineLearningProductVisibilityFilter < Struct.new(
+      :value_list)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Allows filtering on the `AvailabilityEndDate` of an offer.
     #
     # @!attribute [rw] date_range
@@ -1484,6 +1710,21 @@ module Aws::MarketplaceCatalog
     #
     class OfferBuyerAccountsFilter < Struct.new(
       :wild_card_value)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Allows filtering on the `CreatedBySource` of an offer.
+    #
+    # @!attribute [rw] value_list
+    #   Allows filtering on the `CreatedBySource` of an offer with list
+    #   input.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/marketplace-catalog-2018-09-17/OfferCreatedBySourceFilter AWS API Documentation
+    #
+    class OfferCreatedBySourceFilter < Struct.new(
+      :value_list)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1551,6 +1792,22 @@ module Aws::MarketplaceCatalog
     #   Allows filtering on the `LastModifiedDate` of an offer.
     #   @return [Types::OfferLastModifiedDateFilter]
     #
+    # @!attribute [rw] offer_set_id
+    #   Allows filtering on the `OfferSetId` of an offer.
+    #   @return [Types::OfferSetIdFilter]
+    #
+    # @!attribute [rw] target_agreement_id
+    #   Allows filtering on the `TargetAgreementId` of an offer.
+    #   @return [Types::OfferTargetAgreementIdFilter]
+    #
+    # @!attribute [rw] target_agreement_intent
+    #   Allows filtering on the `TargetAgreementIntent` of an offer.
+    #   @return [Types::OfferTargetAgreementIntentFilter]
+    #
+    # @!attribute [rw] created_by_source
+    #   Allows filtering on the `CreatedBySource` of an offer.
+    #   @return [Types::OfferCreatedBySourceFilter]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/marketplace-catalog-2018-09-17/OfferFilters AWS API Documentation
     #
     class OfferFilters < Struct.new(
@@ -1563,7 +1820,11 @@ module Aws::MarketplaceCatalog
       :buyer_accounts,
       :state,
       :targeting,
-      :last_modified_date)
+      :last_modified_date,
+      :offer_set_id,
+      :target_agreement_id,
+      :target_agreement_intent,
+      :created_by_source)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1692,6 +1953,262 @@ module Aws::MarketplaceCatalog
       include Aws::Structure
     end
 
+    # Allows filtering on the `AssociatedOfferIds` of an offer set.
+    #
+    # @!attribute [rw] value_list
+    #   Allows filtering on the `AssociatedOfferIds` of an offer set with
+    #   list input.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/marketplace-catalog-2018-09-17/OfferSetAssociatedOfferIdsFilter AWS API Documentation
+    #
+    class OfferSetAssociatedOfferIdsFilter < Struct.new(
+      :value_list)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Allows filtering on the entity id of an offer set.
+    #
+    # @!attribute [rw] value_list
+    #   Allows filtering on entity id of an offer set with list input.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/marketplace-catalog-2018-09-17/OfferSetEntityIdFilter AWS API Documentation
+    #
+    class OfferSetEntityIdFilter < Struct.new(
+      :value_list)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Object containing all the filter fields for offer sets entity. Client
+    # can add a maximum of 8 filters in a single `ListEntities` request.
+    #
+    # @!attribute [rw] entity_id
+    #   Allows filtering on `EntityId` of an offer set.
+    #   @return [Types::OfferSetEntityIdFilter]
+    #
+    # @!attribute [rw] name
+    #   Allows filtering on the `Name` of an offer set.
+    #   @return [Types::OfferSetNameFilter]
+    #
+    # @!attribute [rw] state
+    #   Allows filtering on the `State` of an offer set.
+    #   @return [Types::OfferSetStateFilter]
+    #
+    # @!attribute [rw] release_date
+    #   Allows filtering on the `ReleaseDate` of an offer set.
+    #   @return [Types::OfferSetReleaseDateFilter]
+    #
+    # @!attribute [rw] associated_offer_ids
+    #   Allows filtering on the `AssociatedOfferIds` of an offer set.
+    #   @return [Types::OfferSetAssociatedOfferIdsFilter]
+    #
+    # @!attribute [rw] solution_id
+    #   Allows filtering on the `SolutionId` of an offer set.
+    #   @return [Types::OfferSetSolutionIdFilter]
+    #
+    # @!attribute [rw] last_modified_date
+    #   Allows filtering on the `LastModifiedDate` of an offer set.
+    #   @return [Types::OfferSetLastModifiedDateFilter]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/marketplace-catalog-2018-09-17/OfferSetFilters AWS API Documentation
+    #
+    class OfferSetFilters < Struct.new(
+      :entity_id,
+      :name,
+      :state,
+      :release_date,
+      :associated_offer_ids,
+      :solution_id,
+      :last_modified_date)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Allows filtering on the `OfferSetId` of an offer.
+    #
+    # @!attribute [rw] value_list
+    #   Allows filtering on the `OfferSetId` of an offer.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/marketplace-catalog-2018-09-17/OfferSetIdFilter AWS API Documentation
+    #
+    class OfferSetIdFilter < Struct.new(
+      :value_list)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Allows filtering on the `LastModifiedDate` of an offer set.
+    #
+    # @!attribute [rw] date_range
+    #   Allows filtering on the `LastModifiedDate` of an offer set with date
+    #   range as input.
+    #   @return [Types::OfferSetLastModifiedDateFilterDateRange]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/marketplace-catalog-2018-09-17/OfferSetLastModifiedDateFilter AWS API Documentation
+    #
+    class OfferSetLastModifiedDateFilter < Struct.new(
+      :date_range)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Allows filtering on the `LastModifiedDate` of an offer set with date
+    # range as input.
+    #
+    # @!attribute [rw] after_value
+    #   Allows filtering on the `LastModifiedDate` of an offer set after a
+    #   date.
+    #   @return [String]
+    #
+    # @!attribute [rw] before_value
+    #   Allows filtering on the `LastModifiedDate` of an offer set before a
+    #   date.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/marketplace-catalog-2018-09-17/OfferSetLastModifiedDateFilterDateRange AWS API Documentation
+    #
+    class OfferSetLastModifiedDateFilterDateRange < Struct.new(
+      :after_value,
+      :before_value)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Allows filtering on the `Name` of an offer set.
+    #
+    # @!attribute [rw] value_list
+    #   Allows filtering on the `Name` of an offer set with list input.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/marketplace-catalog-2018-09-17/OfferSetNameFilter AWS API Documentation
+    #
+    class OfferSetNameFilter < Struct.new(
+      :value_list)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Allows filtering on the `ReleaseDate` of an offer set.
+    #
+    # @!attribute [rw] date_range
+    #   Allows filtering on the `ReleaseDate` of an offer set with date
+    #   range as input.
+    #   @return [Types::OfferSetReleaseDateFilterDateRange]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/marketplace-catalog-2018-09-17/OfferSetReleaseDateFilter AWS API Documentation
+    #
+    class OfferSetReleaseDateFilter < Struct.new(
+      :date_range)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Allows filtering on the `ReleaseDate` of an offer set with date range
+    # as input.
+    #
+    # @!attribute [rw] after_value
+    #   Allows filtering on the `ReleaseDate` of offer set after a date.
+    #   @return [String]
+    #
+    # @!attribute [rw] before_value
+    #   Allows filtering on the `ReleaseDate` of offer set before a date.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/marketplace-catalog-2018-09-17/OfferSetReleaseDateFilterDateRange AWS API Documentation
+    #
+    class OfferSetReleaseDateFilterDateRange < Struct.new(
+      :after_value,
+      :before_value)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Allows filtering on the `SolutionId` of an offer set.
+    #
+    # @!attribute [rw] value_list
+    #   Allows filtering on the `SolutionId` of an offer set with list
+    #   input.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/marketplace-catalog-2018-09-17/OfferSetSolutionIdFilter AWS API Documentation
+    #
+    class OfferSetSolutionIdFilter < Struct.new(
+      :value_list)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Allows to sort offer sets.
+    #
+    # @!attribute [rw] sort_by
+    #   Allows to sort offer sets.
+    #   @return [String]
+    #
+    # @!attribute [rw] sort_order
+    #   Allows to sort offer sets.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/marketplace-catalog-2018-09-17/OfferSetSort AWS API Documentation
+    #
+    class OfferSetSort < Struct.new(
+      :sort_by,
+      :sort_order)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Allows filtering on the `State` of an offer set.
+    #
+    # @!attribute [rw] value_list
+    #   Allows filtering on the `State` of an offer set with list input.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/marketplace-catalog-2018-09-17/OfferSetStateFilter AWS API Documentation
+    #
+    class OfferSetStateFilter < Struct.new(
+      :value_list)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Summarized information about an offer set.
+    #
+    # @!attribute [rw] name
+    #   The name of the offer set.
+    #   @return [String]
+    #
+    # @!attribute [rw] state
+    #   The state of the offer set.
+    #   @return [String]
+    #
+    # @!attribute [rw] release_date
+    #   The release date of the offer set.
+    #   @return [String]
+    #
+    # @!attribute [rw] associated_offer_ids
+    #   The list of offer IDs associated with the offer set.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] solution_id
+    #   The solution ID associated with the offer set.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/marketplace-catalog-2018-09-17/OfferSetSummary AWS API Documentation
+    #
+    class OfferSetSummary < Struct.new(
+      :name,
+      :state,
+      :release_date,
+      :associated_offer_ids,
+      :solution_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Allows to sort offers.
     #
     # @!attribute [rw] sort_by
@@ -1759,6 +2276,22 @@ module Aws::MarketplaceCatalog
     #   The targeting in the offer.
     #   @return [Array<String>]
     #
+    # @!attribute [rw] offer_set_id
+    #   The offer set ID of the offer.
+    #   @return [String]
+    #
+    # @!attribute [rw] target_agreement_id
+    #   The target agreement ID of the offer.
+    #   @return [String]
+    #
+    # @!attribute [rw] target_agreement_intent
+    #   The target agreement intent of the offer.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_by_source
+    #   The creation source of the offer.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/marketplace-catalog-2018-09-17/OfferSummary AWS API Documentation
     #
     class OfferSummary < Struct.new(
@@ -1769,7 +2302,41 @@ module Aws::MarketplaceCatalog
       :availability_end_date,
       :buyer_accounts,
       :state,
-      :targeting)
+      :targeting,
+      :offer_set_id,
+      :target_agreement_id,
+      :target_agreement_intent,
+      :created_by_source)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Allows filtering on the `TargetAgreementId` of an offer.
+    #
+    # @!attribute [rw] value_list
+    #   Allows filtering on the `TargetAgreementId` of an offer with list
+    #   input.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/marketplace-catalog-2018-09-17/OfferTargetAgreementIdFilter AWS API Documentation
+    #
+    class OfferTargetAgreementIdFilter < Struct.new(
+      :value_list)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Allows filtering on the `TargetAgreementIntent` of an offer.
+    #
+    # @!attribute [rw] value_list
+    #   Allows filtering on the `TargetAgreementIntent` of an offer with
+    #   list input.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/marketplace-catalog-2018-09-17/OfferTargetAgreementIntentFilter AWS API Documentation
+    #
+    class OfferTargetAgreementIntentFilter < Struct.new(
+      :value_list)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1973,6 +2540,10 @@ module Aws::MarketplaceCatalog
     #   Allows filtering on the `LastModifiedDate` of a ResaleAuthorization.
     #   @return [Types::ResaleAuthorizationLastModifiedDateFilter]
     #
+    # @!attribute [rw] reseller_role
+    #   Allows filtering on the `ResellerRole` of a ResaleAuthorization.
+    #   @return [Types::ResaleAuthorizationResellerRoleFilter]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/marketplace-catalog-2018-09-17/ResaleAuthorizationFilters AWS API Documentation
     #
     class ResaleAuthorizationFilters < Struct.new(
@@ -1988,7 +2559,8 @@ module Aws::MarketplaceCatalog
       :reseller_legal_name,
       :status,
       :offer_extended_status,
-      :last_modified_date)
+      :last_modified_date,
+      :reseller_role)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2195,6 +2767,21 @@ module Aws::MarketplaceCatalog
       include Aws::Structure
     end
 
+    # Allows filtering on the `ResellerRole` of a ResaleAuthorization.
+    #
+    # @!attribute [rw] value_list
+    #   Allows filtering on the `ResellerRole` of a ResaleAuthorization with
+    #   list input.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/marketplace-catalog-2018-09-17/ResaleAuthorizationResellerRoleFilter AWS API Documentation
+    #
+    class ResaleAuthorizationResellerRoleFilter < Struct.new(
+      :value_list)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Allows to sort ResaleAuthorization.
     #
     # @!attribute [rw] sort_by
@@ -2275,6 +2862,10 @@ module Aws::MarketplaceCatalog
     #   The availability end date of the ResaleAuthorization.
     #   @return [String]
     #
+    # @!attribute [rw] reseller_role
+    #   The reseller role of the ResaleAuthorization.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/marketplace-catalog-2018-09-17/ResaleAuthorizationSummary AWS API Documentation
     #
     class ResaleAuthorizationSummary < Struct.new(
@@ -2288,7 +2879,8 @@ module Aws::MarketplaceCatalog
       :status,
       :offer_extended_status,
       :created_date,
-      :availability_end_date)
+      :availability_end_date,
+      :reseller_role)
       SENSITIVE = []
       include Aws::Structure
     end

@@ -167,10 +167,12 @@ module Aws::GuardDuty
       include Aws::Structure
     end
 
-    # Contains information about the account.
+    # Contains information about the Amazon Web Services account within
+    # which the activity took place.
     #
     # @!attribute [rw] uid
-    #   ID of the member's Amazon Web Services account
+    #   The Amazon Web Services account ID within which the activity took
+    #   place. This may differ from the account that owns the user identity.
     #   @return [String]
     #
     # @!attribute [rw] name
@@ -193,7 +195,29 @@ module Aws::GuardDuty
     #   @return [String]
     #
     # @!attribute [rw] email
-    #   The email address of the member account.
+    #   The email address of the member account. The following list includes
+    #   the rules for a valid email address:
+    #
+    #   * The email address must be a minimum of 6 and a maximum of 64
+    #     characters long.
+    #
+    #   * All characters must be 7-bit ASCII characters.
+    #
+    #   * There must be one and only one @ symbol, which separates the local
+    #     name from the domain name.
+    #
+    #   * The local name can't contain any of the following characters:
+    #
+    #     whitespace, " ' ( ) &lt; &gt; \[ \] : ' , \\ \| % &amp;
+    #
+    #   * The local name can't begin with a dot (.).
+    #
+    #   * The domain name can consist of only the characters \[a-z\],
+    #     \[A-Z\], \[0-9\], hyphen (-), or dot (.).
+    #
+    #   * The domain name can't begin or end with a dot (.) or hyphen (-).
+    #
+    #   * The domain name must contain at least one dot.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/AccountDetail AWS API Documentation
@@ -301,11 +325,6 @@ module Aws::GuardDuty
     #   finding.
     #   @return [Types::KubernetesApiCallAction]
     #
-    # @!attribute [rw] rds_login_attempt_action
-    #   Information about `RDS_LOGIN_ATTEMPT` action described in this
-    #   finding.
-    #   @return [Types::RdsLoginAttemptAction]
-    #
     # @!attribute [rw] kubernetes_permission_checked_details
     #   Information whether the user has the permission to use a specific
     #   Kubernetes API.
@@ -320,6 +339,11 @@ module Aws::GuardDuty
     #   Information about the Kubernetes role name and role type.
     #   @return [Types::KubernetesRoleDetails]
     #
+    # @!attribute [rw] rds_login_attempt_action
+    #   Information about `RDS_LOGIN_ATTEMPT` action described in this
+    #   finding.
+    #   @return [Types::RdsLoginAttemptAction]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/Action AWS API Documentation
     #
     class Action < Struct.new(
@@ -329,10 +353,10 @@ module Aws::GuardDuty
       :network_connection_action,
       :port_probe_action,
       :kubernetes_api_call_action,
-      :rds_login_attempt_action,
       :kubernetes_permission_checked_details,
       :kubernetes_role_binding_details,
-      :kubernetes_role_details)
+      :kubernetes_role_details,
+      :rds_login_attempt_action)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -353,12 +377,66 @@ module Aws::GuardDuty
     #   initiated.
     #   @return [Types::Session]
     #
+    # @!attribute [rw] process
+    #   Contains information about the process associated with the threat
+    #   actor. This includes details such as process name, path, execution
+    #   time, and unique identifiers that help track the actor's activities
+    #   within the system.
+    #   @return [Types::ActorProcess]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/Actor AWS API Documentation
     #
     class Actor < Struct.new(
       :id,
       :user,
-      :session)
+      :session,
+      :process)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains information about a process involved in a GuardDuty finding,
+    # including process identification, execution details, and file
+    # information.
+    #
+    # @!attribute [rw] name
+    #   The name of the process as it appears in the system.
+    #   @return [String]
+    #
+    # @!attribute [rw] path
+    #   The full file path to the process executable on the system.
+    #   @return [String]
+    #
+    # @!attribute [rw] sha_256
+    #   The SHA256 hash of the process executable file, which can be used
+    #   for identification and verification purposes.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/ActorProcess AWS API Documentation
+    #
+    class ActorProcess < Struct.new(
+      :name,
+      :path,
+      :sha_256)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains additional information about the detected threat.
+    #
+    # @!attribute [rw] version_id
+    #   The version ID of the S3 object, if applicable.
+    #   @return [String]
+    #
+    # @!attribute [rw] device_name
+    #   The device name of the EBS volume, if applicable.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/AdditionalInfo AWS API Documentation
+    #
+    class AdditionalInfo < Struct.new(
+      :version_id,
+      :device_name)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -556,6 +634,23 @@ module Aws::GuardDuty
       include Aws::Structure
     end
 
+    # Contains information about the Auto Scaling Group involved in a
+    # GuardDuty finding, including unique identifiers of the Amazon EC2
+    # instances.
+    #
+    # @!attribute [rw] ec2_instance_uids
+    #   A list of unique identifiers for the compromised Amazon EC2
+    #   instances that are part of the same Auto Scaling Group.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/AutoscalingAutoScalingGroup AWS API Documentation
+    #
+    class AutoscalingAutoScalingGroup < Struct.new(
+      :ec2_instance_uids)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Contains information about the API action.
     #
     # @!attribute [rw] api
@@ -630,6 +725,70 @@ module Aws::GuardDuty
     class BadRequestException < Struct.new(
       :message,
       :type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains information about a Bedrock guardrail associated with a
+    # finding.
+    #
+    # @!attribute [rw] arn
+    #   The ARN of the Bedrock guardrail.
+    #   @return [String]
+    #
+    # @!attribute [rw] version
+    #   The version of the Bedrock guardrail.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/BedrockGuardrail AWS API Documentation
+    #
+    class BedrockGuardrail < Struct.new(
+      :arn,
+      :version)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains information about the Bedrock guardrail that was involved in
+    # a finding.
+    #
+    # @!attribute [rw] guardrail_arn
+    #   The ARN of the Bedrock guardrail. This field is deprecated. Use the
+    #   `guardrails` list instead.
+    #   @return [String]
+    #
+    # @!attribute [rw] guardrail_version
+    #   The version of the Bedrock guardrail. This field is deprecated. Use
+    #   the `guardrails` list instead.
+    #   @return [String]
+    #
+    # @!attribute [rw] guardrails
+    #   The list of Bedrock guardrails associated with the finding.
+    #   @return [Array<Types::BedrockGuardrail>]
+    #
+    # @!attribute [rw] guardrail_action
+    #   Indicates whether the guardrail intervened or not.
+    #   @return [String]
+    #
+    # @!attribute [rw] guardrail_source
+    #   Indicates whether the guardrail was applied on the input or output
+    #   of the model invocation.
+    #   @return [String]
+    #
+    # @!attribute [rw] content_policy_filters
+    #   The list of content policy filters that matched during the guardrail
+    #   evaluation.
+    #   @return [Array<Types::ContentPolicyFilter>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/BedrockGuardrailDetails AWS API Documentation
+    #
+    class BedrockGuardrailDetails < Struct.new(
+      :guardrail_arn,
+      :guardrail_version,
+      :guardrails,
+      :guardrail_action,
+      :guardrail_source,
+      :content_policy_filters)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -732,6 +891,32 @@ module Aws::GuardDuty
       include Aws::Structure
     end
 
+    # Contains details about the cloud environment associated with an
+    # investigation.
+    #
+    # @!attribute [rw] provider
+    #   The cloud provider. Currently, only `AWS` is supported.
+    #   @return [String]
+    #
+    # @!attribute [rw] region
+    #   The Amazon Web Services Region in which the investigated resource
+    #   resides.
+    #   @return [String]
+    #
+    # @!attribute [rw] account
+    #   The Amazon Web Services account ID of the investigated resource.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/CloudDetails AWS API Documentation
+    #
+    class CloudDetails < Struct.new(
+      :provider,
+      :region,
+      :account)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Contains information on the status of CloudTrail as a data source for
     # the detector.
     #
@@ -748,16 +933,38 @@ module Aws::GuardDuty
       include Aws::Structure
     end
 
+    # Contains information about the CloudFormation stack involved in a
+    # GuardDuty finding, including unique identifiers of the Amazon EC2
+    # instances.
+    #
+    # @!attribute [rw] ec2_instance_uids
+    #   A list of unique identifiers for the compromised Amazon EC2
+    #   instances that were created as part of the same CloudFormation
+    #   stack.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/CloudformationStack AWS API Documentation
+    #
+    class CloudformationStack < Struct.new(
+      :ec2_instance_uids)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Contains information about the condition.
     #
     # @!attribute [rw] eq
     #   Represents the *equal* condition to be applied to a single field
     #   when querying for findings.
+    #
+    #   Max values: 50
     #   @return [Array<String>]
     #
     # @!attribute [rw] neq
     #   Represents the *not equal* condition to be applied to a single field
     #   when querying for findings.
+    #
+    #   Max values: 50
     #   @return [Array<String>]
     #
     # @!attribute [rw] gt
@@ -783,11 +990,15 @@ module Aws::GuardDuty
     # @!attribute [rw] equals
     #   Represents an *equal* **** condition to be applied to a single field
     #   when querying for findings.
+    #
+    #   Max values: 50
     #   @return [Array<String>]
     #
     # @!attribute [rw] not_equals
     #   Represents a *not equal* **** condition to be applied to a single
     #   field when querying for findings.
+    #
+    #   Max values: 50
     #   @return [Array<String>]
     #
     # @!attribute [rw] greater_than
@@ -810,6 +1021,26 @@ module Aws::GuardDuty
     #   single field when querying for findings.
     #   @return [Integer]
     #
+    # @!attribute [rw] matches
+    #   Represents the *match* condition to be applied to a single field
+    #   when querying for findings.
+    #
+    #   <note markdown="1"> The *matches* condition is available only for create-filter and
+    #   update-filter APIs.
+    #
+    #    </note>
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] not_matches
+    #   Represents the *not match* condition to be applied to a single field
+    #   when querying for findings.
+    #
+    #   <note markdown="1"> The *not-matches* condition is available only for create-filter and
+    #   update-filter APIs.
+    #
+    #    </note>
+    #   @return [Array<String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/Condition AWS API Documentation
     #
     class Condition < Struct.new(
@@ -824,7 +1055,9 @@ module Aws::GuardDuty
       :greater_than,
       :greater_than_or_equal,
       :less_than,
-      :less_than_or_equal)
+      :less_than_or_equal,
+      :matches,
+      :not_matches)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -896,6 +1129,28 @@ module Aws::GuardDuty
       include Aws::Structure
     end
 
+    # Contains information about container resources involved in a GuardDuty
+    # finding. This structure provides details about containers that were
+    # identified as part of suspicious or malicious activity.
+    #
+    # @!attribute [rw] image
+    #   The container image information, including the image name and tag
+    #   used to run the container that was involved in the finding.
+    #   @return [String]
+    #
+    # @!attribute [rw] image_uid
+    #   The unique ID associated with the container image.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/ContainerFindingResource AWS API Documentation
+    #
+    class ContainerFindingResource < Struct.new(
+      :image,
+      :image_uid)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Contains information about the Amazon EC2 instance that is running the
     # Amazon ECS container.
     #
@@ -913,6 +1168,53 @@ module Aws::GuardDuty
     class ContainerInstanceDetails < Struct.new(
       :covered_container_instances,
       :compatible_container_instances)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains information about a content policy filter that matched during
+    # a guardrail evaluation.
+    #
+    # @!attribute [rw] type
+    #   The type of content that was filtered by the guardrail.
+    #   @return [String]
+    #
+    # @!attribute [rw] confidence
+    #   The confidence level that the content matched the filter.
+    #   @return [String]
+    #
+    # @!attribute [rw] action
+    #   The action taken by the guardrail filter.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/ContentPolicyFilter AWS API Documentation
+    #
+    class ContentPolicyFilter < Struct.new(
+      :type,
+      :confidence,
+      :action)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains information about the time range within the continuous backup
+    # in Amazon Web Services Backup to scan for a point-in-time recovery
+    # resource.
+    #
+    # @!attribute [rw] start_time
+    #   The timestamp representing the start of the time range to scan.
+    #   Reserved for internal use.
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_time
+    #   The timestamp representing the end of the time range to scan.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/ContinuousScanDetails AWS API Documentation
+    #
+    class ContinuousScanDetails < Struct.new(
+      :start_time,
+      :end_time)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1170,10 +1472,6 @@ module Aws::GuardDuty
     #   EKS cluster details involved in the coverage statistics.
     #   @return [Types::CoverageEksClusterDetails]
     #
-    # @!attribute [rw] resource_type
-    #   The type of Amazon Web Services resource.
-    #   @return [String]
-    #
     # @!attribute [rw] ecs_cluster_details
     #   Information about the Amazon ECS cluster that is assessed for
     #   runtime coverage.
@@ -1184,13 +1482,17 @@ module Aws::GuardDuty
     #   coverage.
     #   @return [Types::CoverageEc2InstanceDetails]
     #
+    # @!attribute [rw] resource_type
+    #   The type of Amazon Web Services resource.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/CoverageResourceDetails AWS API Documentation
     #
     class CoverageResourceDetails < Struct.new(
       :eks_cluster_details,
-      :resource_type,
       :ecs_cluster_details,
-      :ec2_instance_details)
+      :ec2_instance_details,
+      :resource_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1338,6 +1640,8 @@ module Aws::GuardDuty
     # @!attribute [rw] action
     #   Specifies the action that is to be applied to the findings that
     #   match the filter.
+    #
+    #   Default: NOOP
     #   @return [String]
     #
     # @!attribute [rw] rank
@@ -1348,58 +1652,234 @@ module Aws::GuardDuty
     #
     # @!attribute [rw] finding_criteria
     #   Represents the criteria to be used in the filter for querying
-    #   findings.
-    #
-    #   You can only use the following attributes to query findings:
+    #   findings. The following fields are available for filtering:
     #
     #   * accountId
     #
+    #   * arn
+    #
+    #   * associatedAttackSequenceArn
+    #
+    #   * confidence
+    #
+    #   * createdAt
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
     #   * id
     #
+    #   * partition
+    #
     #   * region
-    #
-    #   * severity
-    #
-    #     To filter on the basis of severity, the API and CLI use the
-    #     following input list for the [FindingCriteria][1] condition:
-    #
-    #     * **Low**: `["1", "2", "3"]`
-    #
-    #     * **Medium**: `["4", "5", "6"]`
-    #
-    #     * **High**: `["7", "8"]`
-    #
-    #     * **Critical**: `["9", "10"]`
-    #     For more information, see [Findings severity levels][2] in the
-    #     *Amazon GuardDuty User Guide*.
-    #
-    #   * type
-    #
-    #   * updatedAt
-    #
-    #     Type: ISO 8601 string format: YYYY-MM-DDTHH:MM:SS.SSSZ or
-    #     YYYY-MM-DDTHH:MM:SSZ depending on whether the value contains
-    #     milliseconds.
     #
     #   * resource.accessKeyDetails.accessKeyId
     #
     #   * resource.accessKeyDetails.principalId
     #
+    #   * resource.accessKeyDetails.userIdentity.accessKeyId
+    #
+    #   * resource.accessKeyDetails.userIdentity.accountId
+    #
+    #   * resource.accessKeyDetails.userIdentity.arn
+    #
+    #   * resource.accessKeyDetails.userIdentity.principalId
+    #
+    #   * resource.accessKeyDetails.userIdentity.sessionContext.attributes.mfaAuthenticated
+    #
+    #   * resource.accessKeyDetails.userIdentity.sessionContext.ec2RoleDelivery
+    #
+    #   * resource.accessKeyDetails.userIdentity.sessionContext.invokedBy
+    #
+    #   * resource.accessKeyDetails.userIdentity.sessionContext.sessionIssuer.accountId
+    #
+    #   * resource.accessKeyDetails.userIdentity.sessionContext.sessionIssuer.arn
+    #
+    #   * resource.accessKeyDetails.userIdentity.sessionContext.sessionIssuer.principalId
+    #
+    #   * resource.accessKeyDetails.userIdentity.sessionContext.sessionIssuer.type
+    #
+    #   * resource.accessKeyDetails.userIdentity.sessionContext.sessionIssuer.userName
+    #
+    #   * resource.accessKeyDetails.userIdentity.sessionContext.sourceIdentity
+    #
+    #   * resource.accessKeyDetails.userIdentity.sessionContext.webIdFederationData.attributes
+    #
+    #   * resource.accessKeyDetails.userIdentity.sessionContext.webIdFederationData.federatedProvider
+    #
+    #   * resource.accessKeyDetails.userIdentity.type
+    #
+    #   * resource.accessKeyDetails.userIdentity.userName
+    #
     #   * resource.accessKeyDetails.userName
     #
     #   * resource.accessKeyDetails.userType
     #
+    #   * resource.bedrockGuardrailDetails.guardrailArn
+    #
+    #   * resource.bedrockGuardrailDetails.guardrailVersion
+    #
+    #   * resource.containerDetails.containerRuntime
+    #
+    #   * resource.containerDetails.id
+    #
+    #   * resource.containerDetails.image
+    #
+    #   * resource.containerDetails.imagePrefix
+    #
+    #   * resource.containerDetails.name
+    #
+    #   * resource.containerDetails.securityContext.allowPrivilegeEscalation
+    #
+    #   * resource.containerDetails.securityContext.privileged
+    #
+    #   * resource.containerDetails.volumeMounts.mountPath
+    #
+    #   * resource.containerDetails.volumeMounts.name
+    #
+    #   * resource.ebsSnapshotDetails.snapshotArn
+    #
+    #   * resource.ebsVolumeDetails.scannedVolumeDetails.deviceName
+    #
+    #   * resource.ebsVolumeDetails.scannedVolumeDetails.encryptionType
+    #
+    #   * resource.ebsVolumeDetails.scannedVolumeDetails.kmsKeyArn
+    #
+    #   * resource.ebsVolumeDetails.scannedVolumeDetails.snapshotArn
+    #
+    #   * resource.ebsVolumeDetails.scannedVolumeDetails.volumeArn
+    #
+    #   * resource.ebsVolumeDetails.scannedVolumeDetails.volumeSizeInGB
+    #
+    #   * resource.ebsVolumeDetails.scannedVolumeDetails.volumeType
+    #
+    #   * resource.ebsVolumeDetails.skippedVolumeDetails.deviceName
+    #
+    #   * resource.ebsVolumeDetails.skippedVolumeDetails.encryptionType
+    #
+    #   * resource.ebsVolumeDetails.skippedVolumeDetails.kmsKeyArn
+    #
+    #   * resource.ebsVolumeDetails.skippedVolumeDetails.snapshotArn
+    #
+    #   * resource.ebsVolumeDetails.skippedVolumeDetails.volumeArn
+    #
+    #   * resource.ebsVolumeDetails.skippedVolumeDetails.volumeSizeInGB
+    #
+    #   * resource.ebsVolumeDetails.skippedVolumeDetails.volumeType
+    #
+    #   * resource.ec2ImageDetails.imageArn
+    #
+    #   * resource.ecsClusterDetails.activeServicesCount
+    #
+    #   * resource.ecsClusterDetails.arn
+    #
+    #   * resource.ecsClusterDetails.name
+    #
+    #   * resource.ecsClusterDetails.registeredContainerInstancesCount
+    #
+    #   * resource.ecsClusterDetails.runningTasksCount
+    #
+    #   * resource.ecsClusterDetails.status
+    #
+    #   * resource.ecsClusterDetails.tags.key
+    #
+    #   * resource.ecsClusterDetails.tags.value
+    #
+    #   * resource.ecsClusterDetails.taskDetails.arn
+    #
+    #   * resource.ecsClusterDetails.taskDetails.containers.containerRuntime
+    #
+    #   * resource.ecsClusterDetails.taskDetails.containers.id
+    #
+    #   * resource.ecsClusterDetails.taskDetails.containers.image
+    #
+    #   * resource.ecsClusterDetails.taskDetails.containers.imagePrefix
+    #
+    #   * resource.ecsClusterDetails.taskDetails.containers.name
+    #
+    #   * resource.ecsClusterDetails.taskDetails.containers.securityContext.allowPrivilegeEscalation
+    #
+    #   * resource.ecsClusterDetails.taskDetails.containers.securityContext.privileged
+    #
+    #   * resource.ecsClusterDetails.taskDetails.containers.volumeMounts.mountPath
+    #
+    #   * resource.ecsClusterDetails.taskDetails.containers.volumeMounts.name
+    #
+    #   * resource.ecsClusterDetails.taskDetails.createdAt
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * resource.ecsClusterDetails.taskDetails.definitionArn
+    #
+    #   * resource.ecsClusterDetails.taskDetails.group
+    #
+    #   * resource.ecsClusterDetails.taskDetails.launchType
+    #
+    #   * resource.ecsClusterDetails.taskDetails.startedAt
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * resource.ecsClusterDetails.taskDetails.startedBy
+    #
+    #   * resource.ecsClusterDetails.taskDetails.tags.key
+    #
+    #   * resource.ecsClusterDetails.taskDetails.tags.value
+    #
+    #   * resource.ecsClusterDetails.taskDetails.version
+    #
+    #   * resource.ecsClusterDetails.taskDetails.volumes.hostPath.path
+    #
+    #   * resource.ecsClusterDetails.taskDetails.volumes.name
+    #
+    #   * resource.eksClusterDetails.arn
+    #
+    #   * resource.eksClusterDetails.createdAt
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * resource.eksClusterDetails.name
+    #
+    #   * resource.eksClusterDetails.status
+    #
+    #   * resource.eksClusterDetails.tags.key
+    #
+    #   * resource.eksClusterDetails.tags.value
+    #
+    #   * resource.eksClusterDetails.vpcId
+    #
+    #   * resource.instanceDetails.availabilityZone
+    #
+    #   * resource.instanceDetails.iamInstanceProfile.arn
+    #
     #   * resource.instanceDetails.iamInstanceProfile.id
+    #
+    #   * resource.instanceDetails.imageDescription
     #
     #   * resource.instanceDetails.imageId
     #
     #   * resource.instanceDetails.instanceId
     #
-    #   * resource.instanceDetails.tags.key
+    #   * resource.instanceDetails.instanceState
     #
-    #   * resource.instanceDetails.tags.value
+    #   * resource.instanceDetails.instanceType
+    #
+    #   * resource.instanceDetails.launchTime
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
     #
     #   * resource.instanceDetails.networkInterfaces.ipv6Addresses
+    #
+    #   * resource.instanceDetails.networkInterfaces.networkInterfaceId
+    #
+    #   * resource.instanceDetails.networkInterfaces.privateDnsName
+    #
+    #   * resource.instanceDetails.networkInterfaces.privateIpAddress
+    #
+    #   * resource.instanceDetails.networkInterfaces.privateIpAddresses.privateDnsName
     #
     #   * resource.instanceDetails.networkInterfaces.privateIpAddresses.privateIpAddress
     #
@@ -1417,11 +1897,203 @@ module Aws::GuardDuty
     #
     #   * resource.instanceDetails.outpostArn
     #
+    #   * resource.instanceDetails.platform
+    #
+    #   * resource.instanceDetails.productCodes.productCodeId
+    #
+    #   * resource.instanceDetails.productCodes.productCodeType
+    #
+    #   * resource.instanceDetails.tags.key
+    #
+    #   * resource.instanceDetails.tags.value
+    #
+    #   * resource.kubernetesDetails.kubernetesUserDetails.groups
+    #
+    #   * resource.kubernetesDetails.kubernetesUserDetails.impersonatedUser.groups
+    #
+    #   * resource.kubernetesDetails.kubernetesUserDetails.impersonatedUser.username
+    #
+    #   * resource.kubernetesDetails.kubernetesUserDetails.sessionName
+    #
+    #   * resource.kubernetesDetails.kubernetesUserDetails.uid
+    #
+    #   * resource.kubernetesDetails.kubernetesUserDetails.username
+    #
+    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.containers.containerRuntime
+    #
+    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.containers.id
+    #
+    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.containers.image
+    #
+    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.containers.imagePrefix
+    #
+    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.containers.name
+    #
+    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.containers.securityContext.allowPrivilegeEscalation
+    #
+    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.containers.securityContext.privileged
+    #
+    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.containers.volumeMounts.mountPath
+    #
+    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.containers.volumeMounts.name
+    #
+    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.hostIpc
+    #
+    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.hostNetwork
+    #
+    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.hostPid
+    #
+    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.name
+    #
+    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.namespace
+    #
+    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.serviceAccountName
+    #
+    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.type
+    #
+    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.uid
+    #
+    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.volumes.hostPath.path
+    #
+    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.volumes.name
+    #
+    #   * resource.lambdaDetails.description
+    #
+    #   * resource.lambdaDetails.functionArn
+    #
+    #   * resource.lambdaDetails.functionName
+    #
+    #   * resource.lambdaDetails.functionVersion
+    #
+    #   * resource.lambdaDetails.lastModifiedAt
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * resource.lambdaDetails.revisionId
+    #
+    #   * resource.lambdaDetails.role
+    #
+    #   * resource.lambdaDetails.tags.key
+    #
+    #   * resource.lambdaDetails.tags.value
+    #
+    #   * resource.lambdaDetails.vpcConfig.securityGroups.groupId
+    #
+    #   * resource.lambdaDetails.vpcConfig.securityGroups.groupName
+    #
+    #   * resource.lambdaDetails.vpcConfig.subnetIds
+    #
+    #   * resource.lambdaDetails.vpcConfig.vpcId
+    #
+    #   * resource.rdsDbInstanceDetails.dbClusterIdentifier
+    #
+    #   * resource.rdsDbInstanceDetails.dbInstanceArn
+    #
+    #   * resource.rdsDbInstanceDetails.dbInstanceIdentifier
+    #
+    #   * resource.rdsDbInstanceDetails.dbSecurityGroups.name
+    #
+    #   * resource.rdsDbInstanceDetails.dbSecurityGroups.status
+    #
+    #   * resource.rdsDbInstanceDetails.dbiResourceId
+    #
+    #   * resource.rdsDbInstanceDetails.engine
+    #
+    #   * resource.rdsDbInstanceDetails.engineVersion
+    #
+    #   * resource.rdsDbInstanceDetails.iamDatabaseAuthenticationEnabled
+    #
+    #   * resource.rdsDbInstanceDetails.publiclyAccessible
+    #
+    #   * resource.rdsDbInstanceDetails.vpcId
+    #
+    #   * resource.rdsDbInstanceDetails.vpcSecurityGroups.status
+    #
+    #   * resource.rdsDbInstanceDetails.vpcSecurityGroups.vpcSecurityGroupId
+    #
+    #   * resource.rdsDbUserDetails.application
+    #
+    #   * resource.rdsDbUserDetails.authMethod
+    #
+    #   * resource.rdsDbUserDetails.database
+    #
+    #   * resource.rdsDbUserDetails.ssl
+    #
+    #   * resource.rdsDbUserDetails.user
+    #
+    #   * resource.rdsLimitlessDbDetails.dbClusterIdentifier
+    #
+    #   * resource.rdsLimitlessDbDetails.dbShardGroupArn
+    #
+    #   * resource.rdsLimitlessDbDetails.dbShardGroupIdentifier
+    #
+    #   * resource.rdsLimitlessDbDetails.dbShardGroupResourceId
+    #
+    #   * resource.rdsLimitlessDbDetails.engine
+    #
+    #   * resource.rdsLimitlessDbDetails.engineVersion
+    #
+    #   * resource.rdsLimitlessDbDetails.tags.key
+    #
+    #   * resource.rdsLimitlessDbDetails.tags.value
+    #
+    #   * resource.recoveryPointDetails.backupVaultName
+    #
+    #   * resource.recoveryPointDetails.recoveryPointArn
+    #
     #   * resource.resourceType
     #
-    #   * resource.s3BucketDetails.publicAccess.effectivePermissions
+    #   * resource.s3BucketDetails.arn
+    #
+    #   * resource.s3BucketDetails.createdAt
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * resource.s3BucketDetails.defaultServerSideEncryption.encryptionType
+    #
+    #   * resource.s3BucketDetails.defaultServerSideEncryption.kmsMasterKeyArn
     #
     #   * resource.s3BucketDetails.name
+    #
+    #   * resource.s3BucketDetails.owner.id
+    #
+    #   * resource.s3BucketDetails.publicAccess.effectivePermission
+    #
+    #   * resource.s3BucketDetails.publicAccess.permissionConfiguration.accountLevelPermissions.blockPublicAccess.blockPublicAcls
+    #
+    #   * resource.s3BucketDetails.publicAccess.permissionConfiguration.accountLevelPermissions.blockPublicAccess.blockPublicPolicy
+    #
+    #   * resource.s3BucketDetails.publicAccess.permissionConfiguration.accountLevelPermissions.blockPublicAccess.ignorePublicAcls
+    #
+    #   * resource.s3BucketDetails.publicAccess.permissionConfiguration.accountLevelPermissions.blockPublicAccess.restrictPublicBuckets
+    #
+    #   * resource.s3BucketDetails.publicAccess.permissionConfiguration.bucketLevelPermissions.accessControlList.allowsPublicReadAccess
+    #
+    #   * resource.s3BucketDetails.publicAccess.permissionConfiguration.bucketLevelPermissions.accessControlList.allowsPublicWriteAccess
+    #
+    #   * resource.s3BucketDetails.publicAccess.permissionConfiguration.bucketLevelPermissions.blockPublicAccess.blockPublicAcls
+    #
+    #   * resource.s3BucketDetails.publicAccess.permissionConfiguration.bucketLevelPermissions.blockPublicAccess.blockPublicPolicy
+    #
+    #   * resource.s3BucketDetails.publicAccess.permissionConfiguration.bucketLevelPermissions.blockPublicAccess.ignorePublicAcls
+    #
+    #   * resource.s3BucketDetails.publicAccess.permissionConfiguration.bucketLevelPermissions.blockPublicAccess.restrictPublicBuckets
+    #
+    #   * resource.s3BucketDetails.publicAccess.permissionConfiguration.bucketLevelPermissions.bucketPolicy.allowsPublicReadAccess
+    #
+    #   * resource.s3BucketDetails.publicAccess.permissionConfiguration.bucketLevelPermissions.bucketPolicy.allowsPublicWriteAccess
+    #
+    #   * resource.s3BucketDetails.s3ObjectDetails.eTag
+    #
+    #   * resource.s3BucketDetails.s3ObjectDetails.hash
+    #
+    #   * resource.s3BucketDetails.s3ObjectDetails.key
+    #
+    #   * resource.s3BucketDetails.s3ObjectDetails.objectArn
+    #
+    #   * resource.s3BucketDetails.s3ObjectDetails.versionId
     #
     #   * resource.s3BucketDetails.tags.key
     #
@@ -1429,17 +2101,33 @@ module Aws::GuardDuty
     #
     #   * resource.s3BucketDetails.type
     #
+    #   * schemaVersion
+    #
     #   * service.action.actionType
     #
     #   * service.action.awsApiCallAction.api
     #
     #   * service.action.awsApiCallAction.callerType
     #
+    #   * service.action.awsApiCallAction.domainDetails.domain
+    #
     #   * service.action.awsApiCallAction.errorCode
+    #
+    #   * service.action.awsApiCallAction.remoteAccountDetails.accountId
+    #
+    #   * service.action.awsApiCallAction.remoteAccountDetails.affiliated
+    #
+    #   * service.action.awsApiCallAction.remoteAccountDetails.awsServiceName
     #
     #   * service.action.awsApiCallAction.remoteIpDetails.city.cityName
     #
+    #   * service.action.awsApiCallAction.remoteIpDetails.country.countryCode
+    #
     #   * service.action.awsApiCallAction.remoteIpDetails.country.countryName
+    #
+    #   * service.action.awsApiCallAction.remoteIpDetails.geoLocation.lat
+    #
+    #   * service.action.awsApiCallAction.remoteIpDetails.geoLocation.lon
     #
     #   * service.action.awsApiCallAction.remoteIpDetails.ipAddressV4
     #
@@ -1449,23 +2137,115 @@ module Aws::GuardDuty
     #
     #   * service.action.awsApiCallAction.remoteIpDetails.organization.asnOrg
     #
+    #   * service.action.awsApiCallAction.remoteIpDetails.organization.isp
+    #
+    #   * service.action.awsApiCallAction.remoteIpDetails.organization.org
+    #
     #   * service.action.awsApiCallAction.serviceName
+    #
+    #   * service.action.awsApiCallAction.userAgent
+    #
+    #   * service.action.dnsRequestAction.blocked
     #
     #   * service.action.dnsRequestAction.domain
     #
     #   * service.action.dnsRequestAction.domainWithSuffix
     #
+    #   * service.action.dnsRequestAction.protocol
+    #
+    #   * service.action.dnsRequestAction.vpcOwnerAccountId
+    #
+    #   * service.action.kubernetesApiCallAction.namespace
+    #
+    #   * service.action.kubernetesApiCallAction.parameters
+    #
+    #   * service.action.kubernetesApiCallAction.remoteIpDetails.city.cityName
+    #
+    #   * service.action.kubernetesApiCallAction.remoteIpDetails.country.countryCode
+    #
+    #   * service.action.kubernetesApiCallAction.remoteIpDetails.country.countryName
+    #
+    #   * service.action.kubernetesApiCallAction.remoteIpDetails.geoLocation.lat
+    #
+    #   * service.action.kubernetesApiCallAction.remoteIpDetails.geoLocation.lon
+    #
+    #   * service.action.kubernetesApiCallAction.remoteIpDetails.ipAddressV4
+    #
+    #   * service.action.kubernetesApiCallAction.remoteIpDetails.ipAddressV6
+    #
+    #   * service.action.kubernetesApiCallAction.remoteIpDetails.organization.asn
+    #
+    #   * service.action.kubernetesApiCallAction.remoteIpDetails.organization.asnOrg
+    #
+    #   * service.action.kubernetesApiCallAction.remoteIpDetails.organization.isp
+    #
+    #   * service.action.kubernetesApiCallAction.remoteIpDetails.organization.org
+    #
+    #   * service.action.kubernetesApiCallAction.requestUri
+    #
+    #   * service.action.kubernetesApiCallAction.resource
+    #
+    #   * service.action.kubernetesApiCallAction.resourceName
+    #
+    #   * service.action.kubernetesApiCallAction.sourceIPs
+    #
+    #   * service.action.kubernetesApiCallAction.statusCode
+    #
+    #   * service.action.kubernetesApiCallAction.subresource
+    #
+    #   * service.action.kubernetesApiCallAction.userAgent
+    #
+    #   * service.action.kubernetesApiCallAction.verb
+    #
+    #   * service.action.kubernetesPermissionCheckedDetails.allowed
+    #
+    #   * service.action.kubernetesPermissionCheckedDetails.namespace
+    #
+    #   * service.action.kubernetesPermissionCheckedDetails.resource
+    #
+    #   * service.action.kubernetesPermissionCheckedDetails.verb
+    #
+    #   * service.action.kubernetesRoleBindingDetails.kind
+    #
+    #   * service.action.kubernetesRoleBindingDetails.name
+    #
+    #   * service.action.kubernetesRoleBindingDetails.roleRefKind
+    #
+    #   * service.action.kubernetesRoleBindingDetails.roleRefName
+    #
+    #   * service.action.kubernetesRoleBindingDetails.uid
+    #
+    #   * service.action.kubernetesRoleDetails.kind
+    #
+    #   * service.action.kubernetesRoleDetails.name
+    #
+    #   * service.action.kubernetesRoleDetails.uid
+    #
     #   * service.action.networkConnectionAction.blocked
     #
     #   * service.action.networkConnectionAction.connectionDirection
     #
+    #   * service.action.networkConnectionAction.localIpDetails.ipAddressV4
+    #
+    #   * service.action.networkConnectionAction.localIpDetails.ipAddressV6
+    #
+    #   * service.action.networkConnectionAction.localNetworkInterface
+    #
     #   * service.action.networkConnectionAction.localPortDetails.port
+    #
+    #   * service.action.networkConnectionAction.localPortDetails.portName
     #
     #   * service.action.networkConnectionAction.protocol
     #
     #   * service.action.networkConnectionAction.remoteIpDetails.city.cityName
     #
+    #   * service.action.networkConnectionAction.remoteIpDetails.country.countryCode
+    #
     #   * service.action.networkConnectionAction.remoteIpDetails.country.countryName
+    #
+    #   * service.action.networkConnectionAction.remoteIpDetails.geoLocation.lat
+    #
+    #   * service.action.networkConnectionAction.remoteIpDetails.geoLocation.lon
     #
     #   * service.action.networkConnectionAction.remoteIpDetails.ipAddressV4
     #
@@ -1475,89 +2255,742 @@ module Aws::GuardDuty
     #
     #   * service.action.networkConnectionAction.remoteIpDetails.organization.asnOrg
     #
+    #   * service.action.networkConnectionAction.remoteIpDetails.organization.isp
+    #
+    #   * service.action.networkConnectionAction.remoteIpDetails.organization.org
+    #
     #   * service.action.networkConnectionAction.remotePortDetails.port
     #
-    #   * service.action.awsApiCallAction.remoteAccountDetails.affiliated
+    #   * service.action.networkConnectionAction.remotePortDetails.portName
     #
-    #   * service.action.kubernetesApiCallAction.remoteIpDetails.ipAddressV4
+    #   * service.action.portProbeAction.blocked
     #
-    #   * service.action.kubernetesApiCallAction.remoteIpDetails.ipAddressV6
+    #   * service.action.portProbeAction.portProbeDetails.localIpDetails.ipAddressV4
     #
-    #   * service.action.kubernetesApiCallAction.namespace
+    #   * service.action.portProbeAction.portProbeDetails.localIpDetails.ipAddressV6
     #
-    #   * service.action.kubernetesApiCallAction.remoteIpDetails.organization.asn
+    #   * service.action.portProbeAction.portProbeDetails.localPortDetails.port
     #
-    #   * service.action.kubernetesApiCallAction.requestUri
+    #   * service.action.portProbeAction.portProbeDetails.localPortDetails.portName
     #
-    #   * service.action.kubernetesApiCallAction.statusCode
+    #   * service.action.portProbeAction.portProbeDetails.remoteIpDetails.city.cityName
     #
-    #   * service.action.networkConnectionAction.localIpDetails.ipAddressV4
+    #   * service.action.portProbeAction.portProbeDetails.remoteIpDetails.country.countryCode
     #
-    #   * service.action.networkConnectionAction.localIpDetails.ipAddressV6
+    #   * service.action.portProbeAction.portProbeDetails.remoteIpDetails.country.countryName
     #
-    #   * service.action.networkConnectionAction.protocol
+    #   * service.action.portProbeAction.portProbeDetails.remoteIpDetails.geoLocation.lat
     #
-    #   * service.action.awsApiCallAction.serviceName
+    #   * service.action.portProbeAction.portProbeDetails.remoteIpDetails.geoLocation.lon
     #
-    #   * service.action.awsApiCallAction.remoteAccountDetails.accountId
+    #   * service.action.portProbeAction.portProbeDetails.remoteIpDetails.ipAddressV4
+    #
+    #   * service.action.portProbeAction.portProbeDetails.remoteIpDetails.ipAddressV6
+    #
+    #   * service.action.portProbeAction.portProbeDetails.remoteIpDetails.organization.asn
+    #
+    #   * service.action.portProbeAction.portProbeDetails.remoteIpDetails.organization.asnOrg
+    #
+    #   * service.action.portProbeAction.portProbeDetails.remoteIpDetails.organization.isp
+    #
+    #   * service.action.portProbeAction.portProbeDetails.remoteIpDetails.organization.org
+    #
+    #   * service.action.rdsLoginAttemptAction.loginAttributes.application
+    #
+    #   * service.action.rdsLoginAttemptAction.loginAttributes.failedLoginAttempts
+    #
+    #   * service.action.rdsLoginAttemptAction.loginAttributes.successfulLoginAttempts
+    #
+    #   * service.action.rdsLoginAttemptAction.loginAttributes.user
+    #
+    #   * service.action.rdsLoginAttemptAction.remoteIpDetails.city.cityName
+    #
+    #   * service.action.rdsLoginAttemptAction.remoteIpDetails.country.countryCode
+    #
+    #   * service.action.rdsLoginAttemptAction.remoteIpDetails.country.countryName
+    #
+    #   * service.action.rdsLoginAttemptAction.remoteIpDetails.geoLocation.lat
+    #
+    #   * service.action.rdsLoginAttemptAction.remoteIpDetails.geoLocation.lon
+    #
+    #   * service.action.rdsLoginAttemptAction.remoteIpDetails.ipAddressV4
+    #
+    #   * service.action.rdsLoginAttemptAction.remoteIpDetails.ipAddressV6
+    #
+    #   * service.action.rdsLoginAttemptAction.remoteIpDetails.organization.asn
+    #
+    #   * service.action.rdsLoginAttemptAction.remoteIpDetails.organization.asnOrg
+    #
+    #   * service.action.rdsLoginAttemptAction.remoteIpDetails.organization.isp
+    #
+    #   * service.action.rdsLoginAttemptAction.remoteIpDetails.organization.org
+    #
+    #   * service.additionalInfo.agentDetails.agentId
+    #
+    #   * service.additionalInfo.agentDetails.agentVersion
+    #
+    #   * service.additionalInfo.anomalies.anomalousAPIs
+    #
+    #   * service.additionalInfo.authenticationMethod
+    #
+    #   * service.additionalInfo.averagePacketSizeIn
+    #
+    #   * service.additionalInfo.averagePacketSizeOut
+    #
+    #   * service.additionalInfo.context
+    #
+    #   * service.additionalInfo.domain
+    #
+    #   * service.additionalInfo.inBytes
+    #
+    #   * service.additionalInfo.localNetworkInterfaceOwner
+    #
+    #   * service.additionalInfo.localPort
+    #
+    #   * service.additionalInfo.outBytes
+    #
+    #   * service.additionalInfo.packetsIn
+    #
+    #   * service.additionalInfo.packetsOut
+    #
+    #   * service.additionalInfo.policyArn
+    #
+    #   * service.additionalInfo.policyName
+    #
+    #   * service.additionalInfo.remotePort
+    #
+    #   * service.additionalInfo.sample
+    #
+    #   * service.additionalInfo.scannedPort
+    #
+    #   * service.additionalInfo.threatFileSha256
     #
     #   * service.additionalInfo.threatListName
     #
-    #   * service.resourceRole
+    #   * service.additionalInfo.threatName
     #
-    #   * resource.eksClusterDetails.name
+    #   * service.additionalInfo.totalBytesIn
     #
-    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.name
+    #   * service.additionalInfo.totalBytesOut
     #
-    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.namespace
+    #   * service.additionalInfo.type
     #
-    #   * resource.kubernetesDetails.kubernetesUserDetails.username
+    #   * service.additionalInfo.unusual.asnOrg
     #
-    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.containers.image
+    #   * service.additionalInfo.unusual.port
     #
-    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.containers.imagePrefix
+    #   * service.additionalInfo.unusualProtocol
     #
-    #   * service.ebsVolumeScanDetails.scanId
+    #   * service.additionalInfo.userAgent.fullUserAgent
+    #
+    #   * service.additionalInfo.userAgent.userAgentCategory
+    #
+    #   * service.additionalInfo.value
+    #
+    #   * service.additionalInfo.vpcOwnerAccountId
+    #
+    #   * service.archived
+    #
+    #   * service.count
+    #
+    #   * service.detection.sequence.actors.id
+    #
+    #   * service.detection.sequence.actors.process.name
+    #
+    #   * service.detection.sequence.actors.process.path
+    #
+    #   * service.detection.sequence.actors.process.sha256
+    #
+    #   * service.detection.sequence.actors.session.createdTime
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * service.detection.sequence.actors.session.issuer
+    #
+    #   * service.detection.sequence.actors.session.mfaStatus
+    #
+    #   * service.detection.sequence.actors.session.uid
+    #
+    #   * service.detection.sequence.actors.user.account.account
+    #
+    #   * service.detection.sequence.actors.user.account.uid
+    #
+    #   * service.detection.sequence.actors.user.credentialUid
+    #
+    #   * service.detection.sequence.actors.user.name
+    #
+    #   * service.detection.sequence.actors.user.type
+    #
+    #   * service.detection.sequence.actors.user.uid
+    #
+    #   * service.detection.sequence.additionalSequenceTypes
+    #
+    #   * service.detection.sequence.description
+    #
+    #   * service.detection.sequence.endpoints.autonomousSystem.name
+    #
+    #   * service.detection.sequence.endpoints.autonomousSystem.number
+    #
+    #   * service.detection.sequence.endpoints.connection.direction
+    #
+    #   * service.detection.sequence.endpoints.domain
+    #
+    #   * service.detection.sequence.endpoints.id
+    #
+    #   * service.detection.sequence.endpoints.ip
+    #
+    #   * service.detection.sequence.endpoints.location.city
+    #
+    #   * service.detection.sequence.endpoints.location.country
+    #
+    #   * service.detection.sequence.endpoints.location.lat
+    #
+    #   * service.detection.sequence.endpoints.location.lon
+    #
+    #   * service.detection.sequence.endpoints.port
+    #
+    #   * service.detection.sequence.resources.accountId
+    #
+    #   * service.detection.sequence.resources.cloudPartition
+    #
+    #   * service.detection.sequence.resources.data.accessKey.principalId
+    #
+    #   * service.detection.sequence.resources.data.accessKey.userName
+    #
+    #   * service.detection.sequence.resources.data.accessKey.userType
+    #
+    #   * service.detection.sequence.resources.data.autoscalingAutoScalingGroup.ec2InstanceUids
+    #
+    #   * service.detection.sequence.resources.data.cloudformationStack.ec2InstanceUids
+    #
+    #   * service.detection.sequence.resources.data.container.image
+    #
+    #   * service.detection.sequence.resources.data.container.imageUid
+    #
+    #   * service.detection.sequence.resources.data.ec2Image.ec2InstanceUids
+    #
+    #   * service.detection.sequence.resources.data.ec2Instance.availabilityZone
+    #
+    #   * service.detection.sequence.resources.data.ec2Instance.ec2NetworkInterfaceUids
+    #
+    #   * service.detection.sequence.resources.data.ec2Instance.iamInstanceProfile.arn
+    #
+    #   * service.detection.sequence.resources.data.ec2Instance.iamInstanceProfile.id
+    #
+    #   * service.detection.sequence.resources.data.ec2Instance.imageDescription
+    #
+    #   * service.detection.sequence.resources.data.ec2Instance.instanceState
+    #
+    #   * service.detection.sequence.resources.data.ec2Instance.instanceType
+    #
+    #   * service.detection.sequence.resources.data.ec2Instance.outpostArn
+    #
+    #   * service.detection.sequence.resources.data.ec2Instance.platform
+    #
+    #   * service.detection.sequence.resources.data.ec2Instance.productCodes.productCodeId
+    #
+    #   * service.detection.sequence.resources.data.ec2Instance.productCodes.productCodeType
+    #
+    #   * service.detection.sequence.resources.data.ec2LaunchTemplate.ec2InstanceUids
+    #
+    #   * service.detection.sequence.resources.data.ec2LaunchTemplate.version
+    #
+    #   * service.detection.sequence.resources.data.ec2NetworkInterface.ipv6Addresses
+    #
+    #   * service.detection.sequence.resources.data.ec2NetworkInterface.privateIpAddresses.privateDnsName
+    #
+    #   * service.detection.sequence.resources.data.ec2NetworkInterface.privateIpAddresses.privateIpAddress
+    #
+    #   * service.detection.sequence.resources.data.ec2NetworkInterface.publicIp
+    #
+    #   * service.detection.sequence.resources.data.ec2NetworkInterface.securityGroups.groupId
+    #
+    #   * service.detection.sequence.resources.data.ec2NetworkInterface.securityGroups.groupName
+    #
+    #   * service.detection.sequence.resources.data.ec2NetworkInterface.subNetId
+    #
+    #   * service.detection.sequence.resources.data.ec2NetworkInterface.vpcId
+    #
+    #   * service.detection.sequence.resources.data.ec2Vpc.ec2InstanceUids
+    #
+    #   * service.detection.sequence.resources.data.ecsCluster.ec2InstanceUids
+    #
+    #   * service.detection.sequence.resources.data.ecsCluster.status
+    #
+    #   * service.detection.sequence.resources.data.ecsTask.containerUids
+    #
+    #   * service.detection.sequence.resources.data.ecsTask.createdAt
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * service.detection.sequence.resources.data.ecsTask.launchType
+    #
+    #   * service.detection.sequence.resources.data.ecsTask.taskDefinitionArn
+    #
+    #   * service.detection.sequence.resources.data.eksCluster.arn
+    #
+    #   * service.detection.sequence.resources.data.eksCluster.createdAt
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * service.detection.sequence.resources.data.eksCluster.ec2InstanceUids
+    #
+    #   * service.detection.sequence.resources.data.eksCluster.status
+    #
+    #   * service.detection.sequence.resources.data.eksCluster.vpcId
+    #
+    #   * service.detection.sequence.resources.data.iamInstanceProfile.ec2InstanceUids
+    #
+    #   * service.detection.sequence.resources.data.iamInstanceProfile.id
+    #
+    #   * service.detection.sequence.resources.data.kubernetesWorkload.containerUids
+    #
+    #   * service.detection.sequence.resources.data.kubernetesWorkload.namespace
+    #
+    #   * service.detection.sequence.resources.data.kubernetesWorkload.type
+    #
+    #   * service.detection.sequence.resources.data.s3Bucket.accountPublicAccess.publicAclAccess
+    #
+    #   * service.detection.sequence.resources.data.s3Bucket.accountPublicAccess.publicAclIgnoreBehavior
+    #
+    #   * service.detection.sequence.resources.data.s3Bucket.accountPublicAccess.publicBucketRestrictBehavior
+    #
+    #   * service.detection.sequence.resources.data.s3Bucket.accountPublicAccess.publicPolicyAccess
+    #
+    #   * service.detection.sequence.resources.data.s3Bucket.bucketPublicAccess.publicAclAccess
+    #
+    #   * service.detection.sequence.resources.data.s3Bucket.bucketPublicAccess.publicAclIgnoreBehavior
+    #
+    #   * service.detection.sequence.resources.data.s3Bucket.bucketPublicAccess.publicBucketRestrictBehavior
+    #
+    #   * service.detection.sequence.resources.data.s3Bucket.bucketPublicAccess.publicPolicyAccess
+    #
+    #   * service.detection.sequence.resources.data.s3Bucket.createdAt
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * service.detection.sequence.resources.data.s3Bucket.effectivePermission
+    #
+    #   * service.detection.sequence.resources.data.s3Bucket.encryptionKeyArn
+    #
+    #   * service.detection.sequence.resources.data.s3Bucket.encryptionType
+    #
+    #   * service.detection.sequence.resources.data.s3Bucket.ownerId
+    #
+    #   * service.detection.sequence.resources.data.s3Bucket.publicReadAccess
+    #
+    #   * service.detection.sequence.resources.data.s3Bucket.publicWriteAccess
+    #
+    #   * service.detection.sequence.resources.data.s3Bucket.s3ObjectUids
+    #
+    #   * service.detection.sequence.resources.data.s3Object.eTag
+    #
+    #   * service.detection.sequence.resources.data.s3Object.key
+    #
+    #   * service.detection.sequence.resources.data.s3Object.versionId
+    #
+    #   * service.detection.sequence.resources.name
+    #
+    #   * service.detection.sequence.resources.region
+    #
+    #   * service.detection.sequence.resources.resourceType
+    #
+    #   * service.detection.sequence.resources.service
+    #
+    #   * service.detection.sequence.resources.tags.key
+    #
+    #   * service.detection.sequence.resources.tags.value
+    #
+    #   * service.detection.sequence.resources.uid
+    #
+    #   * service.detection.sequence.sequenceIndicators.key
+    #
+    #   * service.detection.sequence.sequenceIndicators.title
+    #
+    #   * service.detection.sequence.sequenceIndicators.values
+    #
+    #   * service.detection.sequence.signals.actorIds
+    #
+    #   * service.detection.sequence.signals.count
+    #
+    #   * service.detection.sequence.signals.createdAt
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * service.detection.sequence.signals.description
+    #
+    #   * service.detection.sequence.signals.endpointIds
+    #
+    #   * service.detection.sequence.signals.firstSeenAt
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * service.detection.sequence.signals.lastSeenAt
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * service.detection.sequence.signals.name
+    #
+    #   * service.detection.sequence.signals.resourceUids
+    #
+    #   * service.detection.sequence.signals.severity
+    #
+    #   * service.detection.sequence.signals.signalIndicators.key
+    #
+    #   * service.detection.sequence.signals.signalIndicators.title
+    #
+    #   * service.detection.sequence.signals.signalIndicators.values
+    #
+    #   * service.detection.sequence.signals.type
+    #
+    #   * service.detection.sequence.signals.uid
+    #
+    #   * service.detection.sequence.signals.updatedAt
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * service.detection.sequence.uid
+    #
+    #   * service.detectorId
+    #
+    #   * service.ebsVolumeScanDetails.scanCompletedAt
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * service.ebsVolumeScanDetails.scanDetections.highestSeverityThreatDetails.count
+    #
+    #   * service.ebsVolumeScanDetails.scanDetections.highestSeverityThreatDetails.severity
+    #
+    #   * service.ebsVolumeScanDetails.scanDetections.highestSeverityThreatDetails.threatName
+    #
+    #   * service.ebsVolumeScanDetails.scanDetections.scannedItemCount.files
+    #
+    #   * service.ebsVolumeScanDetails.scanDetections.scannedItemCount.totalGb
+    #
+    #   * service.ebsVolumeScanDetails.scanDetections.scannedItemCount.volumes
+    #
+    #   * service.ebsVolumeScanDetails.scanDetections.threatDetectedByName.itemCount
+    #
+    #   * service.ebsVolumeScanDetails.scanDetections.threatDetectedByName.shortened
+    #
+    #   * service.ebsVolumeScanDetails.scanDetections.threatDetectedByName.threatNames.filePaths.fileName
+    #
+    #   * service.ebsVolumeScanDetails.scanDetections.threatDetectedByName.threatNames.filePaths.filePath
+    #
+    #   * service.ebsVolumeScanDetails.scanDetections.threatDetectedByName.threatNames.filePaths.hash
+    #
+    #   * service.ebsVolumeScanDetails.scanDetections.threatDetectedByName.threatNames.filePaths.volumeArn
+    #
+    #   * service.ebsVolumeScanDetails.scanDetections.threatDetectedByName.threatNames.itemCount
     #
     #   * service.ebsVolumeScanDetails.scanDetections.threatDetectedByName.threatNames.name
     #
     #   * service.ebsVolumeScanDetails.scanDetections.threatDetectedByName.threatNames.severity
     #
-    #   * service.ebsVolumeScanDetails.scanDetections.threatDetectedByName.threatNames.filePaths.hash
+    #   * service.ebsVolumeScanDetails.scanDetections.threatDetectedByName.uniqueThreatNameCount
     #
-    #   * resource.ecsClusterDetails.name
+    #   * service.ebsVolumeScanDetails.scanDetections.threatsDetectedItemCount.files
     #
-    #   * resource.ecsClusterDetails.taskDetails.containers.image
+    #   * service.ebsVolumeScanDetails.scanId
     #
-    #   * resource.ecsClusterDetails.taskDetails.definitionArn
+    #   * service.ebsVolumeScanDetails.scanStartedAt
     #
-    #   * resource.containerDetails.image
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
     #
-    #   * resource.rdsDbInstanceDetails.dbInstanceIdentifier
+    #   * service.ebsVolumeScanDetails.scanType
     #
-    #   * resource.rdsDbInstanceDetails.dbClusterIdentifier
+    #   * service.ebsVolumeScanDetails.sources
     #
-    #   * resource.rdsDbInstanceDetails.engine
+    #   * service.ebsVolumeScanDetails.triggerFindingId
     #
-    #   * resource.rdsDbUserDetails.user
+    #   * service.eventFirstSeen
     #
-    #   * resource.rdsDbInstanceDetails.tags.key
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
     #
-    #   * resource.rdsDbInstanceDetails.tags.value
+    #   * service.eventLastSeen
     #
-    #   * service.runtimeDetails.process.executableSha256
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
     #
-    #   * service.runtimeDetails.process.name
+    #   * service.evidence.threatIntelligenceDetails.threatFileSha256
+    #
+    #   * service.evidence.threatIntelligenceDetails.threatListName
+    #
+    #   * service.evidence.threatIntelligenceDetails.threatNames
+    #
+    #   * service.featureName
+    #
+    #   * service.malwareScanDetails.scanCategory
+    #
+    #   * service.malwareScanDetails.scanConfiguration.incrementalScanDetails.baselineResourceArn
+    #
+    #   * service.malwareScanDetails.scanConfiguration.triggerType
+    #
+    #   * service.malwareScanDetails.scanId
+    #
+    #   * service.malwareScanDetails.scanType
+    #
+    #   * service.malwareScanDetails.threats.count
+    #
+    #   * service.malwareScanDetails.threats.hash
+    #
+    #   * service.malwareScanDetails.threats.itemDetails.additionalInfo.deviceName
+    #
+    #   * service.malwareScanDetails.threats.itemDetails.additionalInfo.versionId
+    #
+    #   * service.malwareScanDetails.threats.itemDetails.hash
+    #
+    #   * service.malwareScanDetails.threats.itemDetails.itemPath
+    #
+    #   * service.malwareScanDetails.threats.itemDetails.resourceArn
+    #
+    #   * service.malwareScanDetails.threats.itemPaths.hash
+    #
+    #   * service.malwareScanDetails.threats.itemPaths.nestedItemPath
+    #
+    #   * service.malwareScanDetails.threats.name
+    #
+    #   * service.malwareScanDetails.threats.source
+    #
+    #   * service.malwareScanDetails.uniqueThreatCount
+    #
+    #   * service.resourceRole
+    #
+    #   * service.runtimeDetails.context.addressFamily
+    #
+    #   * service.runtimeDetails.context.commandLineExample
+    #
+    #   * service.runtimeDetails.context.fileOperation
+    #
+    #   * service.runtimeDetails.context.filePath
+    #
+    #   * service.runtimeDetails.context.fileSystemType
+    #
+    #   * service.runtimeDetails.context.flags
+    #
+    #   * service.runtimeDetails.context.ianaProtocolNumber
+    #
+    #   * service.runtimeDetails.context.ldPreloadValue
+    #
+    #   * service.runtimeDetails.context.libraryPath
+    #
+    #   * service.runtimeDetails.context.memoryRegions
+    #
+    #   * service.runtimeDetails.context.modifiedAt
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.euid
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.executablePath
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.executableSha256
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.lineage.euid
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.lineage.executablePath
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.lineage.name
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.lineage.namespacePid
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.lineage.parentUuid
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.lineage.pid
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.lineage.startTime
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.lineage.userId
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.lineage.uuid
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.name
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.namespacePid
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.parentUuid
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.pid
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.pwd
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.startTime
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.user
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.userId
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.uuid
+    #
+    #   * service.runtimeDetails.context.moduleFilePath
+    #
+    #   * service.runtimeDetails.context.moduleName
+    #
+    #   * service.runtimeDetails.context.moduleSha256
+    #
+    #   * service.runtimeDetails.context.mountSource
+    #
+    #   * service.runtimeDetails.context.mountTarget
+    #
+    #   * service.runtimeDetails.context.relatedFilePaths
+    #
+    #   * service.runtimeDetails.context.releaseAgentPath
+    #
+    #   * service.runtimeDetails.context.runcBinaryPath
+    #
+    #   * service.runtimeDetails.context.scriptPath
+    #
+    #   * service.runtimeDetails.context.serviceName
+    #
+    #   * service.runtimeDetails.context.shellHistoryFilePath
+    #
+    #   * service.runtimeDetails.context.socketPath
+    #
+    #   * service.runtimeDetails.context.targetProcess.euid
+    #
+    #   * service.runtimeDetails.context.targetProcess.executablePath
+    #
+    #   * service.runtimeDetails.context.targetProcess.executableSha256
+    #
+    #   * service.runtimeDetails.context.targetProcess.lineage.euid
+    #
+    #   * service.runtimeDetails.context.targetProcess.lineage.executablePath
+    #
+    #   * service.runtimeDetails.context.targetProcess.lineage.name
+    #
+    #   * service.runtimeDetails.context.targetProcess.lineage.namespacePid
+    #
+    #   * service.runtimeDetails.context.targetProcess.lineage.parentUuid
+    #
+    #   * service.runtimeDetails.context.targetProcess.lineage.pid
+    #
+    #   * service.runtimeDetails.context.targetProcess.lineage.startTime
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * service.runtimeDetails.context.targetProcess.lineage.userId
+    #
+    #   * service.runtimeDetails.context.targetProcess.lineage.uuid
+    #
+    #   * service.runtimeDetails.context.targetProcess.name
+    #
+    #   * service.runtimeDetails.context.targetProcess.namespacePid
+    #
+    #   * service.runtimeDetails.context.targetProcess.parentUuid
+    #
+    #   * service.runtimeDetails.context.targetProcess.pid
+    #
+    #   * service.runtimeDetails.context.targetProcess.pwd
+    #
+    #   * service.runtimeDetails.context.targetProcess.startTime
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * service.runtimeDetails.context.targetProcess.user
+    #
+    #   * service.runtimeDetails.context.targetProcess.userId
+    #
+    #   * service.runtimeDetails.context.targetProcess.uuid
+    #
+    #   * service.runtimeDetails.context.threatFilePath
+    #
+    #   * service.runtimeDetails.context.toolCategory
+    #
+    #   * service.runtimeDetails.context.toolName
+    #
+    #   * service.runtimeDetails.process.euid
     #
     #   * service.runtimeDetails.process.executablePath
     #
-    #   * resource.lambdaDetails.functionName
+    #   * service.runtimeDetails.process.executableSha256
     #
-    #   * resource.lambdaDetails.functionArn
+    #   * service.runtimeDetails.process.lineage.euid
     #
-    #   * resource.lambdaDetails.tags.key
+    #   * service.runtimeDetails.process.lineage.executablePath
     #
-    #   * resource.lambdaDetails.tags.value
+    #   * service.runtimeDetails.process.lineage.name
+    #
+    #   * service.runtimeDetails.process.lineage.namespacePid
+    #
+    #   * service.runtimeDetails.process.lineage.parentUuid
+    #
+    #   * service.runtimeDetails.process.lineage.pid
+    #
+    #   * service.runtimeDetails.process.lineage.startTime
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * service.runtimeDetails.process.lineage.userId
+    #
+    #   * service.runtimeDetails.process.lineage.uuid
+    #
+    #   * service.runtimeDetails.process.name
+    #
+    #   * service.runtimeDetails.process.namespacePid
+    #
+    #   * service.runtimeDetails.process.parentUuid
+    #
+    #   * service.runtimeDetails.process.pid
+    #
+    #   * service.runtimeDetails.process.pwd
+    #
+    #   * service.runtimeDetails.process.startTime
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * service.runtimeDetails.process.user
+    #
+    #   * service.runtimeDetails.process.userId
+    #
+    #   * service.runtimeDetails.process.uuid
+    #
+    #   * service.serviceName
+    #
+    #   * service.userFeedback
+    #
+    #   * severity
+    #
+    #     To configure severity based filters, use the following for the
+    #     [FindingCriteria][1] condition:
+    #
+    #     * **Low**: `["1", "2", "3"]`
+    #
+    #     * **Medium**: `["4", "5", "6"]`
+    #
+    #     * **High**: `["7", "8"]`
+    #
+    #     * **Critical**: `["9", "10"]`
+    #     For more information, see [Findings severity levels][2] in the
+    #     *Amazon GuardDuty User Guide*.
+    #
+    #   * type
+    #
+    #   * updatedAt
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
     #
     #
     #
@@ -1646,6 +3079,11 @@ module Aws::GuardDuty
     #   The tags to be added to a new IP set resource.
     #   @return [Hash<String,String>]
     #
+    # @!attribute [rw] expected_bucket_owner
+    #   The Amazon Web Services account ID that owns the Amazon S3 bucket
+    #   specified in the **location** parameter.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/CreateIPSetRequest AWS API Documentation
     #
     class CreateIPSetRequest < Struct.new(
@@ -1655,7 +3093,8 @@ module Aws::GuardDuty
       :location,
       :activate,
       :client_token,
-      :tags)
+      :tags,
+      :expected_bucket_owner)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1668,6 +3107,58 @@ module Aws::GuardDuty
     #
     class CreateIPSetResponse < Struct.new(
       :ip_set_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] detector_id
+    #   The unique ID of the GuardDuty detector for the account in which the
+    #   investigation is created.
+    #
+    #   To find the `detectorId` in the current Region, see the Settings
+    #   page in the GuardDuty console, or run the [ListDetectors][1] API.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/guardduty/latest/APIReference/API_ListDetectors.html
+    #   @return [String]
+    #
+    # @!attribute [rw] trigger_prompt
+    #   A natural-language description of what to investigate. For example:
+    #
+    #   * `"Investigate finding 1ab2c3d4e5f6a7b8c9d0e1f2a3b4c5d6 in account
+    #     123456789012"`
+    #
+    #   * `"Analyze findings in account with id 123456789012"`
+    #
+    #   * `"Analyze findings in my organization"`
+    #   @return [String]
+    #
+    # @!attribute [rw] client_token
+    #   The idempotency token for the create request.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/CreateInvestigationRequest AWS API Documentation
+    #
+    class CreateInvestigationRequest < Struct.new(
+      :detector_id,
+      :trigger_prompt,
+      :client_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] investigation_id
+    #   The unique identifier of the newly created investigation.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/CreateInvestigationResponse AWS API Documentation
+    #
+    class CreateInvestigationResponse < Struct.new(
+      :investigation_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1808,13 +3299,18 @@ module Aws::GuardDuty
     #   not need to pass this option.
     #   @return [String]
     #
+    # @!attribute [rw] tags
+    #   The tags to be added to a new publishing destination resource.
+    #   @return [Hash<String,String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/CreatePublishingDestinationRequest AWS API Documentation
     #
     class CreatePublishingDestinationRequest < Struct.new(
       :detector_id,
       :destination_type,
       :destination_properties,
-      :client_token)
+      :client_token,
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1882,7 +3378,93 @@ module Aws::GuardDuty
 
     # @!attribute [rw] detector_id
     #   The unique ID of the detector of the GuardDuty account for which you
-    #   want to create a `ThreatIntelSet`.
+    #   want to create a threat entity set.
+    #
+    #   To find the `detectorId` in the current Region, see the Settings
+    #   page in the GuardDuty console, or run the [ListDetectors][1] API.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/guardduty/latest/APIReference/API_ListDetectors.html
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   A user-friendly name to identify the threat entity set.
+    #
+    #   The name of your list can include lowercase letters, uppercase
+    #   letters, numbers, dash (-), and underscore (\_).
+    #   @return [String]
+    #
+    # @!attribute [rw] format
+    #   The format of the file that contains the threat entity set.
+    #   @return [String]
+    #
+    # @!attribute [rw] location
+    #   The URI of the file that contains the threat entity set. The format
+    #   of the `Location` URL must be a valid Amazon S3 URL format. Invalid
+    #   URL formats will result in an error, regardless of whether you
+    #   activate the entity set or not. For more information about format of
+    #   the location URLs, see [Format of location URL under Step 2: Adding
+    #   trusted or threat intelligence data][1] in the *Amazon GuardDuty
+    #   User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/guardduty/latest/ug/guardduty-lists-create-activate.html
+    #   @return [String]
+    #
+    # @!attribute [rw] expected_bucket_owner
+    #   The Amazon Web Services account ID that owns the Amazon S3 bucket
+    #   specified in the **location** parameter.
+    #   @return [String]
+    #
+    # @!attribute [rw] activate
+    #   A boolean value that indicates whether GuardDuty should start using
+    #   the uploaded threat entity set to generate findings.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] client_token
+    #   The idempotency token for the create request.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   The tags to be added to a new threat entity set resource.
+    #   @return [Hash<String,String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/CreateThreatEntitySetRequest AWS API Documentation
+    #
+    class CreateThreatEntitySetRequest < Struct.new(
+      :detector_id,
+      :name,
+      :format,
+      :location,
+      :expected_bucket_owner,
+      :activate,
+      :client_token,
+      :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] threat_entity_set_id
+    #   The ID returned by GuardDuty after creation of the threat entity set
+    #   resource.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/CreateThreatEntitySetResponse AWS API Documentation
+    #
+    class CreateThreatEntitySetResponse < Struct.new(
+      :threat_entity_set_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] detector_id
+    #   The unique ID of the detector of the GuardDuty account for which you
+    #   want to create a `threatIntelSet`.
     #
     #   To find the `detectorId` in the current Region, see the Settings
     #   page in the GuardDuty console, or run the [ListDetectors][1] API.
@@ -1922,6 +3504,11 @@ module Aws::GuardDuty
     #   The tags to be added to a new threat list resource.
     #   @return [Hash<String,String>]
     #
+    # @!attribute [rw] expected_bucket_owner
+    #   The Amazon Web Services account ID that owns the Amazon S3 bucket
+    #   specified in the **location** parameter.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/CreateThreatIntelSetRequest AWS API Documentation
     #
     class CreateThreatIntelSetRequest < Struct.new(
@@ -1931,7 +3518,8 @@ module Aws::GuardDuty
       :location,
       :activate,
       :client_token,
-      :tags)
+      :tags,
+      :expected_bucket_owner)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1944,6 +3532,92 @@ module Aws::GuardDuty
     #
     class CreateThreatIntelSetResponse < Struct.new(
       :threat_intel_set_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] detector_id
+    #   The unique ID of the detector of the GuardDuty account for which you
+    #   want to create a trusted entity set.
+    #
+    #   To find the `detectorId` in the current Region, see the Settings
+    #   page in the GuardDuty console, or run the [ListDetectors][1] API.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/guardduty/latest/APIReference/API_ListDetectors.html
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   A user-friendly name to identify the trusted entity set.
+    #
+    #   The name of your list can include lowercase letters, uppercase
+    #   letters, numbers, dash (-), and underscore (\_).
+    #   @return [String]
+    #
+    # @!attribute [rw] format
+    #   The format of the file that contains the trusted entity set.
+    #   @return [String]
+    #
+    # @!attribute [rw] location
+    #   The URI of the file that contains the threat entity set. The format
+    #   of the `Location` URL must be a valid Amazon S3 URL format. Invalid
+    #   URL formats will result in an error, regardless of whether you
+    #   activate the entity set or not. For more information about format of
+    #   the location URLs, see [Format of location URL under Step 2: Adding
+    #   trusted or threat intelligence data][1] in the *Amazon GuardDuty
+    #   User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/guardduty/latest/ug/guardduty-lists-create-activate.html
+    #   @return [String]
+    #
+    # @!attribute [rw] expected_bucket_owner
+    #   The Amazon Web Services account ID that owns the Amazon S3 bucket
+    #   specified in the **location** parameter.
+    #   @return [String]
+    #
+    # @!attribute [rw] activate
+    #   A boolean value that indicates whether GuardDuty is to start using
+    #   the uploaded trusted entity set.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] client_token
+    #   The idempotency token for the create request.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   The tags to be added to a new trusted entity set resource.
+    #   @return [Hash<String,String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/CreateTrustedEntitySetRequest AWS API Documentation
+    #
+    class CreateTrustedEntitySetRequest < Struct.new(
+      :detector_id,
+      :name,
+      :format,
+      :location,
+      :expected_bucket_owner,
+      :activate,
+      :client_token,
+      :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] trusted_entity_set_id
+    #   The ID returned by GuardDuty after creation of the trusted entity
+    #   set resource.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/CreateTrustedEntitySetResponse AWS API Documentation
+    #
+    class CreateTrustedEntitySetResponse < Struct.new(
+      :trusted_entity_set_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2363,6 +4037,36 @@ module Aws::GuardDuty
     class DeletePublishingDestinationResponse < Aws::EmptyStructure; end
 
     # @!attribute [rw] detector_id
+    #   The unique ID of the detector associated with the threat entity set
+    #   resource.
+    #
+    #   To find the `detectorId` in the current Region, see the Settings
+    #   page in the GuardDuty console, or run the [ListDetectors][1] API.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/guardduty/latest/APIReference/API_ListDetectors.html
+    #   @return [String]
+    #
+    # @!attribute [rw] threat_entity_set_id
+    #   The unique ID that helps GuardDuty identify which threat entity set
+    #   needs to be deleted.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/DeleteThreatEntitySetRequest AWS API Documentation
+    #
+    class DeleteThreatEntitySetRequest < Struct.new(
+      :detector_id,
+      :threat_entity_set_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/DeleteThreatEntitySetResponse AWS API Documentation
+    #
+    class DeleteThreatEntitySetResponse < Aws::EmptyStructure; end
+
+    # @!attribute [rw] detector_id
     #   The unique ID of the detector that is associated with the
     #   threatIntelSet.
     #
@@ -2390,6 +4094,36 @@ module Aws::GuardDuty
     # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/DeleteThreatIntelSetResponse AWS API Documentation
     #
     class DeleteThreatIntelSetResponse < Aws::EmptyStructure; end
+
+    # @!attribute [rw] detector_id
+    #   The unique ID of the detector associated with the trusted entity set
+    #   resource.
+    #
+    #   To find the `detectorId` in the current Region, see the Settings
+    #   page in the GuardDuty console, or run the [ListDetectors][1] API.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/guardduty/latest/APIReference/API_ListDetectors.html
+    #   @return [String]
+    #
+    # @!attribute [rw] trusted_entity_set_id
+    #   The unique ID that helps GuardDuty identify which trusted entity set
+    #   needs to be deleted.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/DeleteTrustedEntitySetRequest AWS API Documentation
+    #
+    class DeleteTrustedEntitySetRequest < Struct.new(
+      :detector_id,
+      :trusted_entity_set_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/DeleteTrustedEntitySetResponse AWS API Documentation
+    #
+    class DeleteTrustedEntitySetResponse < Aws::EmptyStructure; end
 
     # @!attribute [rw] detector_id
     #   The unique ID of the detector that the request is associated with.
@@ -2613,6 +4347,10 @@ module Aws::GuardDuty
     #   and `KmsKeyArn` of the publishing destination.
     #   @return [Types::DestinationProperties]
     #
+    # @!attribute [rw] tags
+    #   The tags of the publishing destination resource.
+    #   @return [Hash<String,String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/DescribePublishingDestinationResponse AWS API Documentation
     #
     class DescribePublishingDestinationResponse < Struct.new(
@@ -2620,7 +4358,8 @@ module Aws::GuardDuty
       :destination_type,
       :status,
       :publishing_failure_start_timestamp,
-      :destination_properties)
+      :destination_properties,
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2922,13 +4661,19 @@ module Aws::GuardDuty
     #   [1]: https://publicsuffix.org/
     #   @return [String]
     #
+    # @!attribute [rw] vpc_owner_account_id
+    #   The Amazon Web Services account ID that owns the VPC through which
+    #   the DNS request was made.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/DnsRequestAction AWS API Documentation
     #
     class DnsRequestAction < Struct.new(
       :domain,
       :protocol,
       :blocked,
-      :domain_with_suffix)
+      :domain_with_suffix,
+      :vpc_owner_account_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2943,6 +4688,35 @@ module Aws::GuardDuty
     #
     class DomainDetails < Struct.new(
       :domain)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains information about an EBS snapshot that was scanned for
+    # malware.
+    #
+    # @!attribute [rw] device_name
+    #   The device name of the EBS snapshot that was scanned.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/EbsSnapshot AWS API Documentation
+    #
+    class EbsSnapshot < Struct.new(
+      :device_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains details about the EBS snapshot that was scanned for malware.
+    #
+    # @!attribute [rw] snapshot_arn
+    #   The Amazon Resource Name (ARN) of the EBS snapshot.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/EbsSnapshotDetails AWS API Documentation
+    #
+    class EbsSnapshotDetails < Struct.new(
+      :snapshot_arn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3030,6 +4804,38 @@ module Aws::GuardDuty
       include Aws::Structure
     end
 
+    # Contains information about the Amazon EC2 Image involved in a
+    # GuardDuty finding, including unique identifiers of the Amazon EC2
+    # instances.
+    #
+    # @!attribute [rw] ec2_instance_uids
+    #   A list of unique identifiers for the compromised Amazon EC2
+    #   instances that were launched with the same Amazon Machine Image
+    #   (AMI).
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/Ec2Image AWS API Documentation
+    #
+    class Ec2Image < Struct.new(
+      :ec2_instance_uids)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains details about the EC2 AMI that was scanned.
+    #
+    # @!attribute [rw] image_arn
+    #   The Amazon Resource Name (ARN) of the EC2 AMI.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/Ec2ImageDetails AWS API Documentation
+    #
+    class Ec2ImageDetails < Struct.new(
+      :image_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Details about the potentially impacted Amazon EC2 instance resource.
     #
     # @!attribute [rw] availability_zone
@@ -3097,6 +4903,28 @@ module Aws::GuardDuty
       include Aws::Structure
     end
 
+    # Contains information about the Amazon EC2 launch template involved in
+    # a GuardDuty finding, including unique identifiers of the Amazon EC2
+    # instances.
+    #
+    # @!attribute [rw] ec2_instance_uids
+    #   A list of unique identifiers for the compromised Amazon EC2
+    #   instances that share the same Amazon EC2 launch template.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] version
+    #   Version of the EC2 launch template.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/Ec2LaunchTemplate AWS API Documentation
+    #
+    class Ec2LaunchTemplate < Struct.new(
+      :ec2_instance_uids,
+      :version)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Contains information about the elastic network interface of the Amazon
     # EC2 instance.
     #
@@ -3133,6 +4961,44 @@ module Aws::GuardDuty
       :security_groups,
       :sub_net_id,
       :vpc_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains information about the Amazon EC2 VPC involved in a GuardDuty
+    # finding, including unique identifiers of the Amazon EC2 instances.
+    #
+    # @!attribute [rw] ec2_instance_uids
+    #   A list of unique identifiers for the compromised Amazon EC2
+    #   instances that were launched within the same Virtual Private Cloud
+    #   (VPC).
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/Ec2Vpc AWS API Documentation
+    #
+    class Ec2Vpc < Struct.new(
+      :ec2_instance_uids)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains information about the Amazon ECS cluster involved in a
+    # GuardDuty finding, including cluster identification and status.
+    #
+    # @!attribute [rw] status
+    #   The current status of the Amazon ECS cluster.
+    #   @return [String]
+    #
+    # @!attribute [rw] ec2_instance_uids
+    #   A list of unique identifiers for the Amazon EC2 instances that serve
+    #   as container instances in the Amazon ECS cluster.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/EcsCluster AWS API Documentation
+    #
+    class EcsCluster < Struct.new(
+      :status,
+      :ec2_instance_uids)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3183,6 +5049,39 @@ module Aws::GuardDuty
       :running_tasks_count,
       :tags,
       :task_details)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains information about Amazon ECS task involved in a GuardDuty
+    # finding, including task definition and container identifiers.
+    #
+    # @!attribute [rw] created_at
+    #   The timestamp indicating when the Amazon ECS task was created, in
+    #   UTC format.
+    #   @return [Time]
+    #
+    # @!attribute [rw] task_definition_arn
+    #   The ARN of task definition which describes the container and volume
+    #   definitions of the Amazon ECS task.
+    #   @return [String]
+    #
+    # @!attribute [rw] launch_type
+    #   The infrastructure type on which the Amazon ECS task runs.
+    #   @return [String]
+    #
+    # @!attribute [rw] container_uids
+    #   A list of unique identifiers for the containers associated with the
+    #   Amazon ECS task.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/EcsTask AWS API Documentation
+    #
+    class EcsTask < Struct.new(
+      :created_at,
+      :task_definition_arn,
+      :launch_type,
+      :container_uids)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3248,6 +5147,46 @@ module Aws::GuardDuty
       :containers,
       :group,
       :launch_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains information about the Amazon EKS cluster involved in a
+    # GuardDuty finding, including cluster identification, status, and
+    # network configuration.
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) that uniquely identifies the Amazon
+    #   EKS cluster involved in the finding.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_at
+    #   The timestamp indicating when the Amazon EKS cluster was created, in
+    #   UTC format.
+    #   @return [Time]
+    #
+    # @!attribute [rw] status
+    #   The current status of the Amazon EKS cluster.
+    #   @return [String]
+    #
+    # @!attribute [rw] vpc_id
+    #   The ID of the Amazon Virtual Private Cloud (Amazon VPC) associated
+    #   with the Amazon EKS cluster.
+    #   @return [String]
+    #
+    # @!attribute [rw] ec2_instance_uids
+    #   A list of unique identifiers for the Amazon EC2 instances that serve
+    #   as worker nodes in the Amazon EKS cluster.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/EksCluster AWS API Documentation
+    #
+    class EksCluster < Struct.new(
+      :arn,
+      :created_at,
+      :status,
+      :vpc_id,
+      :ec2_instance_uids)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3407,11 +5346,6 @@ module Aws::GuardDuty
     # @!attribute [rw] criterion_key
     #   An enum value representing possible scan properties to match with
     #   given scan entries.
-    #
-    #   <note markdown="1"> Replace the enum value `CLUSTER_NAME` with `EKS_CLUSTER_NAME`.
-    #   `CLUSTER_NAME` has been deprecated.
-    #
-    #    </note>
     #   @return [String]
     #
     # @!attribute [rw] filter_condition
@@ -3459,7 +5393,17 @@ module Aws::GuardDuty
     #   @return [String]
     #
     # @!attribute [rw] region
-    #   The Region where the finding was generated.
+    #   The Region where the finding was generated. For findings generated
+    #   from [Global Service Events][1], the Region value in the finding
+    #   might differ from the Region where GuardDuty identifies the
+    #   potential threat. For more information, see [How GuardDuty handles
+    #   Amazon Web Services CloudTrail global events][2] in the *Amazon
+    #   GuardDuty User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-concepts.html#cloudtrail-concepts-global-service-events
+    #   [2]: https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_data-sources.html#cloudtrail_global
     #   @return [String]
     #
     # @!attribute [rw] resource
@@ -3646,7 +5590,9 @@ module Aws::GuardDuty
       include Aws::Structure
     end
 
-    # Contains information about the location of the remote IP address.
+    # Contains information about the location of the remote IP address. By
+    # default, GuardDuty returns `Geolocation` with `Lat` and `Lon` as
+    # `0.0`.
     #
     # @!attribute [rw] lat
     #   The latitude information of the remote IP address.
@@ -3850,6 +5796,25 @@ module Aws::GuardDuty
     #   The tags of the filter resource.
     #   @return [Hash<String,String>]
     #
+    # @!attribute [rw] created_at
+    #   The timestamp when the filter was created. This field is not
+    #   available for filters that were created before the lifecycle
+    #   metadata feature was enabled (legacy filters).
+    #   @return [Time]
+    #
+    # @!attribute [rw] updated_at
+    #   The timestamp when the filter was last updated. For legacy filters,
+    #   this field is present only after the filter has been updated at
+    #   least once since the lifecycle metadata feature was enabled.
+    #   @return [Time]
+    #
+    # @!attribute [rw] version
+    #   The version of the filter. Every time the filter is updated, the
+    #   version increments by 1. This field is not available for legacy
+    #   filters that were created before the lifecycle metadata feature was
+    #   enabled.
+    #   @return [Integer]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/GetFilterResponse AWS API Documentation
     #
     class GetFilterResponse < Struct.new(
@@ -3858,7 +5823,10 @@ module Aws::GuardDuty
       :action,
       :rank,
       :finding_criteria,
-      :tags)
+      :tags,
+      :created_at,
+      :updated_at,
+      :version)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4021,6 +5989,12 @@ module Aws::GuardDuty
     #   The tags of the IPSet resource.
     #   @return [Hash<String,String>]
     #
+    # @!attribute [rw] expected_bucket_owner
+    #   The Amazon Web Services account ID that owns the Amazon S3 bucket
+    #   specified in the **location** parameter. This field appears in the
+    #   response only if it was provided during IPSet creation or update.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/GetIPSetResponse AWS API Documentation
     #
     class GetIPSetResponse < Struct.new(
@@ -4028,7 +6002,45 @@ module Aws::GuardDuty
       :format,
       :location,
       :status,
-      :tags)
+      :tags,
+      :expected_bucket_owner)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] detector_id
+    #   The unique ID of the GuardDuty detector associated with the
+    #   investigation.
+    #
+    #   To find the `detectorId` in the current Region, see the Settings
+    #   page in the GuardDuty console, or run the [ListDetectors][1] API.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/guardduty/latest/APIReference/API_ListDetectors.html
+    #   @return [String]
+    #
+    # @!attribute [rw] investigation_id
+    #   The unique identifier of the investigation to retrieve.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/GetInvestigationRequest AWS API Documentation
+    #
+    class GetInvestigationRequest < Struct.new(
+      :detector_id,
+      :investigation_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] investigation
+    #   The details and results of the requested investigation.
+    #   @return [Types::Investigation]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/GetInvestigationResponse AWS API Documentation
+    #
+    class GetInvestigationResponse < Struct.new(
+      :investigation)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4113,6 +6125,188 @@ module Aws::GuardDuty
       :status,
       :status_reasons,
       :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] scan_id
+    #   A unique identifier that gets generated when you invoke the API
+    #   without any error. Each malware scan has a corresponding scan ID.
+    #   Using this scan ID, you can monitor the status of your malware scan.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/GetMalwareScanRequest AWS API Documentation
+    #
+    class GetMalwareScanRequest < Struct.new(
+      :scan_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] scan_id
+    #   A unique identifier associated with the malware scan. Each malware
+    #   scan has a corresponding scan ID. Using this scan ID, you can
+    #   monitor the status of your malware scan.
+    #   @return [String]
+    #
+    # @!attribute [rw] detector_id
+    #   The unique ID of the detector that is associated with the request,
+    #   if it belongs to an account which is a GuardDuty customer.
+    #
+    #   To find the `detectorId` in the current Region, see the Settings
+    #   page in the GuardDuty console, or run the [ListDetectors][1] API.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/guardduty/latest/APIReference/API_ListDetectors.html
+    #   @return [String]
+    #
+    # @!attribute [rw] admin_detector_id
+    #   The unique detector ID of the administrator account that the request
+    #   is associated with. If the account is an administrator, the
+    #   `AdminDetectorId` will be the same as the one used for `DetectorId.
+    #   If the customer is not a GuardDuty customer, this field will not be
+    #   present.`.
+    #
+    #   To find the `detectorId` in the current Region, see the Settings
+    #   page in the GuardDuty console, or run the [ListDetectors][1] API.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/guardduty/latest/APIReference/API_ListDetectors.html
+    #   @return [String]
+    #
+    # @!attribute [rw] resource_arn
+    #   Amazon Resource Name (ARN) of the resource on which a malware scan
+    #   was invoked.
+    #   @return [String]
+    #
+    # @!attribute [rw] resource_type
+    #   The type of resource that was scanned for malware.
+    #   @return [String]
+    #
+    # @!attribute [rw] scanned_resources_count
+    #   The total number of resources that were successfully scanned. This
+    #   is dependent on the resource type.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] skipped_resources_count
+    #   The total number of resources that were skipped during the scan.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] failed_resources_count
+    #   The total number of resources that failed to be scanned.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] scanned_resources
+    #   A list of resources along with their metadata that were scanned as
+    #   part of the malware scan operation.
+    #   @return [Array<Types::ScannedResource>]
+    #
+    # @!attribute [rw] scan_configuration
+    #   Information about the scan configuration used for the malware scan.
+    #   @return [Types::ScanConfiguration]
+    #
+    # @!attribute [rw] scan_category
+    #   The category of the malware scan, indicating the type of scan
+    #   performed.
+    #   @return [String]
+    #
+    # @!attribute [rw] scan_status
+    #   A value representing the current status of the malware scan.
+    #   @return [String]
+    #
+    # @!attribute [rw] scan_status_reason
+    #   Represents the reason for the current scan status, if applicable.
+    #   @return [String]
+    #
+    # @!attribute [rw] scan_type
+    #   A value representing the initiator of the scan.
+    #   @return [String]
+    #
+    # @!attribute [rw] scan_started_at
+    #   The timestamp representing when the malware scan was started.
+    #   @return [Time]
+    #
+    # @!attribute [rw] scan_completed_at
+    #   The timestamp representing when the malware scan was completed.
+    #   @return [Time]
+    #
+    # @!attribute [rw] scan_result_details
+    #   Detailed information about the results of the malware scan, if the
+    #   scan completed.
+    #   @return [Types::GetMalwareScanResultDetails]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/GetMalwareScanResponse AWS API Documentation
+    #
+    class GetMalwareScanResponse < Struct.new(
+      :scan_id,
+      :detector_id,
+      :admin_detector_id,
+      :resource_arn,
+      :resource_type,
+      :scanned_resources_count,
+      :skipped_resources_count,
+      :failed_resources_count,
+      :scanned_resources,
+      :scan_configuration,
+      :scan_category,
+      :scan_status,
+      :scan_status_reason,
+      :scan_type,
+      :scan_started_at,
+      :scan_completed_at,
+      :scan_result_details)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains information about the results of the malware scan.
+    #
+    # @!attribute [rw] scan_result_status
+    #   Status indicating whether threats were found for a completed scan.
+    #   @return [String]
+    #
+    # @!attribute [rw] skipped_file_count
+    #   The total number of files that were skipped during the scan.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] failed_file_count
+    #   The total number of files that failed to be scanned.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] threat_found_file_count
+    #   The total number of files in which threats were detected.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] total_file_count
+    #   The total number of files that were processed during the scan.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] total_bytes
+    #   The total number of bytes that were scanned.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] unique_threat_count
+    #   The total number of unique threats that were detected during the
+    #   scan.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] threats
+    #   The threats that were detected during the malware scan.
+    #   @return [Array<Types::ScanResultThreat>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/GetMalwareScanResultDetails AWS API Documentation
+    #
+    class GetMalwareScanResultDetails < Struct.new(
+      :scan_result_status,
+      :skipped_file_count,
+      :failed_file_count,
+      :threat_found_file_count,
+      :total_file_count,
+      :total_bytes,
+      :unique_threat_count,
+      :threats)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4328,6 +6522,85 @@ module Aws::GuardDuty
     end
 
     # @!attribute [rw] detector_id
+    #   The unique ID of the detector associated with the threat entity set
+    #   resource.
+    #
+    #   To find the `detectorId` in the current Region, see the Settings
+    #   page in the GuardDuty console, or run the [ListDetectors][1] API.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/guardduty/latest/APIReference/API_ListDetectors.html
+    #   @return [String]
+    #
+    # @!attribute [rw] threat_entity_set_id
+    #   The unique ID that helps GuardDuty identify the threat entity set.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/GetThreatEntitySetRequest AWS API Documentation
+    #
+    class GetThreatEntitySetRequest < Struct.new(
+      :detector_id,
+      :threat_entity_set_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] name
+    #   The name of the threat entity set associated with the specified
+    #   `threatEntitySetId`.
+    #   @return [String]
+    #
+    # @!attribute [rw] format
+    #   The format of the file that contains the threat entity set.
+    #   @return [String]
+    #
+    # @!attribute [rw] location
+    #   The URI of the file that contains the threat entity set.
+    #   @return [String]
+    #
+    # @!attribute [rw] expected_bucket_owner
+    #   The Amazon Web Services account ID that owns the Amazon S3 bucket
+    #   specified in the **location** parameter.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status of the associated threat entity set.
+    #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   The tags associated with the threat entity set resource.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] created_at
+    #   The timestamp when the associated threat entity set was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] updated_at
+    #   The timestamp when the associated threat entity set was updated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] error_details
+    #   The error details when the status is shown as `ERROR`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/GetThreatEntitySetResponse AWS API Documentation
+    #
+    class GetThreatEntitySetResponse < Struct.new(
+      :name,
+      :format,
+      :location,
+      :expected_bucket_owner,
+      :status,
+      :tags,
+      :created_at,
+      :updated_at,
+      :error_details)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] detector_id
     #   The unique ID of the detector that is associated with the
     #   threatIntelSet.
     #
@@ -4374,6 +6647,13 @@ module Aws::GuardDuty
     #   The tags of the threat list resource.
     #   @return [Hash<String,String>]
     #
+    # @!attribute [rw] expected_bucket_owner
+    #   The Amazon Web Services account ID that owns the Amazon S3 bucket
+    #   specified in the **location** parameter. This field appears in the
+    #   response only if it was provided during ThreatIntelSet creation or
+    #   update.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/GetThreatIntelSetResponse AWS API Documentation
     #
     class GetThreatIntelSetResponse < Struct.new(
@@ -4381,7 +6661,80 @@ module Aws::GuardDuty
       :format,
       :location,
       :status,
-      :tags)
+      :tags,
+      :expected_bucket_owner)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] detector_id
+    #   The unique ID of the GuardDuty detector associated with this trusted
+    #   entity set.
+    #   @return [String]
+    #
+    # @!attribute [rw] trusted_entity_set_id
+    #   The unique ID that helps GuardDuty identify the trusted entity set.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/GetTrustedEntitySetRequest AWS API Documentation
+    #
+    class GetTrustedEntitySetRequest < Struct.new(
+      :detector_id,
+      :trusted_entity_set_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] name
+    #   The name of the threat entity set associated with the specified
+    #   `trustedEntitySetId`.
+    #   @return [String]
+    #
+    # @!attribute [rw] format
+    #   The format of the file that contains the trusted entity set.
+    #   @return [String]
+    #
+    # @!attribute [rw] location
+    #   The URI of the file that contains the trusted entity set.
+    #   @return [String]
+    #
+    # @!attribute [rw] expected_bucket_owner
+    #   The Amazon Web Services account ID that owns the Amazon S3 bucket
+    #   specified in the **location** parameter.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status of the associated trusted entity set.
+    #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   The tags associated with trusted entity set resource.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] created_at
+    #   The timestamp when the associated trusted entity set was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] updated_at
+    #   The timestamp when the associated trusted entity set was updated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] error_details
+    #   The error details when the status is shown as `ERROR`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/GetTrustedEntitySetResponse AWS API Documentation
+    #
+    class GetTrustedEntitySetResponse < Struct.new(
+      :name,
+      :format,
+      :location,
+      :expected_bucket_owner,
+      :status,
+      :tags,
+      :created_at,
+      :updated_at,
+      :error_details)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4516,6 +6869,23 @@ module Aws::GuardDuty
       include Aws::Structure
     end
 
+    # Contains information about the IAM instance profile involved in a
+    # GuardDuty finding, including unique identifiers of the Amazon EC2
+    # instances.
+    #
+    # @!attribute [rw] ec2_instance_uids
+    #   A list of unique identifiers for the compromised Amazon EC2
+    #   instances that share the same IAM instance profile.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/IamInstanceProfileV2 AWS API Documentation
+    #
+    class IamInstanceProfileV2 < Struct.new(
+      :ec2_instance_uids)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Contains information about the impersonated user.
     #
     # @!attribute [rw] username
@@ -4531,6 +6901,22 @@ module Aws::GuardDuty
     class ImpersonatedUser < Struct.new(
       :username,
       :groups)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains information about the incremental scan configuration.
+    #
+    # @!attribute [rw] baseline_resource_arn
+    #   Amazon Resource Name (ARN) of the baseline resource used for
+    #   incremental scanning. The scan will only process changes since this
+    #   baseline resource was created.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/IncrementalScanDetails AWS API Documentation
+    #
+    class IncrementalScanDetails < Struct.new(
+      :baseline_resource_arn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4663,6 +7049,182 @@ module Aws::GuardDuty
       include Aws::Structure
     end
 
+    # Contains the details and results of a GuardDuty investigation.
+    #
+    # @!attribute [rw] investigation_id
+    #   The unique identifier of the investigation.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The current status of the investigation. Possible values are
+    #   `RUNNING`, `COMPLETED`, and `FAILED`.
+    #   @return [String]
+    #
+    # @!attribute [rw] trigger_prompt
+    #   The natural-language prompt that initiated this investigation.
+    #   @return [String]
+    #
+    # @!attribute [rw] triggered_by
+    #   The account that initiated the investigation.
+    #   @return [String]
+    #
+    # @!attribute [rw] metadata
+    #   Metadata about the product and version that produced the
+    #   investigation.
+    #   @return [Types::InvestigationMetadata]
+    #
+    # @!attribute [rw] cloud
+    #   Details about the cloud environment in which the investigation was
+    #   performed, including the provider, region, and account.
+    #   @return [Types::CloudDetails]
+    #
+    # @!attribute [rw] risk_level
+    #   The assessed risk level of the investigated threat. Possible values
+    #   are `Info`, `Low`, `Medium`, `High`, and `Critical`.
+    #   @return [String]
+    #
+    # @!attribute [rw] risk
+    #   A human-readable description of the assessed risk.
+    #   @return [String]
+    #
+    # @!attribute [rw] confidence
+    #   The confidence level of the investigation's assessment. Possible
+    #   values are `Unknown`, `Low`, `Medium`, and `High`.
+    #   @return [String]
+    #
+    # @!attribute [rw] summary
+    #   A structured summary of the investigation findings, including
+    #   affected resources, threat assessment, and recommended remediation
+    #   steps.
+    #   @return [String]
+    #
+    # @!attribute [rw] start_time
+    #   The timestamp at which the investigation started.
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_time
+    #   The timestamp at which the investigation completed.
+    #   @return [Time]
+    #
+    # @!attribute [rw] error
+    #   Details about the error if the investigation status is `FAILED`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/Investigation AWS API Documentation
+    #
+    class Investigation < Struct.new(
+      :investigation_id,
+      :status,
+      :trigger_prompt,
+      :triggered_by,
+      :metadata,
+      :cloud,
+      :risk_level,
+      :risk,
+      :confidence,
+      :summary,
+      :start_time,
+      :end_time,
+      :error)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains metadata about the product and version that produced an
+    # investigation.
+    #
+    # @!attribute [rw] version
+    #   The version of the investigation engine that produced the results.
+    #   @return [String]
+    #
+    # @!attribute [rw] product
+    #   Information about the product that produced the investigation.
+    #   @return [Types::Product]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/InvestigationMetadata AWS API Documentation
+    #
+    class InvestigationMetadata < Struct.new(
+      :version,
+      :product)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains information about the criteria used for sorting
+    # investigations.
+    #
+    # @!attribute [rw] attribute_name
+    #   The attribute by which to sort investigations.
+    #   @return [String]
+    #
+    # @!attribute [rw] order_by
+    #   The order in which the sorted results are to be displayed.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/InvestigationSortCriteria AWS API Documentation
+    #
+    class InvestigationSortCriteria < Struct.new(
+      :attribute_name,
+      :order_by)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains summary information about a GuardDuty investigation.
+    #
+    # @!attribute [rw] investigation_id
+    #   The unique identifier of the investigation.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The current status of the investigation.
+    #   @return [String]
+    #
+    # @!attribute [rw] trigger_prompt
+    #   The natural-language prompt that initiated this investigation.
+    #   @return [String]
+    #
+    # @!attribute [rw] risk_level
+    #   The assessed risk level of the investigated threat.
+    #   @return [String]
+    #
+    # @!attribute [rw] confidence
+    #   The confidence level of the investigation's assessment.
+    #   @return [String]
+    #
+    # @!attribute [rw] title
+    #   A short title summarizing the investigation.
+    #   @return [String]
+    #
+    # @!attribute [rw] account_id
+    #   The Amazon Web Services account ID associated with the
+    #   investigation.
+    #   @return [String]
+    #
+    # @!attribute [rw] start_time
+    #   The timestamp at which the investigation started.
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_time
+    #   The timestamp at which the investigation completed.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/InvestigationSummary AWS API Documentation
+    #
+    class InvestigationSummary < Struct.new(
+      :investigation_id,
+      :status,
+      :trigger_prompt,
+      :risk_level,
+      :confidence,
+      :title,
+      :account_id,
+      :start_time,
+      :end_time)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Contains information about the invitation to become a member account.
     #
     # @!attribute [rw] account_id
@@ -4746,6 +7308,36 @@ module Aws::GuardDuty
       include Aws::Structure
     end
 
+    # Contains detailed information about where a threat was detected.
+    #
+    # @!attribute [rw] resource_arn
+    #   Amazon Resource Name (ARN) of the resource where the threat was
+    #   detected.
+    #   @return [String]
+    #
+    # @!attribute [rw] item_path
+    #   The path where the threat was detected.
+    #   @return [String]
+    #
+    # @!attribute [rw] hash
+    #   The hash value of the infected item.
+    #   @return [String]
+    #
+    # @!attribute [rw] additional_info
+    #   Additional information about the detected threat item.
+    #   @return [Types::AdditionalInfo]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/ItemDetails AWS API Documentation
+    #
+    class ItemDetails < Struct.new(
+      :resource_arn,
+      :item_path,
+      :hash,
+      :additional_info)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Information about the nested item path and hash of the protected
     # resource.
     #
@@ -4777,6 +7369,23 @@ module Aws::GuardDuty
     #   The Kubernetes API request HTTP verb.
     #   @return [String]
     #
+    # @!attribute [rw] resource
+    #   The resource component in the Kubernetes API call action.
+    #   @return [String]
+    #
+    # @!attribute [rw] subresource
+    #   The name of the sub-resource in the Kubernetes API call action.
+    #   @return [String]
+    #
+    # @!attribute [rw] namespace
+    #   The name of the namespace where the Kubernetes API call action takes
+    #   place.
+    #   @return [String]
+    #
+    # @!attribute [rw] resource_name
+    #   The name of the resource in the Kubernetes API call action.
+    #   @return [String]
+    #
     # @!attribute [rw] source_ips
     #   The IP of the Kubernetes API caller and the IPs of any proxies or
     #   load balancers between the caller and the API endpoint.
@@ -4798,37 +7407,20 @@ module Aws::GuardDuty
     #   Parameters related to the Kubernetes API call action.
     #   @return [String]
     #
-    # @!attribute [rw] resource
-    #   The resource component in the Kubernetes API call action.
-    #   @return [String]
-    #
-    # @!attribute [rw] subresource
-    #   The name of the sub-resource in the Kubernetes API call action.
-    #   @return [String]
-    #
-    # @!attribute [rw] namespace
-    #   The name of the namespace where the Kubernetes API call action takes
-    #   place.
-    #   @return [String]
-    #
-    # @!attribute [rw] resource_name
-    #   The name of the resource in the Kubernetes API call action.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/KubernetesApiCallAction AWS API Documentation
     #
     class KubernetesApiCallAction < Struct.new(
       :request_uri,
       :verb,
+      :resource,
+      :subresource,
+      :namespace,
+      :resource_name,
       :source_ips,
       :user_agent,
       :remote_ip_details,
       :status_code,
-      :parameters,
-      :resource,
-      :subresource,
-      :namespace,
-      :resource_name)
+      :parameters)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5060,6 +7652,34 @@ module Aws::GuardDuty
       include Aws::Structure
     end
 
+    # Contains information about Kubernetes workloads involved in a
+    # GuardDuty finding, including pods, deployments, and other Kubernetes
+    # resources.
+    #
+    # @!attribute [rw] container_uids
+    #   A list of unique identifiers for the containers that are part of the
+    #   Kubernetes workload.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] namespace
+    #   The Kubernetes namespace in which the workload is running, providing
+    #   logical isolation within the cluster.
+    #   @return [String]
+    #
+    # @!attribute [rw] kubernetes_resources_types
+    #   The types of Kubernetes resources involved in the workload.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/KubernetesWorkload AWS API Documentation
+    #
+    class KubernetesWorkload < Struct.new(
+      :container_uids,
+      :namespace,
+      :kubernetes_resources_types)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Details about the Kubernetes workload involved in a Kubernetes
     # finding.
     #
@@ -5084,6 +7704,11 @@ module Aws::GuardDuty
     #   workload.
     #   @return [Boolean]
     #
+    # @!attribute [rw] service_account_name
+    #   The service account name that is associated with a Kubernetes
+    #   workload.
+    #   @return [String]
+    #
     # @!attribute [rw] containers
     #   Containers running as part of the Kubernetes workload.
     #   @return [Array<Types::Container>]
@@ -5091,11 +7716,6 @@ module Aws::GuardDuty
     # @!attribute [rw] volumes
     #   Volumes used by the Kubernetes workload.
     #   @return [Array<Types::Volume>]
-    #
-    # @!attribute [rw] service_account_name
-    #   The service account name that is associated with a Kubernetes
-    #   workload.
-    #   @return [String]
     #
     # @!attribute [rw] host_ipc
     #   Whether the host IPC flag is enabled for the pods in the workload.
@@ -5113,9 +7733,9 @@ module Aws::GuardDuty
       :uid,
       :namespace,
       :host_network,
+      :service_account_name,
       :containers,
       :volumes,
-      :service_account_name,
       :host_ipc,
       :host_pid)
       SENSITIVE = []
@@ -5615,6 +8235,65 @@ module Aws::GuardDuty
       include Aws::Structure
     end
 
+    # @!attribute [rw] detector_id
+    #   The unique ID of the GuardDuty detector whose investigations you
+    #   want to list.
+    #
+    #   To find the `detectorId` in the current Region, see the Settings
+    #   page in the GuardDuty console, or run the [ListDetectors][1] API.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/guardduty/latest/APIReference/API_ListDetectors.html
+    #   @return [String]
+    #
+    # @!attribute [rw] sort_criteria
+    #   Represents the criteria used for sorting investigations.
+    #   @return [Types::InvestigationSortCriteria]
+    #
+    # @!attribute [rw] max_results
+    #   You can use this parameter to indicate the maximum number of items
+    #   you want in the response. The default value is 50.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   You can use this parameter when paginating results. Set the value of
+    #   this parameter to null on your first call to the list action. For
+    #   subsequent calls to the action, fill nextToken in the request with
+    #   the value of NextToken from the previous response to continue
+    #   listing data.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/ListInvestigationsRequest AWS API Documentation
+    #
+    class ListInvestigationsRequest < Struct.new(
+      :detector_id,
+      :sort_criteria,
+      :max_results,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] investigations
+    #   A list of investigation summaries associated with the specified
+    #   detector.
+    #   @return [Array<Types::InvestigationSummary>]
+    #
+    # @!attribute [rw] next_token
+    #   The pagination parameter to be used on the next list operation to
+    #   retrieve more items.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/ListInvestigationsResponse AWS API Documentation
+    #
+    class ListInvestigationsResponse < Struct.new(
+      :investigations,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] max_results
     #   You can use this parameter to indicate the maximum number of items
     #   that you want in the response. The default value is 50. The maximum
@@ -5661,7 +8340,7 @@ module Aws::GuardDuty
     #   this parameter to null on your first call to the list action. For
     #   subsequent calls to the action, fill nextToken in the request with
     #   the value of `NextToken` from the previous response to continue
-    #   listing data.
+    #   listing data. The default page size is 100 plans.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/ListMalwareProtectionPlansRequest AWS API Documentation
@@ -5689,6 +8368,97 @@ module Aws::GuardDuty
     #
     class ListMalwareProtectionPlansResponse < Struct.new(
       :malware_protection_plans,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Represents the criteria used to filter the malware scan entries.
+    #
+    # @!attribute [rw] list_malware_scans_filter_criterion
+    #   Represents a condition that when matched will be added to the
+    #   response of the operation.
+    #   @return [Array<Types::ListMalwareScansFilterCriterion>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/ListMalwareScansFilterCriteria AWS API Documentation
+    #
+    class ListMalwareScansFilterCriteria < Struct.new(
+      :list_malware_scans_filter_criterion)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Represents a condition that when matched will be added to the response
+    # of the operation. Irrespective of using any filter criteria, an
+    # administrator account can view the scan entries for all of its member
+    # accounts. However, each member account can view the scan entries only
+    # for their own account.
+    #
+    # @!attribute [rw] list_malware_scans_criterion_key
+    #   An enum value representing possible scan properties to match with
+    #   given scan entries.
+    #   @return [String]
+    #
+    # @!attribute [rw] filter_condition
+    #   Contains information about the condition.
+    #   @return [Types::FilterCondition]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/ListMalwareScansFilterCriterion AWS API Documentation
+    #
+    class ListMalwareScansFilterCriterion < Struct.new(
+      :list_malware_scans_criterion_key,
+      :filter_condition)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] max_results
+    #   You can use this parameter to indicate the maximum number of items
+    #   that you want in the response. The default value is 50. The maximum
+    #   value is 50.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   You can use this parameter when paginating results. Set the value of
+    #   this parameter to null on your first call to the list action. For
+    #   subsequent calls to the action, fill nextToken in the request with
+    #   the value of NextToken from the previous response to continue
+    #   listing results.
+    #   @return [String]
+    #
+    # @!attribute [rw] filter_criteria
+    #   Represents the criteria used to filter the malware scan entries.
+    #   @return [Types::ListMalwareScansFilterCriteria]
+    #
+    # @!attribute [rw] sort_criteria
+    #   Represents the criteria used for sorting malware scan entries.
+    #   @return [Types::SortCriteria]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/ListMalwareScansRequest AWS API Documentation
+    #
+    class ListMalwareScansRequest < Struct.new(
+      :max_results,
+      :next_token,
+      :filter_criteria,
+      :sort_criteria)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] scans
+    #   The list of malware scans associated with the provided input
+    #   parameters.
+    #   @return [Array<Types::MalwareScan>]
+    #
+    # @!attribute [rw] next_token
+    #   The pagination parameter to be used on the next list operation to
+    #   retrieve more scans.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/ListMalwareScansResponse AWS API Documentation
+    #
+    class ListMalwareScansResponse < Struct.new(
+      :scans,
       :next_token)
       SENSITIVE = []
       include Aws::Structure
@@ -5885,6 +8655,59 @@ module Aws::GuardDuty
     end
 
     # @!attribute [rw] detector_id
+    #   The unique ID of the GuardDuty detector that is associated with this
+    #   threat entity set.
+    #
+    #   To find the `detectorId` in the current Region, see the Settings
+    #   page in the GuardDuty console, or run the [ListDetectors][1] API.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/guardduty/latest/APIReference/API_ListDetectors.html
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   You can use this parameter to indicate the maximum number of items
+    #   you want in the response. The default value is 50.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   You can use this parameter when paginating results. Set the value of
+    #   this parameter to null on your first call to the list action. For
+    #   subsequent calls to the action, fill nextToken in the request with
+    #   the value of NextToken from the previous response to continue
+    #   listing data.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/ListThreatEntitySetsRequest AWS API Documentation
+    #
+    class ListThreatEntitySetsRequest < Struct.new(
+      :detector_id,
+      :max_results,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] threat_entity_set_ids
+    #   The IDs of the threat entity set resources.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] next_token
+    #   The pagination parameter to be used on the next list operation to
+    #   retrieve more items.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/ListThreatEntitySetsResponse AWS API Documentation
+    #
+    class ListThreatEntitySetsResponse < Struct.new(
+      :threat_entity_set_ids,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] detector_id
     #   The unique ID of the detector that is associated with the
     #   threatIntelSet.
     #
@@ -5933,6 +8756,59 @@ module Aws::GuardDuty
     #
     class ListThreatIntelSetsResponse < Struct.new(
       :threat_intel_set_ids,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] detector_id
+    #   The unique ID of the GuardDuty detector that is associated with this
+    #   threat entity set.
+    #
+    #   To find the `detectorId` in the current Region, see the Settings
+    #   page in the GuardDuty console, or run the [ListDetectors][1] API.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/guardduty/latest/APIReference/API_ListDetectors.html
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   You can use this parameter to indicate the maximum number of items
+    #   you want in the response. The default value is 50.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   You can use this parameter when paginating results. Set the value of
+    #   this parameter to null on your first call to the list action. For
+    #   subsequent calls to the action, fill nextToken in the request with
+    #   the value of NextToken from the previous response to continue
+    #   listing data.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/ListTrustedEntitySetsRequest AWS API Documentation
+    #
+    class ListTrustedEntitySetsRequest < Struct.new(
+      :detector_id,
+      :max_results,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] trusted_entity_set_ids
+    #   The IDs of the trusted entity set resources.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] next_token
+    #   The pagination parameter to be used on the next list operation to
+    #   retrieve more items.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/ListTrustedEntitySetsResponse AWS API Documentation
+    #
+    class ListTrustedEntitySetsResponse < Struct.new(
+      :trusted_entity_set_ids,
       :next_token)
       SENSITIVE = []
       include Aws::Structure
@@ -6059,6 +8935,25 @@ module Aws::GuardDuty
       include Aws::Structure
     end
 
+    # Contains finding configuration details about the malware scan.
+    #
+    # @!attribute [rw] trigger_type
+    #   The event that triggered the malware scan.
+    #   @return [String]
+    #
+    # @!attribute [rw] incremental_scan_details
+    #   Contains information about the incremental scan configuration.
+    #   @return [Types::IncrementalScanDetails]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/MalwareProtectionFindingsScanConfiguration AWS API Documentation
+    #
+    class MalwareProtectionFindingsScanConfiguration < Struct.new(
+      :trigger_type,
+      :incremental_scan_details)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Information about whether the tags will be added to the S3 object
     # after scanning.
     #
@@ -6131,6 +9026,58 @@ module Aws::GuardDuty
       include Aws::Structure
     end
 
+    # Contains information about a particular malware scan.
+    #
+    # @!attribute [rw] resource_arn
+    #   Amazon Resource Name (ARN) of the resource for the given malware
+    #   scan.
+    #   @return [String]
+    #
+    # @!attribute [rw] resource_type
+    #   The type of resource that was scanned for malware.
+    #   @return [String]
+    #
+    # @!attribute [rw] scan_id
+    #   A unique identifier that gets generated when you invoke the API
+    #   without any error. Each malware scan has a corresponding scan ID.
+    #   Using this scan ID, you can monitor the status of your malware scan.
+    #   @return [String]
+    #
+    # @!attribute [rw] scan_status
+    #   An enum value representing the current status of the malware scan.
+    #   @return [String]
+    #
+    # @!attribute [rw] scan_result_status
+    #   An enum value representing the result of the malware scan.
+    #   @return [String]
+    #
+    # @!attribute [rw] scan_type
+    #   An enum value representing the type of scan that was initiated.
+    #   @return [String]
+    #
+    # @!attribute [rw] scan_started_at
+    #   The timestamp representing when the malware scan was started.
+    #   @return [Time]
+    #
+    # @!attribute [rw] scan_completed_at
+    #   The timestamp representing when the malware scan was completed.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/MalwareScan AWS API Documentation
+    #
+    class MalwareScan < Struct.new(
+      :resource_arn,
+      :resource_type,
+      :scan_id,
+      :scan_status,
+      :scan_result_status,
+      :scan_type,
+      :scan_started_at,
+      :scan_completed_at)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Information about the malware scan that generated a GuardDuty finding.
     #
     # @!attribute [rw] threats
@@ -6138,10 +9085,35 @@ module Aws::GuardDuty
     #   GuardDuty finding.
     #   @return [Array<Types::Threat>]
     #
+    # @!attribute [rw] scan_id
+    #   The unique identifier for the malware scan.
+    #   @return [String]
+    #
+    # @!attribute [rw] scan_type
+    #   The type of malware scan performed.
+    #   @return [String]
+    #
+    # @!attribute [rw] scan_category
+    #   The category of the malware scan.
+    #   @return [String]
+    #
+    # @!attribute [rw] scan_configuration
+    #   The configuration settings used for the malware scan.
+    #   @return [Types::MalwareProtectionFindingsScanConfiguration]
+    #
+    # @!attribute [rw] unique_threat_count
+    #   The number of unique malware threats detected during the scan.
+    #   @return [Integer]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/MalwareScanDetails AWS API Documentation
     #
     class MalwareScanDetails < Struct.new(
-      :threats)
+      :threats,
+      :scan_id,
+      :scan_type,
+      :scan_category,
+      :scan_configuration,
+      :unique_threat_count)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6354,6 +9326,20 @@ module Aws::GuardDuty
       include Aws::Structure
     end
 
+    # Contains information about the AI model involved in a finding.
+    #
+    # @!attribute [rw] model_id
+    #   The identifier of the AI model.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/ModelDetail AWS API Documentation
+    #
+    class ModelDetail < Struct.new(
+      :model_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Contains information about the network connection.
     #
     # @!attribute [rw] direction
@@ -6560,10 +9546,15 @@ module Aws::GuardDuty
     #   The text that was unusual.
     #   @return [Array<String>]
     #
+    # @!attribute [rw] number
+    #   The numeric values that were unusual.
+    #   @return [Array<Integer>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/Observations AWS API Documentation
     #
     class Observations < Struct.new(
-      :text)
+      :text,
+      :number)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7297,6 +10288,26 @@ module Aws::GuardDuty
       include Aws::Structure
     end
 
+    # Contains information about the product that produced an investigation.
+    #
+    # @!attribute [rw] name
+    #   The name of the product.
+    #   @return [String]
+    #
+    # @!attribute [rw] feature
+    #   The specific feature within the product that produced the
+    #   investigation.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/Product AWS API Documentation
+    #
+    class Product < Struct.new(
+      :name,
+      :feature)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Contains information about the product code for the EC2 instance.
     #
     # @!attribute [rw] code
@@ -7406,6 +10417,11 @@ module Aws::GuardDuty
     #   involved in the finding.
     #   @return [String]
     #
+    # @!attribute [rw] dbi_resource_id
+    #   The unique ID of the database resource involved in the activity that
+    #   prompted GuardDuty to generate the finding.
+    #   @return [String]
+    #
     # @!attribute [rw] tags
     #   Information about the tag key-value pairs.
     #   @return [Array<Types::Tag>]
@@ -7418,6 +10434,7 @@ module Aws::GuardDuty
       :engine_version,
       :db_cluster_identifier,
       :db_instance_arn,
+      :dbi_resource_id,
       :tags)
       SENSITIVE = []
       include Aws::Structure
@@ -7523,6 +10540,54 @@ module Aws::GuardDuty
     class RdsLoginAttemptAction < Struct.new(
       :remote_ip_details,
       :login_attributes)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains information about the recovery point configuration for
+    # scanning backup data from Amazon Web Services Backup.
+    #
+    # @!attribute [rw] backup_vault_name
+    #   The name of the Amazon Web Services Backup vault that contains the
+    #   name of the recovery point to be scanned.
+    #   @return [String]
+    #
+    # @!attribute [rw] continuous_scan_details
+    #   Contains information about the time range within the continuous
+    #   backup in Amazon Web Services Backup to scan.
+    #   @return [Types::ContinuousScanDetails]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/RecoveryPoint AWS API Documentation
+    #
+    class RecoveryPoint < Struct.new(
+      :backup_vault_name,
+      :continuous_scan_details)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains details about the backup recovery point.
+    #
+    # @!attribute [rw] recovery_point_arn
+    #   The Amazon Resource Name (ARN) of the recovery point.
+    #   @return [String]
+    #
+    # @!attribute [rw] backup_vault_name
+    #   The name of the backup vault containing the recovery point.
+    #   @return [String]
+    #
+    # @!attribute [rw] continuous_scan_details
+    #   Contains information about the time range within the continuous
+    #   backup in Amazon Web Services Backup that was scanned for a
+    #   point-in-time recovery resource.
+    #   @return [Types::ScanConfigurationContinuousScanDetails]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/RecoveryPointDetails AWS API Documentation
+    #
+    class RecoveryPointDetails < Struct.new(
+      :recovery_point_arn,
+      :backup_vault_name,
+      :continuous_scan_details)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7650,6 +10715,11 @@ module Aws::GuardDuty
     #   Details of a container.
     #   @return [Types::Container]
     #
+    # @!attribute [rw] lambda_details
+    #   Contains information about the Lambda function that was involved in
+    #   a finding.
+    #   @return [Types::LambdaDetails]
+    #
     # @!attribute [rw] rds_db_instance_details
     #   Contains information about the database instance to which an
     #   anomalous login attempt was made.
@@ -7665,10 +10735,26 @@ module Aws::GuardDuty
     #   login attempt was made.
     #   @return [Types::RdsDbUserDetails]
     #
-    # @!attribute [rw] lambda_details
-    #   Contains information about the Lambda function that was involved in
-    #   a finding.
-    #   @return [Types::LambdaDetails]
+    # @!attribute [rw] ebs_snapshot_details
+    #   Contains details about the EBS snapshot that was scanned.
+    #   @return [Types::EbsSnapshotDetails]
+    #
+    # @!attribute [rw] ec2_image_details
+    #   Contains details about the EC2 image that was scanned.
+    #   @return [Types::Ec2ImageDetails]
+    #
+    # @!attribute [rw] recovery_point_details
+    #   Contains details about the backup recovery point that was scanned.
+    #   @return [Types::RecoveryPointDetails]
+    #
+    # @!attribute [rw] bedrock_guardrail_details
+    #   Contains information about the Bedrock guardrail that was involved
+    #   in a finding.
+    #   @return [Types::BedrockGuardrailDetails]
+    #
+    # @!attribute [rw] model_details
+    #   Contains information about the AI models involved in a finding.
+    #   @return [Array<Types::ModelDetail>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/Resource AWS API Documentation
     #
@@ -7682,10 +10768,15 @@ module Aws::GuardDuty
       :ebs_volume_details,
       :ecs_cluster_details,
       :container_details,
+      :lambda_details,
       :rds_db_instance_details,
       :rds_limitless_db_details,
       :rds_db_user_details,
-      :lambda_details)
+      :ebs_snapshot_details,
+      :ec2_image_details,
+      :recovery_point_details,
+      :bedrock_guardrail_details,
+      :model_details)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7716,6 +10807,68 @@ module Aws::GuardDuty
     #   Contains information about the Amazon S3 object.
     #   @return [Types::S3Object]
     #
+    # @!attribute [rw] eks_cluster
+    #   Contains detailed information about the Amazon EKS cluster
+    #   associated with the activity that prompted GuardDuty to generate a
+    #   finding.
+    #   @return [Types::EksCluster]
+    #
+    # @!attribute [rw] kubernetes_workload
+    #   Contains detailed information about the Kubernetes workload
+    #   associated with the activity that prompted GuardDuty to generate a
+    #   finding.
+    #   @return [Types::KubernetesWorkload]
+    #
+    # @!attribute [rw] container
+    #   Contains detailed information about the container associated with
+    #   the activity that prompted GuardDuty to generate a finding.
+    #   @return [Types::ContainerFindingResource]
+    #
+    # @!attribute [rw] ecs_cluster
+    #   Contains detailed information about the Amazon ECS cluster
+    #   associated with the activity that prompted GuardDuty to generate a
+    #   finding.
+    #   @return [Types::EcsCluster]
+    #
+    # @!attribute [rw] ecs_task
+    #   Contains detailed information about the Amazon ECS task associated
+    #   with the activity that prompted GuardDuty to generate a finding.
+    #   @return [Types::EcsTask]
+    #
+    # @!attribute [rw] iam_instance_profile
+    #   Contains detailed information about the IAM instance profile
+    #   associated with the activity that prompted GuardDuty to generate a
+    #   finding.
+    #   @return [Types::IamInstanceProfileV2]
+    #
+    # @!attribute [rw] autoscaling_auto_scaling_group
+    #   Contains detailed information about the Auto Scaling Group
+    #   associated with the activity that prompted GuardDuty to generate a
+    #   finding.
+    #   @return [Types::AutoscalingAutoScalingGroup]
+    #
+    # @!attribute [rw] ec2_launch_template
+    #   Contains detailed information about the EC2 launch template
+    #   associated with the activity that prompted GuardDuty to generate a
+    #   finding.
+    #   @return [Types::Ec2LaunchTemplate]
+    #
+    # @!attribute [rw] ec2_vpc
+    #   Contains detailed information about the EC2 VPC associated with the
+    #   activity that prompted GuardDuty to generate a finding.
+    #   @return [Types::Ec2Vpc]
+    #
+    # @!attribute [rw] ec2_image
+    #   Contains detailed information about the EC2 Image associated with
+    #   the activity that prompted GuardDuty to generate a finding.
+    #   @return [Types::Ec2Image]
+    #
+    # @!attribute [rw] cloudformation_stack
+    #   Contains detailed information about the CloudFormation stack
+    #   associated with the activity that prompted GuardDuty to generate a
+    #   finding.
+    #   @return [Types::CloudformationStack]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/ResourceData AWS API Documentation
     #
     class ResourceData < Struct.new(
@@ -7723,7 +10876,18 @@ module Aws::GuardDuty
       :ec2_instance,
       :access_key,
       :ec2_network_interface,
-      :s3_object)
+      :s3_object,
+      :eks_cluster,
+      :kubernetes_workload,
+      :container,
+      :ecs_cluster,
+      :ecs_task,
+      :iam_instance_profile,
+      :autoscaling_auto_scaling_group,
+      :ec2_launch_template,
+      :ec2_vpc,
+      :ec2_image,
+      :cloudformation_stack)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7994,6 +11158,22 @@ module Aws::GuardDuty
     #   were found.
     #   @return [String]
     #
+    # @!attribute [rw] file_operation
+    #   Represents the type of file operation that triggered the finding,
+    #   such as Write, Delete, Rename, Link, or Symlink.
+    #   @return [String]
+    #
+    # @!attribute [rw] file_path
+    #   The path of the sensitive file that was modified. Modification
+    #   includes write, delete, rename, link, or symlink operations. This
+    #   field is indexed for filtering.
+    #   @return [String]
+    #
+    # @!attribute [rw] related_file_paths
+    #   All file paths modified by the same process that triggered the
+    #   finding, up to a maximum of 25 paths.
+    #   @return [Array<String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/RuntimeContext AWS API Documentation
     #
     class RuntimeContext < Struct.new(
@@ -8021,7 +11201,10 @@ module Aws::GuardDuty
       :tool_category,
       :service_name,
       :command_line_example,
-      :threat_file_path)
+      :threat_file_path,
+      :file_operation,
+      :file_path,
+      :related_file_paths)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -8261,6 +11444,34 @@ module Aws::GuardDuty
       include Aws::Structure
     end
 
+    # The S3 object path to initiate a scan, including bucket name, object
+    # key, and optional version ID.
+    #
+    # @!attribute [rw] bucket
+    #   The name of the S3 bucket containing the object to scan. The bucket
+    #   must have GuardDuty Malware Protection enabled.
+    #   @return [String]
+    #
+    # @!attribute [rw] key
+    #   The key (name) of the S3 object to scan for malware. This must be
+    #   the full key path of the object within the bucket.
+    #   @return [String]
+    #
+    # @!attribute [rw] version_id
+    #   The version ID of the S3 object to scan. If not specified, the
+    #   latest version of the object is scanned.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/S3ObjectForSendObjectMalwareScan AWS API Documentation
+    #
+    class S3ObjectForSendObjectMalwareScan < Struct.new(
+      :bucket,
+      :key,
+      :version_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Contains information about malware scans associated with GuardDuty
     # Malware Protection for EC2.
     #
@@ -8399,6 +11610,83 @@ module Aws::GuardDuty
       include Aws::Structure
     end
 
+    # Contains information about the configuration used for the malware
+    # scan.
+    #
+    # @!attribute [rw] role
+    #   Amazon Resource Name (ARN) of the IAM role that should contain the
+    #   required permissions for the scan.
+    #   @return [String]
+    #
+    # @!attribute [rw] trigger_details
+    #   Information about the entity that triggered the malware scan.
+    #   @return [Types::TriggerDetails]
+    #
+    # @!attribute [rw] incremental_scan_details
+    #   Information about the incremental scan configuration, if applicable.
+    #   @return [Types::IncrementalScanDetails]
+    #
+    # @!attribute [rw] recovery_point
+    #   Information about the recovery point configuration used for the
+    #   scan, if applicable.
+    #   @return [Types::ScanConfigurationRecoveryPoint]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/ScanConfiguration AWS API Documentation
+    #
+    class ScanConfiguration < Struct.new(
+      :role,
+      :trigger_details,
+      :incremental_scan_details,
+      :recovery_point)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains information about the time range within the continuous backup
+    # in Amazon Web Services Backup that was scanned for a point-in-time
+    # recovery resource.
+    #
+    # @!attribute [rw] start_time
+    #   The timestamp representing the start of the time range that was
+    #   scanned.
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_time
+    #   The timestamp representing the end of the time range that was
+    #   scanned.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/ScanConfigurationContinuousScanDetails AWS API Documentation
+    #
+    class ScanConfigurationContinuousScanDetails < Struct.new(
+      :start_time,
+      :end_time)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains information about the recovery point configuration used in
+    # the scan.
+    #
+    # @!attribute [rw] backup_vault_name
+    #   The name of the Amazon Web Services Backup vault that contains the
+    #   recovery point for the scanned.
+    #   @return [String]
+    #
+    # @!attribute [rw] continuous_scan_details
+    #   The time range within the continuous backup in Amazon Web Services
+    #   Backup that was scanned for a point-in-time recovery resource.
+    #   @return [Types::ScanConfigurationContinuousScanDetails]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/ScanConfigurationRecoveryPoint AWS API Documentation
+    #
+    class ScanConfigurationRecoveryPoint < Struct.new(
+      :backup_vault_name,
+      :continuous_scan_details)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Contains a complete view providing malware scan result details.
     #
     # @!attribute [rw] scanned_item_count
@@ -8526,6 +11814,41 @@ module Aws::GuardDuty
       include Aws::Structure
     end
 
+    # Contains information about a specific threat that was detected during
+    # the malware scan.
+    #
+    # @!attribute [rw] name
+    #   The name of the detected threat.
+    #   @return [String]
+    #
+    # @!attribute [rw] source
+    #   The source that detected this threat.
+    #   @return [String]
+    #
+    # @!attribute [rw] count
+    #   The number of instances of this threat that were detected.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] hash
+    #   The hash value associated with the detected threat.
+    #   @return [String]
+    #
+    # @!attribute [rw] item_details
+    #   Additional information about where this threat was detected.
+    #   @return [Array<Types::ItemDetails>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/ScanResultThreat AWS API Documentation
+    #
+    class ScanResultThreat < Struct.new(
+      :name,
+      :source,
+      :count,
+      :hash,
+      :item_details)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Contains files infected with the given threat providing details of
     # malware name and severity.
     #
@@ -8580,6 +11903,61 @@ module Aws::GuardDuty
       include Aws::Structure
     end
 
+    # Contains information about a resource that was scanned as part of the
+    # malware scan operation.
+    #
+    # @!attribute [rw] scanned_resource_arn
+    #   Amazon Resource Name (ARN) of the scanned resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] scanned_resource_type
+    #   The resource type of the scanned resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] scanned_resource_status
+    #   The status of the scanned resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] scan_status_reason
+    #   The reason for the scan status of this particular resource, if
+    #   applicable.
+    #   @return [String]
+    #
+    # @!attribute [rw] resource_details
+    #   Information about the scanned resource.
+    #   @return [Types::ScannedResourceDetails]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/ScannedResource AWS API Documentation
+    #
+    class ScannedResource < Struct.new(
+      :scanned_resource_arn,
+      :scanned_resource_type,
+      :scanned_resource_status,
+      :scan_status_reason,
+      :resource_details)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains additional information about a resource that was scanned.
+    #
+    # @!attribute [rw] ebs_volume
+    #   Contains information about the EBS volume that was scanned.
+    #   @return [Types::VolumeDetail]
+    #
+    # @!attribute [rw] ebs_snapshot
+    #   Contains information about the EBS snapshot that was scanned.
+    #   @return [Types::EbsSnapshot]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/ScannedResourceDetails AWS API Documentation
+    #
+    class ScannedResourceDetails < Struct.new(
+      :ebs_volume,
+      :ebs_snapshot)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Container security context.
     #
     # @!attribute [rw] privileged
@@ -8620,6 +11998,24 @@ module Aws::GuardDuty
       include Aws::Structure
     end
 
+    # @!attribute [rw] s3_object
+    #   The S3 object information for the object you want to scan. The
+    #   bucket must have a Malware Protection plan configured to use this
+    #   API.
+    #   @return [Types::S3ObjectForSendObjectMalwareScan]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/SendObjectMalwareScanRequest AWS API Documentation
+    #
+    class SendObjectMalwareScanRequest < Struct.new(
+      :s3_object)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/SendObjectMalwareScanResponse AWS API Documentation
+    #
+    class SendObjectMalwareScanResponse < Aws::EmptyStructure; end
+
     # Contains information about the GuardDuty attack sequence finding.
     #
     # @!attribute [rw] uid
@@ -8655,6 +12051,12 @@ module Aws::GuardDuty
     #   sequence.
     #   @return [Array<Types::Indicator>]
     #
+    # @!attribute [rw] additional_sequence_types
+    #   Additional types of sequences that may be associated with the attack
+    #   sequence finding, providing further context about the nature of the
+    #   detected threat.
+    #   @return [Array<String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/Sequence AWS API Documentation
     #
     class Sequence < Struct.new(
@@ -8664,7 +12066,8 @@ module Aws::GuardDuty
       :resources,
       :endpoints,
       :signals,
-      :sequence_indicators)
+      :sequence_indicators,
+      :additional_sequence_types)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -8982,15 +12385,58 @@ module Aws::GuardDuty
       include Aws::Structure
     end
 
+    # Contains information about the configuration to be used for the
+    # malware scan.
+    #
+    # @!attribute [rw] role
+    #   Amazon Resource Name (ARN) of the IAM role that is used for scanning
+    #   the resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] incremental_scan_details
+    #   Contains information about the incremental scan configuration. When
+    #   specified, the scan will only process changes since the baseline
+    #   resource.
+    #   @return [Types::IncrementalScanDetails]
+    #
+    # @!attribute [rw] recovery_point
+    #   Contains information about the recovery point configuration for the
+    #   requested scan.
+    #   @return [Types::RecoveryPoint]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/StartMalwareScanConfiguration AWS API Documentation
+    #
+    class StartMalwareScanConfiguration < Struct.new(
+      :role,
+      :incremental_scan_details,
+      :recovery_point)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] resource_arn
     #   Amazon Resource Name (ARN) of the resource for which you invoked the
     #   API.
     #   @return [String]
     #
+    # @!attribute [rw] client_token
+    #   The idempotency token for the create request.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #   @return [String]
+    #
+    # @!attribute [rw] scan_configuration
+    #   Contains information about the configuration to be used for the
+    #   malware scan.
+    #   @return [Types::StartMalwareScanConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/StartMalwareScanRequest AWS API Documentation
     #
     class StartMalwareScanRequest < Struct.new(
-      :resource_arn)
+      :resource_arn,
+      :client_token,
+      :scan_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -9145,12 +12591,28 @@ module Aws::GuardDuty
     #   resource.
     #   @return [Array<Types::ItemPath>]
     #
+    # @!attribute [rw] count
+    #   The number of occurrences of this specific threat detected during
+    #   the scan.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] hash
+    #   The hash identifier of the detected malware threat.
+    #   @return [String]
+    #
+    # @!attribute [rw] item_details
+    #   Detailed information about the detected malware threat.
+    #   @return [Array<Types::ItemDetails>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/Threat AWS API Documentation
     #
     class Threat < Struct.new(
       :name,
       :source,
-      :item_paths)
+      :item_paths,
+      :count,
+      :hash,
+      :item_details)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -9256,11 +12718,16 @@ module Aws::GuardDuty
     #   The description of the scan trigger.
     #   @return [String]
     #
+    # @!attribute [rw] trigger_type
+    #   Specifies the trigger type that started the malware scan.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/TriggerDetails AWS API Documentation
     #
     class TriggerDetails < Struct.new(
       :guard_duty_finding_id,
-      :description)
+      :description,
+      :trigger_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -9428,6 +12895,8 @@ module Aws::GuardDuty
     # @!attribute [rw] action
     #   Specifies the action that is to be applied to the findings that
     #   match the filter.
+    #
+    #   Default: NOOP
     #   @return [String]
     #
     # @!attribute [rw] rank
@@ -9438,7 +12907,1350 @@ module Aws::GuardDuty
     #
     # @!attribute [rw] finding_criteria
     #   Represents the criteria to be used in the filter for querying
-    #   findings.
+    #   findings. The following fields are available for filtering:
+    #
+    #   * accountId
+    #
+    #   * arn
+    #
+    #   * associatedAttackSequenceArn
+    #
+    #   * confidence
+    #
+    #   * createdAt
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * id
+    #
+    #   * partition
+    #
+    #   * region
+    #
+    #   * resource.accessKeyDetails.accessKeyId
+    #
+    #   * resource.accessKeyDetails.principalId
+    #
+    #   * resource.accessKeyDetails.userIdentity.accessKeyId
+    #
+    #   * resource.accessKeyDetails.userIdentity.accountId
+    #
+    #   * resource.accessKeyDetails.userIdentity.arn
+    #
+    #   * resource.accessKeyDetails.userIdentity.principalId
+    #
+    #   * resource.accessKeyDetails.userIdentity.sessionContext.attributes.mfaAuthenticated
+    #
+    #   * resource.accessKeyDetails.userIdentity.sessionContext.ec2RoleDelivery
+    #
+    #   * resource.accessKeyDetails.userIdentity.sessionContext.invokedBy
+    #
+    #   * resource.accessKeyDetails.userIdentity.sessionContext.sessionIssuer.accountId
+    #
+    #   * resource.accessKeyDetails.userIdentity.sessionContext.sessionIssuer.arn
+    #
+    #   * resource.accessKeyDetails.userIdentity.sessionContext.sessionIssuer.principalId
+    #
+    #   * resource.accessKeyDetails.userIdentity.sessionContext.sessionIssuer.type
+    #
+    #   * resource.accessKeyDetails.userIdentity.sessionContext.sessionIssuer.userName
+    #
+    #   * resource.accessKeyDetails.userIdentity.sessionContext.sourceIdentity
+    #
+    #   * resource.accessKeyDetails.userIdentity.sessionContext.webIdFederationData.attributes
+    #
+    #   * resource.accessKeyDetails.userIdentity.sessionContext.webIdFederationData.federatedProvider
+    #
+    #   * resource.accessKeyDetails.userIdentity.type
+    #
+    #   * resource.accessKeyDetails.userIdentity.userName
+    #
+    #   * resource.accessKeyDetails.userName
+    #
+    #   * resource.accessKeyDetails.userType
+    #
+    #   * resource.bedrockGuardrailDetails.guardrailArn
+    #
+    #   * resource.bedrockGuardrailDetails.guardrailVersion
+    #
+    #   * resource.containerDetails.containerRuntime
+    #
+    #   * resource.containerDetails.id
+    #
+    #   * resource.containerDetails.image
+    #
+    #   * resource.containerDetails.imagePrefix
+    #
+    #   * resource.containerDetails.name
+    #
+    #   * resource.containerDetails.securityContext.allowPrivilegeEscalation
+    #
+    #   * resource.containerDetails.securityContext.privileged
+    #
+    #   * resource.containerDetails.volumeMounts.mountPath
+    #
+    #   * resource.containerDetails.volumeMounts.name
+    #
+    #   * resource.ebsSnapshotDetails.snapshotArn
+    #
+    #   * resource.ebsVolumeDetails.scannedVolumeDetails.deviceName
+    #
+    #   * resource.ebsVolumeDetails.scannedVolumeDetails.encryptionType
+    #
+    #   * resource.ebsVolumeDetails.scannedVolumeDetails.kmsKeyArn
+    #
+    #   * resource.ebsVolumeDetails.scannedVolumeDetails.snapshotArn
+    #
+    #   * resource.ebsVolumeDetails.scannedVolumeDetails.volumeArn
+    #
+    #   * resource.ebsVolumeDetails.scannedVolumeDetails.volumeSizeInGB
+    #
+    #   * resource.ebsVolumeDetails.scannedVolumeDetails.volumeType
+    #
+    #   * resource.ebsVolumeDetails.skippedVolumeDetails.deviceName
+    #
+    #   * resource.ebsVolumeDetails.skippedVolumeDetails.encryptionType
+    #
+    #   * resource.ebsVolumeDetails.skippedVolumeDetails.kmsKeyArn
+    #
+    #   * resource.ebsVolumeDetails.skippedVolumeDetails.snapshotArn
+    #
+    #   * resource.ebsVolumeDetails.skippedVolumeDetails.volumeArn
+    #
+    #   * resource.ebsVolumeDetails.skippedVolumeDetails.volumeSizeInGB
+    #
+    #   * resource.ebsVolumeDetails.skippedVolumeDetails.volumeType
+    #
+    #   * resource.ec2ImageDetails.imageArn
+    #
+    #   * resource.ecsClusterDetails.activeServicesCount
+    #
+    #   * resource.ecsClusterDetails.arn
+    #
+    #   * resource.ecsClusterDetails.name
+    #
+    #   * resource.ecsClusterDetails.registeredContainerInstancesCount
+    #
+    #   * resource.ecsClusterDetails.runningTasksCount
+    #
+    #   * resource.ecsClusterDetails.status
+    #
+    #   * resource.ecsClusterDetails.tags.key
+    #
+    #   * resource.ecsClusterDetails.tags.value
+    #
+    #   * resource.ecsClusterDetails.taskDetails.arn
+    #
+    #   * resource.ecsClusterDetails.taskDetails.containers.containerRuntime
+    #
+    #   * resource.ecsClusterDetails.taskDetails.containers.id
+    #
+    #   * resource.ecsClusterDetails.taskDetails.containers.image
+    #
+    #   * resource.ecsClusterDetails.taskDetails.containers.imagePrefix
+    #
+    #   * resource.ecsClusterDetails.taskDetails.containers.name
+    #
+    #   * resource.ecsClusterDetails.taskDetails.containers.securityContext.allowPrivilegeEscalation
+    #
+    #   * resource.ecsClusterDetails.taskDetails.containers.securityContext.privileged
+    #
+    #   * resource.ecsClusterDetails.taskDetails.containers.volumeMounts.mountPath
+    #
+    #   * resource.ecsClusterDetails.taskDetails.containers.volumeMounts.name
+    #
+    #   * resource.ecsClusterDetails.taskDetails.createdAt
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * resource.ecsClusterDetails.taskDetails.definitionArn
+    #
+    #   * resource.ecsClusterDetails.taskDetails.group
+    #
+    #   * resource.ecsClusterDetails.taskDetails.launchType
+    #
+    #   * resource.ecsClusterDetails.taskDetails.startedAt
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * resource.ecsClusterDetails.taskDetails.startedBy
+    #
+    #   * resource.ecsClusterDetails.taskDetails.tags.key
+    #
+    #   * resource.ecsClusterDetails.taskDetails.tags.value
+    #
+    #   * resource.ecsClusterDetails.taskDetails.version
+    #
+    #   * resource.ecsClusterDetails.taskDetails.volumes.hostPath.path
+    #
+    #   * resource.ecsClusterDetails.taskDetails.volumes.name
+    #
+    #   * resource.eksClusterDetails.arn
+    #
+    #   * resource.eksClusterDetails.createdAt
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * resource.eksClusterDetails.name
+    #
+    #   * resource.eksClusterDetails.status
+    #
+    #   * resource.eksClusterDetails.tags.key
+    #
+    #   * resource.eksClusterDetails.tags.value
+    #
+    #   * resource.eksClusterDetails.vpcId
+    #
+    #   * resource.instanceDetails.availabilityZone
+    #
+    #   * resource.instanceDetails.iamInstanceProfile.arn
+    #
+    #   * resource.instanceDetails.iamInstanceProfile.id
+    #
+    #   * resource.instanceDetails.imageDescription
+    #
+    #   * resource.instanceDetails.imageId
+    #
+    #   * resource.instanceDetails.instanceId
+    #
+    #   * resource.instanceDetails.instanceState
+    #
+    #   * resource.instanceDetails.instanceType
+    #
+    #   * resource.instanceDetails.launchTime
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * resource.instanceDetails.networkInterfaces.ipv6Addresses
+    #
+    #   * resource.instanceDetails.networkInterfaces.networkInterfaceId
+    #
+    #   * resource.instanceDetails.networkInterfaces.privateDnsName
+    #
+    #   * resource.instanceDetails.networkInterfaces.privateIpAddress
+    #
+    #   * resource.instanceDetails.networkInterfaces.privateIpAddresses.privateDnsName
+    #
+    #   * resource.instanceDetails.networkInterfaces.privateIpAddresses.privateIpAddress
+    #
+    #   * resource.instanceDetails.networkInterfaces.publicDnsName
+    #
+    #   * resource.instanceDetails.networkInterfaces.publicIp
+    #
+    #   * resource.instanceDetails.networkInterfaces.securityGroups.groupId
+    #
+    #   * resource.instanceDetails.networkInterfaces.securityGroups.groupName
+    #
+    #   * resource.instanceDetails.networkInterfaces.subnetId
+    #
+    #   * resource.instanceDetails.networkInterfaces.vpcId
+    #
+    #   * resource.instanceDetails.outpostArn
+    #
+    #   * resource.instanceDetails.platform
+    #
+    #   * resource.instanceDetails.productCodes.productCodeId
+    #
+    #   * resource.instanceDetails.productCodes.productCodeType
+    #
+    #   * resource.instanceDetails.tags.key
+    #
+    #   * resource.instanceDetails.tags.value
+    #
+    #   * resource.kubernetesDetails.kubernetesUserDetails.groups
+    #
+    #   * resource.kubernetesDetails.kubernetesUserDetails.impersonatedUser.groups
+    #
+    #   * resource.kubernetesDetails.kubernetesUserDetails.impersonatedUser.username
+    #
+    #   * resource.kubernetesDetails.kubernetesUserDetails.sessionName
+    #
+    #   * resource.kubernetesDetails.kubernetesUserDetails.uid
+    #
+    #   * resource.kubernetesDetails.kubernetesUserDetails.username
+    #
+    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.containers.containerRuntime
+    #
+    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.containers.id
+    #
+    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.containers.image
+    #
+    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.containers.imagePrefix
+    #
+    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.containers.name
+    #
+    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.containers.securityContext.allowPrivilegeEscalation
+    #
+    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.containers.securityContext.privileged
+    #
+    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.containers.volumeMounts.mountPath
+    #
+    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.containers.volumeMounts.name
+    #
+    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.hostIpc
+    #
+    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.hostNetwork
+    #
+    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.hostPid
+    #
+    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.name
+    #
+    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.namespace
+    #
+    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.serviceAccountName
+    #
+    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.type
+    #
+    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.uid
+    #
+    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.volumes.hostPath.path
+    #
+    #   * resource.kubernetesDetails.kubernetesWorkloadDetails.volumes.name
+    #
+    #   * resource.lambdaDetails.description
+    #
+    #   * resource.lambdaDetails.functionArn
+    #
+    #   * resource.lambdaDetails.functionName
+    #
+    #   * resource.lambdaDetails.functionVersion
+    #
+    #   * resource.lambdaDetails.lastModifiedAt
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * resource.lambdaDetails.revisionId
+    #
+    #   * resource.lambdaDetails.role
+    #
+    #   * resource.lambdaDetails.tags.key
+    #
+    #   * resource.lambdaDetails.tags.value
+    #
+    #   * resource.lambdaDetails.vpcConfig.securityGroups.groupId
+    #
+    #   * resource.lambdaDetails.vpcConfig.securityGroups.groupName
+    #
+    #   * resource.lambdaDetails.vpcConfig.subnetIds
+    #
+    #   * resource.lambdaDetails.vpcConfig.vpcId
+    #
+    #   * resource.rdsDbInstanceDetails.dbClusterIdentifier
+    #
+    #   * resource.rdsDbInstanceDetails.dbInstanceArn
+    #
+    #   * resource.rdsDbInstanceDetails.dbInstanceIdentifier
+    #
+    #   * resource.rdsDbInstanceDetails.dbSecurityGroups.name
+    #
+    #   * resource.rdsDbInstanceDetails.dbSecurityGroups.status
+    #
+    #   * resource.rdsDbInstanceDetails.dbiResourceId
+    #
+    #   * resource.rdsDbInstanceDetails.engine
+    #
+    #   * resource.rdsDbInstanceDetails.engineVersion
+    #
+    #   * resource.rdsDbInstanceDetails.iamDatabaseAuthenticationEnabled
+    #
+    #   * resource.rdsDbInstanceDetails.publiclyAccessible
+    #
+    #   * resource.rdsDbInstanceDetails.vpcId
+    #
+    #   * resource.rdsDbInstanceDetails.vpcSecurityGroups.status
+    #
+    #   * resource.rdsDbInstanceDetails.vpcSecurityGroups.vpcSecurityGroupId
+    #
+    #   * resource.rdsDbUserDetails.application
+    #
+    #   * resource.rdsDbUserDetails.authMethod
+    #
+    #   * resource.rdsDbUserDetails.database
+    #
+    #   * resource.rdsDbUserDetails.ssl
+    #
+    #   * resource.rdsDbUserDetails.user
+    #
+    #   * resource.rdsLimitlessDbDetails.dbClusterIdentifier
+    #
+    #   * resource.rdsLimitlessDbDetails.dbShardGroupArn
+    #
+    #   * resource.rdsLimitlessDbDetails.dbShardGroupIdentifier
+    #
+    #   * resource.rdsLimitlessDbDetails.dbShardGroupResourceId
+    #
+    #   * resource.rdsLimitlessDbDetails.engine
+    #
+    #   * resource.rdsLimitlessDbDetails.engineVersion
+    #
+    #   * resource.rdsLimitlessDbDetails.tags.key
+    #
+    #   * resource.rdsLimitlessDbDetails.tags.value
+    #
+    #   * resource.recoveryPointDetails.backupVaultName
+    #
+    #   * resource.recoveryPointDetails.recoveryPointArn
+    #
+    #   * resource.resourceType
+    #
+    #   * resource.s3BucketDetails.arn
+    #
+    #   * resource.s3BucketDetails.createdAt
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * resource.s3BucketDetails.defaultServerSideEncryption.encryptionType
+    #
+    #   * resource.s3BucketDetails.defaultServerSideEncryption.kmsMasterKeyArn
+    #
+    #   * resource.s3BucketDetails.name
+    #
+    #   * resource.s3BucketDetails.owner.id
+    #
+    #   * resource.s3BucketDetails.publicAccess.effectivePermission
+    #
+    #   * resource.s3BucketDetails.publicAccess.permissionConfiguration.accountLevelPermissions.blockPublicAccess.blockPublicAcls
+    #
+    #   * resource.s3BucketDetails.publicAccess.permissionConfiguration.accountLevelPermissions.blockPublicAccess.blockPublicPolicy
+    #
+    #   * resource.s3BucketDetails.publicAccess.permissionConfiguration.accountLevelPermissions.blockPublicAccess.ignorePublicAcls
+    #
+    #   * resource.s3BucketDetails.publicAccess.permissionConfiguration.accountLevelPermissions.blockPublicAccess.restrictPublicBuckets
+    #
+    #   * resource.s3BucketDetails.publicAccess.permissionConfiguration.bucketLevelPermissions.accessControlList.allowsPublicReadAccess
+    #
+    #   * resource.s3BucketDetails.publicAccess.permissionConfiguration.bucketLevelPermissions.accessControlList.allowsPublicWriteAccess
+    #
+    #   * resource.s3BucketDetails.publicAccess.permissionConfiguration.bucketLevelPermissions.blockPublicAccess.blockPublicAcls
+    #
+    #   * resource.s3BucketDetails.publicAccess.permissionConfiguration.bucketLevelPermissions.blockPublicAccess.blockPublicPolicy
+    #
+    #   * resource.s3BucketDetails.publicAccess.permissionConfiguration.bucketLevelPermissions.blockPublicAccess.ignorePublicAcls
+    #
+    #   * resource.s3BucketDetails.publicAccess.permissionConfiguration.bucketLevelPermissions.blockPublicAccess.restrictPublicBuckets
+    #
+    #   * resource.s3BucketDetails.publicAccess.permissionConfiguration.bucketLevelPermissions.bucketPolicy.allowsPublicReadAccess
+    #
+    #   * resource.s3BucketDetails.publicAccess.permissionConfiguration.bucketLevelPermissions.bucketPolicy.allowsPublicWriteAccess
+    #
+    #   * resource.s3BucketDetails.s3ObjectDetails.eTag
+    #
+    #   * resource.s3BucketDetails.s3ObjectDetails.hash
+    #
+    #   * resource.s3BucketDetails.s3ObjectDetails.key
+    #
+    #   * resource.s3BucketDetails.s3ObjectDetails.objectArn
+    #
+    #   * resource.s3BucketDetails.s3ObjectDetails.versionId
+    #
+    #   * resource.s3BucketDetails.tags.key
+    #
+    #   * resource.s3BucketDetails.tags.value
+    #
+    #   * resource.s3BucketDetails.type
+    #
+    #   * schemaVersion
+    #
+    #   * service.action.actionType
+    #
+    #   * service.action.awsApiCallAction.api
+    #
+    #   * service.action.awsApiCallAction.callerType
+    #
+    #   * service.action.awsApiCallAction.domainDetails.domain
+    #
+    #   * service.action.awsApiCallAction.errorCode
+    #
+    #   * service.action.awsApiCallAction.remoteAccountDetails.accountId
+    #
+    #   * service.action.awsApiCallAction.remoteAccountDetails.affiliated
+    #
+    #   * service.action.awsApiCallAction.remoteAccountDetails.awsServiceName
+    #
+    #   * service.action.awsApiCallAction.remoteIpDetails.city.cityName
+    #
+    #   * service.action.awsApiCallAction.remoteIpDetails.country.countryCode
+    #
+    #   * service.action.awsApiCallAction.remoteIpDetails.country.countryName
+    #
+    #   * service.action.awsApiCallAction.remoteIpDetails.geoLocation.lat
+    #
+    #   * service.action.awsApiCallAction.remoteIpDetails.geoLocation.lon
+    #
+    #   * service.action.awsApiCallAction.remoteIpDetails.ipAddressV4
+    #
+    #   * service.action.awsApiCallAction.remoteIpDetails.ipAddressV6
+    #
+    #   * service.action.awsApiCallAction.remoteIpDetails.organization.asn
+    #
+    #   * service.action.awsApiCallAction.remoteIpDetails.organization.asnOrg
+    #
+    #   * service.action.awsApiCallAction.remoteIpDetails.organization.isp
+    #
+    #   * service.action.awsApiCallAction.remoteIpDetails.organization.org
+    #
+    #   * service.action.awsApiCallAction.serviceName
+    #
+    #   * service.action.awsApiCallAction.userAgent
+    #
+    #   * service.action.dnsRequestAction.blocked
+    #
+    #   * service.action.dnsRequestAction.domain
+    #
+    #   * service.action.dnsRequestAction.domainWithSuffix
+    #
+    #   * service.action.dnsRequestAction.protocol
+    #
+    #   * service.action.dnsRequestAction.vpcOwnerAccountId
+    #
+    #   * service.action.kubernetesApiCallAction.namespace
+    #
+    #   * service.action.kubernetesApiCallAction.parameters
+    #
+    #   * service.action.kubernetesApiCallAction.remoteIpDetails.city.cityName
+    #
+    #   * service.action.kubernetesApiCallAction.remoteIpDetails.country.countryCode
+    #
+    #   * service.action.kubernetesApiCallAction.remoteIpDetails.country.countryName
+    #
+    #   * service.action.kubernetesApiCallAction.remoteIpDetails.geoLocation.lat
+    #
+    #   * service.action.kubernetesApiCallAction.remoteIpDetails.geoLocation.lon
+    #
+    #   * service.action.kubernetesApiCallAction.remoteIpDetails.ipAddressV4
+    #
+    #   * service.action.kubernetesApiCallAction.remoteIpDetails.ipAddressV6
+    #
+    #   * service.action.kubernetesApiCallAction.remoteIpDetails.organization.asn
+    #
+    #   * service.action.kubernetesApiCallAction.remoteIpDetails.organization.asnOrg
+    #
+    #   * service.action.kubernetesApiCallAction.remoteIpDetails.organization.isp
+    #
+    #   * service.action.kubernetesApiCallAction.remoteIpDetails.organization.org
+    #
+    #   * service.action.kubernetesApiCallAction.requestUri
+    #
+    #   * service.action.kubernetesApiCallAction.resource
+    #
+    #   * service.action.kubernetesApiCallAction.resourceName
+    #
+    #   * service.action.kubernetesApiCallAction.sourceIPs
+    #
+    #   * service.action.kubernetesApiCallAction.statusCode
+    #
+    #   * service.action.kubernetesApiCallAction.subresource
+    #
+    #   * service.action.kubernetesApiCallAction.userAgent
+    #
+    #   * service.action.kubernetesApiCallAction.verb
+    #
+    #   * service.action.kubernetesPermissionCheckedDetails.allowed
+    #
+    #   * service.action.kubernetesPermissionCheckedDetails.namespace
+    #
+    #   * service.action.kubernetesPermissionCheckedDetails.resource
+    #
+    #   * service.action.kubernetesPermissionCheckedDetails.verb
+    #
+    #   * service.action.kubernetesRoleBindingDetails.kind
+    #
+    #   * service.action.kubernetesRoleBindingDetails.name
+    #
+    #   * service.action.kubernetesRoleBindingDetails.roleRefKind
+    #
+    #   * service.action.kubernetesRoleBindingDetails.roleRefName
+    #
+    #   * service.action.kubernetesRoleBindingDetails.uid
+    #
+    #   * service.action.kubernetesRoleDetails.kind
+    #
+    #   * service.action.kubernetesRoleDetails.name
+    #
+    #   * service.action.kubernetesRoleDetails.uid
+    #
+    #   * service.action.networkConnectionAction.blocked
+    #
+    #   * service.action.networkConnectionAction.connectionDirection
+    #
+    #   * service.action.networkConnectionAction.localIpDetails.ipAddressV4
+    #
+    #   * service.action.networkConnectionAction.localIpDetails.ipAddressV6
+    #
+    #   * service.action.networkConnectionAction.localNetworkInterface
+    #
+    #   * service.action.networkConnectionAction.localPortDetails.port
+    #
+    #   * service.action.networkConnectionAction.localPortDetails.portName
+    #
+    #   * service.action.networkConnectionAction.protocol
+    #
+    #   * service.action.networkConnectionAction.remoteIpDetails.city.cityName
+    #
+    #   * service.action.networkConnectionAction.remoteIpDetails.country.countryCode
+    #
+    #   * service.action.networkConnectionAction.remoteIpDetails.country.countryName
+    #
+    #   * service.action.networkConnectionAction.remoteIpDetails.geoLocation.lat
+    #
+    #   * service.action.networkConnectionAction.remoteIpDetails.geoLocation.lon
+    #
+    #   * service.action.networkConnectionAction.remoteIpDetails.ipAddressV4
+    #
+    #   * service.action.networkConnectionAction.remoteIpDetails.ipAddressV6
+    #
+    #   * service.action.networkConnectionAction.remoteIpDetails.organization.asn
+    #
+    #   * service.action.networkConnectionAction.remoteIpDetails.organization.asnOrg
+    #
+    #   * service.action.networkConnectionAction.remoteIpDetails.organization.isp
+    #
+    #   * service.action.networkConnectionAction.remoteIpDetails.organization.org
+    #
+    #   * service.action.networkConnectionAction.remotePortDetails.port
+    #
+    #   * service.action.networkConnectionAction.remotePortDetails.portName
+    #
+    #   * service.action.portProbeAction.blocked
+    #
+    #   * service.action.portProbeAction.portProbeDetails.localIpDetails.ipAddressV4
+    #
+    #   * service.action.portProbeAction.portProbeDetails.localIpDetails.ipAddressV6
+    #
+    #   * service.action.portProbeAction.portProbeDetails.localPortDetails.port
+    #
+    #   * service.action.portProbeAction.portProbeDetails.localPortDetails.portName
+    #
+    #   * service.action.portProbeAction.portProbeDetails.remoteIpDetails.city.cityName
+    #
+    #   * service.action.portProbeAction.portProbeDetails.remoteIpDetails.country.countryCode
+    #
+    #   * service.action.portProbeAction.portProbeDetails.remoteIpDetails.country.countryName
+    #
+    #   * service.action.portProbeAction.portProbeDetails.remoteIpDetails.geoLocation.lat
+    #
+    #   * service.action.portProbeAction.portProbeDetails.remoteIpDetails.geoLocation.lon
+    #
+    #   * service.action.portProbeAction.portProbeDetails.remoteIpDetails.ipAddressV4
+    #
+    #   * service.action.portProbeAction.portProbeDetails.remoteIpDetails.ipAddressV6
+    #
+    #   * service.action.portProbeAction.portProbeDetails.remoteIpDetails.organization.asn
+    #
+    #   * service.action.portProbeAction.portProbeDetails.remoteIpDetails.organization.asnOrg
+    #
+    #   * service.action.portProbeAction.portProbeDetails.remoteIpDetails.organization.isp
+    #
+    #   * service.action.portProbeAction.portProbeDetails.remoteIpDetails.organization.org
+    #
+    #   * service.action.rdsLoginAttemptAction.loginAttributes.application
+    #
+    #   * service.action.rdsLoginAttemptAction.loginAttributes.failedLoginAttempts
+    #
+    #   * service.action.rdsLoginAttemptAction.loginAttributes.successfulLoginAttempts
+    #
+    #   * service.action.rdsLoginAttemptAction.loginAttributes.user
+    #
+    #   * service.action.rdsLoginAttemptAction.remoteIpDetails.city.cityName
+    #
+    #   * service.action.rdsLoginAttemptAction.remoteIpDetails.country.countryCode
+    #
+    #   * service.action.rdsLoginAttemptAction.remoteIpDetails.country.countryName
+    #
+    #   * service.action.rdsLoginAttemptAction.remoteIpDetails.geoLocation.lat
+    #
+    #   * service.action.rdsLoginAttemptAction.remoteIpDetails.geoLocation.lon
+    #
+    #   * service.action.rdsLoginAttemptAction.remoteIpDetails.ipAddressV4
+    #
+    #   * service.action.rdsLoginAttemptAction.remoteIpDetails.ipAddressV6
+    #
+    #   * service.action.rdsLoginAttemptAction.remoteIpDetails.organization.asn
+    #
+    #   * service.action.rdsLoginAttemptAction.remoteIpDetails.organization.asnOrg
+    #
+    #   * service.action.rdsLoginAttemptAction.remoteIpDetails.organization.isp
+    #
+    #   * service.action.rdsLoginAttemptAction.remoteIpDetails.organization.org
+    #
+    #   * service.additionalInfo.agentDetails.agentId
+    #
+    #   * service.additionalInfo.agentDetails.agentVersion
+    #
+    #   * service.additionalInfo.anomalies.anomalousAPIs
+    #
+    #   * service.additionalInfo.authenticationMethod
+    #
+    #   * service.additionalInfo.averagePacketSizeIn
+    #
+    #   * service.additionalInfo.averagePacketSizeOut
+    #
+    #   * service.additionalInfo.context
+    #
+    #   * service.additionalInfo.domain
+    #
+    #   * service.additionalInfo.inBytes
+    #
+    #   * service.additionalInfo.localNetworkInterfaceOwner
+    #
+    #   * service.additionalInfo.localPort
+    #
+    #   * service.additionalInfo.outBytes
+    #
+    #   * service.additionalInfo.packetsIn
+    #
+    #   * service.additionalInfo.packetsOut
+    #
+    #   * service.additionalInfo.policyArn
+    #
+    #   * service.additionalInfo.policyName
+    #
+    #   * service.additionalInfo.remotePort
+    #
+    #   * service.additionalInfo.sample
+    #
+    #   * service.additionalInfo.scannedPort
+    #
+    #   * service.additionalInfo.threatFileSha256
+    #
+    #   * service.additionalInfo.threatListName
+    #
+    #   * service.additionalInfo.threatName
+    #
+    #   * service.additionalInfo.totalBytesIn
+    #
+    #   * service.additionalInfo.totalBytesOut
+    #
+    #   * service.additionalInfo.type
+    #
+    #   * service.additionalInfo.unusual.asnOrg
+    #
+    #   * service.additionalInfo.unusual.port
+    #
+    #   * service.additionalInfo.unusualProtocol
+    #
+    #   * service.additionalInfo.userAgent.fullUserAgent
+    #
+    #   * service.additionalInfo.userAgent.userAgentCategory
+    #
+    #   * service.additionalInfo.value
+    #
+    #   * service.additionalInfo.vpcOwnerAccountId
+    #
+    #   * service.archived
+    #
+    #   * service.count
+    #
+    #   * service.detection.sequence.actors.id
+    #
+    #   * service.detection.sequence.actors.process.name
+    #
+    #   * service.detection.sequence.actors.process.path
+    #
+    #   * service.detection.sequence.actors.process.sha256
+    #
+    #   * service.detection.sequence.actors.session.createdTime
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * service.detection.sequence.actors.session.issuer
+    #
+    #   * service.detection.sequence.actors.session.mfaStatus
+    #
+    #   * service.detection.sequence.actors.session.uid
+    #
+    #   * service.detection.sequence.actors.user.account.account
+    #
+    #   * service.detection.sequence.actors.user.account.uid
+    #
+    #   * service.detection.sequence.actors.user.credentialUid
+    #
+    #   * service.detection.sequence.actors.user.name
+    #
+    #   * service.detection.sequence.actors.user.type
+    #
+    #   * service.detection.sequence.actors.user.uid
+    #
+    #   * service.detection.sequence.additionalSequenceTypes
+    #
+    #   * service.detection.sequence.description
+    #
+    #   * service.detection.sequence.endpoints.autonomousSystem.name
+    #
+    #   * service.detection.sequence.endpoints.autonomousSystem.number
+    #
+    #   * service.detection.sequence.endpoints.connection.direction
+    #
+    #   * service.detection.sequence.endpoints.domain
+    #
+    #   * service.detection.sequence.endpoints.id
+    #
+    #   * service.detection.sequence.endpoints.ip
+    #
+    #   * service.detection.sequence.endpoints.location.city
+    #
+    #   * service.detection.sequence.endpoints.location.country
+    #
+    #   * service.detection.sequence.endpoints.location.lat
+    #
+    #   * service.detection.sequence.endpoints.location.lon
+    #
+    #   * service.detection.sequence.endpoints.port
+    #
+    #   * service.detection.sequence.resources.accountId
+    #
+    #   * service.detection.sequence.resources.cloudPartition
+    #
+    #   * service.detection.sequence.resources.data.accessKey.principalId
+    #
+    #   * service.detection.sequence.resources.data.accessKey.userName
+    #
+    #   * service.detection.sequence.resources.data.accessKey.userType
+    #
+    #   * service.detection.sequence.resources.data.autoscalingAutoScalingGroup.ec2InstanceUids
+    #
+    #   * service.detection.sequence.resources.data.cloudformationStack.ec2InstanceUids
+    #
+    #   * service.detection.sequence.resources.data.container.image
+    #
+    #   * service.detection.sequence.resources.data.container.imageUid
+    #
+    #   * service.detection.sequence.resources.data.ec2Image.ec2InstanceUids
+    #
+    #   * service.detection.sequence.resources.data.ec2Instance.availabilityZone
+    #
+    #   * service.detection.sequence.resources.data.ec2Instance.ec2NetworkInterfaceUids
+    #
+    #   * service.detection.sequence.resources.data.ec2Instance.iamInstanceProfile.arn
+    #
+    #   * service.detection.sequence.resources.data.ec2Instance.iamInstanceProfile.id
+    #
+    #   * service.detection.sequence.resources.data.ec2Instance.imageDescription
+    #
+    #   * service.detection.sequence.resources.data.ec2Instance.instanceState
+    #
+    #   * service.detection.sequence.resources.data.ec2Instance.instanceType
+    #
+    #   * service.detection.sequence.resources.data.ec2Instance.outpostArn
+    #
+    #   * service.detection.sequence.resources.data.ec2Instance.platform
+    #
+    #   * service.detection.sequence.resources.data.ec2Instance.productCodes.productCodeId
+    #
+    #   * service.detection.sequence.resources.data.ec2Instance.productCodes.productCodeType
+    #
+    #   * service.detection.sequence.resources.data.ec2LaunchTemplate.ec2InstanceUids
+    #
+    #   * service.detection.sequence.resources.data.ec2LaunchTemplate.version
+    #
+    #   * service.detection.sequence.resources.data.ec2NetworkInterface.ipv6Addresses
+    #
+    #   * service.detection.sequence.resources.data.ec2NetworkInterface.privateIpAddresses.privateDnsName
+    #
+    #   * service.detection.sequence.resources.data.ec2NetworkInterface.privateIpAddresses.privateIpAddress
+    #
+    #   * service.detection.sequence.resources.data.ec2NetworkInterface.publicIp
+    #
+    #   * service.detection.sequence.resources.data.ec2NetworkInterface.securityGroups.groupId
+    #
+    #   * service.detection.sequence.resources.data.ec2NetworkInterface.securityGroups.groupName
+    #
+    #   * service.detection.sequence.resources.data.ec2NetworkInterface.subNetId
+    #
+    #   * service.detection.sequence.resources.data.ec2NetworkInterface.vpcId
+    #
+    #   * service.detection.sequence.resources.data.ec2Vpc.ec2InstanceUids
+    #
+    #   * service.detection.sequence.resources.data.ecsCluster.ec2InstanceUids
+    #
+    #   * service.detection.sequence.resources.data.ecsCluster.status
+    #
+    #   * service.detection.sequence.resources.data.ecsTask.containerUids
+    #
+    #   * service.detection.sequence.resources.data.ecsTask.createdAt
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * service.detection.sequence.resources.data.ecsTask.launchType
+    #
+    #   * service.detection.sequence.resources.data.ecsTask.taskDefinitionArn
+    #
+    #   * service.detection.sequence.resources.data.eksCluster.arn
+    #
+    #   * service.detection.sequence.resources.data.eksCluster.createdAt
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * service.detection.sequence.resources.data.eksCluster.ec2InstanceUids
+    #
+    #   * service.detection.sequence.resources.data.eksCluster.status
+    #
+    #   * service.detection.sequence.resources.data.eksCluster.vpcId
+    #
+    #   * service.detection.sequence.resources.data.iamInstanceProfile.ec2InstanceUids
+    #
+    #   * service.detection.sequence.resources.data.iamInstanceProfile.id
+    #
+    #   * service.detection.sequence.resources.data.kubernetesWorkload.containerUids
+    #
+    #   * service.detection.sequence.resources.data.kubernetesWorkload.namespace
+    #
+    #   * service.detection.sequence.resources.data.kubernetesWorkload.type
+    #
+    #   * service.detection.sequence.resources.data.s3Bucket.accountPublicAccess.publicAclAccess
+    #
+    #   * service.detection.sequence.resources.data.s3Bucket.accountPublicAccess.publicAclIgnoreBehavior
+    #
+    #   * service.detection.sequence.resources.data.s3Bucket.accountPublicAccess.publicBucketRestrictBehavior
+    #
+    #   * service.detection.sequence.resources.data.s3Bucket.accountPublicAccess.publicPolicyAccess
+    #
+    #   * service.detection.sequence.resources.data.s3Bucket.bucketPublicAccess.publicAclAccess
+    #
+    #   * service.detection.sequence.resources.data.s3Bucket.bucketPublicAccess.publicAclIgnoreBehavior
+    #
+    #   * service.detection.sequence.resources.data.s3Bucket.bucketPublicAccess.publicBucketRestrictBehavior
+    #
+    #   * service.detection.sequence.resources.data.s3Bucket.bucketPublicAccess.publicPolicyAccess
+    #
+    #   * service.detection.sequence.resources.data.s3Bucket.createdAt
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * service.detection.sequence.resources.data.s3Bucket.effectivePermission
+    #
+    #   * service.detection.sequence.resources.data.s3Bucket.encryptionKeyArn
+    #
+    #   * service.detection.sequence.resources.data.s3Bucket.encryptionType
+    #
+    #   * service.detection.sequence.resources.data.s3Bucket.ownerId
+    #
+    #   * service.detection.sequence.resources.data.s3Bucket.publicReadAccess
+    #
+    #   * service.detection.sequence.resources.data.s3Bucket.publicWriteAccess
+    #
+    #   * service.detection.sequence.resources.data.s3Bucket.s3ObjectUids
+    #
+    #   * service.detection.sequence.resources.data.s3Object.eTag
+    #
+    #   * service.detection.sequence.resources.data.s3Object.key
+    #
+    #   * service.detection.sequence.resources.data.s3Object.versionId
+    #
+    #   * service.detection.sequence.resources.name
+    #
+    #   * service.detection.sequence.resources.region
+    #
+    #   * service.detection.sequence.resources.resourceType
+    #
+    #   * service.detection.sequence.resources.service
+    #
+    #   * service.detection.sequence.resources.tags.key
+    #
+    #   * service.detection.sequence.resources.tags.value
+    #
+    #   * service.detection.sequence.resources.uid
+    #
+    #   * service.detection.sequence.sequenceIndicators.key
+    #
+    #   * service.detection.sequence.sequenceIndicators.title
+    #
+    #   * service.detection.sequence.sequenceIndicators.values
+    #
+    #   * service.detection.sequence.signals.actorIds
+    #
+    #   * service.detection.sequence.signals.count
+    #
+    #   * service.detection.sequence.signals.createdAt
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * service.detection.sequence.signals.description
+    #
+    #   * service.detection.sequence.signals.endpointIds
+    #
+    #   * service.detection.sequence.signals.firstSeenAt
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * service.detection.sequence.signals.lastSeenAt
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * service.detection.sequence.signals.name
+    #
+    #   * service.detection.sequence.signals.resourceUids
+    #
+    #   * service.detection.sequence.signals.severity
+    #
+    #   * service.detection.sequence.signals.signalIndicators.key
+    #
+    #   * service.detection.sequence.signals.signalIndicators.title
+    #
+    #   * service.detection.sequence.signals.signalIndicators.values
+    #
+    #   * service.detection.sequence.signals.type
+    #
+    #   * service.detection.sequence.signals.uid
+    #
+    #   * service.detection.sequence.signals.updatedAt
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * service.detection.sequence.uid
+    #
+    #   * service.detectorId
+    #
+    #   * service.ebsVolumeScanDetails.scanCompletedAt
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * service.ebsVolumeScanDetails.scanDetections.highestSeverityThreatDetails.count
+    #
+    #   * service.ebsVolumeScanDetails.scanDetections.highestSeverityThreatDetails.severity
+    #
+    #   * service.ebsVolumeScanDetails.scanDetections.highestSeverityThreatDetails.threatName
+    #
+    #   * service.ebsVolumeScanDetails.scanDetections.scannedItemCount.files
+    #
+    #   * service.ebsVolumeScanDetails.scanDetections.scannedItemCount.totalGb
+    #
+    #   * service.ebsVolumeScanDetails.scanDetections.scannedItemCount.volumes
+    #
+    #   * service.ebsVolumeScanDetails.scanDetections.threatDetectedByName.itemCount
+    #
+    #   * service.ebsVolumeScanDetails.scanDetections.threatDetectedByName.shortened
+    #
+    #   * service.ebsVolumeScanDetails.scanDetections.threatDetectedByName.threatNames.filePaths.fileName
+    #
+    #   * service.ebsVolumeScanDetails.scanDetections.threatDetectedByName.threatNames.filePaths.filePath
+    #
+    #   * service.ebsVolumeScanDetails.scanDetections.threatDetectedByName.threatNames.filePaths.hash
+    #
+    #   * service.ebsVolumeScanDetails.scanDetections.threatDetectedByName.threatNames.filePaths.volumeArn
+    #
+    #   * service.ebsVolumeScanDetails.scanDetections.threatDetectedByName.threatNames.itemCount
+    #
+    #   * service.ebsVolumeScanDetails.scanDetections.threatDetectedByName.threatNames.name
+    #
+    #   * service.ebsVolumeScanDetails.scanDetections.threatDetectedByName.threatNames.severity
+    #
+    #   * service.ebsVolumeScanDetails.scanDetections.threatDetectedByName.uniqueThreatNameCount
+    #
+    #   * service.ebsVolumeScanDetails.scanDetections.threatsDetectedItemCount.files
+    #
+    #   * service.ebsVolumeScanDetails.scanId
+    #
+    #   * service.ebsVolumeScanDetails.scanStartedAt
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * service.ebsVolumeScanDetails.scanType
+    #
+    #   * service.ebsVolumeScanDetails.sources
+    #
+    #   * service.ebsVolumeScanDetails.triggerFindingId
+    #
+    #   * service.eventFirstSeen
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * service.eventLastSeen
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * service.evidence.threatIntelligenceDetails.threatFileSha256
+    #
+    #   * service.evidence.threatIntelligenceDetails.threatListName
+    #
+    #   * service.evidence.threatIntelligenceDetails.threatNames
+    #
+    #   * service.featureName
+    #
+    #   * service.malwareScanDetails.scanCategory
+    #
+    #   * service.malwareScanDetails.scanConfiguration.incrementalScanDetails.baselineResourceArn
+    #
+    #   * service.malwareScanDetails.scanConfiguration.triggerType
+    #
+    #   * service.malwareScanDetails.scanId
+    #
+    #   * service.malwareScanDetails.scanType
+    #
+    #   * service.malwareScanDetails.threats.count
+    #
+    #   * service.malwareScanDetails.threats.hash
+    #
+    #   * service.malwareScanDetails.threats.itemDetails.additionalInfo.deviceName
+    #
+    #   * service.malwareScanDetails.threats.itemDetails.additionalInfo.versionId
+    #
+    #   * service.malwareScanDetails.threats.itemDetails.hash
+    #
+    #   * service.malwareScanDetails.threats.itemDetails.itemPath
+    #
+    #   * service.malwareScanDetails.threats.itemDetails.resourceArn
+    #
+    #   * service.malwareScanDetails.threats.itemPaths.hash
+    #
+    #   * service.malwareScanDetails.threats.itemPaths.nestedItemPath
+    #
+    #   * service.malwareScanDetails.threats.name
+    #
+    #   * service.malwareScanDetails.threats.source
+    #
+    #   * service.malwareScanDetails.uniqueThreatCount
+    #
+    #   * service.resourceRole
+    #
+    #   * service.runtimeDetails.context.addressFamily
+    #
+    #   * service.runtimeDetails.context.commandLineExample
+    #
+    #   * service.runtimeDetails.context.fileOperation
+    #
+    #   * service.runtimeDetails.context.filePath
+    #
+    #   * service.runtimeDetails.context.fileSystemType
+    #
+    #   * service.runtimeDetails.context.flags
+    #
+    #   * service.runtimeDetails.context.ianaProtocolNumber
+    #
+    #   * service.runtimeDetails.context.ldPreloadValue
+    #
+    #   * service.runtimeDetails.context.libraryPath
+    #
+    #   * service.runtimeDetails.context.memoryRegions
+    #
+    #   * service.runtimeDetails.context.modifiedAt
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.euid
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.executablePath
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.executableSha256
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.lineage.euid
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.lineage.executablePath
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.lineage.name
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.lineage.namespacePid
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.lineage.parentUuid
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.lineage.pid
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.lineage.startTime
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.lineage.userId
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.lineage.uuid
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.name
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.namespacePid
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.parentUuid
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.pid
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.pwd
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.startTime
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.user
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.userId
+    #
+    #   * service.runtimeDetails.context.modifyingProcess.uuid
+    #
+    #   * service.runtimeDetails.context.moduleFilePath
+    #
+    #   * service.runtimeDetails.context.moduleName
+    #
+    #   * service.runtimeDetails.context.moduleSha256
+    #
+    #   * service.runtimeDetails.context.mountSource
+    #
+    #   * service.runtimeDetails.context.mountTarget
+    #
+    #   * service.runtimeDetails.context.relatedFilePaths
+    #
+    #   * service.runtimeDetails.context.releaseAgentPath
+    #
+    #   * service.runtimeDetails.context.runcBinaryPath
+    #
+    #   * service.runtimeDetails.context.scriptPath
+    #
+    #   * service.runtimeDetails.context.serviceName
+    #
+    #   * service.runtimeDetails.context.shellHistoryFilePath
+    #
+    #   * service.runtimeDetails.context.socketPath
+    #
+    #   * service.runtimeDetails.context.targetProcess.euid
+    #
+    #   * service.runtimeDetails.context.targetProcess.executablePath
+    #
+    #   * service.runtimeDetails.context.targetProcess.executableSha256
+    #
+    #   * service.runtimeDetails.context.targetProcess.lineage.euid
+    #
+    #   * service.runtimeDetails.context.targetProcess.lineage.executablePath
+    #
+    #   * service.runtimeDetails.context.targetProcess.lineage.name
+    #
+    #   * service.runtimeDetails.context.targetProcess.lineage.namespacePid
+    #
+    #   * service.runtimeDetails.context.targetProcess.lineage.parentUuid
+    #
+    #   * service.runtimeDetails.context.targetProcess.lineage.pid
+    #
+    #   * service.runtimeDetails.context.targetProcess.lineage.startTime
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * service.runtimeDetails.context.targetProcess.lineage.userId
+    #
+    #   * service.runtimeDetails.context.targetProcess.lineage.uuid
+    #
+    #   * service.runtimeDetails.context.targetProcess.name
+    #
+    #   * service.runtimeDetails.context.targetProcess.namespacePid
+    #
+    #   * service.runtimeDetails.context.targetProcess.parentUuid
+    #
+    #   * service.runtimeDetails.context.targetProcess.pid
+    #
+    #   * service.runtimeDetails.context.targetProcess.pwd
+    #
+    #   * service.runtimeDetails.context.targetProcess.startTime
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * service.runtimeDetails.context.targetProcess.user
+    #
+    #   * service.runtimeDetails.context.targetProcess.userId
+    #
+    #   * service.runtimeDetails.context.targetProcess.uuid
+    #
+    #   * service.runtimeDetails.context.threatFilePath
+    #
+    #   * service.runtimeDetails.context.toolCategory
+    #
+    #   * service.runtimeDetails.context.toolName
+    #
+    #   * service.runtimeDetails.process.euid
+    #
+    #   * service.runtimeDetails.process.executablePath
+    #
+    #   * service.runtimeDetails.process.executableSha256
+    #
+    #   * service.runtimeDetails.process.lineage.euid
+    #
+    #   * service.runtimeDetails.process.lineage.executablePath
+    #
+    #   * service.runtimeDetails.process.lineage.name
+    #
+    #   * service.runtimeDetails.process.lineage.namespacePid
+    #
+    #   * service.runtimeDetails.process.lineage.parentUuid
+    #
+    #   * service.runtimeDetails.process.lineage.pid
+    #
+    #   * service.runtimeDetails.process.lineage.startTime
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * service.runtimeDetails.process.lineage.userId
+    #
+    #   * service.runtimeDetails.process.lineage.uuid
+    #
+    #   * service.runtimeDetails.process.name
+    #
+    #   * service.runtimeDetails.process.namespacePid
+    #
+    #   * service.runtimeDetails.process.parentUuid
+    #
+    #   * service.runtimeDetails.process.pid
+    #
+    #   * service.runtimeDetails.process.pwd
+    #
+    #   * service.runtimeDetails.process.startTime
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #   * service.runtimeDetails.process.user
+    #
+    #   * service.runtimeDetails.process.userId
+    #
+    #   * service.runtimeDetails.process.uuid
+    #
+    #   * service.serviceName
+    #
+    #   * service.userFeedback
+    #
+    #   * severity
+    #
+    #     To configure severity based filters, use the following for the
+    #     [FindingCriteria][1] condition:
+    #
+    #     * **Low**: `["1", "2", "3"]`
+    #
+    #     * **Medium**: `["4", "5", "6"]`
+    #
+    #     * **High**: `["7", "8"]`
+    #
+    #     * **Critical**: `["9", "10"]`
+    #     For more information, see [Findings severity levels][2] in the
+    #     *Amazon GuardDuty User Guide*.
+    #
+    #   * type
+    #
+    #   * updatedAt
+    #
+    #     Type: Timestamp in Unix Epoch millisecond format. Ex:
+    #     1486685375000
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/guardduty/latest/APIReference/API_FindingCriteria.html
+    #   [2]: https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_findings-severity.html
     #   @return [Types::FindingCriteria]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/UpdateFilterRequest AWS API Documentation
@@ -9498,7 +14310,7 @@ module Aws::GuardDuty
       :finding_ids,
       :feedback,
       :comments)
-      SENSITIVE = []
+      SENSITIVE = [:comments]
       include Aws::Structure
     end
 
@@ -9535,6 +14347,11 @@ module Aws::GuardDuty
     #   or not.
     #   @return [Boolean]
     #
+    # @!attribute [rw] expected_bucket_owner
+    #   The Amazon Web Services account ID that owns the Amazon S3 bucket
+    #   specified in the **location** parameter.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/UpdateIPSetRequest AWS API Documentation
     #
     class UpdateIPSetRequest < Struct.new(
@@ -9542,7 +14359,8 @@ module Aws::GuardDuty
       :ip_set_id,
       :name,
       :location,
-      :activate)
+      :activate,
+      :expected_bucket_owner)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -9811,6 +14629,63 @@ module Aws::GuardDuty
     end
 
     # @!attribute [rw] detector_id
+    #   The unique ID of the GuardDuty detector associated with the threat
+    #   entity set that you want to update.
+    #
+    #   To find the `detectorId` in the current Region, see the Settings
+    #   page in the GuardDuty console, or run the [ListDetectors][1] API.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/guardduty/latest/APIReference/API_ListDetectors.html
+    #   @return [String]
+    #
+    # @!attribute [rw] threat_entity_set_id
+    #   The ID returned by GuardDuty after updating the threat entity set
+    #   resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   A user-friendly name to identify the trusted entity set.
+    #
+    #   The name of your list can include lowercase letters, uppercase
+    #   letters, numbers, dash (-), and underscore (\_).
+    #   @return [String]
+    #
+    # @!attribute [rw] location
+    #   The URI of the file that contains the trusted entity set.
+    #   @return [String]
+    #
+    # @!attribute [rw] expected_bucket_owner
+    #   The Amazon Web Services account ID that owns the Amazon S3 bucket
+    #   specified in the **location** parameter.
+    #   @return [String]
+    #
+    # @!attribute [rw] activate
+    #   A boolean value that indicates whether GuardDuty is to start using
+    #   this updated threat entity set. After you update an entity set, you
+    #   will need to activate it again. It might take up to 15 minutes for
+    #   the updated entity set to be effective.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/UpdateThreatEntitySetRequest AWS API Documentation
+    #
+    class UpdateThreatEntitySetRequest < Struct.new(
+      :detector_id,
+      :threat_entity_set_id,
+      :name,
+      :location,
+      :expected_bucket_owner,
+      :activate)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/UpdateThreatEntitySetResponse AWS API Documentation
+    #
+    class UpdateThreatEntitySetResponse < Aws::EmptyStructure; end
+
+    # @!attribute [rw] detector_id
     #   The detectorID that specifies the GuardDuty service whose
     #   ThreatIntelSet you want to update.
     #
@@ -9841,6 +14716,11 @@ module Aws::GuardDuty
     #   is active or not.
     #   @return [Boolean]
     #
+    # @!attribute [rw] expected_bucket_owner
+    #   The Amazon Web Services account ID that owns the Amazon S3 bucket
+    #   specified in the **location** parameter.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/UpdateThreatIntelSetRequest AWS API Documentation
     #
     class UpdateThreatIntelSetRequest < Struct.new(
@@ -9848,7 +14728,8 @@ module Aws::GuardDuty
       :threat_intel_set_id,
       :name,
       :location,
-      :activate)
+      :activate,
+      :expected_bucket_owner)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -9856,6 +14737,63 @@ module Aws::GuardDuty
     # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/UpdateThreatIntelSetResponse AWS API Documentation
     #
     class UpdateThreatIntelSetResponse < Aws::EmptyStructure; end
+
+    # @!attribute [rw] detector_id
+    #   The unique ID of the GuardDuty detector associated with the threat
+    #   entity set that you want to update.
+    #
+    #   To find the `detectorId` in the current Region, see the Settings
+    #   page in the GuardDuty console, or run the [ListDetectors][1] API.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/guardduty/latest/APIReference/API_ListDetectors.html
+    #   @return [String]
+    #
+    # @!attribute [rw] trusted_entity_set_id
+    #   The ID returned by GuardDuty after updating the trusted entity set
+    #   resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   A user-friendly name to identify the trusted entity set.
+    #
+    #   The name of your list can include lowercase letters, uppercase
+    #   letters, numbers, dash (-), and underscore (\_).
+    #   @return [String]
+    #
+    # @!attribute [rw] location
+    #   The URI of the file that contains the trusted entity set.
+    #   @return [String]
+    #
+    # @!attribute [rw] expected_bucket_owner
+    #   The Amazon Web Services account ID that owns the Amazon S3 bucket
+    #   specified in the **location** parameter.
+    #   @return [String]
+    #
+    # @!attribute [rw] activate
+    #   A boolean value that indicates whether GuardDuty is to start using
+    #   this updated trusted entity set. After you update an entity set, you
+    #   will need to activate it again. It might take up to 15 minutes for
+    #   the updated entity set to be effective.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/UpdateTrustedEntitySetRequest AWS API Documentation
+    #
+    class UpdateTrustedEntitySetRequest < Struct.new(
+      :detector_id,
+      :trusted_entity_set_id,
+      :name,
+      :location,
+      :expected_bucket_owner,
+      :activate)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/UpdateTrustedEntitySetResponse AWS API Documentation
+    #
+    class UpdateTrustedEntitySetResponse < Aws::EmptyStructure; end
 
     # Contains information on the total of usage based on account IDs.
     #
@@ -10074,7 +15012,9 @@ module Aws::GuardDuty
     #   @return [String]
     #
     # @!attribute [rw] account
-    #   Contains information about the Amazon Web Services account.
+    #   Contains information about the Amazon Web Services account within
+    #   which the activity took place. This is not necessarily the account
+    #   that owns the user identity.
     #   @return [Types::Account]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/User AWS API Documentation

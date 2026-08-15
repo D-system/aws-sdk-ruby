@@ -16,13 +16,14 @@ module Aws::Redshift
 
     AcceptReservedNodeExchangeInputMessage = Shapes::StructureShape.new(name: 'AcceptReservedNodeExchangeInputMessage')
     AcceptReservedNodeExchangeOutputMessage = Shapes::StructureShape.new(name: 'AcceptReservedNodeExchangeOutputMessage')
-    AccessToClusterDeniedFault = Shapes::StructureShape.new(name: 'AccessToClusterDeniedFault', error: {"code"=>"AccessToClusterDenied", "httpStatusCode"=>400, "senderFault"=>true})
-    AccessToSnapshotDeniedFault = Shapes::StructureShape.new(name: 'AccessToSnapshotDeniedFault', error: {"code"=>"AccessToSnapshotDenied", "httpStatusCode"=>400, "senderFault"=>true})
+    AccessToClusterDeniedFault = Shapes::StructureShape.new(name: 'AccessToClusterDeniedFault', error: {"code" => "AccessToClusterDenied", "httpStatusCode" => 400, "senderFault" => true})
+    AccessToSnapshotDeniedFault = Shapes::StructureShape.new(name: 'AccessToSnapshotDeniedFault', error: {"code" => "AccessToSnapshotDenied", "httpStatusCode" => 400, "senderFault" => true})
     AccountAttribute = Shapes::StructureShape.new(name: 'AccountAttribute')
     AccountAttributeList = Shapes::StructureShape.new(name: 'AccountAttributeList')
     AccountWithRestoreAccess = Shapes::StructureShape.new(name: 'AccountWithRestoreAccess')
     AccountsWithRestoreAccessList = Shapes::ListShape.new(name: 'AccountsWithRestoreAccessList')
     ActionType = Shapes::StringShape.new(name: 'ActionType')
+    ApplicationType = Shapes::StringShape.new(name: 'ApplicationType')
     AquaConfiguration = Shapes::StructureShape.new(name: 'AquaConfiguration')
     AquaConfigurationStatus = Shapes::StringShape.new(name: 'AquaConfigurationStatus')
     AquaStatus = Shapes::StringShape.new(name: 'AquaStatus')
@@ -35,14 +36,14 @@ module Aws::Redshift
     AttributeValueList = Shapes::ListShape.new(name: 'AttributeValueList')
     AttributeValueTarget = Shapes::StructureShape.new(name: 'AttributeValueTarget')
     AuthenticationProfile = Shapes::StructureShape.new(name: 'AuthenticationProfile')
-    AuthenticationProfileAlreadyExistsFault = Shapes::StructureShape.new(name: 'AuthenticationProfileAlreadyExistsFault', error: {"code"=>"AuthenticationProfileAlreadyExistsFault", "httpStatusCode"=>400, "senderFault"=>true})
+    AuthenticationProfileAlreadyExistsFault = Shapes::StructureShape.new(name: 'AuthenticationProfileAlreadyExistsFault', error: {"code" => "AuthenticationProfileAlreadyExistsFault", "httpStatusCode" => 400, "senderFault" => true})
     AuthenticationProfileList = Shapes::ListShape.new(name: 'AuthenticationProfileList')
     AuthenticationProfileNameString = Shapes::StringShape.new(name: 'AuthenticationProfileNameString')
-    AuthenticationProfileNotFoundFault = Shapes::StructureShape.new(name: 'AuthenticationProfileNotFoundFault', error: {"code"=>"AuthenticationProfileNotFoundFault", "httpStatusCode"=>404, "senderFault"=>true})
-    AuthenticationProfileQuotaExceededFault = Shapes::StructureShape.new(name: 'AuthenticationProfileQuotaExceededFault', error: {"code"=>"AuthenticationProfileQuotaExceededFault", "httpStatusCode"=>400, "senderFault"=>true})
-    AuthorizationAlreadyExistsFault = Shapes::StructureShape.new(name: 'AuthorizationAlreadyExistsFault', error: {"code"=>"AuthorizationAlreadyExists", "httpStatusCode"=>400, "senderFault"=>true})
-    AuthorizationNotFoundFault = Shapes::StructureShape.new(name: 'AuthorizationNotFoundFault', error: {"code"=>"AuthorizationNotFound", "httpStatusCode"=>404, "senderFault"=>true})
-    AuthorizationQuotaExceededFault = Shapes::StructureShape.new(name: 'AuthorizationQuotaExceededFault', error: {"code"=>"AuthorizationQuotaExceeded", "httpStatusCode"=>400, "senderFault"=>true})
+    AuthenticationProfileNotFoundFault = Shapes::StructureShape.new(name: 'AuthenticationProfileNotFoundFault', error: {"code" => "AuthenticationProfileNotFoundFault", "httpStatusCode" => 404, "senderFault" => true})
+    AuthenticationProfileQuotaExceededFault = Shapes::StructureShape.new(name: 'AuthenticationProfileQuotaExceededFault', error: {"code" => "AuthenticationProfileQuotaExceededFault", "httpStatusCode" => 400, "senderFault" => true})
+    AuthorizationAlreadyExistsFault = Shapes::StructureShape.new(name: 'AuthorizationAlreadyExistsFault', error: {"code" => "AuthorizationAlreadyExists", "httpStatusCode" => 400, "senderFault" => true})
+    AuthorizationNotFoundFault = Shapes::StructureShape.new(name: 'AuthorizationNotFoundFault', error: {"code" => "AuthorizationNotFound", "httpStatusCode" => 404, "senderFault" => true})
+    AuthorizationQuotaExceededFault = Shapes::StructureShape.new(name: 'AuthorizationQuotaExceededFault', error: {"code" => "AuthorizationQuotaExceeded", "httpStatusCode" => 400, "senderFault" => true})
     AuthorizationStatus = Shapes::StringShape.new(name: 'AuthorizationStatus')
     AuthorizeClusterSecurityGroupIngressMessage = Shapes::StructureShape.new(name: 'AuthorizeClusterSecurityGroupIngressMessage')
     AuthorizeClusterSecurityGroupIngressResult = Shapes::StructureShape.new(name: 'AuthorizeClusterSecurityGroupIngressResult')
@@ -57,20 +58,21 @@ module Aws::Redshift
     AvailabilityZoneList = Shapes::ListShape.new(name: 'AvailabilityZoneList')
     BatchDeleteClusterSnapshotsRequest = Shapes::StructureShape.new(name: 'BatchDeleteClusterSnapshotsRequest')
     BatchDeleteClusterSnapshotsResult = Shapes::StructureShape.new(name: 'BatchDeleteClusterSnapshotsResult')
-    BatchDeleteRequestSizeExceededFault = Shapes::StructureShape.new(name: 'BatchDeleteRequestSizeExceededFault', error: {"code"=>"BatchDeleteRequestSizeExceeded", "httpStatusCode"=>400, "senderFault"=>true})
-    BatchModifyClusterSnapshotsLimitExceededFault = Shapes::StructureShape.new(name: 'BatchModifyClusterSnapshotsLimitExceededFault', error: {"code"=>"BatchModifyClusterSnapshotsLimitExceededFault", "httpStatusCode"=>400, "senderFault"=>true})
+    BatchDeleteRequestSizeExceededFault = Shapes::StructureShape.new(name: 'BatchDeleteRequestSizeExceededFault', error: {"code" => "BatchDeleteRequestSizeExceeded", "httpStatusCode" => 400, "senderFault" => true})
+    BatchModifyClusterSnapshotsLimitExceededFault = Shapes::StructureShape.new(name: 'BatchModifyClusterSnapshotsLimitExceededFault', error: {"code" => "BatchModifyClusterSnapshotsLimitExceededFault", "httpStatusCode" => 400, "senderFault" => true})
     BatchModifyClusterSnapshotsMessage = Shapes::StructureShape.new(name: 'BatchModifyClusterSnapshotsMessage')
     BatchModifyClusterSnapshotsOutputMessage = Shapes::StructureShape.new(name: 'BatchModifyClusterSnapshotsOutputMessage')
     BatchSnapshotOperationErrorList = Shapes::ListShape.new(name: 'BatchSnapshotOperationErrorList')
     BatchSnapshotOperationErrors = Shapes::ListShape.new(name: 'BatchSnapshotOperationErrors')
     Boolean = Shapes::BooleanShape.new(name: 'Boolean')
     BooleanOptional = Shapes::BooleanShape.new(name: 'BooleanOptional')
-    BucketNotFoundFault = Shapes::StructureShape.new(name: 'BucketNotFoundFault', error: {"code"=>"BucketNotFoundFault", "httpStatusCode"=>400, "senderFault"=>true})
+    BucketNotFoundFault = Shapes::StructureShape.new(name: 'BucketNotFoundFault', error: {"code" => "BucketNotFoundFault", "httpStatusCode" => 400, "senderFault" => true})
     CancelResizeMessage = Shapes::StructureShape.new(name: 'CancelResizeMessage')
+    CatalogNameString = Shapes::StringShape.new(name: 'CatalogNameString')
     CertificateAssociation = Shapes::StructureShape.new(name: 'CertificateAssociation')
     CertificateAssociationList = Shapes::ListShape.new(name: 'CertificateAssociationList')
     Cluster = Shapes::StructureShape.new(name: 'Cluster')
-    ClusterAlreadyExistsFault = Shapes::StructureShape.new(name: 'ClusterAlreadyExistsFault', error: {"code"=>"ClusterAlreadyExists", "httpStatusCode"=>400, "senderFault"=>true})
+    ClusterAlreadyExistsFault = Shapes::StructureShape.new(name: 'ClusterAlreadyExistsFault', error: {"code" => "ClusterAlreadyExists", "httpStatusCode" => 400, "senderFault" => true})
     ClusterAssociatedToSchedule = Shapes::StructureShape.new(name: 'ClusterAssociatedToSchedule')
     ClusterCredentials = Shapes::StructureShape.new(name: 'ClusterCredentials')
     ClusterDbRevision = Shapes::StructureShape.new(name: 'ClusterDbRevision')
@@ -79,52 +81,54 @@ module Aws::Redshift
     ClusterExtendedCredentials = Shapes::StructureShape.new(name: 'ClusterExtendedCredentials')
     ClusterIamRole = Shapes::StructureShape.new(name: 'ClusterIamRole')
     ClusterIamRoleList = Shapes::ListShape.new(name: 'ClusterIamRoleList')
+    ClusterIdentifierList = Shapes::ListShape.new(name: 'ClusterIdentifierList')
     ClusterList = Shapes::ListShape.new(name: 'ClusterList')
     ClusterNode = Shapes::StructureShape.new(name: 'ClusterNode')
     ClusterNodesList = Shapes::ListShape.new(name: 'ClusterNodesList')
-    ClusterNotFoundFault = Shapes::StructureShape.new(name: 'ClusterNotFoundFault', error: {"code"=>"ClusterNotFound", "httpStatusCode"=>404, "senderFault"=>true})
-    ClusterOnLatestRevisionFault = Shapes::StructureShape.new(name: 'ClusterOnLatestRevisionFault', error: {"code"=>"ClusterOnLatestRevision", "httpStatusCode"=>400, "senderFault"=>true})
+    ClusterNotFoundFault = Shapes::StructureShape.new(name: 'ClusterNotFoundFault', error: {"code" => "ClusterNotFound", "httpStatusCode" => 404, "senderFault" => true})
+    ClusterOnLatestRevisionFault = Shapes::StructureShape.new(name: 'ClusterOnLatestRevisionFault', error: {"code" => "ClusterOnLatestRevision", "httpStatusCode" => 400, "senderFault" => true})
     ClusterParameterGroup = Shapes::StructureShape.new(name: 'ClusterParameterGroup')
-    ClusterParameterGroupAlreadyExistsFault = Shapes::StructureShape.new(name: 'ClusterParameterGroupAlreadyExistsFault', error: {"code"=>"ClusterParameterGroupAlreadyExists", "httpStatusCode"=>400, "senderFault"=>true})
+    ClusterParameterGroupAlreadyExistsFault = Shapes::StructureShape.new(name: 'ClusterParameterGroupAlreadyExistsFault', error: {"code" => "ClusterParameterGroupAlreadyExists", "httpStatusCode" => 400, "senderFault" => true})
     ClusterParameterGroupDetails = Shapes::StructureShape.new(name: 'ClusterParameterGroupDetails')
     ClusterParameterGroupNameMessage = Shapes::StructureShape.new(name: 'ClusterParameterGroupNameMessage')
-    ClusterParameterGroupNotFoundFault = Shapes::StructureShape.new(name: 'ClusterParameterGroupNotFoundFault', error: {"code"=>"ClusterParameterGroupNotFound", "httpStatusCode"=>404, "senderFault"=>true})
-    ClusterParameterGroupQuotaExceededFault = Shapes::StructureShape.new(name: 'ClusterParameterGroupQuotaExceededFault', error: {"code"=>"ClusterParameterGroupQuotaExceeded", "httpStatusCode"=>400, "senderFault"=>true})
+    ClusterParameterGroupNotFoundFault = Shapes::StructureShape.new(name: 'ClusterParameterGroupNotFoundFault', error: {"code" => "ClusterParameterGroupNotFound", "httpStatusCode" => 404, "senderFault" => true})
+    ClusterParameterGroupQuotaExceededFault = Shapes::StructureShape.new(name: 'ClusterParameterGroupQuotaExceededFault', error: {"code" => "ClusterParameterGroupQuotaExceeded", "httpStatusCode" => 400, "senderFault" => true})
     ClusterParameterGroupStatus = Shapes::StructureShape.new(name: 'ClusterParameterGroupStatus')
     ClusterParameterGroupStatusList = Shapes::ListShape.new(name: 'ClusterParameterGroupStatusList')
     ClusterParameterGroupsMessage = Shapes::StructureShape.new(name: 'ClusterParameterGroupsMessage')
     ClusterParameterStatus = Shapes::StructureShape.new(name: 'ClusterParameterStatus')
     ClusterParameterStatusList = Shapes::ListShape.new(name: 'ClusterParameterStatusList')
-    ClusterQuotaExceededFault = Shapes::StructureShape.new(name: 'ClusterQuotaExceededFault', error: {"code"=>"ClusterQuotaExceeded", "httpStatusCode"=>400, "senderFault"=>true})
+    ClusterQuotaExceededFault = Shapes::StructureShape.new(name: 'ClusterQuotaExceededFault', error: {"code" => "ClusterQuotaExceeded", "httpStatusCode" => 400, "senderFault" => true})
     ClusterSecurityGroup = Shapes::StructureShape.new(name: 'ClusterSecurityGroup')
-    ClusterSecurityGroupAlreadyExistsFault = Shapes::StructureShape.new(name: 'ClusterSecurityGroupAlreadyExistsFault', error: {"code"=>"ClusterSecurityGroupAlreadyExists", "httpStatusCode"=>400, "senderFault"=>true})
+    ClusterSecurityGroupAlreadyExistsFault = Shapes::StructureShape.new(name: 'ClusterSecurityGroupAlreadyExistsFault', error: {"code" => "ClusterSecurityGroupAlreadyExists", "httpStatusCode" => 400, "senderFault" => true})
     ClusterSecurityGroupMembership = Shapes::StructureShape.new(name: 'ClusterSecurityGroupMembership')
     ClusterSecurityGroupMembershipList = Shapes::ListShape.new(name: 'ClusterSecurityGroupMembershipList')
     ClusterSecurityGroupMessage = Shapes::StructureShape.new(name: 'ClusterSecurityGroupMessage')
     ClusterSecurityGroupNameList = Shapes::ListShape.new(name: 'ClusterSecurityGroupNameList')
-    ClusterSecurityGroupNotFoundFault = Shapes::StructureShape.new(name: 'ClusterSecurityGroupNotFoundFault', error: {"code"=>"ClusterSecurityGroupNotFound", "httpStatusCode"=>404, "senderFault"=>true})
-    ClusterSecurityGroupQuotaExceededFault = Shapes::StructureShape.new(name: 'ClusterSecurityGroupQuotaExceededFault', error: {"code"=>"QuotaExceeded.ClusterSecurityGroup", "httpStatusCode"=>400, "senderFault"=>true})
+    ClusterSecurityGroupNotFoundFault = Shapes::StructureShape.new(name: 'ClusterSecurityGroupNotFoundFault', error: {"code" => "ClusterSecurityGroupNotFound", "httpStatusCode" => 404, "senderFault" => true})
+    ClusterSecurityGroupQuotaExceededFault = Shapes::StructureShape.new(name: 'ClusterSecurityGroupQuotaExceededFault', error: {"code" => "QuotaExceeded.ClusterSecurityGroup", "httpStatusCode" => 400, "senderFault" => true})
     ClusterSecurityGroups = Shapes::ListShape.new(name: 'ClusterSecurityGroups')
-    ClusterSnapshotAlreadyExistsFault = Shapes::StructureShape.new(name: 'ClusterSnapshotAlreadyExistsFault', error: {"code"=>"ClusterSnapshotAlreadyExists", "httpStatusCode"=>400, "senderFault"=>true})
+    ClusterSnapshotAlreadyExistsFault = Shapes::StructureShape.new(name: 'ClusterSnapshotAlreadyExistsFault', error: {"code" => "ClusterSnapshotAlreadyExists", "httpStatusCode" => 400, "senderFault" => true})
     ClusterSnapshotCopyStatus = Shapes::StructureShape.new(name: 'ClusterSnapshotCopyStatus')
-    ClusterSnapshotNotFoundFault = Shapes::StructureShape.new(name: 'ClusterSnapshotNotFoundFault', error: {"code"=>"ClusterSnapshotNotFound", "httpStatusCode"=>404, "senderFault"=>true})
-    ClusterSnapshotQuotaExceededFault = Shapes::StructureShape.new(name: 'ClusterSnapshotQuotaExceededFault', error: {"code"=>"ClusterSnapshotQuotaExceeded", "httpStatusCode"=>400, "senderFault"=>true})
+    ClusterSnapshotNotFoundFault = Shapes::StructureShape.new(name: 'ClusterSnapshotNotFoundFault', error: {"code" => "ClusterSnapshotNotFound", "httpStatusCode" => 404, "senderFault" => true})
+    ClusterSnapshotQuotaExceededFault = Shapes::StructureShape.new(name: 'ClusterSnapshotQuotaExceededFault', error: {"code" => "ClusterSnapshotQuotaExceeded", "httpStatusCode" => 400, "senderFault" => true})
     ClusterSubnetGroup = Shapes::StructureShape.new(name: 'ClusterSubnetGroup')
-    ClusterSubnetGroupAlreadyExistsFault = Shapes::StructureShape.new(name: 'ClusterSubnetGroupAlreadyExistsFault', error: {"code"=>"ClusterSubnetGroupAlreadyExists", "httpStatusCode"=>400, "senderFault"=>true})
+    ClusterSubnetGroupAlreadyExistsFault = Shapes::StructureShape.new(name: 'ClusterSubnetGroupAlreadyExistsFault', error: {"code" => "ClusterSubnetGroupAlreadyExists", "httpStatusCode" => 400, "senderFault" => true})
     ClusterSubnetGroupMessage = Shapes::StructureShape.new(name: 'ClusterSubnetGroupMessage')
-    ClusterSubnetGroupNotFoundFault = Shapes::StructureShape.new(name: 'ClusterSubnetGroupNotFoundFault', error: {"code"=>"ClusterSubnetGroupNotFoundFault", "httpStatusCode"=>400, "senderFault"=>true})
-    ClusterSubnetGroupQuotaExceededFault = Shapes::StructureShape.new(name: 'ClusterSubnetGroupQuotaExceededFault', error: {"code"=>"ClusterSubnetGroupQuotaExceeded", "httpStatusCode"=>400, "senderFault"=>true})
+    ClusterSubnetGroupNotFoundFault = Shapes::StructureShape.new(name: 'ClusterSubnetGroupNotFoundFault', error: {"code" => "ClusterSubnetGroupNotFoundFault", "httpStatusCode" => 400, "senderFault" => true})
+    ClusterSubnetGroupQuotaExceededFault = Shapes::StructureShape.new(name: 'ClusterSubnetGroupQuotaExceededFault', error: {"code" => "ClusterSubnetGroupQuotaExceeded", "httpStatusCode" => 400, "senderFault" => true})
     ClusterSubnetGroups = Shapes::ListShape.new(name: 'ClusterSubnetGroups')
-    ClusterSubnetQuotaExceededFault = Shapes::StructureShape.new(name: 'ClusterSubnetQuotaExceededFault', error: {"code"=>"ClusterSubnetQuotaExceededFault", "httpStatusCode"=>400, "senderFault"=>true})
+    ClusterSubnetQuotaExceededFault = Shapes::StructureShape.new(name: 'ClusterSubnetQuotaExceededFault', error: {"code" => "ClusterSubnetQuotaExceededFault", "httpStatusCode" => 400, "senderFault" => true})
     ClusterVersion = Shapes::StructureShape.new(name: 'ClusterVersion')
     ClusterVersionList = Shapes::ListShape.new(name: 'ClusterVersionList')
     ClusterVersionsMessage = Shapes::StructureShape.new(name: 'ClusterVersionsMessage')
     ClustersMessage = Shapes::StructureShape.new(name: 'ClustersMessage')
-    ConflictPolicyUpdateFault = Shapes::StructureShape.new(name: 'ConflictPolicyUpdateFault', error: {"code"=>"ConflictPolicyUpdateFault", "httpStatusCode"=>409, "senderFault"=>true})
+    ConflictPolicyUpdateFault = Shapes::StructureShape.new(name: 'ConflictPolicyUpdateFault', error: {"code" => "ConflictPolicyUpdateFault", "httpStatusCode" => 409, "senderFault" => true})
+    Connect = Shapes::StructureShape.new(name: 'Connect')
     ConsumerIdentifierList = Shapes::ListShape.new(name: 'ConsumerIdentifierList')
     CopyClusterSnapshotMessage = Shapes::StructureShape.new(name: 'CopyClusterSnapshotMessage')
     CopyClusterSnapshotResult = Shapes::StructureShape.new(name: 'CopyClusterSnapshotResult')
-    CopyToRegionDisabledFault = Shapes::StructureShape.new(name: 'CopyToRegionDisabledFault', error: {"code"=>"CopyToRegionDisabledFault", "httpStatusCode"=>400, "senderFault"=>true})
+    CopyToRegionDisabledFault = Shapes::StructureShape.new(name: 'CopyToRegionDisabledFault', error: {"code" => "CopyToRegionDisabledFault", "httpStatusCode" => 400, "senderFault" => true})
     CreateAuthenticationProfileMessage = Shapes::StructureShape.new(name: 'CreateAuthenticationProfileMessage')
     CreateAuthenticationProfileResult = Shapes::StructureShape.new(name: 'CreateAuthenticationProfileResult')
     CreateClusterMessage = Shapes::StructureShape.new(name: 'CreateClusterMessage')
@@ -147,6 +151,8 @@ module Aws::Redshift
     CreateHsmConfigurationMessage = Shapes::StructureShape.new(name: 'CreateHsmConfigurationMessage')
     CreateHsmConfigurationResult = Shapes::StructureShape.new(name: 'CreateHsmConfigurationResult')
     CreateIntegrationMessage = Shapes::StructureShape.new(name: 'CreateIntegrationMessage')
+    CreateQev2IdcApplicationMessage = Shapes::StructureShape.new(name: 'CreateQev2IdcApplicationMessage')
+    CreateQev2IdcApplicationResult = Shapes::StructureShape.new(name: 'CreateQev2IdcApplicationResult')
     CreateRedshiftIdcApplicationMessage = Shapes::StructureShape.new(name: 'CreateRedshiftIdcApplicationMessage')
     CreateRedshiftIdcApplicationResult = Shapes::StructureShape.new(name: 'CreateRedshiftIdcApplicationResult')
     CreateScheduledActionMessage = Shapes::StructureShape.new(name: 'CreateScheduledActionMessage')
@@ -155,8 +161,8 @@ module Aws::Redshift
     CreateSnapshotScheduleMessage = Shapes::StructureShape.new(name: 'CreateSnapshotScheduleMessage')
     CreateTagsMessage = Shapes::StructureShape.new(name: 'CreateTagsMessage')
     CreateUsageLimitMessage = Shapes::StructureShape.new(name: 'CreateUsageLimitMessage')
-    CustomCnameAssociationFault = Shapes::StructureShape.new(name: 'CustomCnameAssociationFault', error: {"code"=>"CustomCnameAssociationFault", "httpStatusCode"=>400, "senderFault"=>true})
-    CustomDomainAssociationNotFoundFault = Shapes::StructureShape.new(name: 'CustomDomainAssociationNotFoundFault', error: {"code"=>"CustomDomainAssociationNotFoundFault", "httpStatusCode"=>404, "senderFault"=>true})
+    CustomCnameAssociationFault = Shapes::StructureShape.new(name: 'CustomCnameAssociationFault', error: {"code" => "CustomCnameAssociationFault", "httpStatusCode" => 400, "senderFault" => true})
+    CustomDomainAssociationNotFoundFault = Shapes::StructureShape.new(name: 'CustomDomainAssociationNotFoundFault', error: {"code" => "CustomDomainAssociationNotFoundFault", "httpStatusCode" => 404, "senderFault" => true})
     CustomDomainAssociationsMessage = Shapes::StructureShape.new(name: 'CustomDomainAssociationsMessage')
     CustomDomainCertificateArnString = Shapes::StringShape.new(name: 'CustomDomainCertificateArnString')
     CustomDomainNameString = Shapes::StringShape.new(name: 'CustomDomainNameString')
@@ -191,6 +197,7 @@ module Aws::Redshift
     DeleteHsmClientCertificateMessage = Shapes::StructureShape.new(name: 'DeleteHsmClientCertificateMessage')
     DeleteHsmConfigurationMessage = Shapes::StructureShape.new(name: 'DeleteHsmConfigurationMessage')
     DeleteIntegrationMessage = Shapes::StructureShape.new(name: 'DeleteIntegrationMessage')
+    DeleteQev2IdcApplicationMessage = Shapes::StructureShape.new(name: 'DeleteQev2IdcApplicationMessage')
     DeleteRedshiftIdcApplicationMessage = Shapes::StructureShape.new(name: 'DeleteRedshiftIdcApplicationMessage')
     DeleteResourcePolicyMessage = Shapes::StructureShape.new(name: 'DeleteResourcePolicyMessage')
     DeleteScheduledActionMessage = Shapes::StructureShape.new(name: 'DeleteScheduledActionMessage')
@@ -198,9 +205,9 @@ module Aws::Redshift
     DeleteSnapshotScheduleMessage = Shapes::StructureShape.new(name: 'DeleteSnapshotScheduleMessage')
     DeleteTagsMessage = Shapes::StructureShape.new(name: 'DeleteTagsMessage')
     DeleteUsageLimitMessage = Shapes::StructureShape.new(name: 'DeleteUsageLimitMessage')
-    DependentServiceAccessDeniedFault = Shapes::StructureShape.new(name: 'DependentServiceAccessDeniedFault', error: {"code"=>"DependentServiceAccessDenied", "httpStatusCode"=>403, "senderFault"=>true})
-    DependentServiceRequestThrottlingFault = Shapes::StructureShape.new(name: 'DependentServiceRequestThrottlingFault', error: {"code"=>"DependentServiceRequestThrottlingFault", "httpStatusCode"=>400, "senderFault"=>true})
-    DependentServiceUnavailableFault = Shapes::StructureShape.new(name: 'DependentServiceUnavailableFault', error: {"code"=>"DependentServiceUnavailableFault", "httpStatusCode"=>400, "senderFault"=>true})
+    DependentServiceAccessDeniedFault = Shapes::StructureShape.new(name: 'DependentServiceAccessDeniedFault', error: {"code" => "DependentServiceAccessDenied", "httpStatusCode" => 403, "senderFault" => true})
+    DependentServiceRequestThrottlingFault = Shapes::StructureShape.new(name: 'DependentServiceRequestThrottlingFault', error: {"code" => "DependentServiceRequestThrottlingFault", "httpStatusCode" => 400, "senderFault" => true})
+    DependentServiceUnavailableFault = Shapes::StructureShape.new(name: 'DependentServiceUnavailableFault', error: {"code" => "DependentServiceUnavailableFault", "httpStatusCode" => 400, "senderFault" => true})
     DeregisterNamespaceInputMessage = Shapes::StructureShape.new(name: 'DeregisterNamespaceInputMessage')
     DeregisterNamespaceOutputMessage = Shapes::StructureShape.new(name: 'DeregisterNamespaceOutputMessage')
     DescribeAccountAttributesMessage = Shapes::StructureShape.new(name: 'DescribeAccountAttributesMessage')
@@ -242,6 +249,8 @@ module Aws::Redshift
     DescribeOrderableClusterOptionsMessage = Shapes::StructureShape.new(name: 'DescribeOrderableClusterOptionsMessage')
     DescribePartnersInputMessage = Shapes::StructureShape.new(name: 'DescribePartnersInputMessage')
     DescribePartnersOutputMessage = Shapes::StructureShape.new(name: 'DescribePartnersOutputMessage')
+    DescribeQev2IdcApplicationsMessage = Shapes::StructureShape.new(name: 'DescribeQev2IdcApplicationsMessage')
+    DescribeQev2IdcApplicationsResult = Shapes::StructureShape.new(name: 'DescribeQev2IdcApplicationsResult')
     DescribeRedshiftIdcApplicationsMessage = Shapes::StructureShape.new(name: 'DescribeRedshiftIdcApplicationsMessage')
     DescribeRedshiftIdcApplicationsResult = Shapes::StructureShape.new(name: 'DescribeRedshiftIdcApplicationsResult')
     DescribeReservedNodeExchangeStatusInputMessage = Shapes::StructureShape.new(name: 'DescribeReservedNodeExchangeStatusInputMessage')
@@ -275,16 +284,16 @@ module Aws::Redshift
     EndpointAccess = Shapes::StructureShape.new(name: 'EndpointAccess')
     EndpointAccessList = Shapes::StructureShape.new(name: 'EndpointAccessList')
     EndpointAccesses = Shapes::ListShape.new(name: 'EndpointAccesses')
-    EndpointAlreadyExistsFault = Shapes::StructureShape.new(name: 'EndpointAlreadyExistsFault', error: {"code"=>"EndpointAlreadyExists", "httpStatusCode"=>400, "senderFault"=>true})
+    EndpointAlreadyExistsFault = Shapes::StructureShape.new(name: 'EndpointAlreadyExistsFault', error: {"code" => "EndpointAlreadyExists", "httpStatusCode" => 400, "senderFault" => true})
     EndpointAuthorization = Shapes::StructureShape.new(name: 'EndpointAuthorization')
-    EndpointAuthorizationAlreadyExistsFault = Shapes::StructureShape.new(name: 'EndpointAuthorizationAlreadyExistsFault', error: {"code"=>"EndpointAuthorizationAlreadyExists", "httpStatusCode"=>400, "senderFault"=>true})
+    EndpointAuthorizationAlreadyExistsFault = Shapes::StructureShape.new(name: 'EndpointAuthorizationAlreadyExistsFault', error: {"code" => "EndpointAuthorizationAlreadyExists", "httpStatusCode" => 400, "senderFault" => true})
     EndpointAuthorizationList = Shapes::StructureShape.new(name: 'EndpointAuthorizationList')
-    EndpointAuthorizationNotFoundFault = Shapes::StructureShape.new(name: 'EndpointAuthorizationNotFoundFault', error: {"code"=>"EndpointAuthorizationNotFound", "httpStatusCode"=>404, "senderFault"=>true})
+    EndpointAuthorizationNotFoundFault = Shapes::StructureShape.new(name: 'EndpointAuthorizationNotFoundFault', error: {"code" => "EndpointAuthorizationNotFound", "httpStatusCode" => 404, "senderFault" => true})
     EndpointAuthorizations = Shapes::ListShape.new(name: 'EndpointAuthorizations')
-    EndpointAuthorizationsPerClusterLimitExceededFault = Shapes::StructureShape.new(name: 'EndpointAuthorizationsPerClusterLimitExceededFault', error: {"code"=>"EndpointAuthorizationsPerClusterLimitExceeded", "httpStatusCode"=>400, "senderFault"=>true})
-    EndpointNotFoundFault = Shapes::StructureShape.new(name: 'EndpointNotFoundFault', error: {"code"=>"EndpointNotFound", "httpStatusCode"=>404, "senderFault"=>true})
-    EndpointsPerAuthorizationLimitExceededFault = Shapes::StructureShape.new(name: 'EndpointsPerAuthorizationLimitExceededFault', error: {"code"=>"EndpointsPerAuthorizationLimitExceeded", "httpStatusCode"=>400, "senderFault"=>true})
-    EndpointsPerClusterLimitExceededFault = Shapes::StructureShape.new(name: 'EndpointsPerClusterLimitExceededFault', error: {"code"=>"EndpointsPerClusterLimitExceeded", "httpStatusCode"=>400, "senderFault"=>true})
+    EndpointAuthorizationsPerClusterLimitExceededFault = Shapes::StructureShape.new(name: 'EndpointAuthorizationsPerClusterLimitExceededFault', error: {"code" => "EndpointAuthorizationsPerClusterLimitExceeded", "httpStatusCode" => 400, "senderFault" => true})
+    EndpointNotFoundFault = Shapes::StructureShape.new(name: 'EndpointNotFoundFault', error: {"code" => "EndpointNotFound", "httpStatusCode" => 404, "senderFault" => true})
+    EndpointsPerAuthorizationLimitExceededFault = Shapes::StructureShape.new(name: 'EndpointsPerAuthorizationLimitExceededFault', error: {"code" => "EndpointsPerAuthorizationLimitExceeded", "httpStatusCode" => 400, "senderFault" => true})
+    EndpointsPerClusterLimitExceededFault = Shapes::StructureShape.new(name: 'EndpointsPerClusterLimitExceededFault', error: {"code" => "EndpointsPerClusterLimitExceeded", "httpStatusCode" => 400, "senderFault" => true})
     Event = Shapes::StructureShape.new(name: 'Event')
     EventCategoriesList = Shapes::ListShape.new(name: 'EventCategoriesList')
     EventCategoriesMap = Shapes::StructureShape.new(name: 'EventCategoriesMap')
@@ -294,7 +303,7 @@ module Aws::Redshift
     EventInfoMapList = Shapes::ListShape.new(name: 'EventInfoMapList')
     EventList = Shapes::ListShape.new(name: 'EventList')
     EventSubscription = Shapes::StructureShape.new(name: 'EventSubscription')
-    EventSubscriptionQuotaExceededFault = Shapes::StructureShape.new(name: 'EventSubscriptionQuotaExceededFault', error: {"code"=>"EventSubscriptionQuotaExceeded", "httpStatusCode"=>400, "senderFault"=>true})
+    EventSubscriptionQuotaExceededFault = Shapes::StructureShape.new(name: 'EventSubscriptionQuotaExceededFault', error: {"code" => "EventSubscriptionQuotaExceeded", "httpStatusCode" => 400, "senderFault" => true})
     EventSubscriptionsList = Shapes::ListShape.new(name: 'EventSubscriptionsList')
     EventSubscriptionsMessage = Shapes::StructureShape.new(name: 'EventSubscriptionsMessage')
     EventsMessage = Shapes::StructureShape.new(name: 'EventsMessage')
@@ -302,6 +311,8 @@ module Aws::Redshift
     FailoverPrimaryComputeResult = Shapes::StructureShape.new(name: 'FailoverPrimaryComputeResult')
     GetClusterCredentialsMessage = Shapes::StructureShape.new(name: 'GetClusterCredentialsMessage')
     GetClusterCredentialsWithIAMMessage = Shapes::StructureShape.new(name: 'GetClusterCredentialsWithIAMMessage')
+    GetIdentityCenterAuthTokenRequest = Shapes::StructureShape.new(name: 'GetIdentityCenterAuthTokenRequest')
+    GetIdentityCenterAuthTokenResponse = Shapes::StructureShape.new(name: 'GetIdentityCenterAuthTokenResponse')
     GetReservedNodeExchangeConfigurationOptionsInputMessage = Shapes::StructureShape.new(name: 'GetReservedNodeExchangeConfigurationOptionsInputMessage')
     GetReservedNodeExchangeConfigurationOptionsOutputMessage = Shapes::StructureShape.new(name: 'GetReservedNodeExchangeConfigurationOptionsOutputMessage')
     GetReservedNodeExchangeOfferingsInputMessage = Shapes::StructureShape.new(name: 'GetReservedNodeExchangeOfferingsInputMessage')
@@ -309,17 +320,17 @@ module Aws::Redshift
     GetResourcePolicyMessage = Shapes::StructureShape.new(name: 'GetResourcePolicyMessage')
     GetResourcePolicyResult = Shapes::StructureShape.new(name: 'GetResourcePolicyResult')
     HsmClientCertificate = Shapes::StructureShape.new(name: 'HsmClientCertificate')
-    HsmClientCertificateAlreadyExistsFault = Shapes::StructureShape.new(name: 'HsmClientCertificateAlreadyExistsFault', error: {"code"=>"HsmClientCertificateAlreadyExistsFault", "httpStatusCode"=>400, "senderFault"=>true})
+    HsmClientCertificateAlreadyExistsFault = Shapes::StructureShape.new(name: 'HsmClientCertificateAlreadyExistsFault', error: {"code" => "HsmClientCertificateAlreadyExistsFault", "httpStatusCode" => 400, "senderFault" => true})
     HsmClientCertificateList = Shapes::ListShape.new(name: 'HsmClientCertificateList')
     HsmClientCertificateMessage = Shapes::StructureShape.new(name: 'HsmClientCertificateMessage')
-    HsmClientCertificateNotFoundFault = Shapes::StructureShape.new(name: 'HsmClientCertificateNotFoundFault', error: {"code"=>"HsmClientCertificateNotFoundFault", "httpStatusCode"=>400, "senderFault"=>true})
-    HsmClientCertificateQuotaExceededFault = Shapes::StructureShape.new(name: 'HsmClientCertificateQuotaExceededFault', error: {"code"=>"HsmClientCertificateQuotaExceededFault", "httpStatusCode"=>400, "senderFault"=>true})
+    HsmClientCertificateNotFoundFault = Shapes::StructureShape.new(name: 'HsmClientCertificateNotFoundFault', error: {"code" => "HsmClientCertificateNotFoundFault", "httpStatusCode" => 400, "senderFault" => true})
+    HsmClientCertificateQuotaExceededFault = Shapes::StructureShape.new(name: 'HsmClientCertificateQuotaExceededFault', error: {"code" => "HsmClientCertificateQuotaExceededFault", "httpStatusCode" => 400, "senderFault" => true})
     HsmConfiguration = Shapes::StructureShape.new(name: 'HsmConfiguration')
-    HsmConfigurationAlreadyExistsFault = Shapes::StructureShape.new(name: 'HsmConfigurationAlreadyExistsFault', error: {"code"=>"HsmConfigurationAlreadyExistsFault", "httpStatusCode"=>400, "senderFault"=>true})
+    HsmConfigurationAlreadyExistsFault = Shapes::StructureShape.new(name: 'HsmConfigurationAlreadyExistsFault', error: {"code" => "HsmConfigurationAlreadyExistsFault", "httpStatusCode" => 400, "senderFault" => true})
     HsmConfigurationList = Shapes::ListShape.new(name: 'HsmConfigurationList')
     HsmConfigurationMessage = Shapes::StructureShape.new(name: 'HsmConfigurationMessage')
-    HsmConfigurationNotFoundFault = Shapes::StructureShape.new(name: 'HsmConfigurationNotFoundFault', error: {"code"=>"HsmConfigurationNotFoundFault", "httpStatusCode"=>400, "senderFault"=>true})
-    HsmConfigurationQuotaExceededFault = Shapes::StructureShape.new(name: 'HsmConfigurationQuotaExceededFault', error: {"code"=>"HsmConfigurationQuotaExceededFault", "httpStatusCode"=>400, "senderFault"=>true})
+    HsmConfigurationNotFoundFault = Shapes::StructureShape.new(name: 'HsmConfigurationNotFoundFault', error: {"code" => "HsmConfigurationNotFoundFault", "httpStatusCode" => 400, "senderFault" => true})
+    HsmConfigurationQuotaExceededFault = Shapes::StructureShape.new(name: 'HsmConfigurationQuotaExceededFault', error: {"code" => "HsmConfigurationQuotaExceededFault", "httpStatusCode" => 400, "senderFault" => true})
     HsmStatus = Shapes::StructureShape.new(name: 'HsmStatus')
     IPRange = Shapes::StructureShape.new(name: 'IPRange')
     IPRangeList = Shapes::ListShape.new(name: 'IPRangeList')
@@ -330,67 +341,70 @@ module Aws::Redshift
     ImportTablesCompleted = Shapes::ListShape.new(name: 'ImportTablesCompleted')
     ImportTablesInProgress = Shapes::ListShape.new(name: 'ImportTablesInProgress')
     ImportTablesNotStarted = Shapes::ListShape.new(name: 'ImportTablesNotStarted')
-    InProgressTableRestoreQuotaExceededFault = Shapes::StructureShape.new(name: 'InProgressTableRestoreQuotaExceededFault', error: {"code"=>"InProgressTableRestoreQuotaExceededFault", "httpStatusCode"=>400, "senderFault"=>true})
+    InProgressTableRestoreQuotaExceededFault = Shapes::StructureShape.new(name: 'InProgressTableRestoreQuotaExceededFault', error: {"code" => "InProgressTableRestoreQuotaExceededFault", "httpStatusCode" => 400, "senderFault" => true})
     InboundIntegration = Shapes::StructureShape.new(name: 'InboundIntegration')
     InboundIntegrationArn = Shapes::StringShape.new(name: 'InboundIntegrationArn')
     InboundIntegrationList = Shapes::ListShape.new(name: 'InboundIntegrationList')
     InboundIntegrationsMessage = Shapes::StructureShape.new(name: 'InboundIntegrationsMessage')
-    IncompatibleOrderableOptions = Shapes::StructureShape.new(name: 'IncompatibleOrderableOptions', error: {"code"=>"IncompatibleOrderableOptions", "httpStatusCode"=>400, "senderFault"=>true})
-    InsufficientClusterCapacityFault = Shapes::StructureShape.new(name: 'InsufficientClusterCapacityFault', error: {"code"=>"InsufficientClusterCapacity", "httpStatusCode"=>400, "senderFault"=>true})
-    InsufficientS3BucketPolicyFault = Shapes::StructureShape.new(name: 'InsufficientS3BucketPolicyFault', error: {"code"=>"InsufficientS3BucketPolicyFault", "httpStatusCode"=>400, "senderFault"=>true})
+    IncompatibleOrderableOptions = Shapes::StructureShape.new(name: 'IncompatibleOrderableOptions', error: {"code" => "IncompatibleOrderableOptions", "httpStatusCode" => 400, "senderFault" => true})
+    InsufficientClusterCapacityFault = Shapes::StructureShape.new(name: 'InsufficientClusterCapacityFault', error: {"code" => "InsufficientClusterCapacity", "httpStatusCode" => 400, "senderFault" => true})
+    InsufficientS3BucketPolicyFault = Shapes::StructureShape.new(name: 'InsufficientS3BucketPolicyFault', error: {"code" => "InsufficientS3BucketPolicyFault", "httpStatusCode" => 400, "senderFault" => true})
     Integer = Shapes::IntegerShape.new(name: 'Integer')
     IntegerOptional = Shapes::IntegerShape.new(name: 'IntegerOptional')
     Integration = Shapes::StructureShape.new(name: 'Integration')
-    IntegrationAlreadyExistsFault = Shapes::StructureShape.new(name: 'IntegrationAlreadyExistsFault', error: {"code"=>"IntegrationAlreadyExistsFault", "httpStatusCode"=>400, "senderFault"=>true})
+    IntegrationAlreadyExistsFault = Shapes::StructureShape.new(name: 'IntegrationAlreadyExistsFault', error: {"code" => "IntegrationAlreadyExistsFault", "httpStatusCode" => 400, "senderFault" => true})
     IntegrationArn = Shapes::StringShape.new(name: 'IntegrationArn')
-    IntegrationConflictOperationFault = Shapes::StructureShape.new(name: 'IntegrationConflictOperationFault', error: {"code"=>"IntegrationConflictOperationFault", "httpStatusCode"=>400, "senderFault"=>true})
-    IntegrationConflictStateFault = Shapes::StructureShape.new(name: 'IntegrationConflictStateFault', error: {"code"=>"IntegrationConflictStateFault", "httpStatusCode"=>400, "senderFault"=>true})
+    IntegrationConflictOperationFault = Shapes::StructureShape.new(name: 'IntegrationConflictOperationFault', error: {"code" => "IntegrationConflictOperationFault", "httpStatusCode" => 400, "senderFault" => true})
+    IntegrationConflictStateFault = Shapes::StructureShape.new(name: 'IntegrationConflictStateFault', error: {"code" => "IntegrationConflictStateFault", "httpStatusCode" => 400, "senderFault" => true})
     IntegrationDescription = Shapes::StringShape.new(name: 'IntegrationDescription')
     IntegrationError = Shapes::StructureShape.new(name: 'IntegrationError')
     IntegrationErrorList = Shapes::ListShape.new(name: 'IntegrationErrorList')
     IntegrationList = Shapes::ListShape.new(name: 'IntegrationList')
     IntegrationName = Shapes::StringShape.new(name: 'IntegrationName')
-    IntegrationNotFoundFault = Shapes::StructureShape.new(name: 'IntegrationNotFoundFault', error: {"code"=>"IntegrationNotFoundFault", "httpStatusCode"=>404, "senderFault"=>true})
-    IntegrationQuotaExceededFault = Shapes::StructureShape.new(name: 'IntegrationQuotaExceededFault', error: {"code"=>"IntegrationQuotaExceededFault", "httpStatusCode"=>400, "senderFault"=>true})
-    IntegrationSourceNotFoundFault = Shapes::StructureShape.new(name: 'IntegrationSourceNotFoundFault', error: {"code"=>"IntegrationSourceNotFoundFault", "httpStatusCode"=>404, "senderFault"=>true})
-    IntegrationTargetNotFoundFault = Shapes::StructureShape.new(name: 'IntegrationTargetNotFoundFault', error: {"code"=>"IntegrationTargetNotFoundFault", "httpStatusCode"=>404, "senderFault"=>true})
+    IntegrationNotFoundFault = Shapes::StructureShape.new(name: 'IntegrationNotFoundFault', error: {"code" => "IntegrationNotFoundFault", "httpStatusCode" => 404, "senderFault" => true})
+    IntegrationQuotaExceededFault = Shapes::StructureShape.new(name: 'IntegrationQuotaExceededFault', error: {"code" => "IntegrationQuotaExceededFault", "httpStatusCode" => 400, "senderFault" => true})
+    IntegrationSourceNotFoundFault = Shapes::StructureShape.new(name: 'IntegrationSourceNotFoundFault', error: {"code" => "IntegrationSourceNotFoundFault", "httpStatusCode" => 404, "senderFault" => true})
+    IntegrationTargetNotFoundFault = Shapes::StructureShape.new(name: 'IntegrationTargetNotFoundFault', error: {"code" => "IntegrationTargetNotFoundFault", "httpStatusCode" => 404, "senderFault" => true})
     IntegrationsMessage = Shapes::StructureShape.new(name: 'IntegrationsMessage')
-    InvalidAuthenticationProfileRequestFault = Shapes::StructureShape.new(name: 'InvalidAuthenticationProfileRequestFault', error: {"code"=>"InvalidAuthenticationProfileRequestFault", "httpStatusCode"=>400, "senderFault"=>true})
-    InvalidAuthorizationStateFault = Shapes::StructureShape.new(name: 'InvalidAuthorizationStateFault', error: {"code"=>"InvalidAuthorizationState", "httpStatusCode"=>400, "senderFault"=>true})
-    InvalidClusterParameterGroupStateFault = Shapes::StructureShape.new(name: 'InvalidClusterParameterGroupStateFault', error: {"code"=>"InvalidClusterParameterGroupState", "httpStatusCode"=>400, "senderFault"=>true})
-    InvalidClusterSecurityGroupStateFault = Shapes::StructureShape.new(name: 'InvalidClusterSecurityGroupStateFault', error: {"code"=>"InvalidClusterSecurityGroupState", "httpStatusCode"=>400, "senderFault"=>true})
-    InvalidClusterSnapshotScheduleStateFault = Shapes::StructureShape.new(name: 'InvalidClusterSnapshotScheduleStateFault', error: {"code"=>"InvalidClusterSnapshotScheduleState", "httpStatusCode"=>400, "senderFault"=>true})
-    InvalidClusterSnapshotStateFault = Shapes::StructureShape.new(name: 'InvalidClusterSnapshotStateFault', error: {"code"=>"InvalidClusterSnapshotState", "httpStatusCode"=>400, "senderFault"=>true})
-    InvalidClusterStateFault = Shapes::StructureShape.new(name: 'InvalidClusterStateFault', error: {"code"=>"InvalidClusterState", "httpStatusCode"=>400, "senderFault"=>true})
-    InvalidClusterSubnetGroupStateFault = Shapes::StructureShape.new(name: 'InvalidClusterSubnetGroupStateFault', error: {"code"=>"InvalidClusterSubnetGroupStateFault", "httpStatusCode"=>400, "senderFault"=>true})
-    InvalidClusterSubnetStateFault = Shapes::StructureShape.new(name: 'InvalidClusterSubnetStateFault', error: {"code"=>"InvalidClusterSubnetStateFault", "httpStatusCode"=>400, "senderFault"=>true})
-    InvalidClusterTrackFault = Shapes::StructureShape.new(name: 'InvalidClusterTrackFault', error: {"code"=>"InvalidClusterTrack", "httpStatusCode"=>400, "senderFault"=>true})
-    InvalidDataShareFault = Shapes::StructureShape.new(name: 'InvalidDataShareFault', error: {"code"=>"InvalidDataShareFault", "httpStatusCode"=>400, "senderFault"=>true})
-    InvalidElasticIpFault = Shapes::StructureShape.new(name: 'InvalidElasticIpFault', error: {"code"=>"InvalidElasticIpFault", "httpStatusCode"=>400, "senderFault"=>true})
-    InvalidEndpointStateFault = Shapes::StructureShape.new(name: 'InvalidEndpointStateFault', error: {"code"=>"InvalidEndpointState", "httpStatusCode"=>400, "senderFault"=>true})
-    InvalidHsmClientCertificateStateFault = Shapes::StructureShape.new(name: 'InvalidHsmClientCertificateStateFault', error: {"code"=>"InvalidHsmClientCertificateStateFault", "httpStatusCode"=>400, "senderFault"=>true})
-    InvalidHsmConfigurationStateFault = Shapes::StructureShape.new(name: 'InvalidHsmConfigurationStateFault', error: {"code"=>"InvalidHsmConfigurationStateFault", "httpStatusCode"=>400, "senderFault"=>true})
-    InvalidNamespaceFault = Shapes::StructureShape.new(name: 'InvalidNamespaceFault', error: {"code"=>"InvalidNamespaceFault", "httpStatusCode"=>400, "senderFault"=>true})
-    InvalidPolicyFault = Shapes::StructureShape.new(name: 'InvalidPolicyFault', error: {"code"=>"InvalidPolicyFault", "httpStatusCode"=>400, "senderFault"=>true})
-    InvalidReservedNodeStateFault = Shapes::StructureShape.new(name: 'InvalidReservedNodeStateFault', error: {"code"=>"InvalidReservedNodeState", "httpStatusCode"=>400, "senderFault"=>true})
-    InvalidRestoreFault = Shapes::StructureShape.new(name: 'InvalidRestoreFault', error: {"code"=>"InvalidRestore", "httpStatusCode"=>406, "senderFault"=>true})
-    InvalidRetentionPeriodFault = Shapes::StructureShape.new(name: 'InvalidRetentionPeriodFault', error: {"code"=>"InvalidRetentionPeriodFault", "httpStatusCode"=>400, "senderFault"=>true})
-    InvalidS3BucketNameFault = Shapes::StructureShape.new(name: 'InvalidS3BucketNameFault', error: {"code"=>"InvalidS3BucketNameFault", "httpStatusCode"=>400, "senderFault"=>true})
-    InvalidS3KeyPrefixFault = Shapes::StructureShape.new(name: 'InvalidS3KeyPrefixFault', error: {"code"=>"InvalidS3KeyPrefixFault", "httpStatusCode"=>400, "senderFault"=>true})
-    InvalidScheduleFault = Shapes::StructureShape.new(name: 'InvalidScheduleFault', error: {"code"=>"InvalidSchedule", "httpStatusCode"=>400, "senderFault"=>true})
-    InvalidScheduledActionFault = Shapes::StructureShape.new(name: 'InvalidScheduledActionFault', error: {"code"=>"InvalidScheduledAction", "httpStatusCode"=>400, "senderFault"=>true})
-    InvalidSnapshotCopyGrantStateFault = Shapes::StructureShape.new(name: 'InvalidSnapshotCopyGrantStateFault', error: {"code"=>"InvalidSnapshotCopyGrantStateFault", "httpStatusCode"=>400, "senderFault"=>true})
-    InvalidSubnet = Shapes::StructureShape.new(name: 'InvalidSubnet', error: {"code"=>"InvalidSubnet", "httpStatusCode"=>400, "senderFault"=>true})
-    InvalidSubscriptionStateFault = Shapes::StructureShape.new(name: 'InvalidSubscriptionStateFault', error: {"code"=>"InvalidSubscriptionStateFault", "httpStatusCode"=>400, "senderFault"=>true})
-    InvalidTableRestoreArgumentFault = Shapes::StructureShape.new(name: 'InvalidTableRestoreArgumentFault', error: {"code"=>"InvalidTableRestoreArgument", "httpStatusCode"=>400, "senderFault"=>true})
-    InvalidTagFault = Shapes::StructureShape.new(name: 'InvalidTagFault', error: {"code"=>"InvalidTagFault", "httpStatusCode"=>400, "senderFault"=>true})
-    InvalidUsageLimitFault = Shapes::StructureShape.new(name: 'InvalidUsageLimitFault', error: {"code"=>"InvalidUsageLimit", "httpStatusCode"=>400, "senderFault"=>true})
-    InvalidVPCNetworkStateFault = Shapes::StructureShape.new(name: 'InvalidVPCNetworkStateFault', error: {"code"=>"InvalidVPCNetworkStateFault", "httpStatusCode"=>400, "senderFault"=>true})
-    Ipv6CidrBlockNotFoundFault = Shapes::StructureShape.new(name: 'Ipv6CidrBlockNotFoundFault', error: {"code"=>"Ipv6CidrBlockNotFoundFault", "httpStatusCode"=>400, "senderFault"=>true})
+    InvalidAuthenticationProfileRequestFault = Shapes::StructureShape.new(name: 'InvalidAuthenticationProfileRequestFault', error: {"code" => "InvalidAuthenticationProfileRequestFault", "httpStatusCode" => 400, "senderFault" => true})
+    InvalidAuthorizationStateFault = Shapes::StructureShape.new(name: 'InvalidAuthorizationStateFault', error: {"code" => "InvalidAuthorizationState", "httpStatusCode" => 400, "senderFault" => true})
+    InvalidClusterParameterGroupStateFault = Shapes::StructureShape.new(name: 'InvalidClusterParameterGroupStateFault', error: {"code" => "InvalidClusterParameterGroupState", "httpStatusCode" => 400, "senderFault" => true})
+    InvalidClusterSecurityGroupStateFault = Shapes::StructureShape.new(name: 'InvalidClusterSecurityGroupStateFault', error: {"code" => "InvalidClusterSecurityGroupState", "httpStatusCode" => 400, "senderFault" => true})
+    InvalidClusterSnapshotScheduleStateFault = Shapes::StructureShape.new(name: 'InvalidClusterSnapshotScheduleStateFault', error: {"code" => "InvalidClusterSnapshotScheduleState", "httpStatusCode" => 400, "senderFault" => true})
+    InvalidClusterSnapshotStateFault = Shapes::StructureShape.new(name: 'InvalidClusterSnapshotStateFault', error: {"code" => "InvalidClusterSnapshotState", "httpStatusCode" => 400, "senderFault" => true})
+    InvalidClusterStateFault = Shapes::StructureShape.new(name: 'InvalidClusterStateFault', error: {"code" => "InvalidClusterState", "httpStatusCode" => 400, "senderFault" => true})
+    InvalidClusterSubnetGroupStateFault = Shapes::StructureShape.new(name: 'InvalidClusterSubnetGroupStateFault', error: {"code" => "InvalidClusterSubnetGroupStateFault", "httpStatusCode" => 400, "senderFault" => true})
+    InvalidClusterSubnetStateFault = Shapes::StructureShape.new(name: 'InvalidClusterSubnetStateFault', error: {"code" => "InvalidClusterSubnetStateFault", "httpStatusCode" => 400, "senderFault" => true})
+    InvalidClusterTrackFault = Shapes::StructureShape.new(name: 'InvalidClusterTrackFault', error: {"code" => "InvalidClusterTrack", "httpStatusCode" => 400, "senderFault" => true})
+    InvalidDataShareFault = Shapes::StructureShape.new(name: 'InvalidDataShareFault', error: {"code" => "InvalidDataShareFault", "httpStatusCode" => 400, "senderFault" => true})
+    InvalidElasticIpFault = Shapes::StructureShape.new(name: 'InvalidElasticIpFault', error: {"code" => "InvalidElasticIpFault", "httpStatusCode" => 400, "senderFault" => true})
+    InvalidEndpointStateFault = Shapes::StructureShape.new(name: 'InvalidEndpointStateFault', error: {"code" => "InvalidEndpointState", "httpStatusCode" => 400, "senderFault" => true})
+    InvalidHsmClientCertificateStateFault = Shapes::StructureShape.new(name: 'InvalidHsmClientCertificateStateFault', error: {"code" => "InvalidHsmClientCertificateStateFault", "httpStatusCode" => 400, "senderFault" => true})
+    InvalidHsmConfigurationStateFault = Shapes::StructureShape.new(name: 'InvalidHsmConfigurationStateFault', error: {"code" => "InvalidHsmConfigurationStateFault", "httpStatusCode" => 400, "senderFault" => true})
+    InvalidNamespaceFault = Shapes::StructureShape.new(name: 'InvalidNamespaceFault', error: {"code" => "InvalidNamespaceFault", "httpStatusCode" => 400, "senderFault" => true})
+    InvalidPolicyFault = Shapes::StructureShape.new(name: 'InvalidPolicyFault', error: {"code" => "InvalidPolicyFault", "httpStatusCode" => 400, "senderFault" => true})
+    InvalidReservedNodeStateFault = Shapes::StructureShape.new(name: 'InvalidReservedNodeStateFault', error: {"code" => "InvalidReservedNodeState", "httpStatusCode" => 400, "senderFault" => true})
+    InvalidRestoreFault = Shapes::StructureShape.new(name: 'InvalidRestoreFault', error: {"code" => "InvalidRestore", "httpStatusCode" => 406, "senderFault" => true})
+    InvalidRetentionPeriodFault = Shapes::StructureShape.new(name: 'InvalidRetentionPeriodFault', error: {"code" => "InvalidRetentionPeriodFault", "httpStatusCode" => 400, "senderFault" => true})
+    InvalidS3BucketNameFault = Shapes::StructureShape.new(name: 'InvalidS3BucketNameFault', error: {"code" => "InvalidS3BucketNameFault", "httpStatusCode" => 400, "senderFault" => true})
+    InvalidS3KeyPrefixFault = Shapes::StructureShape.new(name: 'InvalidS3KeyPrefixFault', error: {"code" => "InvalidS3KeyPrefixFault", "httpStatusCode" => 400, "senderFault" => true})
+    InvalidScheduleFault = Shapes::StructureShape.new(name: 'InvalidScheduleFault', error: {"code" => "InvalidSchedule", "httpStatusCode" => 400, "senderFault" => true})
+    InvalidScheduledActionFault = Shapes::StructureShape.new(name: 'InvalidScheduledActionFault', error: {"code" => "InvalidScheduledAction", "httpStatusCode" => 400, "senderFault" => true})
+    InvalidSnapshotCopyGrantStateFault = Shapes::StructureShape.new(name: 'InvalidSnapshotCopyGrantStateFault', error: {"code" => "InvalidSnapshotCopyGrantStateFault", "httpStatusCode" => 400, "senderFault" => true})
+    InvalidSubnet = Shapes::StructureShape.new(name: 'InvalidSubnet', error: {"code" => "InvalidSubnet", "httpStatusCode" => 400, "senderFault" => true})
+    InvalidSubscriptionStateFault = Shapes::StructureShape.new(name: 'InvalidSubscriptionStateFault', error: {"code" => "InvalidSubscriptionStateFault", "httpStatusCode" => 400, "senderFault" => true})
+    InvalidTableRestoreArgumentFault = Shapes::StructureShape.new(name: 'InvalidTableRestoreArgumentFault', error: {"code" => "InvalidTableRestoreArgument", "httpStatusCode" => 400, "senderFault" => true})
+    InvalidTagFault = Shapes::StructureShape.new(name: 'InvalidTagFault', error: {"code" => "InvalidTagFault", "httpStatusCode" => 400, "senderFault" => true})
+    InvalidUsageLimitFault = Shapes::StructureShape.new(name: 'InvalidUsageLimitFault', error: {"code" => "InvalidUsageLimit", "httpStatusCode" => 400, "senderFault" => true})
+    InvalidVPCNetworkStateFault = Shapes::StructureShape.new(name: 'InvalidVPCNetworkStateFault', error: {"code" => "InvalidVPCNetworkStateFault", "httpStatusCode" => 400, "senderFault" => true})
+    Ipv6CidrBlockNotFoundFault = Shapes::StructureShape.new(name: 'Ipv6CidrBlockNotFoundFault', error: {"code" => "Ipv6CidrBlockNotFoundFault", "httpStatusCode" => 400, "senderFault" => true})
     LakeFormationQuery = Shapes::StructureShape.new(name: 'LakeFormationQuery')
     LakeFormationScopeUnion = Shapes::UnionShape.new(name: 'LakeFormationScopeUnion')
     LakeFormationServiceIntegrations = Shapes::ListShape.new(name: 'LakeFormationServiceIntegrations')
-    LimitExceededFault = Shapes::StructureShape.new(name: 'LimitExceededFault', error: {"code"=>"LimitExceededFault", "httpStatusCode"=>400, "senderFault"=>true})
+    LakehouseConfiguration = Shapes::StructureShape.new(name: 'LakehouseConfiguration')
+    LakehouseIdcRegistration = Shapes::StringShape.new(name: 'LakehouseIdcRegistration')
+    LakehouseRegistration = Shapes::StringShape.new(name: 'LakehouseRegistration')
+    LimitExceededFault = Shapes::StructureShape.new(name: 'LimitExceededFault', error: {"code" => "LimitExceededFault", "httpStatusCode" => 400, "senderFault" => true})
     ListRecommendationsMessage = Shapes::StructureShape.new(name: 'ListRecommendationsMessage')
     ListRecommendationsResult = Shapes::StructureShape.new(name: 'ListRecommendationsResult')
     LogDestinationType = Shapes::StringShape.new(name: 'LogDestinationType')
@@ -424,6 +438,9 @@ module Aws::Redshift
     ModifyEventSubscriptionMessage = Shapes::StructureShape.new(name: 'ModifyEventSubscriptionMessage')
     ModifyEventSubscriptionResult = Shapes::StructureShape.new(name: 'ModifyEventSubscriptionResult')
     ModifyIntegrationMessage = Shapes::StructureShape.new(name: 'ModifyIntegrationMessage')
+    ModifyLakehouseConfigurationMessage = Shapes::StructureShape.new(name: 'ModifyLakehouseConfigurationMessage')
+    ModifyQev2IdcApplicationMessage = Shapes::StructureShape.new(name: 'ModifyQev2IdcApplicationMessage')
+    ModifyQev2IdcApplicationResult = Shapes::StructureShape.new(name: 'ModifyQev2IdcApplicationResult')
     ModifyRedshiftIdcApplicationMessage = Shapes::StructureShape.new(name: 'ModifyRedshiftIdcApplicationMessage')
     ModifyRedshiftIdcApplicationResult = Shapes::StructureShape.new(name: 'ModifyRedshiftIdcApplicationResult')
     ModifyScheduledActionMessage = Shapes::StructureShape.new(name: 'ModifyScheduledActionMessage')
@@ -441,8 +458,8 @@ module Aws::Redshift
     NodeConfigurationOptionsFilterList = Shapes::ListShape.new(name: 'NodeConfigurationOptionsFilterList')
     NodeConfigurationOptionsFilterName = Shapes::StringShape.new(name: 'NodeConfigurationOptionsFilterName')
     NodeConfigurationOptionsMessage = Shapes::StructureShape.new(name: 'NodeConfigurationOptionsMessage')
-    NumberOfNodesPerClusterLimitExceededFault = Shapes::StructureShape.new(name: 'NumberOfNodesPerClusterLimitExceededFault', error: {"code"=>"NumberOfNodesPerClusterLimitExceeded", "httpStatusCode"=>400, "senderFault"=>true})
-    NumberOfNodesQuotaExceededFault = Shapes::StructureShape.new(name: 'NumberOfNodesQuotaExceededFault', error: {"code"=>"NumberOfNodesQuotaExceeded", "httpStatusCode"=>400, "senderFault"=>true})
+    NumberOfNodesPerClusterLimitExceededFault = Shapes::StructureShape.new(name: 'NumberOfNodesPerClusterLimitExceededFault', error: {"code" => "NumberOfNodesPerClusterLimitExceeded", "httpStatusCode" => 400, "senderFault" => true})
+    NumberOfNodesQuotaExceededFault = Shapes::StructureShape.new(name: 'NumberOfNodesQuotaExceededFault', error: {"code" => "NumberOfNodesQuotaExceeded", "httpStatusCode" => 400, "senderFault" => true})
     OperatorType = Shapes::StringShape.new(name: 'OperatorType')
     OrderableClusterOption = Shapes::StructureShape.new(name: 'OrderableClusterOption')
     OrderableClusterOptionsList = Shapes::ListShape.new(name: 'OrderableClusterOptionsList')
@@ -461,7 +478,7 @@ module Aws::Redshift
     PartnerIntegrationPartnerName = Shapes::StringShape.new(name: 'PartnerIntegrationPartnerName')
     PartnerIntegrationStatus = Shapes::StringShape.new(name: 'PartnerIntegrationStatus')
     PartnerIntegrationStatusMessage = Shapes::StringShape.new(name: 'PartnerIntegrationStatusMessage')
-    PartnerNotFoundFault = Shapes::StructureShape.new(name: 'PartnerNotFoundFault', error: {"code"=>"PartnerNotFound", "httpStatusCode"=>404, "senderFault"=>true})
+    PartnerNotFoundFault = Shapes::StructureShape.new(name: 'PartnerNotFoundFault', error: {"code" => "PartnerNotFound", "httpStatusCode" => 404, "senderFault" => true})
     PauseClusterMessage = Shapes::StructureShape.new(name: 'PauseClusterMessage')
     PauseClusterResult = Shapes::StructureShape.new(name: 'PauseClusterResult')
     PendingActionsList = Shapes::ListShape.new(name: 'PendingActionsList')
@@ -471,6 +488,11 @@ module Aws::Redshift
     PurchaseReservedNodeOfferingResult = Shapes::StructureShape.new(name: 'PurchaseReservedNodeOfferingResult')
     PutResourcePolicyMessage = Shapes::StructureShape.new(name: 'PutResourcePolicyMessage')
     PutResourcePolicyResult = Shapes::StructureShape.new(name: 'PutResourcePolicyResult')
+    Qev2IdcApplication = Shapes::StructureShape.new(name: 'Qev2IdcApplication')
+    Qev2IdcApplicationAlreadyExistsFault = Shapes::StructureShape.new(name: 'Qev2IdcApplicationAlreadyExistsFault', error: {"code" => "Qev2IdcApplicationAlreadyExists", "httpStatusCode" => 400, "senderFault" => true})
+    Qev2IdcApplicationList = Shapes::ListShape.new(name: 'Qev2IdcApplicationList')
+    Qev2IdcApplicationName = Shapes::StringShape.new(name: 'Qev2IdcApplicationName')
+    Qev2IdcApplicationNotExistsFault = Shapes::StructureShape.new(name: 'Qev2IdcApplicationNotExistsFault', error: {"code" => "Qev2IdcApplicationNotExists", "httpStatusCode" => 404, "senderFault" => true})
     ReadWriteAccess = Shapes::StructureShape.new(name: 'ReadWriteAccess')
     RebootClusterMessage = Shapes::StructureShape.new(name: 'RebootClusterMessage')
     RebootClusterResult = Shapes::StructureShape.new(name: 'RebootClusterResult')
@@ -482,42 +504,45 @@ module Aws::Redshift
     RecurringCharge = Shapes::StructureShape.new(name: 'RecurringCharge')
     RecurringChargeList = Shapes::ListShape.new(name: 'RecurringChargeList')
     RedshiftIdcApplication = Shapes::StructureShape.new(name: 'RedshiftIdcApplication')
-    RedshiftIdcApplicationAlreadyExistsFault = Shapes::StructureShape.new(name: 'RedshiftIdcApplicationAlreadyExistsFault', error: {"code"=>"RedshiftIdcApplicationAlreadyExists", "httpStatusCode"=>400, "senderFault"=>true})
+    RedshiftIdcApplicationAlreadyExistsFault = Shapes::StructureShape.new(name: 'RedshiftIdcApplicationAlreadyExistsFault', error: {"code" => "RedshiftIdcApplicationAlreadyExists", "httpStatusCode" => 400, "senderFault" => true})
     RedshiftIdcApplicationList = Shapes::ListShape.new(name: 'RedshiftIdcApplicationList')
     RedshiftIdcApplicationName = Shapes::StringShape.new(name: 'RedshiftIdcApplicationName')
-    RedshiftIdcApplicationNotExistsFault = Shapes::StructureShape.new(name: 'RedshiftIdcApplicationNotExistsFault', error: {"code"=>"RedshiftIdcApplicationNotExists", "httpStatusCode"=>404, "senderFault"=>true})
-    RedshiftIdcApplicationQuotaExceededFault = Shapes::StructureShape.new(name: 'RedshiftIdcApplicationQuotaExceededFault', error: {"code"=>"RedshiftIdcApplicationQuotaExceeded", "httpStatusCode"=>400, "senderFault"=>true})
+    RedshiftIdcApplicationNotExistsFault = Shapes::StructureShape.new(name: 'RedshiftIdcApplicationNotExistsFault', error: {"code" => "RedshiftIdcApplicationNotExists", "httpStatusCode" => 404, "senderFault" => true})
+    RedshiftIdcApplicationQuotaExceededFault = Shapes::StructureShape.new(name: 'RedshiftIdcApplicationQuotaExceededFault', error: {"code" => "RedshiftIdcApplicationQuotaExceeded", "httpStatusCode" => 400, "senderFault" => true})
+    RedshiftInvalidParameterFault = Shapes::StructureShape.new(name: 'RedshiftInvalidParameterFault', error: {"code" => "RedshiftInvalidParameter", "httpStatusCode" => 400, "senderFault" => true})
+    RedshiftScopeUnion = Shapes::UnionShape.new(name: 'RedshiftScopeUnion')
+    RedshiftServiceIntegrations = Shapes::ListShape.new(name: 'RedshiftServiceIntegrations')
     ReferenceLink = Shapes::StructureShape.new(name: 'ReferenceLink')
     ReferenceLinkList = Shapes::ListShape.new(name: 'ReferenceLinkList')
     RegisterNamespaceInputMessage = Shapes::StructureShape.new(name: 'RegisterNamespaceInputMessage')
     RegisterNamespaceOutputMessage = Shapes::StructureShape.new(name: 'RegisterNamespaceOutputMessage')
     RejectDataShareMessage = Shapes::StructureShape.new(name: 'RejectDataShareMessage')
     ReservedNode = Shapes::StructureShape.new(name: 'ReservedNode')
-    ReservedNodeAlreadyExistsFault = Shapes::StructureShape.new(name: 'ReservedNodeAlreadyExistsFault', error: {"code"=>"ReservedNodeAlreadyExists", "httpStatusCode"=>404, "senderFault"=>true})
-    ReservedNodeAlreadyMigratedFault = Shapes::StructureShape.new(name: 'ReservedNodeAlreadyMigratedFault', error: {"code"=>"ReservedNodeAlreadyMigrated", "httpStatusCode"=>400, "senderFault"=>true})
+    ReservedNodeAlreadyExistsFault = Shapes::StructureShape.new(name: 'ReservedNodeAlreadyExistsFault', error: {"code" => "ReservedNodeAlreadyExists", "httpStatusCode" => 404, "senderFault" => true})
+    ReservedNodeAlreadyMigratedFault = Shapes::StructureShape.new(name: 'ReservedNodeAlreadyMigratedFault', error: {"code" => "ReservedNodeAlreadyMigrated", "httpStatusCode" => 400, "senderFault" => true})
     ReservedNodeConfigurationOption = Shapes::StructureShape.new(name: 'ReservedNodeConfigurationOption')
     ReservedNodeConfigurationOptionList = Shapes::ListShape.new(name: 'ReservedNodeConfigurationOptionList')
     ReservedNodeExchangeActionType = Shapes::StringShape.new(name: 'ReservedNodeExchangeActionType')
-    ReservedNodeExchangeNotFoundFault = Shapes::StructureShape.new(name: 'ReservedNodeExchangeNotFoundFault', error: {"code"=>"ReservedNodeExchangeNotFond", "httpStatusCode"=>404, "senderFault"=>true})
+    ReservedNodeExchangeNotFoundFault = Shapes::StructureShape.new(name: 'ReservedNodeExchangeNotFoundFault', error: {"code" => "ReservedNodeExchangeNotFond", "httpStatusCode" => 404, "senderFault" => true})
     ReservedNodeExchangeStatus = Shapes::StructureShape.new(name: 'ReservedNodeExchangeStatus')
     ReservedNodeExchangeStatusList = Shapes::ListShape.new(name: 'ReservedNodeExchangeStatusList')
     ReservedNodeExchangeStatusType = Shapes::StringShape.new(name: 'ReservedNodeExchangeStatusType')
     ReservedNodeList = Shapes::ListShape.new(name: 'ReservedNodeList')
-    ReservedNodeNotFoundFault = Shapes::StructureShape.new(name: 'ReservedNodeNotFoundFault', error: {"code"=>"ReservedNodeNotFound", "httpStatusCode"=>404, "senderFault"=>true})
+    ReservedNodeNotFoundFault = Shapes::StructureShape.new(name: 'ReservedNodeNotFoundFault', error: {"code" => "ReservedNodeNotFound", "httpStatusCode" => 404, "senderFault" => true})
     ReservedNodeOffering = Shapes::StructureShape.new(name: 'ReservedNodeOffering')
     ReservedNodeOfferingList = Shapes::ListShape.new(name: 'ReservedNodeOfferingList')
-    ReservedNodeOfferingNotFoundFault = Shapes::StructureShape.new(name: 'ReservedNodeOfferingNotFoundFault', error: {"code"=>"ReservedNodeOfferingNotFound", "httpStatusCode"=>404, "senderFault"=>true})
+    ReservedNodeOfferingNotFoundFault = Shapes::StructureShape.new(name: 'ReservedNodeOfferingNotFoundFault', error: {"code" => "ReservedNodeOfferingNotFound", "httpStatusCode" => 404, "senderFault" => true})
     ReservedNodeOfferingType = Shapes::StringShape.new(name: 'ReservedNodeOfferingType')
     ReservedNodeOfferingsMessage = Shapes::StructureShape.new(name: 'ReservedNodeOfferingsMessage')
-    ReservedNodeQuotaExceededFault = Shapes::StructureShape.new(name: 'ReservedNodeQuotaExceededFault', error: {"code"=>"ReservedNodeQuotaExceeded", "httpStatusCode"=>400, "senderFault"=>true})
+    ReservedNodeQuotaExceededFault = Shapes::StructureShape.new(name: 'ReservedNodeQuotaExceededFault', error: {"code" => "ReservedNodeQuotaExceeded", "httpStatusCode" => 400, "senderFault" => true})
     ReservedNodesMessage = Shapes::StructureShape.new(name: 'ReservedNodesMessage')
     ResetClusterParameterGroupMessage = Shapes::StructureShape.new(name: 'ResetClusterParameterGroupMessage')
     ResizeClusterMessage = Shapes::StructureShape.new(name: 'ResizeClusterMessage')
     ResizeClusterResult = Shapes::StructureShape.new(name: 'ResizeClusterResult')
     ResizeInfo = Shapes::StructureShape.new(name: 'ResizeInfo')
-    ResizeNotFoundFault = Shapes::StructureShape.new(name: 'ResizeNotFoundFault', error: {"code"=>"ResizeNotFound", "httpStatusCode"=>404, "senderFault"=>true})
+    ResizeNotFoundFault = Shapes::StructureShape.new(name: 'ResizeNotFoundFault', error: {"code" => "ResizeNotFound", "httpStatusCode" => 404, "senderFault" => true})
     ResizeProgressMessage = Shapes::StructureShape.new(name: 'ResizeProgressMessage')
-    ResourceNotFoundFault = Shapes::StructureShape.new(name: 'ResourceNotFoundFault', error: {"code"=>"ResourceNotFoundFault", "httpStatusCode"=>404, "senderFault"=>true})
+    ResourceNotFoundFault = Shapes::StructureShape.new(name: 'ResourceNotFoundFault', error: {"code" => "ResourceNotFoundFault", "httpStatusCode" => 404, "senderFault" => true})
     ResourcePolicy = Shapes::StructureShape.new(name: 'ResourcePolicy')
     RestorableNodeTypeList = Shapes::ListShape.new(name: 'RestorableNodeTypeList')
     RestoreFromClusterSnapshotMessage = Shapes::StructureShape.new(name: 'RestoreFromClusterSnapshotMessage')
@@ -539,24 +564,24 @@ module Aws::Redshift
     S3AccessGrantsScopeUnion = Shapes::UnionShape.new(name: 'S3AccessGrantsScopeUnion')
     S3AccessGrantsServiceIntegrations = Shapes::ListShape.new(name: 'S3AccessGrantsServiceIntegrations')
     S3KeyPrefixValue = Shapes::StringShape.new(name: 'S3KeyPrefixValue')
-    SNSInvalidTopicFault = Shapes::StructureShape.new(name: 'SNSInvalidTopicFault', error: {"code"=>"SNSInvalidTopic", "httpStatusCode"=>400, "senderFault"=>true})
-    SNSNoAuthorizationFault = Shapes::StructureShape.new(name: 'SNSNoAuthorizationFault', error: {"code"=>"SNSNoAuthorization", "httpStatusCode"=>400, "senderFault"=>true})
-    SNSTopicArnNotFoundFault = Shapes::StructureShape.new(name: 'SNSTopicArnNotFoundFault', error: {"code"=>"SNSTopicArnNotFound", "httpStatusCode"=>404, "senderFault"=>true})
+    SNSInvalidTopicFault = Shapes::StructureShape.new(name: 'SNSInvalidTopicFault', error: {"code" => "SNSInvalidTopic", "httpStatusCode" => 400, "senderFault" => true})
+    SNSNoAuthorizationFault = Shapes::StructureShape.new(name: 'SNSNoAuthorizationFault', error: {"code" => "SNSNoAuthorization", "httpStatusCode" => 400, "senderFault" => true})
+    SNSTopicArnNotFoundFault = Shapes::StructureShape.new(name: 'SNSTopicArnNotFoundFault', error: {"code" => "SNSTopicArnNotFound", "httpStatusCode" => 404, "senderFault" => true})
     ScheduleDefinitionList = Shapes::ListShape.new(name: 'ScheduleDefinitionList')
-    ScheduleDefinitionTypeUnsupportedFault = Shapes::StructureShape.new(name: 'ScheduleDefinitionTypeUnsupportedFault', error: {"code"=>"ScheduleDefinitionTypeUnsupported", "httpStatusCode"=>400, "senderFault"=>true})
+    ScheduleDefinitionTypeUnsupportedFault = Shapes::StructureShape.new(name: 'ScheduleDefinitionTypeUnsupportedFault', error: {"code" => "ScheduleDefinitionTypeUnsupported", "httpStatusCode" => 400, "senderFault" => true})
     ScheduleState = Shapes::StringShape.new(name: 'ScheduleState')
     ScheduledAction = Shapes::StructureShape.new(name: 'ScheduledAction')
-    ScheduledActionAlreadyExistsFault = Shapes::StructureShape.new(name: 'ScheduledActionAlreadyExistsFault', error: {"code"=>"ScheduledActionAlreadyExists", "httpStatusCode"=>400, "senderFault"=>true})
+    ScheduledActionAlreadyExistsFault = Shapes::StructureShape.new(name: 'ScheduledActionAlreadyExistsFault', error: {"code" => "ScheduledActionAlreadyExists", "httpStatusCode" => 400, "senderFault" => true})
     ScheduledActionFilter = Shapes::StructureShape.new(name: 'ScheduledActionFilter')
     ScheduledActionFilterList = Shapes::ListShape.new(name: 'ScheduledActionFilterList')
     ScheduledActionFilterName = Shapes::StringShape.new(name: 'ScheduledActionFilterName')
     ScheduledActionList = Shapes::ListShape.new(name: 'ScheduledActionList')
-    ScheduledActionNotFoundFault = Shapes::StructureShape.new(name: 'ScheduledActionNotFoundFault', error: {"code"=>"ScheduledActionNotFound", "httpStatusCode"=>400, "senderFault"=>true})
-    ScheduledActionQuotaExceededFault = Shapes::StructureShape.new(name: 'ScheduledActionQuotaExceededFault', error: {"code"=>"ScheduledActionQuotaExceeded", "httpStatusCode"=>400, "senderFault"=>true})
+    ScheduledActionNotFoundFault = Shapes::StructureShape.new(name: 'ScheduledActionNotFoundFault', error: {"code" => "ScheduledActionNotFound", "httpStatusCode" => 400, "senderFault" => true})
+    ScheduledActionQuotaExceededFault = Shapes::StructureShape.new(name: 'ScheduledActionQuotaExceededFault', error: {"code" => "ScheduledActionQuotaExceeded", "httpStatusCode" => 400, "senderFault" => true})
     ScheduledActionState = Shapes::StringShape.new(name: 'ScheduledActionState')
     ScheduledActionTimeList = Shapes::ListShape.new(name: 'ScheduledActionTimeList')
     ScheduledActionType = Shapes::StructureShape.new(name: 'ScheduledActionType')
-    ScheduledActionTypeUnsupportedFault = Shapes::StructureShape.new(name: 'ScheduledActionTypeUnsupportedFault', error: {"code"=>"ScheduledActionTypeUnsupported", "httpStatusCode"=>400, "senderFault"=>true})
+    ScheduledActionTypeUnsupportedFault = Shapes::StructureShape.new(name: 'ScheduledActionTypeUnsupportedFault', error: {"code" => "ScheduledActionTypeUnsupported", "httpStatusCode" => 400, "senderFault" => true})
     ScheduledActionTypeValues = Shapes::StringShape.new(name: 'ScheduledActionTypeValues')
     ScheduledActionsMessage = Shapes::StructureShape.new(name: 'ScheduledActionsMessage')
     ScheduledSnapshotTimeList = Shapes::ListShape.new(name: 'ScheduledSnapshotTimeList')
@@ -568,56 +593,56 @@ module Aws::Redshift
     ServiceIntegrationsUnion = Shapes::UnionShape.new(name: 'ServiceIntegrationsUnion')
     Snapshot = Shapes::StructureShape.new(name: 'Snapshot')
     SnapshotAttributeToSortBy = Shapes::StringShape.new(name: 'SnapshotAttributeToSortBy')
-    SnapshotCopyAlreadyDisabledFault = Shapes::StructureShape.new(name: 'SnapshotCopyAlreadyDisabledFault', error: {"code"=>"SnapshotCopyAlreadyDisabledFault", "httpStatusCode"=>400, "senderFault"=>true})
-    SnapshotCopyAlreadyEnabledFault = Shapes::StructureShape.new(name: 'SnapshotCopyAlreadyEnabledFault', error: {"code"=>"SnapshotCopyAlreadyEnabledFault", "httpStatusCode"=>400, "senderFault"=>true})
-    SnapshotCopyDisabledFault = Shapes::StructureShape.new(name: 'SnapshotCopyDisabledFault', error: {"code"=>"SnapshotCopyDisabledFault", "httpStatusCode"=>400, "senderFault"=>true})
+    SnapshotCopyAlreadyDisabledFault = Shapes::StructureShape.new(name: 'SnapshotCopyAlreadyDisabledFault', error: {"code" => "SnapshotCopyAlreadyDisabledFault", "httpStatusCode" => 400, "senderFault" => true})
+    SnapshotCopyAlreadyEnabledFault = Shapes::StructureShape.new(name: 'SnapshotCopyAlreadyEnabledFault', error: {"code" => "SnapshotCopyAlreadyEnabledFault", "httpStatusCode" => 400, "senderFault" => true})
+    SnapshotCopyDisabledFault = Shapes::StructureShape.new(name: 'SnapshotCopyDisabledFault', error: {"code" => "SnapshotCopyDisabledFault", "httpStatusCode" => 400, "senderFault" => true})
     SnapshotCopyGrant = Shapes::StructureShape.new(name: 'SnapshotCopyGrant')
-    SnapshotCopyGrantAlreadyExistsFault = Shapes::StructureShape.new(name: 'SnapshotCopyGrantAlreadyExistsFault', error: {"code"=>"SnapshotCopyGrantAlreadyExistsFault", "httpStatusCode"=>400, "senderFault"=>true})
+    SnapshotCopyGrantAlreadyExistsFault = Shapes::StructureShape.new(name: 'SnapshotCopyGrantAlreadyExistsFault', error: {"code" => "SnapshotCopyGrantAlreadyExistsFault", "httpStatusCode" => 400, "senderFault" => true})
     SnapshotCopyGrantList = Shapes::ListShape.new(name: 'SnapshotCopyGrantList')
     SnapshotCopyGrantMessage = Shapes::StructureShape.new(name: 'SnapshotCopyGrantMessage')
-    SnapshotCopyGrantNotFoundFault = Shapes::StructureShape.new(name: 'SnapshotCopyGrantNotFoundFault', error: {"code"=>"SnapshotCopyGrantNotFoundFault", "httpStatusCode"=>400, "senderFault"=>true})
-    SnapshotCopyGrantQuotaExceededFault = Shapes::StructureShape.new(name: 'SnapshotCopyGrantQuotaExceededFault', error: {"code"=>"SnapshotCopyGrantQuotaExceededFault", "httpStatusCode"=>400, "senderFault"=>true})
+    SnapshotCopyGrantNotFoundFault = Shapes::StructureShape.new(name: 'SnapshotCopyGrantNotFoundFault', error: {"code" => "SnapshotCopyGrantNotFoundFault", "httpStatusCode" => 400, "senderFault" => true})
+    SnapshotCopyGrantQuotaExceededFault = Shapes::StructureShape.new(name: 'SnapshotCopyGrantQuotaExceededFault', error: {"code" => "SnapshotCopyGrantQuotaExceededFault", "httpStatusCode" => 400, "senderFault" => true})
     SnapshotErrorMessage = Shapes::StructureShape.new(name: 'SnapshotErrorMessage')
     SnapshotIdentifierList = Shapes::ListShape.new(name: 'SnapshotIdentifierList')
     SnapshotList = Shapes::ListShape.new(name: 'SnapshotList')
     SnapshotMessage = Shapes::StructureShape.new(name: 'SnapshotMessage')
     SnapshotSchedule = Shapes::StructureShape.new(name: 'SnapshotSchedule')
-    SnapshotScheduleAlreadyExistsFault = Shapes::StructureShape.new(name: 'SnapshotScheduleAlreadyExistsFault', error: {"code"=>"SnapshotScheduleAlreadyExists", "httpStatusCode"=>400, "senderFault"=>true})
+    SnapshotScheduleAlreadyExistsFault = Shapes::StructureShape.new(name: 'SnapshotScheduleAlreadyExistsFault', error: {"code" => "SnapshotScheduleAlreadyExists", "httpStatusCode" => 400, "senderFault" => true})
     SnapshotScheduleList = Shapes::ListShape.new(name: 'SnapshotScheduleList')
-    SnapshotScheduleNotFoundFault = Shapes::StructureShape.new(name: 'SnapshotScheduleNotFoundFault', error: {"code"=>"SnapshotScheduleNotFound", "httpStatusCode"=>400, "senderFault"=>true})
-    SnapshotScheduleQuotaExceededFault = Shapes::StructureShape.new(name: 'SnapshotScheduleQuotaExceededFault', error: {"code"=>"SnapshotScheduleQuotaExceeded", "httpStatusCode"=>400, "senderFault"=>true})
-    SnapshotScheduleUpdateInProgressFault = Shapes::StructureShape.new(name: 'SnapshotScheduleUpdateInProgressFault', error: {"code"=>"SnapshotScheduleUpdateInProgress", "httpStatusCode"=>400, "senderFault"=>true})
+    SnapshotScheduleNotFoundFault = Shapes::StructureShape.new(name: 'SnapshotScheduleNotFoundFault', error: {"code" => "SnapshotScheduleNotFound", "httpStatusCode" => 400, "senderFault" => true})
+    SnapshotScheduleQuotaExceededFault = Shapes::StructureShape.new(name: 'SnapshotScheduleQuotaExceededFault', error: {"code" => "SnapshotScheduleQuotaExceeded", "httpStatusCode" => 400, "senderFault" => true})
+    SnapshotScheduleUpdateInProgressFault = Shapes::StructureShape.new(name: 'SnapshotScheduleUpdateInProgressFault', error: {"code" => "SnapshotScheduleUpdateInProgress", "httpStatusCode" => 400, "senderFault" => true})
     SnapshotSortingEntity = Shapes::StructureShape.new(name: 'SnapshotSortingEntity')
     SnapshotSortingEntityList = Shapes::ListShape.new(name: 'SnapshotSortingEntityList')
     SortByOrder = Shapes::StringShape.new(name: 'SortByOrder')
     SourceArn = Shapes::StringShape.new(name: 'SourceArn')
     SourceIdsList = Shapes::ListShape.new(name: 'SourceIdsList')
-    SourceNotFoundFault = Shapes::StructureShape.new(name: 'SourceNotFoundFault', error: {"code"=>"SourceNotFound", "httpStatusCode"=>404, "senderFault"=>true})
+    SourceNotFoundFault = Shapes::StructureShape.new(name: 'SourceNotFoundFault', error: {"code" => "SourceNotFound", "httpStatusCode" => 404, "senderFault" => true})
     SourceType = Shapes::StringShape.new(name: 'SourceType')
     String = Shapes::StringShape.new(name: 'String')
     Subnet = Shapes::StructureShape.new(name: 'Subnet')
-    SubnetAlreadyInUse = Shapes::StructureShape.new(name: 'SubnetAlreadyInUse', error: {"code"=>"SubnetAlreadyInUse", "httpStatusCode"=>400, "senderFault"=>true})
+    SubnetAlreadyInUse = Shapes::StructureShape.new(name: 'SubnetAlreadyInUse', error: {"code" => "SubnetAlreadyInUse", "httpStatusCode" => 400, "senderFault" => true})
     SubnetIdentifierList = Shapes::ListShape.new(name: 'SubnetIdentifierList')
     SubnetList = Shapes::ListShape.new(name: 'SubnetList')
-    SubscriptionAlreadyExistFault = Shapes::StructureShape.new(name: 'SubscriptionAlreadyExistFault', error: {"code"=>"SubscriptionAlreadyExist", "httpStatusCode"=>400, "senderFault"=>true})
-    SubscriptionCategoryNotFoundFault = Shapes::StructureShape.new(name: 'SubscriptionCategoryNotFoundFault', error: {"code"=>"SubscriptionCategoryNotFound", "httpStatusCode"=>404, "senderFault"=>true})
-    SubscriptionEventIdNotFoundFault = Shapes::StructureShape.new(name: 'SubscriptionEventIdNotFoundFault', error: {"code"=>"SubscriptionEventIdNotFound", "httpStatusCode"=>404, "senderFault"=>true})
-    SubscriptionNotFoundFault = Shapes::StructureShape.new(name: 'SubscriptionNotFoundFault', error: {"code"=>"SubscriptionNotFound", "httpStatusCode"=>404, "senderFault"=>true})
-    SubscriptionSeverityNotFoundFault = Shapes::StructureShape.new(name: 'SubscriptionSeverityNotFoundFault', error: {"code"=>"SubscriptionSeverityNotFound", "httpStatusCode"=>404, "senderFault"=>true})
+    SubscriptionAlreadyExistFault = Shapes::StructureShape.new(name: 'SubscriptionAlreadyExistFault', error: {"code" => "SubscriptionAlreadyExist", "httpStatusCode" => 400, "senderFault" => true})
+    SubscriptionCategoryNotFoundFault = Shapes::StructureShape.new(name: 'SubscriptionCategoryNotFoundFault', error: {"code" => "SubscriptionCategoryNotFound", "httpStatusCode" => 404, "senderFault" => true})
+    SubscriptionEventIdNotFoundFault = Shapes::StructureShape.new(name: 'SubscriptionEventIdNotFoundFault', error: {"code" => "SubscriptionEventIdNotFound", "httpStatusCode" => 404, "senderFault" => true})
+    SubscriptionNotFoundFault = Shapes::StructureShape.new(name: 'SubscriptionNotFoundFault', error: {"code" => "SubscriptionNotFound", "httpStatusCode" => 404, "senderFault" => true})
+    SubscriptionSeverityNotFoundFault = Shapes::StructureShape.new(name: 'SubscriptionSeverityNotFoundFault', error: {"code" => "SubscriptionSeverityNotFound", "httpStatusCode" => 404, "senderFault" => true})
     SupportedOperation = Shapes::StructureShape.new(name: 'SupportedOperation')
     SupportedOperationList = Shapes::ListShape.new(name: 'SupportedOperationList')
     SupportedPlatform = Shapes::StructureShape.new(name: 'SupportedPlatform')
     SupportedPlatformsList = Shapes::ListShape.new(name: 'SupportedPlatformsList')
     TStamp = Shapes::TimestampShape.new(name: 'TStamp')
-    TableLimitExceededFault = Shapes::StructureShape.new(name: 'TableLimitExceededFault', error: {"code"=>"TableLimitExceeded", "httpStatusCode"=>400, "senderFault"=>true})
-    TableRestoreNotFoundFault = Shapes::StructureShape.new(name: 'TableRestoreNotFoundFault', error: {"code"=>"TableRestoreNotFoundFault", "httpStatusCode"=>400, "senderFault"=>true})
+    TableLimitExceededFault = Shapes::StructureShape.new(name: 'TableLimitExceededFault', error: {"code" => "TableLimitExceeded", "httpStatusCode" => 400, "senderFault" => true})
+    TableRestoreNotFoundFault = Shapes::StructureShape.new(name: 'TableRestoreNotFoundFault', error: {"code" => "TableRestoreNotFoundFault", "httpStatusCode" => 400, "senderFault" => true})
     TableRestoreStatus = Shapes::StructureShape.new(name: 'TableRestoreStatus')
     TableRestoreStatusList = Shapes::ListShape.new(name: 'TableRestoreStatusList')
     TableRestoreStatusMessage = Shapes::StructureShape.new(name: 'TableRestoreStatusMessage')
     TableRestoreStatusType = Shapes::StringShape.new(name: 'TableRestoreStatusType')
     Tag = Shapes::StructureShape.new(name: 'Tag')
     TagKeyList = Shapes::ListShape.new(name: 'TagKeyList')
-    TagLimitExceededFault = Shapes::StructureShape.new(name: 'TagLimitExceededFault', error: {"code"=>"TagLimitExceededFault", "httpStatusCode"=>400, "senderFault"=>true})
+    TagLimitExceededFault = Shapes::StructureShape.new(name: 'TagLimitExceededFault', error: {"code" => "TagLimitExceededFault", "httpStatusCode" => 400, "senderFault" => true})
     TagList = Shapes::ListShape.new(name: 'TagList')
     TagValueList = Shapes::ListShape.new(name: 'TagValueList')
     TaggedResource = Shapes::StructureShape.new(name: 'TaggedResource')
@@ -626,20 +651,20 @@ module Aws::Redshift
     TargetArn = Shapes::StringShape.new(name: 'TargetArn')
     TrackList = Shapes::ListShape.new(name: 'TrackList')
     TrackListMessage = Shapes::StructureShape.new(name: 'TrackListMessage')
-    UnauthorizedOperation = Shapes::StructureShape.new(name: 'UnauthorizedOperation', error: {"code"=>"UnauthorizedOperation", "httpStatusCode"=>400, "senderFault"=>true})
-    UnauthorizedPartnerIntegrationFault = Shapes::StructureShape.new(name: 'UnauthorizedPartnerIntegrationFault', error: {"code"=>"UnauthorizedPartnerIntegration", "httpStatusCode"=>401, "senderFault"=>true})
-    UnknownSnapshotCopyRegionFault = Shapes::StructureShape.new(name: 'UnknownSnapshotCopyRegionFault', error: {"code"=>"UnknownSnapshotCopyRegionFault", "httpStatusCode"=>404, "senderFault"=>true})
-    UnsupportedOperationFault = Shapes::StructureShape.new(name: 'UnsupportedOperationFault', error: {"code"=>"UnsupportedOperation", "httpStatusCode"=>400, "senderFault"=>true})
-    UnsupportedOptionFault = Shapes::StructureShape.new(name: 'UnsupportedOptionFault', error: {"code"=>"UnsupportedOptionFault", "httpStatusCode"=>400, "senderFault"=>true})
+    UnauthorizedOperation = Shapes::StructureShape.new(name: 'UnauthorizedOperation', error: {"code" => "UnauthorizedOperation", "httpStatusCode" => 400, "senderFault" => true})
+    UnauthorizedPartnerIntegrationFault = Shapes::StructureShape.new(name: 'UnauthorizedPartnerIntegrationFault', error: {"code" => "UnauthorizedPartnerIntegration", "httpStatusCode" => 401, "senderFault" => true})
+    UnknownSnapshotCopyRegionFault = Shapes::StructureShape.new(name: 'UnknownSnapshotCopyRegionFault', error: {"code" => "UnknownSnapshotCopyRegionFault", "httpStatusCode" => 404, "senderFault" => true})
+    UnsupportedOperationFault = Shapes::StructureShape.new(name: 'UnsupportedOperationFault', error: {"code" => "UnsupportedOperation", "httpStatusCode" => 400, "senderFault" => true})
+    UnsupportedOptionFault = Shapes::StructureShape.new(name: 'UnsupportedOptionFault', error: {"code" => "UnsupportedOptionFault", "httpStatusCode" => 400, "senderFault" => true})
     UpdatePartnerStatusInputMessage = Shapes::StructureShape.new(name: 'UpdatePartnerStatusInputMessage')
     UpdateTarget = Shapes::StructureShape.new(name: 'UpdateTarget')
     UsageLimit = Shapes::StructureShape.new(name: 'UsageLimit')
-    UsageLimitAlreadyExistsFault = Shapes::StructureShape.new(name: 'UsageLimitAlreadyExistsFault', error: {"code"=>"UsageLimitAlreadyExists", "httpStatusCode"=>400, "senderFault"=>true})
+    UsageLimitAlreadyExistsFault = Shapes::StructureShape.new(name: 'UsageLimitAlreadyExistsFault', error: {"code" => "UsageLimitAlreadyExists", "httpStatusCode" => 400, "senderFault" => true})
     UsageLimitBreachAction = Shapes::StringShape.new(name: 'UsageLimitBreachAction')
     UsageLimitFeatureType = Shapes::StringShape.new(name: 'UsageLimitFeatureType')
     UsageLimitLimitType = Shapes::StringShape.new(name: 'UsageLimitLimitType')
     UsageLimitList = Shapes::StructureShape.new(name: 'UsageLimitList')
-    UsageLimitNotFoundFault = Shapes::StructureShape.new(name: 'UsageLimitNotFoundFault', error: {"code"=>"UsageLimitNotFound", "httpStatusCode"=>404, "senderFault"=>true})
+    UsageLimitNotFoundFault = Shapes::StructureShape.new(name: 'UsageLimitNotFoundFault', error: {"code" => "UsageLimitNotFound", "httpStatusCode" => 404, "senderFault" => true})
     UsageLimitPeriod = Shapes::StringShape.new(name: 'UsageLimitPeriod')
     UsageLimits = Shapes::ListShape.new(name: 'UsageLimits')
     ValueStringList = Shapes::ListShape.new(name: 'ValueStringList')
@@ -859,6 +884,9 @@ module Aws::Redshift
     Cluster.add_member(:ip_address_type, Shapes::ShapeRef.new(shape: String, location_name: "IpAddressType"))
     Cluster.add_member(:multi_az, Shapes::ShapeRef.new(shape: String, location_name: "MultiAZ"))
     Cluster.add_member(:multi_az_secondary, Shapes::ShapeRef.new(shape: SecondaryClusterInfo, location_name: "MultiAZSecondary"))
+    Cluster.add_member(:lakehouse_registration_status, Shapes::ShapeRef.new(shape: String, location_name: "LakehouseRegistrationStatus"))
+    Cluster.add_member(:catalog_arn, Shapes::ShapeRef.new(shape: String, location_name: "CatalogArn"))
+    Cluster.add_member(:extra_compute_for_automatic_optimization, Shapes::ShapeRef.new(shape: String, location_name: "ExtraComputeForAutomaticOptimization"))
     Cluster.struct_class = Types::Cluster
 
     ClusterAlreadyExistsFault.struct_class = Types::ClusterAlreadyExistsFault
@@ -895,6 +923,8 @@ module Aws::Redshift
     ClusterIamRole.struct_class = Types::ClusterIamRole
 
     ClusterIamRoleList.member = Shapes::ShapeRef.new(shape: ClusterIamRole, location_name: "ClusterIamRole")
+
+    ClusterIdentifierList.member = Shapes::ShapeRef.new(shape: String, location_name: "ClusterIdentifier")
 
     ClusterList.member = Shapes::ShapeRef.new(shape: Cluster, location_name: "Cluster")
 
@@ -1028,6 +1058,9 @@ module Aws::Redshift
 
     ConflictPolicyUpdateFault.struct_class = Types::ConflictPolicyUpdateFault
 
+    Connect.add_member(:authorization, Shapes::ShapeRef.new(shape: ServiceAuthorization, required: true, location_name: "Authorization"))
+    Connect.struct_class = Types::Connect
+
     ConsumerIdentifierList.member = Shapes::ShapeRef.new(shape: String)
 
     CopyClusterSnapshotMessage.add_member(:source_snapshot_identifier, Shapes::ShapeRef.new(shape: String, required: true, location_name: "SourceSnapshotIdentifier"))
@@ -1088,6 +1121,8 @@ module Aws::Redshift
     CreateClusterMessage.add_member(:ip_address_type, Shapes::ShapeRef.new(shape: String, location_name: "IpAddressType"))
     CreateClusterMessage.add_member(:multi_az, Shapes::ShapeRef.new(shape: BooleanOptional, location_name: "MultiAZ"))
     CreateClusterMessage.add_member(:redshift_idc_application_arn, Shapes::ShapeRef.new(shape: String, location_name: "RedshiftIdcApplicationArn"))
+    CreateClusterMessage.add_member(:catalog_name, Shapes::ShapeRef.new(shape: CatalogNameString, location_name: "CatalogName"))
+    CreateClusterMessage.add_member(:extra_compute_for_automatic_optimization, Shapes::ShapeRef.new(shape: BooleanOptional, location_name: "ExtraComputeForAutomaticOptimization"))
     CreateClusterMessage.struct_class = Types::CreateClusterMessage
 
     CreateClusterParameterGroupMessage.add_member(:parameter_group_name, Shapes::ShapeRef.new(shape: String, required: true, location_name: "ParameterGroupName"))
@@ -1187,6 +1222,15 @@ module Aws::Redshift
     CreateIntegrationMessage.add_member(:description, Shapes::ShapeRef.new(shape: IntegrationDescription, location_name: "Description"))
     CreateIntegrationMessage.struct_class = Types::CreateIntegrationMessage
 
+    CreateQev2IdcApplicationMessage.add_member(:idc_instance_arn, Shapes::ShapeRef.new(shape: String, required: true, location_name: "IdcInstanceArn"))
+    CreateQev2IdcApplicationMessage.add_member(:qev_2_idc_application_name, Shapes::ShapeRef.new(shape: Qev2IdcApplicationName, required: true, location_name: "Qev2IdcApplicationName"))
+    CreateQev2IdcApplicationMessage.add_member(:idc_display_name, Shapes::ShapeRef.new(shape: IdcDisplayNameString, required: true, location_name: "IdcDisplayName"))
+    CreateQev2IdcApplicationMessage.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "Tags"))
+    CreateQev2IdcApplicationMessage.struct_class = Types::CreateQev2IdcApplicationMessage
+
+    CreateQev2IdcApplicationResult.add_member(:qev_2_idc_application, Shapes::ShapeRef.new(shape: Qev2IdcApplication, location_name: "Qev2IdcApplication"))
+    CreateQev2IdcApplicationResult.struct_class = Types::CreateQev2IdcApplicationResult
+
     CreateRedshiftIdcApplicationMessage.add_member(:idc_instance_arn, Shapes::ShapeRef.new(shape: String, required: true, location_name: "IdcInstanceArn"))
     CreateRedshiftIdcApplicationMessage.add_member(:redshift_idc_application_name, Shapes::ShapeRef.new(shape: RedshiftIdcApplicationName, required: true, location_name: "RedshiftIdcApplicationName"))
     CreateRedshiftIdcApplicationMessage.add_member(:identity_namespace, Shapes::ShapeRef.new(shape: IdentityNamespaceString, location_name: "IdentityNamespace"))
@@ -1194,6 +1238,9 @@ module Aws::Redshift
     CreateRedshiftIdcApplicationMessage.add_member(:iam_role_arn, Shapes::ShapeRef.new(shape: String, required: true, location_name: "IamRoleArn"))
     CreateRedshiftIdcApplicationMessage.add_member(:authorized_token_issuer_list, Shapes::ShapeRef.new(shape: AuthorizedTokenIssuerList, location_name: "AuthorizedTokenIssuerList"))
     CreateRedshiftIdcApplicationMessage.add_member(:service_integrations, Shapes::ShapeRef.new(shape: ServiceIntegrationList, location_name: "ServiceIntegrations"))
+    CreateRedshiftIdcApplicationMessage.add_member(:application_type, Shapes::ShapeRef.new(shape: ApplicationType, location_name: "ApplicationType"))
+    CreateRedshiftIdcApplicationMessage.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "Tags"))
+    CreateRedshiftIdcApplicationMessage.add_member(:sso_tag_keys, Shapes::ShapeRef.new(shape: TagKeyList, location_name: "SsoTagKeys"))
     CreateRedshiftIdcApplicationMessage.struct_class = Types::CreateRedshiftIdcApplicationMessage
 
     CreateRedshiftIdcApplicationResult.add_member(:redshift_idc_application, Shapes::ShapeRef.new(shape: RedshiftIdcApplication, location_name: "RedshiftIdcApplication"))
@@ -1348,6 +1395,9 @@ module Aws::Redshift
 
     DeleteIntegrationMessage.add_member(:integration_arn, Shapes::ShapeRef.new(shape: IntegrationArn, required: true, location_name: "IntegrationArn"))
     DeleteIntegrationMessage.struct_class = Types::DeleteIntegrationMessage
+
+    DeleteQev2IdcApplicationMessage.add_member(:qev_2_idc_application_arn, Shapes::ShapeRef.new(shape: String, required: true, location_name: "Qev2IdcApplicationArn"))
+    DeleteQev2IdcApplicationMessage.struct_class = Types::DeleteQev2IdcApplicationMessage
 
     DeleteRedshiftIdcApplicationMessage.add_member(:redshift_idc_application_arn, Shapes::ShapeRef.new(shape: String, required: true, location_name: "RedshiftIdcApplicationArn"))
     DeleteRedshiftIdcApplicationMessage.struct_class = Types::DeleteRedshiftIdcApplicationMessage
@@ -1596,6 +1646,15 @@ module Aws::Redshift
 
     DescribePartnersOutputMessage.add_member(:partner_integration_info_list, Shapes::ShapeRef.new(shape: PartnerIntegrationInfoList, location_name: "PartnerIntegrationInfoList"))
     DescribePartnersOutputMessage.struct_class = Types::DescribePartnersOutputMessage
+
+    DescribeQev2IdcApplicationsMessage.add_member(:qev_2_idc_application_arn, Shapes::ShapeRef.new(shape: String, location_name: "Qev2IdcApplicationArn"))
+    DescribeQev2IdcApplicationsMessage.add_member(:max_records, Shapes::ShapeRef.new(shape: IntegerOptional, location_name: "MaxRecords"))
+    DescribeQev2IdcApplicationsMessage.add_member(:marker, Shapes::ShapeRef.new(shape: String, location_name: "Marker"))
+    DescribeQev2IdcApplicationsMessage.struct_class = Types::DescribeQev2IdcApplicationsMessage
+
+    DescribeQev2IdcApplicationsResult.add_member(:qev_2_idc_applications, Shapes::ShapeRef.new(shape: Qev2IdcApplicationList, location_name: "Qev2IdcApplications"))
+    DescribeQev2IdcApplicationsResult.add_member(:marker, Shapes::ShapeRef.new(shape: String, location_name: "Marker"))
+    DescribeQev2IdcApplicationsResult.struct_class = Types::DescribeQev2IdcApplicationsResult
 
     DescribeRedshiftIdcApplicationsMessage.add_member(:redshift_idc_application_arn, Shapes::ShapeRef.new(shape: String, location_name: "RedshiftIdcApplicationArn"))
     DescribeRedshiftIdcApplicationsMessage.add_member(:max_records, Shapes::ShapeRef.new(shape: IntegerOptional, location_name: "MaxRecords"))
@@ -1860,6 +1919,13 @@ module Aws::Redshift
     GetClusterCredentialsWithIAMMessage.add_member(:custom_domain_name, Shapes::ShapeRef.new(shape: String, location_name: "CustomDomainName"))
     GetClusterCredentialsWithIAMMessage.struct_class = Types::GetClusterCredentialsWithIAMMessage
 
+    GetIdentityCenterAuthTokenRequest.add_member(:cluster_ids, Shapes::ShapeRef.new(shape: ClusterIdentifierList, required: true, location_name: "ClusterIds"))
+    GetIdentityCenterAuthTokenRequest.struct_class = Types::GetIdentityCenterAuthTokenRequest
+
+    GetIdentityCenterAuthTokenResponse.add_member(:token, Shapes::ShapeRef.new(shape: SensitiveString, location_name: "Token"))
+    GetIdentityCenterAuthTokenResponse.add_member(:expiration_time, Shapes::ShapeRef.new(shape: TStamp, location_name: "ExpirationTime"))
+    GetIdentityCenterAuthTokenResponse.struct_class = Types::GetIdentityCenterAuthTokenResponse
+
     GetReservedNodeExchangeConfigurationOptionsInputMessage.add_member(:action_type, Shapes::ShapeRef.new(shape: ReservedNodeExchangeActionType, required: true, location_name: "ActionType"))
     GetReservedNodeExchangeConfigurationOptionsInputMessage.add_member(:cluster_identifier, Shapes::ShapeRef.new(shape: String, location_name: "ClusterIdentifier"))
     GetReservedNodeExchangeConfigurationOptionsInputMessage.add_member(:snapshot_identifier, Shapes::ShapeRef.new(shape: String, location_name: "SnapshotIdentifier"))
@@ -2078,6 +2144,12 @@ module Aws::Redshift
 
     LakeFormationServiceIntegrations.member = Shapes::ShapeRef.new(shape: LakeFormationScopeUnion)
 
+    LakehouseConfiguration.add_member(:cluster_identifier, Shapes::ShapeRef.new(shape: String, location_name: "ClusterIdentifier"))
+    LakehouseConfiguration.add_member(:lakehouse_idc_application_arn, Shapes::ShapeRef.new(shape: String, location_name: "LakehouseIdcApplicationArn"))
+    LakehouseConfiguration.add_member(:lakehouse_registration_status, Shapes::ShapeRef.new(shape: String, location_name: "LakehouseRegistrationStatus"))
+    LakehouseConfiguration.add_member(:catalog_arn, Shapes::ShapeRef.new(shape: String, location_name: "CatalogArn"))
+    LakehouseConfiguration.struct_class = Types::LakehouseConfiguration
+
     LimitExceededFault.struct_class = Types::LimitExceededFault
 
     ListRecommendationsMessage.add_member(:cluster_identifier, Shapes::ShapeRef.new(shape: String, location_name: "ClusterIdentifier"))
@@ -2178,6 +2250,7 @@ module Aws::Redshift
     ModifyClusterMessage.add_member(:master_password_secret_kms_key_id, Shapes::ShapeRef.new(shape: String, location_name: "MasterPasswordSecretKmsKeyId"))
     ModifyClusterMessage.add_member(:ip_address_type, Shapes::ShapeRef.new(shape: String, location_name: "IpAddressType"))
     ModifyClusterMessage.add_member(:multi_az, Shapes::ShapeRef.new(shape: BooleanOptional, location_name: "MultiAZ"))
+    ModifyClusterMessage.add_member(:extra_compute_for_automatic_optimization, Shapes::ShapeRef.new(shape: BooleanOptional, location_name: "ExtraComputeForAutomaticOptimization"))
     ModifyClusterMessage.struct_class = Types::ModifyClusterMessage
 
     ModifyClusterParameterGroupMessage.add_member(:parameter_group_name, Shapes::ShapeRef.new(shape: String, required: true, location_name: "ParameterGroupName"))
@@ -2239,6 +2312,21 @@ module Aws::Redshift
     ModifyIntegrationMessage.add_member(:description, Shapes::ShapeRef.new(shape: IntegrationDescription, location_name: "Description"))
     ModifyIntegrationMessage.add_member(:integration_name, Shapes::ShapeRef.new(shape: IntegrationName, location_name: "IntegrationName"))
     ModifyIntegrationMessage.struct_class = Types::ModifyIntegrationMessage
+
+    ModifyLakehouseConfigurationMessage.add_member(:cluster_identifier, Shapes::ShapeRef.new(shape: String, required: true, location_name: "ClusterIdentifier"))
+    ModifyLakehouseConfigurationMessage.add_member(:lakehouse_registration, Shapes::ShapeRef.new(shape: LakehouseRegistration, location_name: "LakehouseRegistration"))
+    ModifyLakehouseConfigurationMessage.add_member(:catalog_name, Shapes::ShapeRef.new(shape: CatalogNameString, location_name: "CatalogName"))
+    ModifyLakehouseConfigurationMessage.add_member(:lakehouse_idc_registration, Shapes::ShapeRef.new(shape: LakehouseIdcRegistration, location_name: "LakehouseIdcRegistration"))
+    ModifyLakehouseConfigurationMessage.add_member(:lakehouse_idc_application_arn, Shapes::ShapeRef.new(shape: String, location_name: "LakehouseIdcApplicationArn"))
+    ModifyLakehouseConfigurationMessage.add_member(:dry_run, Shapes::ShapeRef.new(shape: BooleanOptional, location_name: "DryRun"))
+    ModifyLakehouseConfigurationMessage.struct_class = Types::ModifyLakehouseConfigurationMessage
+
+    ModifyQev2IdcApplicationMessage.add_member(:qev_2_idc_application_arn, Shapes::ShapeRef.new(shape: String, required: true, location_name: "Qev2IdcApplicationArn"))
+    ModifyQev2IdcApplicationMessage.add_member(:idc_display_name, Shapes::ShapeRef.new(shape: IdcDisplayNameString, location_name: "IdcDisplayName"))
+    ModifyQev2IdcApplicationMessage.struct_class = Types::ModifyQev2IdcApplicationMessage
+
+    ModifyQev2IdcApplicationResult.add_member(:qev_2_idc_application, Shapes::ShapeRef.new(shape: Qev2IdcApplication, location_name: "Qev2IdcApplication"))
+    ModifyQev2IdcApplicationResult.struct_class = Types::ModifyQev2IdcApplicationResult
 
     ModifyRedshiftIdcApplicationMessage.add_member(:redshift_idc_application_arn, Shapes::ShapeRef.new(shape: String, required: true, location_name: "RedshiftIdcApplicationArn"))
     ModifyRedshiftIdcApplicationMessage.add_member(:identity_namespace, Shapes::ShapeRef.new(shape: IdentityNamespaceString, location_name: "IdentityNamespace"))
@@ -2405,6 +2493,21 @@ module Aws::Redshift
     PutResourcePolicyResult.add_member(:resource_policy, Shapes::ShapeRef.new(shape: ResourcePolicy, location_name: "ResourcePolicy"))
     PutResourcePolicyResult.struct_class = Types::PutResourcePolicyResult
 
+    Qev2IdcApplication.add_member(:idc_instance_arn, Shapes::ShapeRef.new(shape: String, location_name: "IdcInstanceArn"))
+    Qev2IdcApplication.add_member(:qev_2_idc_application_name, Shapes::ShapeRef.new(shape: Qev2IdcApplicationName, location_name: "Qev2IdcApplicationName"))
+    Qev2IdcApplication.add_member(:qev_2_idc_application_arn, Shapes::ShapeRef.new(shape: String, location_name: "Qev2IdcApplicationArn"))
+    Qev2IdcApplication.add_member(:idc_managed_application_arn, Shapes::ShapeRef.new(shape: String, location_name: "IdcManagedApplicationArn"))
+    Qev2IdcApplication.add_member(:idc_onboard_status, Shapes::ShapeRef.new(shape: String, location_name: "IdcOnboardStatus"))
+    Qev2IdcApplication.add_member(:idc_display_name, Shapes::ShapeRef.new(shape: IdcDisplayNameString, location_name: "IdcDisplayName"))
+    Qev2IdcApplication.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "Tags"))
+    Qev2IdcApplication.struct_class = Types::Qev2IdcApplication
+
+    Qev2IdcApplicationAlreadyExistsFault.struct_class = Types::Qev2IdcApplicationAlreadyExistsFault
+
+    Qev2IdcApplicationList.member = Shapes::ShapeRef.new(shape: Qev2IdcApplication)
+
+    Qev2IdcApplicationNotExistsFault.struct_class = Types::Qev2IdcApplicationNotExistsFault
+
     ReadWriteAccess.add_member(:authorization, Shapes::ShapeRef.new(shape: ServiceAuthorization, required: true, location_name: "Authorization"))
     ReadWriteAccess.struct_class = Types::ReadWriteAccess
 
@@ -2454,6 +2557,9 @@ module Aws::Redshift
     RedshiftIdcApplication.add_member(:idc_onboard_status, Shapes::ShapeRef.new(shape: String, location_name: "IdcOnboardStatus"))
     RedshiftIdcApplication.add_member(:authorized_token_issuer_list, Shapes::ShapeRef.new(shape: AuthorizedTokenIssuerList, location_name: "AuthorizedTokenIssuerList"))
     RedshiftIdcApplication.add_member(:service_integrations, Shapes::ShapeRef.new(shape: ServiceIntegrationList, location_name: "ServiceIntegrations"))
+    RedshiftIdcApplication.add_member(:application_type, Shapes::ShapeRef.new(shape: ApplicationType, location_name: "ApplicationType"))
+    RedshiftIdcApplication.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "Tags"))
+    RedshiftIdcApplication.add_member(:sso_tag_keys, Shapes::ShapeRef.new(shape: TagKeyList, location_name: "SsoTagKeys"))
     RedshiftIdcApplication.struct_class = Types::RedshiftIdcApplication
 
     RedshiftIdcApplicationAlreadyExistsFault.struct_class = Types::RedshiftIdcApplicationAlreadyExistsFault
@@ -2463,6 +2569,16 @@ module Aws::Redshift
     RedshiftIdcApplicationNotExistsFault.struct_class = Types::RedshiftIdcApplicationNotExistsFault
 
     RedshiftIdcApplicationQuotaExceededFault.struct_class = Types::RedshiftIdcApplicationQuotaExceededFault
+
+    RedshiftInvalidParameterFault.struct_class = Types::RedshiftInvalidParameterFault
+
+    RedshiftScopeUnion.add_member(:connect, Shapes::ShapeRef.new(shape: Connect, location_name: "Connect"))
+    RedshiftScopeUnion.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
+    RedshiftScopeUnion.add_member_subclass(:connect, Types::RedshiftScopeUnion::Connect)
+    RedshiftScopeUnion.add_member_subclass(:unknown, Types::RedshiftScopeUnion::Unknown)
+    RedshiftScopeUnion.struct_class = Types::RedshiftScopeUnion
+
+    RedshiftServiceIntegrations.member = Shapes::ShapeRef.new(shape: RedshiftScopeUnion)
 
     ReferenceLink.add_member(:text, Shapes::ShapeRef.new(shape: String, location_name: "Text"))
     ReferenceLink.add_member(:link, Shapes::ShapeRef.new(shape: String, location_name: "Link"))
@@ -2636,6 +2752,8 @@ module Aws::Redshift
     RestoreFromClusterSnapshotMessage.add_member(:master_password_secret_kms_key_id, Shapes::ShapeRef.new(shape: String, location_name: "MasterPasswordSecretKmsKeyId"))
     RestoreFromClusterSnapshotMessage.add_member(:ip_address_type, Shapes::ShapeRef.new(shape: String, location_name: "IpAddressType"))
     RestoreFromClusterSnapshotMessage.add_member(:multi_az, Shapes::ShapeRef.new(shape: BooleanOptional, location_name: "MultiAZ"))
+    RestoreFromClusterSnapshotMessage.add_member(:catalog_name, Shapes::ShapeRef.new(shape: CatalogNameString, location_name: "CatalogName"))
+    RestoreFromClusterSnapshotMessage.add_member(:redshift_idc_application_arn, Shapes::ShapeRef.new(shape: String, location_name: "RedshiftIdcApplicationArn"))
     RestoreFromClusterSnapshotMessage.struct_class = Types::RestoreFromClusterSnapshotMessage
 
     RestoreFromClusterSnapshotResult.add_member(:cluster, Shapes::ShapeRef.new(shape: Cluster, location_name: "Cluster"))
@@ -2776,9 +2894,11 @@ module Aws::Redshift
 
     ServiceIntegrationsUnion.add_member(:lake_formation, Shapes::ShapeRef.new(shape: LakeFormationServiceIntegrations, location_name: "LakeFormation"))
     ServiceIntegrationsUnion.add_member(:s3_access_grants, Shapes::ShapeRef.new(shape: S3AccessGrantsServiceIntegrations, location_name: "S3AccessGrants"))
+    ServiceIntegrationsUnion.add_member(:redshift, Shapes::ShapeRef.new(shape: RedshiftServiceIntegrations, location_name: "Redshift"))
     ServiceIntegrationsUnion.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
     ServiceIntegrationsUnion.add_member_subclass(:lake_formation, Types::ServiceIntegrationsUnion::LakeFormation)
     ServiceIntegrationsUnion.add_member_subclass(:s3_access_grants, Types::ServiceIntegrationsUnion::S3AccessGrants)
+    ServiceIntegrationsUnion.add_member_subclass(:redshift, Types::ServiceIntegrationsUnion::Redshift)
     ServiceIntegrationsUnion.add_member_subclass(:unknown, Types::ServiceIntegrationsUnion::Unknown)
     ServiceIntegrationsUnion.struct_class = Types::ServiceIntegrationsUnion
 
@@ -3228,6 +3348,8 @@ module Aws::Redshift
         o.errors << Shapes::ShapeRef.new(shape: Ipv6CidrBlockNotFoundFault)
         o.errors << Shapes::ShapeRef.new(shape: UnsupportedOperationFault)
         o.errors << Shapes::ShapeRef.new(shape: RedshiftIdcApplicationNotExistsFault)
+        o.errors << Shapes::ShapeRef.new(shape: DependentServiceUnavailableFault)
+        o.errors << Shapes::ShapeRef.new(shape: DependentServiceAccessDeniedFault)
       end)
 
       api.add_operation(:create_cluster_parameter_group, Seahorse::Model::Operation.new.tap do |o|
@@ -3374,6 +3496,18 @@ module Aws::Redshift
         o.errors << Shapes::ShapeRef.new(shape: InvalidTagFault)
       end)
 
+      api.add_operation(:create_qev_2_idc_application, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "CreateQev2IdcApplication"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: CreateQev2IdcApplicationMessage)
+        o.output = Shapes::ShapeRef.new(shape: CreateQev2IdcApplicationResult)
+        o.errors << Shapes::ShapeRef.new(shape: Qev2IdcApplicationAlreadyExistsFault)
+        o.errors << Shapes::ShapeRef.new(shape: DependentServiceUnavailableFault)
+        o.errors << Shapes::ShapeRef.new(shape: UnsupportedOperationFault)
+        o.errors << Shapes::ShapeRef.new(shape: DependentServiceAccessDeniedFault)
+      end)
+
       api.add_operation(:create_redshift_idc_application, Seahorse::Model::Operation.new.tap do |o|
         o.name = "CreateRedshiftIdcApplication"
         o.http_method = "POST"
@@ -3385,6 +3519,8 @@ module Aws::Redshift
         o.errors << Shapes::ShapeRef.new(shape: UnsupportedOperationFault)
         o.errors << Shapes::ShapeRef.new(shape: DependentServiceAccessDeniedFault)
         o.errors << Shapes::ShapeRef.new(shape: RedshiftIdcApplicationQuotaExceededFault)
+        o.errors << Shapes::ShapeRef.new(shape: TagLimitExceededFault)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidTagFault)
       end)
 
       api.add_operation(:create_scheduled_action, Seahorse::Model::Operation.new.tap do |o|
@@ -3608,6 +3744,18 @@ module Aws::Redshift
         o.errors << Shapes::ShapeRef.new(shape: ClusterNotFoundFault)
         o.errors << Shapes::ShapeRef.new(shape: UnauthorizedPartnerIntegrationFault)
         o.errors << Shapes::ShapeRef.new(shape: UnsupportedOperationFault)
+      end)
+
+      api.add_operation(:delete_qev_2_idc_application, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DeleteQev2IdcApplication"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: DeleteQev2IdcApplicationMessage)
+        o.output = Shapes::ShapeRef.new(shape: Shapes::StructureShape.new(struct_class: Aws::EmptyStructure))
+        o.errors << Shapes::ShapeRef.new(shape: Qev2IdcApplicationNotExistsFault)
+        o.errors << Shapes::ShapeRef.new(shape: DependentServiceUnavailableFault)
+        o.errors << Shapes::ShapeRef.new(shape: UnsupportedOperationFault)
+        o.errors << Shapes::ShapeRef.new(shape: DependentServiceAccessDeniedFault)
       end)
 
       api.add_operation(:delete_redshift_idc_application, Seahorse::Model::Operation.new.tap do |o|
@@ -4119,6 +4267,24 @@ module Aws::Redshift
         o.errors << Shapes::ShapeRef.new(shape: UnsupportedOperationFault)
       end)
 
+      api.add_operation(:describe_qev_2_idc_applications, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DescribeQev2IdcApplications"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: DescribeQev2IdcApplicationsMessage)
+        o.output = Shapes::ShapeRef.new(shape: DescribeQev2IdcApplicationsResult)
+        o.errors << Shapes::ShapeRef.new(shape: Qev2IdcApplicationNotExistsFault)
+        o.errors << Shapes::ShapeRef.new(shape: DependentServiceUnavailableFault)
+        o.errors << Shapes::ShapeRef.new(shape: UnsupportedOperationFault)
+        o.errors << Shapes::ShapeRef.new(shape: DependentServiceAccessDeniedFault)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_records",
+          tokens: {
+            "marker" => "marker"
+          }
+        )
+      end)
+
       api.add_operation(:describe_redshift_idc_applications, Seahorse::Model::Operation.new.tap do |o|
         o.name = "DescribeRedshiftIdcApplications"
         o.http_method = "POST"
@@ -4400,6 +4566,18 @@ module Aws::Redshift
         o.errors << Shapes::ShapeRef.new(shape: UnsupportedOperationFault)
       end)
 
+      api.add_operation(:get_identity_center_auth_token, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "GetIdentityCenterAuthToken"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: GetIdentityCenterAuthTokenRequest)
+        o.output = Shapes::ShapeRef.new(shape: GetIdentityCenterAuthTokenResponse)
+        o.errors << Shapes::ShapeRef.new(shape: ClusterNotFoundFault)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidClusterStateFault)
+        o.errors << Shapes::ShapeRef.new(shape: UnsupportedOperationFault)
+        o.errors << Shapes::ShapeRef.new(shape: RedshiftInvalidParameterFault)
+      end)
+
       api.add_operation(:get_reserved_node_exchange_configuration_options, Seahorse::Model::Operation.new.tap do |o|
         o.name = "GetReservedNodeExchangeConfigurationOptions"
         o.http_method = "POST"
@@ -4655,6 +4833,33 @@ module Aws::Redshift
         o.errors << Shapes::ShapeRef.new(shape: UnsupportedOperationFault)
       end)
 
+      api.add_operation(:modify_lakehouse_configuration, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ModifyLakehouseConfiguration"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: ModifyLakehouseConfigurationMessage)
+        o.output = Shapes::ShapeRef.new(shape: LakehouseConfiguration)
+        o.errors << Shapes::ShapeRef.new(shape: ClusterNotFoundFault)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidClusterStateFault)
+        o.errors << Shapes::ShapeRef.new(shape: UnsupportedOperationFault)
+        o.errors << Shapes::ShapeRef.new(shape: UnauthorizedOperation)
+        o.errors << Shapes::ShapeRef.new(shape: RedshiftIdcApplicationNotExistsFault)
+        o.errors << Shapes::ShapeRef.new(shape: DependentServiceUnavailableFault)
+        o.errors << Shapes::ShapeRef.new(shape: DependentServiceAccessDeniedFault)
+      end)
+
+      api.add_operation(:modify_qev_2_idc_application, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ModifyQev2IdcApplication"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: ModifyQev2IdcApplicationMessage)
+        o.output = Shapes::ShapeRef.new(shape: ModifyQev2IdcApplicationResult)
+        o.errors << Shapes::ShapeRef.new(shape: Qev2IdcApplicationNotExistsFault)
+        o.errors << Shapes::ShapeRef.new(shape: DependentServiceUnavailableFault)
+        o.errors << Shapes::ShapeRef.new(shape: UnsupportedOperationFault)
+        o.errors << Shapes::ShapeRef.new(shape: DependentServiceAccessDeniedFault)
+      end)
+
       api.add_operation(:modify_redshift_idc_application, Seahorse::Model::Operation.new.tap do |o|
         o.name = "ModifyRedshiftIdcApplication"
         o.http_method = "POST"
@@ -4853,6 +5058,8 @@ module Aws::Redshift
         o.errors << Shapes::ShapeRef.new(shape: DependentServiceUnavailableFault)
         o.errors << Shapes::ShapeRef.new(shape: ReservedNodeAlreadyExistsFault)
         o.errors << Shapes::ShapeRef.new(shape: UnsupportedOperationFault)
+        o.errors << Shapes::ShapeRef.new(shape: RedshiftIdcApplicationNotExistsFault)
+        o.errors << Shapes::ShapeRef.new(shape: DependentServiceAccessDeniedFault)
         o.errors << Shapes::ShapeRef.new(shape: Ipv6CidrBlockNotFoundFault)
       end)
 

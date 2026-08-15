@@ -10,6 +10,879 @@
 module Aws::SageMaker
   module Types
 
+    # A LoRA adapter entry identified by a model package ARN.
+    #
+    # @!attribute [rw] adapter_id
+    #   A unique identifier for the adapter. This ID is used as the
+    #   inference component name when the adapter is deployed. The ID must
+    #   start and end with an alphanumeric character, can contain hyphens
+    #   between alphanumeric characters, and can be up to 63 characters
+    #   long.
+    #   @return [String]
+    #
+    # @!attribute [rw] model_package_arn
+    #   The Amazon Resource Name (ARN) of the model package that contains
+    #   the LoRA adapter artifacts.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AIAdapterModelPackageEntry AWS API Documentation
+    #
+    class AIAdapterModelPackageEntry < Struct.new(
+      :adapter_id,
+      :model_package_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A LoRA adapter entry identified by an Amazon S3 URI.
+    #
+    # @!attribute [rw] adapter_id
+    #   A unique identifier for the adapter. This ID is used as the
+    #   inference component name when the adapter is deployed. The ID must
+    #   start and end with an alphanumeric character, can contain hyphens
+    #   between alphanumeric characters, and can be up to 63 characters
+    #   long.
+    #   @return [String]
+    #
+    # @!attribute [rw] s3_uri
+    #   The Amazon S3 URI of the directory that contains the LoRA adapter
+    #   artifacts in PEFT format.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AIAdapterS3Entry AWS API Documentation
+    #
+    class AIAdapterS3Entry < Struct.new(
+      :adapter_id,
+      :s3_uri)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The source of LoRA adapters for an AI recommendation job. This is a
+    # union type — specify exactly one of the members.
+    #
+    # @note AIAdapterSource is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @note AIAdapterSource is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of AIAdapterSource corresponding to the set member.
+    #
+    # @!attribute [rw] model_package_arns
+    #   A list of LoRA adapters identified by their model package ARNs. Use
+    #   this when your adapters were produced by a SageMaker AI fine-tuning
+    #   workflow that registers model packages.
+    #   @return [Array<Types::AIAdapterModelPackageEntry>]
+    #
+    # @!attribute [rw] s3_uris
+    #   A list of LoRA adapters identified by their Amazon S3 URIs. Use this
+    #   when your adapters are stored as raw artifacts in Amazon S3.
+    #   @return [Array<Types::AIAdapterS3Entry>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AIAdapterSource AWS API Documentation
+    #
+    class AIAdapterSource < Struct.new(
+      :model_package_arns,
+      :s3_uris,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class ModelPackageArns < AIAdapterSource; end
+      class S3Uris < AIAdapterSource; end
+      class Unknown < AIAdapterSource; end
+    end
+
+    # The SageMaker endpoint configuration for benchmarking.
+    #
+    # @!attribute [rw] identifier
+    #   The name or Amazon Resource Name (ARN) of the SageMaker endpoint to
+    #   benchmark.
+    #   @return [String]
+    #
+    # @!attribute [rw] target_container_hostname
+    #   The hostname of the specific container to target within a
+    #   multi-container endpoint.
+    #   @return [String]
+    #
+    # @!attribute [rw] inference_components
+    #   The list of inference components to benchmark on the endpoint.
+    #   @return [Array<Types::AIBenchmarkInferenceComponent>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AIBenchmarkEndpoint AWS API Documentation
+    #
+    class AIBenchmarkEndpoint < Struct.new(
+      :identifier,
+      :target_container_hostname,
+      :inference_components)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # An inference component to benchmark.
+    #
+    # @!attribute [rw] identifier
+    #   The name or Amazon Resource Name (ARN) of the inference component.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AIBenchmarkInferenceComponent AWS API Documentation
+    #
+    class AIBenchmarkInferenceComponent < Struct.new(
+      :identifier)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Summary information about an AI benchmark job.
+    #
+    # @!attribute [rw] ai_benchmark_job_name
+    #   The name of the benchmark job.
+    #   @return [String]
+    #
+    # @!attribute [rw] ai_benchmark_job_arn
+    #   The Amazon Resource Name (ARN) of the benchmark job.
+    #   @return [String]
+    #
+    # @!attribute [rw] ai_benchmark_job_status
+    #   The status of the benchmark job.
+    #   @return [String]
+    #
+    # @!attribute [rw] creation_time
+    #   A timestamp that indicates when the benchmark job was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_time
+    #   A timestamp that indicates when the benchmark job completed.
+    #   @return [Time]
+    #
+    # @!attribute [rw] ai_workload_config_name
+    #   The name of the AI workload configuration used by the benchmark job.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AIBenchmarkJobSummary AWS API Documentation
+    #
+    class AIBenchmarkJobSummary < Struct.new(
+      :ai_benchmark_job_name,
+      :ai_benchmark_job_arn,
+      :ai_benchmark_job_status,
+      :creation_time,
+      :end_time,
+      :ai_workload_config_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The network configuration for an AI benchmark job.
+    #
+    # @!attribute [rw] vpc_config
+    #   The VPC configuration, including security group IDs and subnet IDs.
+    #   @return [Types::VpcConfig]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AIBenchmarkNetworkConfig AWS API Documentation
+    #
+    class AIBenchmarkNetworkConfig < Struct.new(
+      :vpc_config)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The output configuration for an AI benchmark job.
+    #
+    # @!attribute [rw] s3_output_location
+    #   The Amazon S3 URI where benchmark results are stored.
+    #   @return [String]
+    #
+    # @!attribute [rw] mlflow_config
+    #   The MLflow tracking configuration for the job. If you don't specify
+    #   this parameter, MLflow tracking is disabled.
+    #   @return [Types::AIMlflowConfig]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AIBenchmarkOutputConfig AWS API Documentation
+    #
+    class AIBenchmarkOutputConfig < Struct.new(
+      :s3_output_location,
+      :mlflow_config)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The output result of an AI benchmark job, including the Amazon S3
+    # location and CloudWatch log information.
+    #
+    # @!attribute [rw] s3_output_location
+    #   The Amazon S3 URI where benchmark results are stored.
+    #   @return [String]
+    #
+    # @!attribute [rw] cloud_watch_logs
+    #   The CloudWatch log information for the benchmark job.
+    #   @return [Array<Types::AICloudWatchLogs>]
+    #
+    # @!attribute [rw] mlflow_config
+    #   The MLflow tracking configuration for the job.
+    #   @return [Types::AIMlflowConfig]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AIBenchmarkOutputResult AWS API Documentation
+    #
+    class AIBenchmarkOutputResult < Struct.new(
+      :s3_output_location,
+      :cloud_watch_logs,
+      :mlflow_config)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The target for an AI benchmark job. This is a union type — specify one
+    # of the members.
+    #
+    # @note AIBenchmarkTarget is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @note AIBenchmarkTarget is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of AIBenchmarkTarget corresponding to the set member.
+    #
+    # @!attribute [rw] endpoint
+    #   The SageMaker endpoint to benchmark.
+    #   @return [Types::AIBenchmarkEndpoint]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AIBenchmarkTarget AWS API Documentation
+    #
+    class AIBenchmarkTarget < Struct.new(
+      :endpoint,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class Endpoint < AIBenchmarkTarget; end
+      class Unknown < AIBenchmarkTarget; end
+    end
+
+    # The capacity reservation configuration for an AI recommendation job.
+    #
+    # @!attribute [rw] capacity_reservation_preference
+    #   The capacity reservation preference. The only valid value is
+    #   `capacity-reservations-only`.
+    #   @return [String]
+    #
+    # @!attribute [rw] ml_reservation_arns
+    #   The list of ML reservation ARNs to use.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AICapacityReservationConfig AWS API Documentation
+    #
+    class AICapacityReservationConfig < Struct.new(
+      :capacity_reservation_preference,
+      :ml_reservation_arns)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # CloudWatch log information for an AI benchmark or recommendation job.
+    #
+    # @!attribute [rw] log_group_arn
+    #   The Amazon Resource Name (ARN) of the CloudWatch log group.
+    #   @return [String]
+    #
+    # @!attribute [rw] log_stream_name
+    #   The name of the CloudWatch log stream.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AICloudWatchLogs AWS API Documentation
+    #
+    class AICloudWatchLogs < Struct.new(
+      :log_group_arn,
+      :log_stream_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The dataset configuration for an AI workload. This is a union type —
+    # specify one of the members.
+    #
+    # @note AIDatasetConfig is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @note AIDatasetConfig is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of AIDatasetConfig corresponding to the set member.
+    #
+    # @!attribute [rw] input_data_config
+    #   An array of input data channel configurations for the workload.
+    #   @return [Array<Types::AIWorkloadInputDataConfig>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AIDatasetConfig AWS API Documentation
+    #
+    class AIDatasetConfig < Struct.new(
+      :input_data_config,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class InputDataConfig < AIDatasetConfig; end
+      class Unknown < AIDatasetConfig; end
+    end
+
+    # The MLflow tracking configuration for logging metrics and parameters
+    # to a SageMaker managed MLflow tracking server.
+    #
+    # @!attribute [rw] mlflow_resource_arn
+    #   The Amazon Resource Name (ARN) of the SageMaker managed MLflow
+    #   resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] mlflow_experiment_name
+    #   The MLflow experiment name used for tracking.
+    #   @return [String]
+    #
+    # @!attribute [rw] mlflow_run_name
+    #   The MLflow run name used for tracking.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AIMlflowConfig AWS API Documentation
+    #
+    class AIMlflowConfig < Struct.new(
+      :mlflow_resource_arn,
+      :mlflow_experiment_name,
+      :mlflow_run_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The source of the model for an AI recommendation job. This is a union
+    # type.
+    #
+    # @note AIModelSource is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @note AIModelSource is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of AIModelSource corresponding to the set member.
+    #
+    # @!attribute [rw] s3
+    #   The Amazon S3 location of the model artifacts.
+    #   @return [Types::AIModelSourceS3]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AIModelSource AWS API Documentation
+    #
+    class AIModelSource < Struct.new(
+      :s3,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class S3 < AIModelSource; end
+      class Unknown < AIModelSource; end
+    end
+
+    # The Amazon S3 model source configuration.
+    #
+    # @!attribute [rw] s3_uri
+    #   The Amazon S3 URI of the model artifacts.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AIModelSourceS3 AWS API Documentation
+    #
+    class AIModelSourceS3 < Struct.new(
+      :s3_uri)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # An optimization recommendation generated by an AI recommendation job.
+    #
+    # @!attribute [rw] recommendation_description
+    #   A description of the recommendation.
+    #   @return [String]
+    #
+    # @!attribute [rw] optimization_details
+    #   The optimization techniques applied in this recommendation.
+    #   @return [Array<Types::AIRecommendationOptimizationDetail>]
+    #
+    # @!attribute [rw] model_details
+    #   Details about the model package associated with this recommendation.
+    #   @return [Types::AIRecommendationModelDetails]
+    #
+    # @!attribute [rw] deployment_configuration
+    #   The deployment configuration for this recommendation, including the
+    #   container image, instance type, instance count, and environment
+    #   variables.
+    #   @return [Types::AIRecommendationDeploymentConfiguration]
+    #
+    # @!attribute [rw] ai_benchmark_job_arn
+    #   The Amazon Resource Name (ARN) of the benchmark job associated with
+    #   this recommendation.
+    #   @return [String]
+    #
+    # @!attribute [rw] expected_performance
+    #   The expected performance metrics for this recommendation.
+    #   @return [Array<Types::AIRecommendationPerformanceMetric>]
+    #
+    # @!attribute [rw] adapter_details
+    #   The LoRA adapter details for this recommendation. This field
+    #   contains both the model package ARNs and Amazon S3 URIs for each
+    #   adapter, regardless of which form was originally supplied. This
+    #   field is absent when the job was created without LoRA adapters.
+    #   @return [Types::AIRecommendationAdapterDetails]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AIRecommendation AWS API Documentation
+    #
+    class AIRecommendation < Struct.new(
+      :recommendation_description,
+      :optimization_details,
+      :model_details,
+      :deployment_configuration,
+      :ai_benchmark_job_arn,
+      :expected_performance,
+      :adapter_details)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The per-recommendation LoRA adapter details. Contains both the model
+    # package ARNs and Amazon S3 URIs for each adapter, regardless of which
+    # form was originally supplied in the request. When you supply only
+    # Amazon S3 URIs, Amazon SageMaker AI creates model packages on your
+    # behalf.
+    #
+    # @!attribute [rw] model_package_arns
+    #   The list of LoRA adapters with their model package ARNs.
+    #   @return [Array<Types::AIAdapterModelPackageEntry>]
+    #
+    # @!attribute [rw] s3_uris
+    #   The list of LoRA adapters with their Amazon S3 URIs.
+    #   @return [Array<Types::AIAdapterS3Entry>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AIRecommendationAdapterDetails AWS API Documentation
+    #
+    class AIRecommendationAdapterDetails < Struct.new(
+      :model_package_arns,
+      :s3_uris)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The compute resource specification for an AI recommendation job.
+    #
+    # @!attribute [rw] instance_types
+    #   The list of instance types to consider for recommendations. You can
+    #   specify up to 3 instance types.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] capacity_reservation_config
+    #   The capacity reservation configuration.
+    #   @return [Types::AICapacityReservationConfig]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AIRecommendationComputeSpec AWS API Documentation
+    #
+    class AIRecommendationComputeSpec < Struct.new(
+      :instance_types,
+      :capacity_reservation_config)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A performance constraint for an AI recommendation job.
+    #
+    # @!attribute [rw] metric
+    #   The performance metric. Valid values are `ttft-ms` (time to first
+    #   token in milliseconds), `throughput`, and `cost`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AIRecommendationConstraint AWS API Documentation
+    #
+    class AIRecommendationConstraint < Struct.new(
+      :metric)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The deployment configuration for a recommendation.
+    #
+    # @!attribute [rw] s3
+    #   The Amazon S3 data channels for the deployment.
+    #   @return [Array<Types::AIRecommendationDeploymentS3Channel>]
+    #
+    # @!attribute [rw] image_uri
+    #   The URI of the container image for the deployment.
+    #   @return [String]
+    #
+    # @!attribute [rw] instance_type
+    #   The recommended instance type for the deployment.
+    #   @return [String]
+    #
+    # @!attribute [rw] instance_count
+    #   The recommended number of instances for the deployment.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] copy_count_per_instance
+    #   The number of model copies per instance.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] environment_variables
+    #   The environment variables for the deployment.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] min_cpu_memory_required_in_mb
+    #   The minimum host (CPU) memory, in MiB, to reserve for each model
+    #   copy when deploying the recommendation as an Inference Component.
+    #   This value maps to the Inference Component's
+    #   `ComputeResourceRequirements$MinMemoryRequiredInMb` field.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AIRecommendationDeploymentConfiguration AWS API Documentation
+    #
+    class AIRecommendationDeploymentConfiguration < Struct.new(
+      :s3,
+      :image_uri,
+      :instance_type,
+      :instance_count,
+      :copy_count_per_instance,
+      :environment_variables,
+      :min_cpu_memory_required_in_mb)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # An Amazon S3 data channel for a recommended deployment configuration,
+    # containing model artifacts or optimized model outputs.
+    #
+    # @!attribute [rw] channel_name
+    #   A custom name for this Amazon S3 data channel.
+    #   @return [String]
+    #
+    # @!attribute [rw] uri
+    #   The Amazon S3 URI of the data for this channel.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AIRecommendationDeploymentS3Channel AWS API Documentation
+    #
+    class AIRecommendationDeploymentS3Channel < Struct.new(
+      :channel_name,
+      :uri)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The inference framework for an AI recommendation job.
+    #
+    # @!attribute [rw] framework
+    #   The inference framework. Valid values are `LMI` and `VLLM`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AIRecommendationInferenceSpecification AWS API Documentation
+    #
+    class AIRecommendationInferenceSpecification < Struct.new(
+      :framework)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Instance details for a recommendation.
+    #
+    # @!attribute [rw] instance_type
+    #   The recommended instance type.
+    #   @return [String]
+    #
+    # @!attribute [rw] instance_count
+    #   The recommended number of instances.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] copy_count_per_instance
+    #   The number of model copies per instance.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AIRecommendationInstanceDetail AWS API Documentation
+    #
+    class AIRecommendationInstanceDetail < Struct.new(
+      :instance_type,
+      :instance_count,
+      :copy_count_per_instance)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Summary information about an AI recommendation job.
+    #
+    # @!attribute [rw] ai_recommendation_job_name
+    #   The name of the recommendation job.
+    #   @return [String]
+    #
+    # @!attribute [rw] ai_recommendation_job_arn
+    #   The Amazon Resource Name (ARN) of the recommendation job.
+    #   @return [String]
+    #
+    # @!attribute [rw] ai_recommendation_job_status
+    #   The status of the recommendation job.
+    #   @return [String]
+    #
+    # @!attribute [rw] creation_time
+    #   A timestamp that indicates when the recommendation job was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_time
+    #   A timestamp that indicates when the recommendation job completed.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AIRecommendationJobSummary AWS API Documentation
+    #
+    class AIRecommendationJobSummary < Struct.new(
+      :ai_recommendation_job_name,
+      :ai_recommendation_job_arn,
+      :ai_recommendation_job_status,
+      :creation_time,
+      :end_time)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Details about the model package in a recommendation.
+    #
+    # @!attribute [rw] model_package_arn
+    #   The Amazon Resource Name (ARN) of the model package.
+    #   @return [String]
+    #
+    # @!attribute [rw] inference_specification_name
+    #   The name of the inference specification within the model package.
+    #   @return [String]
+    #
+    # @!attribute [rw] instance_details
+    #   The instance details for this recommendation, including instance
+    #   type, count, and model copies per instance.
+    #   @return [Array<Types::AIRecommendationInstanceDetail>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AIRecommendationModelDetails AWS API Documentation
+    #
+    class AIRecommendationModelDetails < Struct.new(
+      :model_package_arn,
+      :inference_specification_name,
+      :instance_details)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Details about an optimization technique applied in a recommendation.
+    #
+    # @!attribute [rw] optimization_type
+    #   The type of optimization. Valid values are `SpeculativeDecoding` and
+    #   `KernelTuning`.
+    #   @return [String]
+    #
+    # @!attribute [rw] optimization_config
+    #   A map of configuration parameters for the optimization technique.
+    #   @return [Hash<String,String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AIRecommendationOptimizationDetail AWS API Documentation
+    #
+    class AIRecommendationOptimizationDetail < Struct.new(
+      :optimization_type,
+      :optimization_config)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The output configuration for an AI recommendation job.
+    #
+    # @!attribute [rw] s3_output_location
+    #   The Amazon S3 URI where recommendation results are stored.
+    #   @return [String]
+    #
+    # @!attribute [rw] model_package_group_identifier
+    #   The name or Amazon Resource Name (ARN) of the model package group
+    #   where the optimized model is registered as a new model package
+    #   version.
+    #   @return [String]
+    #
+    # @!attribute [rw] mlflow_config
+    #   The MLflow tracking configuration for the job. If you don't specify
+    #   this parameter, MLflow tracking is disabled.
+    #   @return [Types::AIMlflowConfig]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AIRecommendationOutputConfig AWS API Documentation
+    #
+    class AIRecommendationOutputConfig < Struct.new(
+      :s3_output_location,
+      :model_package_group_identifier,
+      :mlflow_config)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The output configuration for an AI recommendation job, including the
+    # S3 location for results and the model package group for deployment.
+    #
+    # @!attribute [rw] s3_output_location
+    #   The Amazon S3 URI where the recommendation job writes its output
+    #   results.
+    #   @return [String]
+    #
+    # @!attribute [rw] model_package_group_identifier
+    #   The name or Amazon Resource Name (ARN) of the model package group
+    #   where deployment-ready model packages are registered.
+    #   @return [String]
+    #
+    # @!attribute [rw] mlflow_config
+    #   The MLflow tracking configuration for the job.
+    #   @return [Types::AIMlflowConfig]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AIRecommendationOutputResult AWS API Documentation
+    #
+    class AIRecommendationOutputResult < Struct.new(
+      :s3_output_location,
+      :model_package_group_identifier,
+      :mlflow_config)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # An expected performance metric for a recommendation.
+    #
+    # @!attribute [rw] metric
+    #   The name of the performance metric.
+    #   @return [String]
+    #
+    # @!attribute [rw] stat
+    #   The statistical measure for the metric.
+    #   @return [String]
+    #
+    # @!attribute [rw] value
+    #   The value of the metric.
+    #   @return [String]
+    #
+    # @!attribute [rw] unit
+    #   The unit of the metric value.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AIRecommendationPerformanceMetric AWS API Documentation
+    #
+    class AIRecommendationPerformanceMetric < Struct.new(
+      :metric,
+      :stat,
+      :value,
+      :unit)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The performance targets for an AI recommendation job.
+    #
+    # @!attribute [rw] constraints
+    #   An array of performance constraints that define the optimization
+    #   objectives.
+    #   @return [Array<Types::AIRecommendationConstraint>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AIRecommendationPerformanceTarget AWS API Documentation
+    #
+    class AIRecommendationPerformanceTarget < Struct.new(
+      :constraints)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Summary information about an AI workload configuration.
+    #
+    # @!attribute [rw] ai_workload_config_name
+    #   The name of the AI workload configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] ai_workload_config_arn
+    #   The Amazon Resource Name (ARN) of the AI workload configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] creation_time
+    #   A timestamp that indicates when the configuration was created.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AIWorkloadConfigSummary AWS API Documentation
+    #
+    class AIWorkloadConfigSummary < Struct.new(
+      :ai_workload_config_name,
+      :ai_workload_config_arn,
+      :creation_time)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The benchmark tool configuration for an AI workload.
+    #
+    # @!attribute [rw] workload_spec
+    #   The workload specification that defines benchmark parameters.
+    #   @return [Types::WorkloadSpec]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AIWorkloadConfigs AWS API Documentation
+    #
+    class AIWorkloadConfigs < Struct.new(
+      :workload_spec)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The data source for an AI workload input data channel.
+    #
+    # @!attribute [rw] s3_data_source
+    #   The Amazon S3 data source configuration.
+    #   @return [Types::AIWorkloadS3DataSource]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AIWorkloadDataSource AWS API Documentation
+    #
+    class AIWorkloadDataSource < Struct.new(
+      :s3_data_source)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A channel of input data for an AI workload configuration. Each channel
+    # has a name and a data source.
+    #
+    # @!attribute [rw] channel_name
+    #   The logical name for the data channel.
+    #   @return [String]
+    #
+    # @!attribute [rw] data_source
+    #   The data source for this channel.
+    #   @return [Types::AIWorkloadDataSource]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AIWorkloadInputDataConfig AWS API Documentation
+    #
+    class AIWorkloadInputDataConfig < Struct.new(
+      :channel_name,
+      :data_source)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The Amazon S3 data source for an AI workload.
+    #
+    # @!attribute [rw] s3_uri
+    #   The Amazon S3 URI of the data.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AIWorkloadS3DataSource AWS API Documentation
+    #
+    class AIWorkloadS3DataSource < Struct.new(
+      :s3_uri)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration for allocating accelerator partitions.
+    #
+    # @!attribute [rw] type
+    #   The Multi-Instance GPU (MIG) profile type that defines the partition
+    #   configuration. The profile specifies the compute and memory
+    #   allocation for each partition instance. The available profile types
+    #   depend on the instance type specified in the compute quota
+    #   configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] count
+    #   The number of accelerator partitions to allocate with the specified
+    #   partition type. If you don't specify a value for vCPU and
+    #   MemoryInGiB, SageMaker AI automatically allocates ratio-based values
+    #   for those parameters based on the accelerator partition count you
+    #   provide.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AcceleratorPartitionConfig AWS API Documentation
+    #
+    class AcceleratorPartitionConfig < Struct.new(
+      :type,
+      :count)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # A structure describing the source of an action.
     #
     # @!attribute [rw] source_uri
@@ -136,6 +1009,40 @@ module Aws::SageMaker
       include Aws::Structure
     end
 
+    # Specifies an instance group and the number of nodes to add to it.
+    #
+    # @!attribute [rw] instance_group_name
+    #   The name of the instance group to which you want to add nodes.
+    #   @return [String]
+    #
+    # @!attribute [rw] increment_target_count_by
+    #   The number of nodes to add to the specified instance group. The
+    #   total number of nodes across all instance groups in a single request
+    #   cannot exceed 50.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] availability_zones
+    #   The availability zones in which to add nodes. Use this to target
+    #   node placement in specific availability zones within a flexible
+    #   instance group.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] instance_types
+    #   The instance types to use when adding nodes. Use this to target
+    #   specific instance types within a flexible instance group.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AddClusterNodeSpecification AWS API Documentation
+    #
+    class AddClusterNodeSpecification < Struct.new(
+      :instance_group_name,
+      :increment_target_count_by,
+      :availability_zones,
+      :instance_types)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] resource_arn
     #   The Amazon Resource Name (ARN) of the resource that you want to tag.
     #   @return [String]
@@ -168,6 +1075,22 @@ module Aws::SageMaker
     #
     class AddTagsOutput < Struct.new(
       :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Information about additional Elastic Network Interfaces (ENIs)
+    # associated with an instance.
+    #
+    # @!attribute [rw] efa_enis
+    #   A list of Elastic Fabric Adapter (EFA) ENIs associated with the
+    #   instance.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AdditionalEnis AWS API Documentation
+    #
+    class AdditionalEnis < Struct.new(
+      :efa_enis)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -307,6 +1230,20 @@ module Aws::SageMaker
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/Alarm AWS API Documentation
     #
     class Alarm < Struct.new(
+      :alarm_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The details of the alarm to monitor during the AMI update.
+    #
+    # @!attribute [rw] alarm_name
+    #   The name of the alarm.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AlarmDetails AWS API Documentation
+    #
+    class AlarmDetails < Struct.new(
       :alarm_name)
       SENSITIVE = []
       include Aws::Structure
@@ -1293,6 +2230,33 @@ module Aws::SageMaker
     #
     #   * `arn:aws:lambda:ca-central-1:918755190332:function:ACS-Adjustment3DPointCloudSemanticSegmentation`
     #
+    #   **Generative AI/Custom** - Direct passthrough of output data without
+    #   any transformation.
+    #
+    #   * `arn:aws:lambda:us-east-1:432418664414:function:ACS-PassThrough`
+    #
+    #   * `arn:aws:lambda:us-east-2:266458841044:function:ACS-PassThrough`
+    #
+    #   * `arn:aws:lambda:us-west-2:081040173940:function:ACS-PassThrough`
+    #
+    #   * `arn:aws:lambda:eu-west-1:568282634449:function:ACS-PassThrough`
+    #
+    #   * `arn:aws:lambda:ap-northeast-1:477331159723:function:ACS-PassThrough`
+    #
+    #   * `arn:aws:lambda:ap-southeast-2:454466003867:function:ACS-PassThrough`
+    #
+    #   * `arn:aws:lambda:ap-south-1:565803892007:function:ACS-PassThrough`
+    #
+    #   * `arn:aws:lambda:eu-central-1:203001061592:function:ACS-PassThrough`
+    #
+    #   * `arn:aws:lambda:ap-northeast-2:845288260483:function:ACS-PassThrough`
+    #
+    #   * `arn:aws:lambda:eu-west-2:487402164563:function:ACS-PassThrough`
+    #
+    #   * `arn:aws:lambda:ap-southeast-1:377565633583:function:ACS-PassThrough`
+    #
+    #   * `arn:aws:lambda:ca-central-1:918755190332:function:ACS-PassThrough`
+    #
     #
     #
     #   [1]: https://docs.aws.amazon.com/sagemaker/latest/dg/sms-annotation-consolidation.html
@@ -1569,6 +2533,26 @@ module Aws::SageMaker
       include Aws::Structure
     end
 
+    # The data type used to describe the relationship between different
+    # sources.
+    #
+    # @!attribute [rw] source_arn
+    #   The Amazon Resource Name (ARN) of the `AssociationInfo` source.
+    #   @return [String]
+    #
+    # @!attribute [rw] destination_arn
+    #   The Amazon Resource Name (ARN) of the `AssociationInfo` destination.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AssociationInfo AWS API Documentation
+    #
+    class AssociationInfo < Struct.new(
+      :source_arn,
+      :destination_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Lists a summary of the properties of an association. An association is
     # an entity that links other lineage or experiment entities. An example
     # would be an association between a training job and a model.
@@ -1606,8 +2590,8 @@ module Aws::SageMaker
     #   @return [Time]
     #
     # @!attribute [rw] created_by
-    #   Information about the user who created or modified an experiment,
-    #   trial, trial component, lineage group, project, or model card.
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
     #   @return [Types::UserContext]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AssociationSummary AWS API Documentation
@@ -1780,6 +2764,97 @@ module Aws::SageMaker
       :kms_key_id,
       :output_format,
       :output_compression)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] cluster_arn
+    #   The Amazon Resource Name (ARN) of your SageMaker HyperPod cluster
+    #   containing the target node. Your cluster must use EKS as the
+    #   orchestration and be in the `InService` state.
+    #   @return [String]
+    #
+    # @!attribute [rw] node_id
+    #   The unique identifier of the cluster node to which you want to
+    #   attach the volume. The node must belong to your specified HyperPod
+    #   cluster and cannot be part of a Restricted Instance Group (RIG).
+    #   @return [String]
+    #
+    # @!attribute [rw] volume_id
+    #   The unique identifier of your EBS volume to attach. The volume must
+    #   be in the `available` state.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AttachClusterNodeVolumeRequest AWS API Documentation
+    #
+    class AttachClusterNodeVolumeRequest < Struct.new(
+      :cluster_arn,
+      :node_id,
+      :volume_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] cluster_arn
+    #   The Amazon Resource Name (ARN) of your SageMaker HyperPod cluster
+    #   where the volume attachment operation was performed.
+    #   @return [String]
+    #
+    # @!attribute [rw] node_id
+    #   The unique identifier of the cluster node where your volume was
+    #   attached.
+    #   @return [String]
+    #
+    # @!attribute [rw] volume_id
+    #   The unique identifier of your EBS volume that was attached.
+    #   @return [String]
+    #
+    # @!attribute [rw] attach_time
+    #   The timestamp when the volume attachment operation was initiated by
+    #   the SageMaker HyperPod service.
+    #   @return [Time]
+    #
+    # @!attribute [rw] status
+    #   The current status of your volume attachment operation.
+    #   @return [String]
+    #
+    # @!attribute [rw] device_name
+    #   The device name assigned to your attached volume on the target
+    #   instance.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AttachClusterNodeVolumeResponse AWS API Documentation
+    #
+    class AttachClusterNodeVolumeResponse < Struct.new(
+      :cluster_arn,
+      :node_id,
+      :volume_id,
+      :attach_time,
+      :status,
+      :device_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains a presigned URL and its associated local file path for
+    # downloading hub content artifacts.
+    #
+    # @!attribute [rw] url
+    #   The presigned S3 URL that provides temporary, secure access to
+    #   download the file. URLs expire within 15 minutes for security
+    #   purposes.
+    #   @return [String]
+    #
+    # @!attribute [rw] local_path
+    #   The recommended local file path where the downloaded file should be
+    #   stored to maintain proper directory structure and file organization.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AuthorizedUrl AWS API Documentation
+    #
+    class AuthorizedUrl < Struct.new(
+      :url,
+      :local_path)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2116,12 +3191,13 @@ module Aws::SageMaker
       include Aws::Structure
     end
 
-    # <note markdown="1"> This data type is intended for use exclusively by SageMaker Canvas and
+    # <note markdown="1"> This data type is intended for use exclusively by
+    # SageMaker Canvas and
     # cannot be used in other contexts at the moment.
     #
     #  </note>
     #
-    # Specifies the compute configuration for an AutoML job V2.
+    #  Specifies the compute configuration for an AutoML job V2.
     #
     # @!attribute [rw] emr_serverless_compute_config
     #   The configuration for using [ EMR Serverless][1] to run the AutoML
@@ -2910,6 +3986,151 @@ module Aws::SageMaker
       include Aws::Structure
     end
 
+    # Contains information about an available upgrade for a SageMaker
+    # Partner AI App, including the version number and release notes.
+    #
+    # @!attribute [rw] version
+    #   The semantic version number of the available upgrade for the
+    #   SageMaker Partner AI App.
+    #   @return [String]
+    #
+    # @!attribute [rw] release_notes
+    #   A list of release notes describing the changes and improvements
+    #   included in the available upgrade version.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/AvailableUpgrade AWS API Documentation
+    #
+    class AvailableUpgrade < Struct.new(
+      :version,
+      :release_notes)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Identifies the foundation model that was used as the starting point
+    # for model customization.
+    #
+    # @!attribute [rw] hub_content_name
+    #   The hub content name of the base model.
+    #   @return [String]
+    #
+    # @!attribute [rw] hub_content_version
+    #   The hub content version of the base model.
+    #   @return [String]
+    #
+    # @!attribute [rw] recipe_name
+    #   The recipe name of the base model.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/BaseModel AWS API Documentation
+    #
+    class BaseModel < Struct.new(
+      :hub_content_name,
+      :hub_content_version,
+      :recipe_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Information about an error that occurred during the node addition
+    # operation.
+    #
+    # @!attribute [rw] instance_group_name
+    #   The name of the instance group for which the error occurred.
+    #   @return [String]
+    #
+    # @!attribute [rw] error_code
+    #   The error code associated with the failure. Possible values include
+    #   `InstanceGroupNotFound` and `InvalidInstanceGroupState`.
+    #   @return [String]
+    #
+    # @!attribute [rw] failed_count
+    #   The number of nodes that failed to be added to the specified
+    #   instance group.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] availability_zones
+    #   The availability zones associated with the failed node addition
+    #   request.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] instance_types
+    #   The instance types associated with the failed node addition request.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] message
+    #   A descriptive message providing additional details about the error.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/BatchAddClusterNodesError AWS API Documentation
+    #
+    class BatchAddClusterNodesError < Struct.new(
+      :instance_group_name,
+      :error_code,
+      :failed_count,
+      :availability_zones,
+      :instance_types,
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] cluster_name
+    #   The name of the HyperPod cluster to which you want to add nodes.
+    #   @return [String]
+    #
+    # @!attribute [rw] client_token
+    #   A unique, case-sensitive identifier that you provide to ensure the
+    #   idempotency of the request. This token is valid for 8 hours. If you
+    #   retry the request with the same client token within this timeframe
+    #   and the same parameters, the API returns the same set of
+    #   `NodeLogicalIds` with their latest status.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #   @return [String]
+    #
+    # @!attribute [rw] nodes_to_add
+    #   A list of instance groups and the number of nodes to add to each.
+    #   You can specify up to 5 instance groups in a single request, with a
+    #   maximum of 50 nodes total across all instance groups.
+    #   @return [Array<Types::AddClusterNodeSpecification>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/BatchAddClusterNodesRequest AWS API Documentation
+    #
+    class BatchAddClusterNodesRequest < Struct.new(
+      :cluster_name,
+      :client_token,
+      :nodes_to_add)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] successful
+    #   A list of `NodeLogicalIDs` that were successfully added to the
+    #   cluster. The `NodeLogicalID` is unique per cluster and does not
+    #   change between instance replacements. Each entry includes a
+    #   `NodeLogicalId` that can be used to track the node's provisioning
+    #   status (with `DescribeClusterNode`), the instance group name, and
+    #   the current status of the node.
+    #   @return [Array<Types::NodeAdditionResult>]
+    #
+    # @!attribute [rw] failed
+    #   A list of errors that occurred during the node addition operation.
+    #   Each entry includes the instance group name, error code, number of
+    #   failed additions, and an error message.
+    #   @return [Array<Types::BatchAddClusterNodesError>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/BatchAddClusterNodesResponse AWS API Documentation
+    #
+    class BatchAddClusterNodesResponse < Struct.new(
+      :successful,
+      :failed)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Configuration to control how SageMaker captures inference data for
     # batch transform jobs.
     #
@@ -2946,6 +4167,32 @@ module Aws::SageMaker
       :destination_s3_uri,
       :kms_key_id,
       :generate_inference_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Information about an error that occurred when attempting to delete a
+    # node identified by its `NodeLogicalId`.
+    #
+    # @!attribute [rw] code
+    #   The error code associated with the failure. Possible values include
+    #   `NodeLogicalIdNotFound`, `InvalidNodeStatus`, and `InternalError`.
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   A descriptive message providing additional details about the error.
+    #   @return [String]
+    #
+    # @!attribute [rw] node_logical_id
+    #   The `NodeLogicalId` of the node that could not be deleted.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/BatchDeleteClusterNodeLogicalIdsError AWS API Documentation
+    #
+    class BatchDeleteClusterNodeLogicalIdsError < Struct.new(
+      :code,
+      :message,
+      :node_logical_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3003,11 +4250,19 @@ module Aws::SageMaker
     #   [1]: http://aws.amazon.com/contact-us/
     #   @return [Array<String>]
     #
+    # @!attribute [rw] node_logical_ids
+    #   A list of `NodeLogicalIds` identifying the nodes to be deleted. You
+    #   can specify up to 50 `NodeLogicalIds`. You must specify either
+    #   `NodeLogicalIds`, `InstanceIds`, or both, with a combined maximum of
+    #   50 identifiers.
+    #   @return [Array<String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/BatchDeleteClusterNodesRequest AWS API Documentation
     #
     class BatchDeleteClusterNodesRequest < Struct.new(
       :cluster_name,
-      :node_ids)
+      :node_ids,
+      :node_logical_ids)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3021,11 +4276,23 @@ module Aws::SageMaker
     #   cluster.
     #   @return [Array<String>]
     #
+    # @!attribute [rw] failed_node_logical_ids
+    #   A list of `NodeLogicalIds` that could not be deleted, along with
+    #   error information explaining why the deletion failed.
+    #   @return [Array<Types::BatchDeleteClusterNodeLogicalIdsError>]
+    #
+    # @!attribute [rw] successful_node_logical_ids
+    #   A list of `NodeLogicalIds` that were successfully deleted from the
+    #   cluster.
+    #   @return [Array<String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/BatchDeleteClusterNodesResponse AWS API Documentation
     #
     class BatchDeleteClusterNodesResponse < Struct.new(
       :failed,
-      :successful)
+      :successful,
+      :failed_node_logical_ids,
+      :successful_node_logical_ids)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3112,6 +4379,10 @@ module Aws::SageMaker
     #   The approval status of the model.
     #   @return [String]
     #
+    # @!attribute [rw] model_package_registration_type
+    #   The package registration type of the model package summary.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/BatchDescribeModelPackageSummary AWS API Documentation
     #
     class BatchDescribeModelPackageSummary < Struct.new(
@@ -3122,7 +4393,350 @@ module Aws::SageMaker
       :creation_time,
       :inference_specification,
       :model_package_status,
-      :model_approval_status)
+      :model_approval_status,
+      :model_package_registration_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Represents an error encountered when rebooting a node (identified by
+    # its logical node ID) from a SageMaker HyperPod cluster.
+    #
+    # @!attribute [rw] node_logical_id
+    #   The logical node ID of the node that encountered an error during the
+    #   reboot operation.
+    #   @return [String]
+    #
+    # @!attribute [rw] error_code
+    #   The error code associated with the error encountered when rebooting
+    #   a node by logical node ID.
+    #
+    #   Possible values:
+    #
+    #   * `InstanceIdNotFound`: The node does not exist in the specified
+    #     cluster.
+    #
+    #   * `InvalidInstanceStatus`: The node is in a state that does not
+    #     allow rebooting. Wait for the node to finish any ongoing changes
+    #     before retrying.
+    #
+    #   * `InstanceIdInUse`: Another operation is already in progress for
+    #     this node. Wait for the operation to complete before retrying.
+    #
+    #   * `InternalServerError`: An internal error occurred while processing
+    #     this node.
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   A human-readable message describing the error encountered when
+    #   rebooting a node by logical node ID.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/BatchRebootClusterNodeLogicalIdsError AWS API Documentation
+    #
+    class BatchRebootClusterNodeLogicalIdsError < Struct.new(
+      :node_logical_id,
+      :error_code,
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Represents an error encountered when rebooting a node from a SageMaker
+    # HyperPod cluster.
+    #
+    # @!attribute [rw] node_id
+    #   The EC2 instance ID of the node that encountered an error during the
+    #   reboot operation.
+    #   @return [String]
+    #
+    # @!attribute [rw] error_code
+    #   The error code associated with the error encountered when rebooting
+    #   a node.
+    #
+    #   Possible values:
+    #
+    #   * `InstanceIdNotFound`: The instance does not exist in the specified
+    #     cluster.
+    #
+    #   * `InvalidInstanceStatus`: The instance is in a state that does not
+    #     allow rebooting. Wait for the instance to finish any ongoing
+    #     changes before retrying.
+    #
+    #   * `InstanceIdInUse`: Another operation is already in progress for
+    #     this node. Wait for the operation to complete before retrying.
+    #
+    #   * `InternalServerError`: An internal error occurred while processing
+    #     this node.
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   A human-readable message describing the error encountered when
+    #   rebooting a node.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/BatchRebootClusterNodesError AWS API Documentation
+    #
+    class BatchRebootClusterNodesError < Struct.new(
+      :node_id,
+      :error_code,
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] cluster_name
+    #   The name or Amazon Resource Name (ARN) of the SageMaker HyperPod
+    #   cluster containing the nodes to reboot.
+    #   @return [String]
+    #
+    # @!attribute [rw] node_ids
+    #   A list of EC2 instance IDs to reboot using soft recovery. You can
+    #   specify between 1 and 25 instance IDs.
+    #
+    #   <note markdown="1"> * Either `NodeIds` or `NodeLogicalIds` must be provided (or both),
+    #     but at least one is required.
+    #
+    #   * Each instance ID must follow the pattern `i-` followed by 17
+    #     hexadecimal characters (for example, `i-0123456789abcdef0`).
+    #
+    #    </note>
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] node_logical_ids
+    #   A list of logical node IDs to reboot using soft recovery. You can
+    #   specify between 1 and 25 logical node IDs.
+    #
+    #   The `NodeLogicalId` is a unique identifier that persists throughout
+    #   the node's lifecycle and can be used to track nodes that are still
+    #   being provisioned and don't yet have an EC2 instance ID assigned.
+    #
+    #   * This parameter is only supported for clusters using `Continuous`
+    #     as the `NodeProvisioningMode`. For clusters using the default
+    #     provisioning mode, use `NodeIds` instead.
+    #
+    #   * Either `NodeIds` or `NodeLogicalIds` must be provided (or both),
+    #     but at least one is required.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/BatchRebootClusterNodesRequest AWS API Documentation
+    #
+    class BatchRebootClusterNodesRequest < Struct.new(
+      :cluster_name,
+      :node_ids,
+      :node_logical_ids)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] successful
+    #   A list of EC2 instance IDs for which the reboot operation was
+    #   successfully initiated.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] failed
+    #   A list of errors encountered for EC2 instance IDs that could not be
+    #   rebooted. Each error includes the instance ID, an error code, and a
+    #   descriptive message.
+    #   @return [Array<Types::BatchRebootClusterNodesError>]
+    #
+    # @!attribute [rw] failed_node_logical_ids
+    #   A list of errors encountered for logical node IDs that could not be
+    #   rebooted. Each error includes the logical node ID, an error code,
+    #   and a descriptive message. This field is only present when
+    #   `NodeLogicalIds` were provided in the request.
+    #   @return [Array<Types::BatchRebootClusterNodeLogicalIdsError>]
+    #
+    # @!attribute [rw] successful_node_logical_ids
+    #   A list of logical node IDs for which the reboot operation was
+    #   successfully initiated. This field is only present when
+    #   `NodeLogicalIds` were provided in the request.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/BatchRebootClusterNodesResponse AWS API Documentation
+    #
+    class BatchRebootClusterNodesResponse < Struct.new(
+      :successful,
+      :failed,
+      :failed_node_logical_ids,
+      :successful_node_logical_ids)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Represents an error encountered when replacing a node (identified by
+    # its logical node ID) in a SageMaker HyperPod cluster.
+    #
+    # @!attribute [rw] node_logical_id
+    #   The logical node ID of the node that encountered an error during the
+    #   replacement operation.
+    #   @return [String]
+    #
+    # @!attribute [rw] error_code
+    #   The error code associated with the error encountered when replacing
+    #   a node by logical node ID.
+    #
+    #   Possible values:
+    #
+    #   * `InstanceIdNotFound`: The node does not exist in the specified
+    #     cluster.
+    #
+    #   * `InvalidInstanceStatus`: The node is in a state that does not
+    #     allow replacement. Wait for the node to finish any ongoing changes
+    #     before retrying.
+    #
+    #   * `InstanceIdInUse`: Another operation is already in progress for
+    #     this node. Wait for the operation to complete before retrying.
+    #
+    #   * `InternalServerError`: An internal error occurred while processing
+    #     this node.
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   A human-readable message describing the error encountered when
+    #   replacing a node by logical node ID.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/BatchReplaceClusterNodeLogicalIdsError AWS API Documentation
+    #
+    class BatchReplaceClusterNodeLogicalIdsError < Struct.new(
+      :node_logical_id,
+      :error_code,
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Represents an error encountered when replacing a node in a SageMaker
+    # HyperPod cluster.
+    #
+    # @!attribute [rw] node_id
+    #   The EC2 instance ID of the node that encountered an error during the
+    #   replacement operation.
+    #   @return [String]
+    #
+    # @!attribute [rw] error_code
+    #   The error code associated with the error encountered when replacing
+    #   a node.
+    #
+    #   Possible values:
+    #
+    #   * `InstanceIdNotFound`: The instance does not exist in the specified
+    #     cluster.
+    #
+    #   * `InvalidInstanceStatus`: The instance is in a state that does not
+    #     allow replacement. Wait for the instance to finish any ongoing
+    #     changes before retrying.
+    #
+    #   * `InstanceIdInUse`: Another operation is already in progress for
+    #     this node. Wait for the operation to complete before retrying.
+    #
+    #   * `InternalServerError`: An internal error occurred while processing
+    #     this node.
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   A human-readable message describing the error encountered when
+    #   replacing a node.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/BatchReplaceClusterNodesError AWS API Documentation
+    #
+    class BatchReplaceClusterNodesError < Struct.new(
+      :node_id,
+      :error_code,
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] cluster_name
+    #   The name or Amazon Resource Name (ARN) of the SageMaker HyperPod
+    #   cluster containing the nodes to replace.
+    #   @return [String]
+    #
+    # @!attribute [rw] node_ids
+    #   A list of EC2 instance IDs to replace with new hardware. You can
+    #   specify between 1 and 25 instance IDs.
+    #
+    #   Replace operations destroy all instance volumes (root and
+    #   secondary). Ensure you have backed up any important data before
+    #   proceeding.
+    #
+    #   <note markdown="1"> * Either `NodeIds` or `NodeLogicalIds` must be provided (or both),
+    #     but at least one is required.
+    #
+    #   * Each instance ID must follow the pattern `i-` followed by 17
+    #     hexadecimal characters (for example, `i-0123456789abcdef0`).
+    #
+    #   * For SageMaker HyperPod clusters using the Slurm workload manager,
+    #     you cannot replace instances that are configured as Slurm
+    #     controller nodes.
+    #
+    #    </note>
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] node_logical_ids
+    #   A list of logical node IDs to replace with new hardware. You can
+    #   specify between 1 and 25 logical node IDs.
+    #
+    #   The `NodeLogicalId` is a unique identifier that persists throughout
+    #   the node's lifecycle and can be used to track nodes that are still
+    #   being provisioned and don't yet have an EC2 instance ID assigned.
+    #
+    #   * Replace operations destroy all instance volumes (root and
+    #     secondary). Ensure you have backed up any important data before
+    #     proceeding.
+    #
+    #   * This parameter is only supported for clusters using `Continuous`
+    #     as the `NodeProvisioningMode`. For clusters using the default
+    #     provisioning mode, use `NodeIds` instead.
+    #
+    #   * Either `NodeIds` or `NodeLogicalIds` must be provided (or both),
+    #     but at least one is required.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/BatchReplaceClusterNodesRequest AWS API Documentation
+    #
+    class BatchReplaceClusterNodesRequest < Struct.new(
+      :cluster_name,
+      :node_ids,
+      :node_logical_ids)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] successful
+    #   A list of EC2 instance IDs for which the replacement operation was
+    #   successfully initiated.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] failed
+    #   A list of errors encountered for EC2 instance IDs that could not be
+    #   replaced. Each error includes the instance ID, an error code, and a
+    #   descriptive message.
+    #   @return [Array<Types::BatchReplaceClusterNodesError>]
+    #
+    # @!attribute [rw] failed_node_logical_ids
+    #   A list of errors encountered for logical node IDs that could not be
+    #   replaced. Each error includes the logical node ID, an error code,
+    #   and a descriptive message. This field is only present when
+    #   `NodeLogicalIds` were provided in the request.
+    #   @return [Array<Types::BatchReplaceClusterNodeLogicalIdsError>]
+    #
+    # @!attribute [rw] successful_node_logical_ids
+    #   A list of logical node IDs for which the replacement operation was
+    #   successfully initiated. This field is only present when
+    #   `NodeLogicalIds` were provided in the request.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/BatchReplaceClusterNodesResponse AWS API Documentation
+    #
+    class BatchReplaceClusterNodesResponse < Struct.new(
+      :successful,
+      :failed,
+      :failed_node_logical_ids,
+      :successful_node_logical_ids)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3212,6 +4826,64 @@ module Aws::SageMaker
       :start_time_offset,
       :end_time_offset,
       :exclude_features_attribute)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The metadata of the Amazon Bedrock custom model deployment.
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) for the Amazon Bedrock custom model
+    #   deployment.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/BedrockCustomModelDeploymentMetadata AWS API Documentation
+    #
+    class BedrockCustomModelDeploymentMetadata < Struct.new(
+      :arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The metadata of the Amazon Bedrock custom model.
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the Amazon Bedrock custom model.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/BedrockCustomModelMetadata AWS API Documentation
+    #
+    class BedrockCustomModelMetadata < Struct.new(
+      :arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The metadata of the Amazon Bedrock model import.
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the Amazon Bedrock model import.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/BedrockModelImportMetadata AWS API Documentation
+    #
+    class BedrockModelImportMetadata < Struct.new(
+      :arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The metadata of the Amazon Bedrock provisioned model throughput.
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the Amazon Bedrock provisioned
+    #   model throughput.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/BedrockProvisionedModelThroughputMetadata AWS API Documentation
+    #
+    class BedrockProvisionedModelThroughputMetadata < Struct.new(
+      :arn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3500,6 +5172,27 @@ module Aws::SageMaker
       include Aws::Structure
     end
 
+    # Information about the Capacity Reservation used by an instance or
+    # instance group.
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the Capacity Reservation.
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   The type of Capacity Reservation. Valid values are `ODCR` (On-Demand
+    #   Capacity Reservation) or `CRG` (Capacity Reservation Group).
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/CapacityReservation AWS API Documentation
+    #
+    class CapacityReservation < Struct.new(
+      :arn,
+      :type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Specifies the type and size of the endpoint capacity to activate for a
     # blue/green deployment, a rolling deployment, or a rollback strategy.
     # You can specify your batches as either instance count or the overall
@@ -3528,6 +5221,29 @@ module Aws::SageMaker
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/CapacitySize AWS API Documentation
     #
     class CapacitySize < Struct.new(
+      :type,
+      :value)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration of the size measurements of the AMI update. Using
+    # this configuration, you can specify whether SageMaker should update
+    # your instance group by an amount or percentage of instances.
+    #
+    # @!attribute [rw] type
+    #   Specifies whether SageMaker should process the update by amount or
+    #   percentage of instances.
+    #   @return [String]
+    #
+    # @!attribute [rw] value
+    #   Specifies the amount or percentage of instances SageMaker updates at
+    #   a time.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/CapacitySizeConfig AWS API Documentation
+    #
+    class CapacitySizeConfig < Struct.new(
       :type,
       :value)
       SENSITIVE = []
@@ -3619,6 +5335,181 @@ module Aws::SageMaker
     #
     class CategoricalParameterRangeSpecification < Struct.new(
       :values)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The CloudFormation template provider configuration for creating
+    # infrastructure resources.
+    #
+    # @!attribute [rw] template_name
+    #   A unique identifier for the template within the project.
+    #   @return [String]
+    #
+    # @!attribute [rw] template_url
+    #   The Amazon S3 URL of the CloudFormation template.
+    #   @return [String]
+    #
+    # @!attribute [rw] role_arn
+    #   The IAM role that CloudFormation assumes when creating the stack.
+    #   @return [String]
+    #
+    # @!attribute [rw] parameters
+    #   An array of CloudFormation stack parameters.
+    #   @return [Array<Types::CfnStackCreateParameter>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/CfnCreateTemplateProvider AWS API Documentation
+    #
+    class CfnCreateTemplateProvider < Struct.new(
+      :template_name,
+      :template_url,
+      :role_arn,
+      :parameters)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A key-value pair that represents a parameter for the CloudFormation
+    # stack.
+    #
+    # @!attribute [rw] key
+    #   The name of the CloudFormation parameter.
+    #   @return [String]
+    #
+    # @!attribute [rw] value
+    #   The value of the CloudFormation parameter.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/CfnStackCreateParameter AWS API Documentation
+    #
+    class CfnStackCreateParameter < Struct.new(
+      :key,
+      :value)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Details about the CloudFormation stack.
+    #
+    # @!attribute [rw] name
+    #   The name of the CloudFormation stack.
+    #   @return [String]
+    #
+    # @!attribute [rw] id
+    #   The unique identifier of the CloudFormation stack.
+    #   @return [String]
+    #
+    # @!attribute [rw] status_message
+    #   A human-readable message about the stack's current status.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/CfnStackDetail AWS API Documentation
+    #
+    class CfnStackDetail < Struct.new(
+      :name,
+      :id,
+      :status_message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A key-value pair representing a parameter used in the CloudFormation
+    # stack.
+    #
+    # @!attribute [rw] key
+    #   The name of the CloudFormation parameter.
+    #   @return [String]
+    #
+    # @!attribute [rw] value
+    #   The value of the CloudFormation parameter.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/CfnStackParameter AWS API Documentation
+    #
+    class CfnStackParameter < Struct.new(
+      :key,
+      :value)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A key-value pair representing a parameter used in the CloudFormation
+    # stack.
+    #
+    # @!attribute [rw] key
+    #   The name of the CloudFormation parameter.
+    #   @return [String]
+    #
+    # @!attribute [rw] value
+    #   The value of the CloudFormation parameter.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/CfnStackUpdateParameter AWS API Documentation
+    #
+    class CfnStackUpdateParameter < Struct.new(
+      :key,
+      :value)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Details about a CloudFormation template provider configuration and
+    # associated provisioning information.
+    #
+    # @!attribute [rw] template_name
+    #   The unique identifier of the template within the project.
+    #   @return [String]
+    #
+    # @!attribute [rw] template_url
+    #   The Amazon S3 URL of the CloudFormation template.
+    #   @return [String]
+    #
+    # @!attribute [rw] role_arn
+    #   The IAM role used by CloudFormation to create the stack.
+    #   @return [String]
+    #
+    # @!attribute [rw] parameters
+    #   An array of CloudFormation stack parameters.
+    #   @return [Array<Types::CfnStackParameter>]
+    #
+    # @!attribute [rw] stack_detail
+    #   Information about the CloudFormation stack created by the template
+    #   provider.
+    #   @return [Types::CfnStackDetail]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/CfnTemplateProviderDetail AWS API Documentation
+    #
+    class CfnTemplateProviderDetail < Struct.new(
+      :template_name,
+      :template_url,
+      :role_arn,
+      :parameters,
+      :stack_detail)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains configuration details for updating an existing CloudFormation
+    # template provider in the project.
+    #
+    # @!attribute [rw] template_name
+    #   The unique identifier of the template to update within the project.
+    #   @return [String]
+    #
+    # @!attribute [rw] template_url
+    #   The Amazon S3 URL of the CloudFormation template.
+    #   @return [String]
+    #
+    # @!attribute [rw] parameters
+    #   An array of CloudFormation stack parameters.
+    #   @return [Array<Types::CfnStackUpdateParameter>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/CfnUpdateTemplateProvider AWS API Documentation
+    #
+    class CfnUpdateTemplateProvider < Struct.new(
+      :template_name,
+      :template_url,
+      :parameters)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4178,6 +6069,163 @@ module Aws::SageMaker
       include Aws::Structure
     end
 
+    # The configuration for automatic patching of the instance group. When
+    # configured, the system automatically applies security patch AMI
+    # updates to the instance group.
+    #
+    # @!attribute [rw] patching_strategy
+    #   The strategy for applying patches to instances in the group.
+    #
+    #   * `WhenIdle`: Cordons all instances and patches each instance as it
+    #     becomes idle (no running jobs). Each instance is uncordoned
+    #     immediately after patching and becomes available for new jobs. If
+    #     instances do not become idle, they remain on the previous AMI
+    #     version. You can then use UpdateClusterSoftware with the desired
+    #     ImageReleaseVersion to manually update the remaining instances.
+    #
+    #   * `WhenAllIdle`: Cordons all instances and waits for all to become
+    #     idle before patching. All instances are uncordoned after patching
+    #     completes. If not all instances become idle, no patching occurs
+    #     and all instances remain on the previous AMI version.
+    #   @return [String]
+    #
+    # @!attribute [rw] patch_schedule
+    #   The schedule for automatic patching, including the next patch date.
+    #   @return [Types::ClusterPatchSchedule]
+    #
+    # @!attribute [rw] deployment_config
+    #   The deployment configuration for rolling patch updates, including
+    #   rollback settings and batch sizes. Only applicable when using a
+    #   rolling patching strategy.
+    #   @return [Types::DeploymentConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterAutoPatchConfig AWS API Documentation
+    #
+    class ClusterAutoPatchConfig < Struct.new(
+      :patching_strategy,
+      :patch_schedule,
+      :deployment_config)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The auto-patching configuration details for the instance group,
+    # including the patching strategy and schedule.
+    #
+    # @!attribute [rw] patching_strategy
+    #   The strategy used for applying patches to instances in the group.
+    #
+    #   * `WhenIdle`: Cordons all instances and patches each instance as it
+    #     becomes idle (no running jobs). Each instance is uncordoned
+    #     immediately after patching and becomes available for new jobs. If
+    #     instances do not become idle, they remain on the previous AMI
+    #     version. You can then use UpdateClusterSoftware with the desired
+    #     ImageReleaseVersion to manually update the remaining instances.
+    #
+    #   * `WhenAllIdle`: Cordons all instances and waits for all to become
+    #     idle before patching. All instances are uncordoned after patching
+    #     completes. If not all instances become idle, no patching occurs
+    #     and all instances remain on the previous AMI version.
+    #   @return [String]
+    #
+    # @!attribute [rw] current_patch_schedule
+    #   The currently active patch schedule that the system will execute.
+    #   @return [Types::ClusterPatchScheduleDetails]
+    #
+    # @!attribute [rw] desired_patch_schedule
+    #   The requested patch schedule. Differs from CurrentPatchSchedule when
+    #   a reschedule request is pending.
+    #   @return [Types::ClusterPatchScheduleDetails]
+    #
+    # @!attribute [rw] deployment_config
+    #   The deployment configuration for rolling patch updates.
+    #   @return [Types::DeploymentConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterAutoPatchConfigDetails AWS API Documentation
+    #
+    class ClusterAutoPatchConfigDetails < Struct.new(
+      :patching_strategy,
+      :current_patch_schedule,
+      :desired_patch_schedule,
+      :deployment_config)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Specifies the autoscaling configuration for a HyperPod cluster.
+    #
+    # @!attribute [rw] mode
+    #   Describes whether autoscaling is enabled or disabled for the
+    #   cluster. Valid values are `Enable` and `Disable`.
+    #   @return [String]
+    #
+    # @!attribute [rw] auto_scaler_type
+    #   The type of autoscaler to use. Currently supported value is
+    #   `Karpenter`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterAutoScalingConfig AWS API Documentation
+    #
+    class ClusterAutoScalingConfig < Struct.new(
+      :mode,
+      :auto_scaler_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The autoscaling configuration and status information for a HyperPod
+    # cluster.
+    #
+    # @!attribute [rw] mode
+    #   Describes whether autoscaling is enabled or disabled for the
+    #   cluster.
+    #   @return [String]
+    #
+    # @!attribute [rw] auto_scaler_type
+    #   The type of autoscaler configured for the cluster.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The current status of the autoscaling configuration. Valid values
+    #   are `InService`, `Failed`, `Creating`, and `Deleting`.
+    #   @return [String]
+    #
+    # @!attribute [rw] failure_message
+    #   If the autoscaling status is `Failed`, this field contains a message
+    #   describing the failure.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterAutoScalingConfigOutput AWS API Documentation
+    #
+    class ClusterAutoScalingConfigOutput < Struct.new(
+      :mode,
+      :auto_scaler_type,
+      :status,
+      :failure_message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Defines the instance capacity requirements for an instance group,
+    # including configurations for both Spot and On-Demand capacity types.
+    #
+    # @!attribute [rw] spot
+    #   Configuration options specific to Spot instances.
+    #   @return [Types::ClusterSpotOptions]
+    #
+    # @!attribute [rw] on_demand
+    #   Configuration options specific to On-Demand instances.
+    #   @return [Types::ClusterOnDemandOptions]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterCapacityRequirements AWS API Documentation
+    #
+    class ClusterCapacityRequirements < Struct.new(
+      :spot,
+      :on_demand)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Defines the configuration for attaching an additional Amazon Elastic
     # Block Store (EBS) volume to each instance of the SageMaker HyperPod
     # cluster instance group. To learn more, see [SageMaker HyperPod release
@@ -4195,10 +6243,216 @@ module Aws::SageMaker
     #   `/opt/sagemaker`.
     #   @return [Integer]
     #
+    # @!attribute [rw] volume_kms_key_id
+    #   The ID of a KMS key to encrypt the Amazon EBS volume.
+    #   @return [String]
+    #
+    # @!attribute [rw] root_volume
+    #   Specifies whether the configuration is for the cluster's root or
+    #   secondary Amazon EBS volume. You can specify two
+    #   `ClusterEbsVolumeConfig` fields to configure both the root and
+    #   secondary volumes. Set the value to `True` if you'd like to provide
+    #   your own customer managed Amazon Web Services KMS key to encrypt the
+    #   root volume. When `True`:
+    #
+    #   * The configuration is applied to the root volume.
+    #
+    #   * You can't specify the `VolumeSizeInGB` field. The size of the
+    #     root volume is determined for you.
+    #
+    #   * You must specify a KMS key ID for `VolumeKmsKeyId` to encrypt the
+    #     root volume with your own KMS key instead of an Amazon Web
+    #     Services owned KMS key.
+    #
+    #   Otherwise, by default, the value is `False`, and the following
+    #   applies:
+    #
+    #   * The configuration is applied to the secondary volume, while the
+    #     root volume is encrypted with an Amazon Web Services owned key.
+    #
+    #   * You must specify the `VolumeSizeInGB` field.
+    #
+    #   * You can optionally specify the `VolumeKmsKeyId` to encrypt the
+    #     secondary volume with your own KMS key instead of an Amazon Web
+    #     Services owned KMS key.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterEbsVolumeConfig AWS API Documentation
     #
     class ClusterEbsVolumeConfig < Struct.new(
-      :volume_size_in_gb)
+      :volume_size_in_gb,
+      :volume_kms_key_id,
+      :root_volume)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Detailed information about a specific event in a HyperPod cluster.
+    #
+    # @!attribute [rw] event_id
+    #   The unique identifier (UUID) of the event.
+    #   @return [String]
+    #
+    # @!attribute [rw] cluster_arn
+    #   The Amazon Resource Name (ARN) of the HyperPod cluster associated
+    #   with the event.
+    #   @return [String]
+    #
+    # @!attribute [rw] cluster_name
+    #   The name of the HyperPod cluster associated with the event.
+    #   @return [String]
+    #
+    # @!attribute [rw] instance_group_name
+    #   The name of the instance group associated with the event, if
+    #   applicable.
+    #   @return [String]
+    #
+    # @!attribute [rw] instance_id
+    #   The EC2 instance ID associated with the event, if applicable.
+    #   @return [String]
+    #
+    # @!attribute [rw] resource_type
+    #   The type of resource associated with the event. Valid values are
+    #   `Cluster`, `InstanceGroup`, or `Instance`.
+    #   @return [String]
+    #
+    # @!attribute [rw] event_time
+    #   The timestamp when the event occurred.
+    #   @return [Time]
+    #
+    # @!attribute [rw] event_details
+    #   Additional details about the event, including event-specific
+    #   metadata.
+    #   @return [Types::EventDetails]
+    #
+    # @!attribute [rw] description
+    #   A human-readable description of the event.
+    #   @return [String]
+    #
+    # @!attribute [rw] event_level
+    #   The severity level of the event. Valid values are `Info`, `Warn`,
+    #   and `Error`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterEventDetail AWS API Documentation
+    #
+    class ClusterEventDetail < Struct.new(
+      :event_id,
+      :cluster_arn,
+      :cluster_name,
+      :instance_group_name,
+      :instance_id,
+      :resource_type,
+      :event_time,
+      :event_details,
+      :description,
+      :event_level)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A summary of an event in a HyperPod cluster.
+    #
+    # @!attribute [rw] event_id
+    #   The unique identifier (UUID) of the event.
+    #   @return [String]
+    #
+    # @!attribute [rw] cluster_arn
+    #   The Amazon Resource Name (ARN) of the HyperPod cluster associated
+    #   with the event.
+    #   @return [String]
+    #
+    # @!attribute [rw] cluster_name
+    #   The name of the HyperPod cluster associated with the event.
+    #   @return [String]
+    #
+    # @!attribute [rw] instance_group_name
+    #   The name of the instance group associated with the event, if
+    #   applicable.
+    #   @return [String]
+    #
+    # @!attribute [rw] instance_id
+    #   The Amazon Elastic Compute Cloud (EC2) instance ID associated with
+    #   the event, if applicable.
+    #   @return [String]
+    #
+    # @!attribute [rw] resource_type
+    #   The type of resource associated with the event. Valid values are
+    #   `Cluster`, `InstanceGroup`, or `Instance`.
+    #   @return [String]
+    #
+    # @!attribute [rw] event_time
+    #   The timestamp when the event occurred.
+    #   @return [Time]
+    #
+    # @!attribute [rw] description
+    #   A brief, human-readable description of the event.
+    #   @return [String]
+    #
+    # @!attribute [rw] event_level
+    #   The severity level of the event. Valid values are `Info`, `Warn`,
+    #   and `Error`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterEventSummary AWS API Documentation
+    #
+    class ClusterEventSummary < Struct.new(
+      :event_id,
+      :cluster_arn,
+      :cluster_name,
+      :instance_group_name,
+      :instance_id,
+      :resource_type,
+      :event_time,
+      :description,
+      :event_level)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Defines the configuration for attaching an Amazon FSx for Lustre file
+    # system to instances in a SageMaker HyperPod cluster instance group.
+    #
+    # @!attribute [rw] dns_name
+    #   The DNS name of the Amazon FSx for Lustre file system.
+    #   @return [String]
+    #
+    # @!attribute [rw] mount_name
+    #   The mount name of the Amazon FSx for Lustre file system.
+    #   @return [String]
+    #
+    # @!attribute [rw] mount_path
+    #   The local path where the Amazon FSx for Lustre file system is
+    #   mounted on instances.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterFsxLustreConfig AWS API Documentation
+    #
+    class ClusterFsxLustreConfig < Struct.new(
+      :dns_name,
+      :mount_name,
+      :mount_path)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Defines the configuration for attaching an Amazon FSx for OpenZFS file
+    # system to instances in a SageMaker HyperPod cluster instance group.
+    #
+    # @!attribute [rw] dns_name
+    #   The DNS name of the Amazon FSx for OpenZFS file system.
+    #   @return [String]
+    #
+    # @!attribute [rw] mount_path
+    #   The local path where the Amazon FSx for OpenZFS file system is
+    #   mounted on instances.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterFsxOpenZfsConfig AWS API Documentation
+    #
+    class ClusterFsxOpenZfsConfig < Struct.new(
+      :dns_name,
+      :mount_path)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4215,6 +6469,12 @@ module Aws::SageMaker
     #   of a SageMaker HyperPod cluster.
     #   @return [Integer]
     #
+    # @!attribute [rw] min_count
+    #   The minimum number of instances that must be available in the
+    #   instance group of a SageMaker HyperPod cluster before it transitions
+    #   to `InService` status.
+    #   @return [Integer]
+    #
     # @!attribute [rw] instance_group_name
     #   The name of the instance group of a SageMaker HyperPod cluster.
     #   @return [String]
@@ -4223,6 +6483,19 @@ module Aws::SageMaker
     #   The instance type of the instance group of a SageMaker HyperPod
     #   cluster.
     #   @return [String]
+    #
+    # @!attribute [rw] instance_requirements
+    #   The instance requirements for the instance group, including the
+    #   current and desired instance types. This field is present for
+    #   flexible instance groups that support multiple instance types.
+    #   @return [Types::ClusterInstanceRequirementDetails]
+    #
+    # @!attribute [rw] instance_type_details
+    #   Details about the instance types in the instance group, including
+    #   the count and configuration of each instance type. This field is
+    #   present for flexible instance groups that support multiple instance
+    #   types.
+    #   @return [Array<Types::ClusterInstanceTypeDetail>]
     #
     # @!attribute [rw] life_cycle_config
     #   Details of LifeCycle configuration for the instance group.
@@ -4294,13 +6567,114 @@ module Aws::SageMaker
     #   HyperPod cluster.
     #   @return [Types::VpcConfig]
     #
+    # @!attribute [rw] scheduled_update_config
+    #   The configuration object of the schedule that SageMaker follows when
+    #   updating the AMI.
+    #   @return [Types::ScheduledUpdateConfig]
+    #
+    # @!attribute [rw] auto_patch_config
+    #   The auto-patching configuration for the instance group, including
+    #   the current patching strategy and next scheduled patch date.
+    #   @return [Types::ClusterAutoPatchConfigDetails]
+    #
+    # @!attribute [rw] current_image_id
+    #   The ID of the Amazon Machine Image (AMI) currently in use by the
+    #   instance group.
+    #   @return [String]
+    #
+    # @!attribute [rw] desired_image_id
+    #   The ID of the Amazon Machine Image (AMI) desired for the instance
+    #   group.
+    #   @return [String]
+    #
+    # @!attribute [rw] current_image_release_version
+    #   The version of the HyperPod-managed AMI currently running on the
+    #   instance group.
+    #   @return [String]
+    #
+    # @!attribute [rw] desired_image_release_version
+    #   The desired version of the HyperPod-managed AMI for the instance
+    #   group. This may differ from the current version when an update is
+    #   pending.
+    #   @return [String]
+    #
+    # @!attribute [rw] image_version_status
+    #   The status of the image version for the instance group. Indicates
+    #   whether the instance group is running the latest image version or if
+    #   an update is available.
+    #   @return [String]
+    #
+    # @!attribute [rw] active_operations
+    #   A map indicating active operations currently in progress for the
+    #   instance group of a SageMaker HyperPod cluster. When there is a
+    #   scaling operation in progress, this map contains a key `Scaling`
+    #   with value 1.
+    #   @return [Hash<String,Integer>]
+    #
+    # @!attribute [rw] kubernetes_config
+    #   The Kubernetes configuration for the instance group that contains
+    #   labels and taints to be applied for the nodes in this instance
+    #   group.
+    #   @return [Types::ClusterKubernetesConfigDetails]
+    #
+    # @!attribute [rw] capacity_requirements
+    #   The instance capacity requirements for the instance group.
+    #   @return [Types::ClusterCapacityRequirements]
+    #
+    # @!attribute [rw] target_state_count
+    #   Represents the number of running nodes using the desired Image ID.
+    #
+    #   1.  **During software update operations:** This count shows the
+    #       number of nodes running on the desired Image ID. If a rollback
+    #       occurs, the current image ID and desired image ID (both included
+    #       in the describe cluster response) swap values. The
+    #       TargetStateCount then shows the number of nodes running on the
+    #       newly designated desired image ID (which was previously the
+    #       current image ID).
+    #
+    #   2.  **During simultaneous scaling and software update operations:**
+    #       This count shows the number of instances running on the desired
+    #       image ID, including any new instances created as part of the
+    #       scaling request. New nodes are always created using the desired
+    #       image ID, so TargetStateCount reflects the total count of nodes
+    #       running on the desired image ID, even during rollback scenarios.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] software_update_status
+    #   Status of the last software udpate request.
+    #
+    #   Status transitions follow these possible sequences:
+    #
+    #   * Pending -&gt; InProgress -&gt; Succeeded
+    #
+    #   * Pending -&gt; InProgress -&gt; RollbackInProgress -&gt;
+    #     RollbackComplete
+    #
+    #   * Pending -&gt; InProgress -&gt; RollbackInProgress -&gt; Failed
+    #   @return [String]
+    #
+    # @!attribute [rw] active_software_update_config
+    #   The configuration to use when updating the AMI versions.
+    #   @return [Types::DeploymentConfiguration]
+    #
+    # @!attribute [rw] slurm_config
+    #   The Slurm configuration for the instance group.
+    #   @return [Types::ClusterSlurmConfigDetails]
+    #
+    # @!attribute [rw] network_interface
+    #   The network interface configuration for the instance group.
+    #   @return [Types::ClusterNetworkInterfaceDetails]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterInstanceGroupDetails AWS API Documentation
     #
     class ClusterInstanceGroupDetails < Struct.new(
       :current_count,
       :target_count,
+      :min_count,
       :instance_group_name,
       :instance_type,
+      :instance_requirements,
+      :instance_type_details,
       :life_cycle_config,
       :execution_role,
       :threads_per_core,
@@ -4309,7 +6683,22 @@ module Aws::SageMaker
       :status,
       :training_plan_arn,
       :training_plan_status,
-      :override_vpc_config)
+      :override_vpc_config,
+      :scheduled_update_config,
+      :auto_patch_config,
+      :current_image_id,
+      :desired_image_id,
+      :current_image_release_version,
+      :desired_image_release_version,
+      :image_version_status,
+      :active_operations,
+      :kubernetes_config,
+      :capacity_requirements,
+      :target_state_count,
+      :software_update_status,
+      :active_software_update_config,
+      :slurm_config,
+      :network_interface)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4321,6 +6710,16 @@ module Aws::SageMaker
     #   SageMaker HyperPod cluster.
     #   @return [Integer]
     #
+    # @!attribute [rw] min_instance_count
+    #   Defines the minimum number of instances required for an instance
+    #   group to become `InService`. If this threshold isn't met within 3
+    #   hours, the instance group rolls back to its previous state - zero
+    #   instances for new instance groups, or previous settings for existing
+    #   instance groups. `MinInstanceCount` only affects the initial
+    #   transition to `InService` and does not guarantee maintaining this
+    #   minimum afterward.
+    #   @return [Integer]
+    #
     # @!attribute [rw] instance_group_name
     #   Specifies the name of the instance group.
     #   @return [String]
@@ -4328,6 +6727,13 @@ module Aws::SageMaker
     # @!attribute [rw] instance_type
     #   Specifies the instance type of the instance group.
     #   @return [String]
+    #
+    # @!attribute [rw] instance_requirements
+    #   The instance requirements for the instance group, including the
+    #   instance types to use. Use this to create a flexible instance group
+    #   that supports multiple instance types. The `InstanceType` and
+    #   `InstanceRequirements` properties are mutually exclusive.
+    #   @return [Types::ClusterInstanceRequirements]
     #
     # @!attribute [rw] life_cycle_config
     #   Specifies the LifeCycle configuration for the instance group.
@@ -4414,19 +6820,97 @@ module Aws::SageMaker
     #   [5]: https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-hyperpod-prerequisites.html#sagemaker-hyperpod-prerequisites-optional-vpc
     #   @return [Types::VpcConfig]
     #
+    # @!attribute [rw] scheduled_update_config
+    #   The configuration object of the schedule that SageMaker uses to
+    #   update the AMI.
+    #   @return [Types::ScheduledUpdateConfig]
+    #
+    # @!attribute [rw] image_id
+    #   When configuring your HyperPod cluster, you can specify an image ID
+    #   using one of the following options:
+    #
+    #   * `HyperPodPublicAmiId`: Use a HyperPod public AMI
+    #
+    #   * `CustomAmiId`: Use your custom AMI
+    #
+    #   * `default`: Use the default latest system image. For clusters with
+    #     continuous scaling node provisioning mode, new instance groups
+    #     inherit the AMI from the earliest existing instance group
+    #
+    #   If you choose to use a custom AMI (`CustomAmiId`), ensure it meets
+    #   the following requirements:
+    #
+    #   * Encryption: The custom AMI must be unencrypted.
+    #
+    #   * Ownership: The custom AMI must be owned by the same Amazon Web
+    #     Services account that is creating the HyperPod cluster.
+    #
+    #   * Volume support: Only the primary AMI snapshot volume is supported;
+    #     additional AMI volumes are not supported.
+    #
+    #   When updating the instance group's AMI through the
+    #   `UpdateClusterSoftware` operation, if an instance group uses a
+    #   custom AMI, you must provide an `ImageId` or use the default as
+    #   input. Note that if you don't specify an instance group in your
+    #   `UpdateClusterSoftware` request, then all of the instance groups are
+    #   patched with the specified image.
+    #   @return [String]
+    #
+    # @!attribute [rw] auto_patch_config
+    #   The configuration for automatic OS security patching. If present,
+    #   the system automatically applies PATCH AMI updates to this instance
+    #   group.
+    #   @return [Types::ClusterAutoPatchConfig]
+    #
+    # @!attribute [rw] image_release_version
+    #   The version of the HyperPod-managed AMI to use for the instance
+    #   group. Uses semantic versioning in the format `MAJOR.MINOR.PATCH`
+    #   (for example, `1.2.3`). If omitted, the latest available version is
+    #   used.
+    #   @return [String]
+    #
+    # @!attribute [rw] kubernetes_config
+    #   Specifies the Kubernetes configuration for the instance group. You
+    #   describe what you want the labels and taints to look like, and the
+    #   cluster works to reconcile the actual state with the declared state
+    #   for nodes in this instance group.
+    #   @return [Types::ClusterKubernetesConfig]
+    #
+    # @!attribute [rw] slurm_config
+    #   Specifies the Slurm configuration for the instance group.
+    #   @return [Types::ClusterSlurmConfig]
+    #
+    # @!attribute [rw] capacity_requirements
+    #   Specifies the capacity requirements for the instance group.
+    #   @return [Types::ClusterCapacityRequirements]
+    #
+    # @!attribute [rw] network_interface
+    #   The network interface configuration for the instance group.
+    #   @return [Types::ClusterNetworkInterface]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterInstanceGroupSpecification AWS API Documentation
     #
     class ClusterInstanceGroupSpecification < Struct.new(
       :instance_count,
+      :min_instance_count,
       :instance_group_name,
       :instance_type,
+      :instance_requirements,
       :life_cycle_config,
       :execution_role,
       :threads_per_core,
       :instance_storage_configs,
       :on_start_deep_health_checks,
       :training_plan_arn,
-      :override_vpc_config)
+      :override_vpc_config,
+      :scheduled_update_config,
+      :image_id,
+      :auto_patch_config,
+      :image_release_version,
+      :kubernetes_config,
+      :slurm_config,
+      :capacity_requirements,
+      :network_interface)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4450,6 +6934,47 @@ module Aws::SageMaker
     class ClusterInstancePlacement < Struct.new(
       :availability_zone,
       :availability_zone_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The instance requirement details for a flexible instance group,
+    # including the current and desired instance types.
+    #
+    # @!attribute [rw] current_instance_types
+    #   The instance types currently in use by the instance group.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] desired_instance_types
+    #   The desired instance types for the instance group, as specified in
+    #   the most recent update request.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterInstanceRequirementDetails AWS API Documentation
+    #
+    class ClusterInstanceRequirementDetails < Struct.new(
+      :current_instance_types,
+      :desired_instance_types)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The instance requirements for a flexible instance group. Use this to
+    # specify multiple instance types that the instance group can use. The
+    # order of instance types in the list determines the priority for
+    # instance provisioning.
+    #
+    # @!attribute [rw] instance_types
+    #   The list of instance types that the instance group can use. The
+    #   order of instance types determines the priority—HyperPod attempts to
+    #   provision instances using the first instance type in the list and
+    #   falls back to subsequent types if capacity is unavailable.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterInstanceRequirements AWS API Documentation
+    #
+    class ClusterInstanceRequirements < Struct.new(
+      :instance_types)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4493,17 +7018,166 @@ module Aws::SageMaker
     #   and mounted to `/opt/sagemaker`.
     #   @return [Types::ClusterEbsVolumeConfig]
     #
+    # @!attribute [rw] fsx_lustre_config
+    #   Defines the configuration for attaching an Amazon FSx for Lustre
+    #   file system to the instances in the SageMaker HyperPod cluster
+    #   instance group.
+    #   @return [Types::ClusterFsxLustreConfig]
+    #
+    # @!attribute [rw] fsx_open_zfs_config
+    #   Defines the configuration for attaching an Amazon FSx for OpenZFS
+    #   file system to the instances in the SageMaker HyperPod cluster
+    #   instance group.
+    #   @return [Types::ClusterFsxOpenZfsConfig]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterInstanceStorageConfig AWS API Documentation
     #
     class ClusterInstanceStorageConfig < Struct.new(
       :ebs_volume_config,
+      :fsx_lustre_config,
+      :fsx_open_zfs_config,
       :unknown)
       SENSITIVE = []
       include Aws::Structure
       include Aws::Structure::Union
 
       class EbsVolumeConfig < ClusterInstanceStorageConfig; end
+      class FsxLustreConfig < ClusterInstanceStorageConfig; end
+      class FsxOpenZfsConfig < ClusterInstanceStorageConfig; end
       class Unknown < ClusterInstanceStorageConfig; end
+    end
+
+    # Details about a specific instance type within a flexible instance
+    # group, including the count and configuration.
+    #
+    # @!attribute [rw] instance_type
+    #   The instance type.
+    #   @return [String]
+    #
+    # @!attribute [rw] current_count
+    #   The number of instances of this type currently running in the
+    #   instance group.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] threads_per_core
+    #   The number of threads per CPU core for this instance type.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterInstanceTypeDetail AWS API Documentation
+    #
+    class ClusterInstanceTypeDetail < Struct.new(
+      :instance_type,
+      :current_count,
+      :threads_per_core)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Kubernetes configuration that specifies labels and taints to be
+    # applied to cluster nodes in an instance group.
+    #
+    # @!attribute [rw] labels
+    #   Key-value pairs of labels to be applied to cluster nodes.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] taints
+    #   List of taints to be applied to cluster nodes.
+    #   @return [Array<Types::ClusterKubernetesTaint>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterKubernetesConfig AWS API Documentation
+    #
+    class ClusterKubernetesConfig < Struct.new(
+      :labels,
+      :taints)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Detailed Kubernetes configuration showing both the current and desired
+    # state of labels and taints for cluster nodes.
+    #
+    # @!attribute [rw] current_labels
+    #   The current labels applied to cluster nodes of an instance group.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] desired_labels
+    #   The desired labels to be applied to cluster nodes of an instance
+    #   group.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] current_taints
+    #   The current taints applied to cluster nodes of an instance group.
+    #   @return [Array<Types::ClusterKubernetesTaint>]
+    #
+    # @!attribute [rw] desired_taints
+    #   The desired taints to be applied to cluster nodes of an instance
+    #   group.
+    #   @return [Array<Types::ClusterKubernetesTaint>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterKubernetesConfigDetails AWS API Documentation
+    #
+    class ClusterKubernetesConfigDetails < Struct.new(
+      :current_labels,
+      :desired_labels,
+      :current_taints,
+      :desired_taints)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Node-specific Kubernetes configuration showing both current and
+    # desired state of labels and taints for an individual cluster node.
+    #
+    # @!attribute [rw] current_labels
+    #   The current labels applied to the cluster node.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] desired_labels
+    #   The desired labels to be applied to the cluster node.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] current_taints
+    #   The current taints applied to the cluster node.
+    #   @return [Array<Types::ClusterKubernetesTaint>]
+    #
+    # @!attribute [rw] desired_taints
+    #   The desired taints to be applied to the cluster node.
+    #   @return [Array<Types::ClusterKubernetesTaint>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterKubernetesConfigNodeDetails AWS API Documentation
+    #
+    class ClusterKubernetesConfigNodeDetails < Struct.new(
+      :current_labels,
+      :desired_labels,
+      :current_taints,
+      :desired_taints)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A Kubernetes taint that can be applied to cluster nodes.
+    #
+    # @!attribute [rw] key
+    #   The key of the taint.
+    #   @return [String]
+    #
+    # @!attribute [rw] value
+    #   The value of the taint.
+    #   @return [String]
+    #
+    # @!attribute [rw] effect
+    #   The effect of the taint. Valid values are `NoSchedule`,
+    #   `PreferNoSchedule`, and `NoExecute`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterKubernetesTaint AWS API Documentation
+    #
+    class ClusterKubernetesTaint < Struct.new(
+      :key,
+      :value,
+      :effect)
+      SENSITIVE = []
+      include Aws::Structure
     end
 
     # The lifecycle configuration for a SageMaker HyperPod cluster.
@@ -4527,11 +7201,94 @@ module Aws::SageMaker
     #   `SourceS3Uri`. This entrypoint script runs during cluster creation.
     #   @return [String]
     #
+    # @!attribute [rw] on_init_complete
+    #   The file name of the entrypoint script of lifecycle scripts under
+    #   `SourceS3Uri`. This script runs on the node after the AMI-based
+    #   initialization is complete.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterLifeCycleConfig AWS API Documentation
     #
     class ClusterLifeCycleConfig < Struct.new(
       :source_s3_uri,
-      :on_create)
+      :on_create,
+      :on_init_complete)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Metadata information about a HyperPod cluster showing information
+    # about the cluster level operations, such as creating, updating, and
+    # deleting.
+    #
+    # @!attribute [rw] failure_message
+    #   An error message describing why the cluster level operation (such as
+    #   creating, updating, or deleting) failed.
+    #   @return [String]
+    #
+    # @!attribute [rw] eks_role_access_entries
+    #   A list of Amazon EKS IAM role ARNs associated with the cluster. This
+    #   is created by HyperPod on your behalf and only applies for EKS
+    #   orchestrated clusters.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] slr_access_entry
+    #   The Service-Linked Role (SLR) associated with the cluster. This is
+    #   created by HyperPod on your behalf and only applies for EKS
+    #   orchestrated clusters.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterMetadata AWS API Documentation
+    #
+    class ClusterMetadata < Struct.new(
+      :failure_message,
+      :eks_role_access_entries,
+      :slr_access_entry)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The network interface configuration for a Amazon SageMaker HyperPod
+    # cluster instance group.
+    #
+    # @!attribute [rw] interface_type
+    #   The type of network interface for the instance group. Valid values:
+    #
+    #   * `efa` – An EFA with ENA interface, which provides both the EFA
+    #     device for low-latency, high-throughput communication and the ENA
+    #     device for IP networking.
+    #
+    #   * `efa-only` – An EFA-only interface, which provides only the EFA
+    #     device capabilities without the ENA device for traditional IP
+    #     networking.
+    #
+    #   For more information, see [Elastic Fabric Adapter][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/efa.html
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterNetworkInterface AWS API Documentation
+    #
+    class ClusterNetworkInterface < Struct.new(
+      :interface_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The network interface configuration details for a Amazon SageMaker
+    # HyperPod cluster instance group.
+    #
+    # @!attribute [rw] interface_type
+    #   The type of network interface for the instance group. Valid values
+    #   are `efa` and `efa-only`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterNetworkInterfaceDetails AWS API Documentation
+    #
+    class ClusterNetworkInterfaceDetails < Struct.new(
+      :interface_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4547,6 +7304,13 @@ module Aws::SageMaker
     #   The ID of the instance.
     #   @return [String]
     #
+    # @!attribute [rw] node_logical_id
+    #   A unique identifier for the node that persists throughout its
+    #   lifecycle, from provisioning request to termination. This identifier
+    #   can be used to track the node even before it has an assigned
+    #   `InstanceId`.
+    #   @return [String]
+    #
     # @!attribute [rw] instance_status
     #   The status of the instance.
     #   @return [Types::ClusterInstanceStatusDetails]
@@ -4557,6 +7321,10 @@ module Aws::SageMaker
     #
     # @!attribute [rw] launch_time
     #   The time when the instance is launched.
+    #   @return [Time]
+    #
+    # @!attribute [rw] last_software_update_time
+    #   The time when the cluster was last updated.
     #   @return [Time]
     #
     # @!attribute [rw] life_cycle_config
@@ -4600,14 +7368,60 @@ module Aws::SageMaker
     #   The placement details of the SageMaker HyperPod cluster node.
     #   @return [Types::ClusterInstancePlacement]
     #
+    # @!attribute [rw] current_image_id
+    #   The ID of the Amazon Machine Image (AMI) currently in use by the
+    #   node.
+    #   @return [String]
+    #
+    # @!attribute [rw] desired_image_id
+    #   The ID of the Amazon Machine Image (AMI) desired for the node.
+    #   @return [String]
+    #
+    # @!attribute [rw] current_image_release_version
+    #   The version of the HyperPod-managed AMI currently running on the
+    #   node.
+    #   @return [String]
+    #
+    # @!attribute [rw] desired_image_release_version
+    #   The desired version of the HyperPod-managed AMI for the node. This
+    #   may differ from the current version when an update is pending.
+    #   @return [String]
+    #
+    # @!attribute [rw] image_version_status
+    #   The status of the image version for the cluster node.
+    #   @return [String]
+    #
+    # @!attribute [rw] ultra_server_info
+    #   Contains information about the UltraServer.
+    #   @return [Types::UltraServerInfo]
+    #
+    # @!attribute [rw] kubernetes_config
+    #   The Kubernetes configuration applied to this node, showing both the
+    #   current and desired state of labels and taints. The cluster works to
+    #   reconcile the actual state with the declared state.
+    #   @return [Types::ClusterKubernetesConfigNodeDetails]
+    #
+    # @!attribute [rw] capacity_type
+    #   The capacity type of the node. Valid values are `OnDemand` and
+    #   `Spot`. When set to `OnDemand`, the node is launched as an On-Demand
+    #   instance. When set to `Spot`, the node is launched as a Spot
+    #   instance.
+    #   @return [String]
+    #
+    # @!attribute [rw] network_interface
+    #   The network interface configuration for the cluster node.
+    #   @return [Types::ClusterNetworkInterfaceDetails]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterNodeDetails AWS API Documentation
     #
     class ClusterNodeDetails < Struct.new(
       :instance_group_name,
       :instance_id,
+      :node_logical_id,
       :instance_status,
       :instance_type,
       :launch_time,
+      :last_software_update_time,
       :life_cycle_config,
       :override_vpc_config,
       :threads_per_core,
@@ -4615,7 +7429,16 @@ module Aws::SageMaker
       :private_primary_ip,
       :private_primary_ipv_6,
       :private_dns_hostname,
-      :placement)
+      :placement,
+      :current_image_id,
+      :desired_image_id,
+      :current_image_release_version,
+      :desired_image_release_version,
+      :image_version_status,
+      :ultra_server_info,
+      :kubernetes_config,
+      :capacity_type,
+      :network_interface)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4631,6 +7454,15 @@ module Aws::SageMaker
     #   The ID of the instance.
     #   @return [String]
     #
+    # @!attribute [rw] node_logical_id
+    #   A unique identifier for the node that persists throughout its
+    #   lifecycle, from provisioning request to termination. This identifier
+    #   can be used to track the node even before it has an assigned
+    #   `InstanceId`. This field is only included when
+    #   `IncludeNodeLogicalIds` is set to `True` in the `ListClusterNodes`
+    #   request.
+    #   @return [String]
+    #
     # @!attribute [rw] instance_type
     #   The type of the instance.
     #   @return [String]
@@ -4639,21 +7471,57 @@ module Aws::SageMaker
     #   The time when the instance is launched.
     #   @return [Time]
     #
+    # @!attribute [rw] last_software_update_time
+    #   The time when SageMaker last updated the software of the instances
+    #   in the cluster.
+    #   @return [Time]
+    #
     # @!attribute [rw] instance_status
     #   The status of the instance.
     #   @return [Types::ClusterInstanceStatusDetails]
+    #
+    # @!attribute [rw] ultra_server_info
+    #   Contains information about the UltraServer.
+    #   @return [Types::UltraServerInfo]
+    #
+    # @!attribute [rw] private_dns_hostname
+    #   The private DNS hostname of the SageMaker HyperPod cluster node.
+    #   @return [String]
+    #
+    # @!attribute [rw] current_image_release_version
+    #   The version of the HyperPod-managed AMI currently running on the
+    #   node.
+    #   @return [String]
+    #
+    # @!attribute [rw] image_version_status
+    #   The status of the image version for the cluster node.
+    #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterNodeSummary AWS API Documentation
     #
     class ClusterNodeSummary < Struct.new(
       :instance_group_name,
       :instance_id,
+      :node_logical_id,
       :instance_type,
       :launch_time,
-      :instance_status)
+      :last_software_update_time,
+      :instance_status,
+      :ultra_server_info,
+      :private_dns_hostname,
+      :current_image_release_version,
+      :image_version_status)
       SENSITIVE = []
       include Aws::Structure
     end
+
+    # Configuration options specific to On-Demand instances.
+    #
+    # @api private
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterOnDemandOptions AWS API Documentation
+    #
+    class ClusterOnDemandOptions < Aws::EmptyStructure; end
 
     # The type of orchestrator used for the SageMaker HyperPod cluster.
     #
@@ -4662,10 +7530,16 @@ module Aws::SageMaker
     #   HyperPod cluster.
     #   @return [Types::ClusterOrchestratorEksConfig]
     #
+    # @!attribute [rw] slurm
+    #   The Slurm orchestrator configuration for the SageMaker HyperPod
+    #   cluster.
+    #   @return [Types::ClusterOrchestratorSlurmConfig]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterOrchestrator AWS API Documentation
     #
     class ClusterOrchestrator < Struct.new(
-      :eks)
+      :eks,
+      :slurm)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4682,6 +7556,301 @@ module Aws::SageMaker
     #
     class ClusterOrchestratorEksConfig < Struct.new(
       :cluster_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration settings for the Slurm orchestrator used with the
+    # SageMaker HyperPod cluster.
+    #
+    # @!attribute [rw] slurm_config_strategy
+    #   The strategy for managing partitions for the Slurm configuration.
+    #   Valid values are `Managed`, `Overwrite`, and `Merge`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterOrchestratorSlurmConfig AWS API Documentation
+    #
+    class ClusterOrchestratorSlurmConfig < Struct.new(
+      :slurm_config_strategy)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The schedule configuration for automatic patching.
+    #
+    # @!attribute [rw] next_patch_date
+    #   The date and time of the next scheduled automatic patch. The system
+    #   sets this automatically when a patch is detected. Use this field to
+    #   reschedule the patch to a different date.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterPatchSchedule AWS API Documentation
+    #
+    class ClusterPatchSchedule < Struct.new(
+      :next_patch_date)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The schedule details for automatic patching, including the next
+    # scheduled patch date.
+    #
+    # @!attribute [rw] next_patch_date
+    #   The date and time of the next scheduled automatic patch.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterPatchScheduleDetails AWS API Documentation
+    #
+    class ClusterPatchScheduleDetails < Struct.new(
+      :next_patch_date)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The instance group details of the restricted instance group (RIG).
+    #
+    # @!attribute [rw] current_count
+    #   The number of instances that are currently in the restricted
+    #   instance group of a SageMaker HyperPod cluster.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] target_count
+    #   The number of instances you specified to add to the restricted
+    #   instance group of a SageMaker HyperPod cluster.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] instance_group_name
+    #   The name of the restricted instance group of a SageMaker HyperPod
+    #   cluster.
+    #   @return [String]
+    #
+    # @!attribute [rw] instance_type
+    #   The instance type of the restricted instance group of a SageMaker
+    #   HyperPod cluster.
+    #   @return [String]
+    #
+    # @!attribute [rw] execution_role
+    #   The execution role for the restricted instance group to assume.
+    #   @return [String]
+    #
+    # @!attribute [rw] threads_per_core
+    #   The number you specified to `TreadsPerCore` in `CreateCluster` for
+    #   enabling or disabling multithreading. For instance types that
+    #   support multithreading, you can specify 1 for disabling
+    #   multithreading and 2 for enabling multithreading. For more
+    #   information, see the reference table of [CPU cores and threads per
+    #   CPU core per instance type][1] in the *Amazon Elastic Compute Cloud
+    #   User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/cpu-options-supported-instances-values.html
+    #   @return [Integer]
+    #
+    # @!attribute [rw] instance_storage_configs
+    #   The additional storage configurations for the instances in the
+    #   SageMaker HyperPod cluster restricted instance group.
+    #   @return [Array<Types::ClusterInstanceStorageConfig>]
+    #
+    # @!attribute [rw] on_start_deep_health_checks
+    #   A flag indicating whether deep health checks should be performed
+    #   when the cluster's restricted instance group is created or updated.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] status
+    #   The current status of the cluster's restricted instance group.
+    #
+    #   * `InService`: The restricted instance group is active and healthy.
+    #
+    #   * `Creating`: The restricted instance group is being provisioned.
+    #
+    #   * `Updating`: The restricted instance group is being updated.
+    #
+    #   * `Failed`: The restricted instance group has failed to provision or
+    #     is no longer healthy.
+    #
+    #   * `Degraded`: The restricted instance group is degraded, meaning
+    #     that some instances have failed to provision or are no longer
+    #     healthy.
+    #
+    #   * `Deleting`: The restricted instance group is being deleted.
+    #   @return [String]
+    #
+    # @!attribute [rw] training_plan_arn
+    #   The Amazon Resource Name (ARN) of the training plan to filter
+    #   clusters by. For more information about reserving GPU capacity for
+    #   your SageMaker HyperPod clusters using Amazon SageMaker Training
+    #   Plan, see ` CreateTrainingPlan `.
+    #   @return [String]
+    #
+    # @!attribute [rw] training_plan_status
+    #   The current status of the training plan associated with this cluster
+    #   restricted instance group.
+    #   @return [String]
+    #
+    # @!attribute [rw] override_vpc_config
+    #   Specifies an Amazon Virtual Private Cloud (VPC) that your SageMaker
+    #   jobs, hosted models, and compute resources have access to. You can
+    #   control access to and from your resources by configuring a VPC. For
+    #   more information, see [Give SageMaker Access to Resources in your
+    #   Amazon VPC][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/sagemaker/latest/dg/infrastructure-give-access.html
+    #   @return [Types::VpcConfig]
+    #
+    # @!attribute [rw] scheduled_update_config
+    #   The configuration object of the schedule that SageMaker follows when
+    #   updating the AMI.
+    #   @return [Types::ScheduledUpdateConfig]
+    #
+    # @!attribute [rw] environment_config
+    #   The configuration for the restricted instance groups (RIG)
+    #   environment.
+    #   @return [Types::EnvironmentConfigDetails]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterRestrictedInstanceGroupDetails AWS API Documentation
+    #
+    class ClusterRestrictedInstanceGroupDetails < Struct.new(
+      :current_count,
+      :target_count,
+      :instance_group_name,
+      :instance_type,
+      :execution_role,
+      :threads_per_core,
+      :instance_storage_configs,
+      :on_start_deep_health_checks,
+      :status,
+      :training_plan_arn,
+      :training_plan_status,
+      :override_vpc_config,
+      :scheduled_update_config,
+      :environment_config)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The specifications of a restricted instance group that you need to
+    # define.
+    #
+    # @!attribute [rw] instance_count
+    #   Specifies the number of instances to add to the restricted instance
+    #   group of a SageMaker HyperPod cluster.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] instance_group_name
+    #   Specifies the name of the restricted instance group.
+    #   @return [String]
+    #
+    # @!attribute [rw] instance_type
+    #   Specifies the instance type of the restricted instance group.
+    #   @return [String]
+    #
+    # @!attribute [rw] execution_role
+    #   Specifies an IAM execution role to be assumed by the restricted
+    #   instance group.
+    #   @return [String]
+    #
+    # @!attribute [rw] threads_per_core
+    #   The number you specified to `TreadsPerCore` in `CreateCluster` for
+    #   enabling or disabling multithreading. For instance types that
+    #   support multithreading, you can specify 1 for disabling
+    #   multithreading and 2 for enabling multithreading. For more
+    #   information, see the reference table of [CPU cores and threads per
+    #   CPU core per instance type][1] in the *Amazon Elastic Compute Cloud
+    #   User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/cpu-options-supported-instances-values.html
+    #   @return [Integer]
+    #
+    # @!attribute [rw] instance_storage_configs
+    #   Specifies the additional storage configurations for the instances in
+    #   the SageMaker HyperPod cluster restricted instance group.
+    #   @return [Array<Types::ClusterInstanceStorageConfig>]
+    #
+    # @!attribute [rw] on_start_deep_health_checks
+    #   A flag indicating whether deep health checks should be performed
+    #   when the cluster restricted instance group is created or updated.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] training_plan_arn
+    #   The Amazon Resource Name (ARN) of the training plan to filter
+    #   clusters by. For more information about reserving GPU capacity for
+    #   your SageMaker HyperPod clusters using Amazon SageMaker Training
+    #   Plan, see ` CreateTrainingPlan `.
+    #   @return [String]
+    #
+    # @!attribute [rw] override_vpc_config
+    #   Specifies an Amazon Virtual Private Cloud (VPC) that your SageMaker
+    #   jobs, hosted models, and compute resources have access to. You can
+    #   control access to and from your resources by configuring a VPC. For
+    #   more information, see [Give SageMaker Access to Resources in your
+    #   Amazon VPC][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/sagemaker/latest/dg/infrastructure-give-access.html
+    #   @return [Types::VpcConfig]
+    #
+    # @!attribute [rw] scheduled_update_config
+    #   The configuration object of the schedule that SageMaker follows when
+    #   updating the AMI.
+    #   @return [Types::ScheduledUpdateConfig]
+    #
+    # @!attribute [rw] environment_config
+    #   The configuration for the restricted instance groups (RIG)
+    #   environment.
+    #   @return [Types::EnvironmentConfig]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterRestrictedInstanceGroupSpecification AWS API Documentation
+    #
+    class ClusterRestrictedInstanceGroupSpecification < Struct.new(
+      :instance_count,
+      :instance_group_name,
+      :instance_type,
+      :execution_role,
+      :threads_per_core,
+      :instance_storage_configs,
+      :on_start_deep_health_checks,
+      :training_plan_arn,
+      :override_vpc_config,
+      :scheduled_update_config,
+      :environment_config)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration for the restricted instance groups (RIG) in the
+    # SageMaker HyperPod cluster.
+    #
+    # @!attribute [rw] shared_environment_config
+    #   The shared environment configuration for the restricted instance
+    #   groups (RIG).
+    #   @return [Types::ClusterSharedEnvironmentConfig]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterRestrictedInstanceGroupsConfig AWS API Documentation
+    #
+    class ClusterRestrictedInstanceGroupsConfig < Struct.new(
+      :shared_environment_config)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The output configuration for the restricted instance groups (RIG) in
+    # the SageMaker HyperPod cluster.
+    #
+    # @!attribute [rw] shared_environment_config
+    #   The shared environment configuration details for the restricted
+    #   instance groups (RIG).
+    #   @return [Types::ClusterSharedEnvironmentConfigDetails]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterRestrictedInstanceGroupsConfigOutput AWS API Documentation
+    #
+    class ClusterRestrictedInstanceGroupsConfigOutput < Struct.new(
+      :shared_environment_config)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4735,6 +7904,114 @@ module Aws::SageMaker
       include Aws::Structure
     end
 
+    # The shared environment configuration for the restricted instance
+    # groups (RIG).
+    #
+    # @!attribute [rw] f_sx_lustre_deletion_policy
+    #   The deletion policy for the Amazon FSx for Lustre file system in the
+    #   shared environment.
+    #   @return [String]
+    #
+    # @!attribute [rw] f_sx_lustre_config
+    #   Configuration settings for an Amazon FSx for Lustre file system in
+    #   the shared environment.
+    #   @return [Types::FSxLustreConfig]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterSharedEnvironmentConfig AWS API Documentation
+    #
+    class ClusterSharedEnvironmentConfig < Struct.new(
+      :f_sx_lustre_deletion_policy,
+      :f_sx_lustre_config)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The shared environment configuration details for the restricted
+    # instance groups (RIG).
+    #
+    # @!attribute [rw] current_f_sx_lustre_config
+    #   The current Amazon FSx for Lustre file system configuration in the
+    #   shared environment.
+    #   @return [Types::FSxLustreConfig]
+    #
+    # @!attribute [rw] desired_f_sx_lustre_config
+    #   The desired Amazon FSx for Lustre file system configuration in the
+    #   shared environment.
+    #   @return [Types::FSxLustreConfig]
+    #
+    # @!attribute [rw] current_f_sx_lustre_deletion_policy
+    #   The current deletion policy for the Amazon FSx for Lustre file
+    #   system in the shared environment.
+    #   @return [String]
+    #
+    # @!attribute [rw] desired_f_sx_lustre_deletion_policy
+    #   The desired deletion policy for the Amazon FSx for Lustre file
+    #   system in the shared environment.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterSharedEnvironmentConfigDetails AWS API Documentation
+    #
+    class ClusterSharedEnvironmentConfigDetails < Struct.new(
+      :current_f_sx_lustre_config,
+      :desired_f_sx_lustre_config,
+      :current_f_sx_lustre_deletion_policy,
+      :desired_f_sx_lustre_deletion_policy)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The Slurm configuration for an instance group in a SageMaker HyperPod
+    # cluster.
+    #
+    # @!attribute [rw] node_type
+    #   The type of Slurm node for the instance group. Valid values are
+    #   `Controller`, `Worker`, and `Login`.
+    #   @return [String]
+    #
+    # @!attribute [rw] partition_names
+    #   The list of Slurm partition names that the instance group belongs
+    #   to.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterSlurmConfig AWS API Documentation
+    #
+    class ClusterSlurmConfig < Struct.new(
+      :node_type,
+      :partition_names)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The Slurm configuration details for an instance group in a SageMaker
+    # HyperPod cluster.
+    #
+    # @!attribute [rw] node_type
+    #   The type of Slurm node for the instance group. Valid values are
+    #   `Controller`, `Worker`, and `Login`.
+    #   @return [String]
+    #
+    # @!attribute [rw] partition_names
+    #   The list of Slurm partition names that the instance group belongs
+    #   to.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterSlurmConfigDetails AWS API Documentation
+    #
+    class ClusterSlurmConfigDetails < Struct.new(
+      :node_type,
+      :partition_names)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration options specific to Spot instances.
+    #
+    # @api private
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterSpotOptions AWS API Documentation
+    #
+    class ClusterSpotOptions < Aws::EmptyStructure; end
+
     # Lists a summary of the properties of a SageMaker HyperPod cluster.
     #
     # @!attribute [rw] cluster_arn
@@ -4762,6 +8039,11 @@ module Aws::SageMaker
     #   see ` CreateTrainingPlan `.
     #   @return [Array<String>]
     #
+    # @!attribute [rw] image_version_status
+    #   The aggregate status of the image version across the cluster's
+    #   instance groups.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterSummary AWS API Documentation
     #
     class ClusterSummary < Struct.new(
@@ -4769,7 +8051,38 @@ module Aws::SageMaker
       :cluster_name,
       :creation_time,
       :cluster_status,
-      :training_plan_arns)
+      :training_plan_arns,
+      :image_version_status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Defines the configuration for managed tier checkpointing in a HyperPod
+    # cluster. Managed tier checkpointing uses multiple storage tiers,
+    # including cluster CPU memory, to provide faster checkpoint operations
+    # and improved fault tolerance for large-scale model training. The
+    # system automatically saves checkpoints at high frequency to memory and
+    # periodically persists them to durable storage, like Amazon S3.
+    #
+    # @!attribute [rw] mode
+    #   Specifies whether managed tier checkpointing is enabled or disabled
+    #   for the HyperPod cluster. When set to `Enable`, the system installs
+    #   a memory management daemon that provides disaggregated memory as a
+    #   service for checkpoint storage. When set to `Disable`, the feature
+    #   is turned off and the memory management daemon is removed from the
+    #   cluster.
+    #   @return [String]
+    #
+    # @!attribute [rw] instance_memory_allocation_percentage
+    #   The percentage (int) of cluster memory to allocate for
+    #   checkpointing.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ClusterTieredStorageConfig AWS API Documentation
+    #
+    class ClusterTieredStorageConfig < Struct.new(
+      :mode,
+      :instance_memory_allocation_percentage)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5126,11 +8439,46 @@ module Aws::SageMaker
     #   HyperPod cluster.
     #   @return [Integer]
     #
+    # @!attribute [rw] accelerators
+    #   The number of accelerators to allocate. If you don't specify a
+    #   value for vCPU and MemoryInGiB, SageMaker AI automatically allocates
+    #   ratio-based values for those parameters based on the number of
+    #   accelerators you provide. For example, if you allocate 16 out of 32
+    #   total accelerators, SageMaker AI uses the ratio of 0.5 and allocates
+    #   values to vCPU and MemoryInGiB.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] v_cpu
+    #   The number of vCPU to allocate. If you specify a value only for
+    #   vCPU, SageMaker AI automatically allocates ratio-based values for
+    #   MemoryInGiB based on this vCPU parameter. For example, if you
+    #   allocate 20 out of 40 total vCPU, SageMaker AI uses the ratio of 0.5
+    #   and allocates values to MemoryInGiB. Accelerators are set to 0.
+    #   @return [Float]
+    #
+    # @!attribute [rw] memory_in_gi_b
+    #   The amount of memory in GiB to allocate. If you specify a value only
+    #   for this parameter, SageMaker AI automatically allocates a
+    #   ratio-based value for vCPU based on this memory that you provide.
+    #   For example, if you allocate 200 out of 400 total memory in GiB,
+    #   SageMaker AI uses the ratio of 0.5 and allocates values to vCPU.
+    #   Accelerators are set to 0.
+    #   @return [Float]
+    #
+    # @!attribute [rw] accelerator_partition
+    #   The accelerator partition configuration for fractional GPU
+    #   allocation.
+    #   @return [Types::AcceleratorPartitionConfig]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ComputeQuotaResourceConfig AWS API Documentation
     #
     class ComputeQuotaResourceConfig < Struct.new(
       :instance_type,
-      :count)
+      :count,
+      :accelerators,
+      :v_cpu,
+      :memory_in_gi_b,
+      :accelerator_partition)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5421,6 +8769,15 @@ module Aws::SageMaker
     #   Specifies additional configuration for multi-model endpoints.
     #   @return [Types::MultiModelConfig]
     #
+    # @!attribute [rw] container_metrics_config
+    #   The configuration for container metrics scraping. Specifies the
+    #   metrics endpoint path and publishing frequency. If not specified
+    #   when `EnableDetailedObservability` is `True`, the default path
+    #   `/metrics` on port `8080` is used. For first-party and Deep Learning
+    #   Containers (DLC), the endpoint path is determined automatically and
+    #   this configuration is optional.
+    #   @return [Types::ContainerMetricsConfig]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ContainerDefinition AWS API Documentation
     #
     class ContainerDefinition < Struct.new(
@@ -5434,7 +8791,33 @@ module Aws::SageMaker
       :environment,
       :model_package_name,
       :inference_specification_name,
-      :multi_model_config)
+      :multi_model_config,
+      :container_metrics_config)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration for container-level metrics scraping. Use this
+    # configuration to specify a custom metrics endpoint path and publishing
+    # frequency for container metrics. When `EnableDetailedObservability` is
+    # set to `True` in `MetricsConfig`, metrics are scraped from the
+    # container's Prometheus endpoint. If this configuration is not
+    # provided, the default path `/metrics` on port `8080` is used with a
+    # default publishing frequency of `60` seconds. For first-party and Deep
+    # Learning Containers (DLC), the endpoint path is determined
+    # automatically and this configuration is optional.
+    #
+    # @!attribute [rw] metrics_endpoints
+    #   A list of metrics endpoints to scrape from the container. Each
+    #   endpoint specifies the path where the container exposes
+    #   Prometheus-formatted metrics and the frequency at which to publish
+    #   them. You can specify a maximum of 1 endpoint.
+    #   @return [Array<Types::MetricsEndpoint>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ContainerMetricsConfig AWS API Documentation
+    #
+    class ContainerMetricsConfig < Struct.new(
+      :metrics_endpoints)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5600,6 +8983,212 @@ module Aws::SageMaker
     #
     class ConvergenceDetected < Struct.new(
       :complete_on_convergence)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] ai_benchmark_job_name
+    #   The name of the AI benchmark job. The name must be unique within
+    #   your Amazon Web Services account in the current Amazon Web Services
+    #   Region.
+    #   @return [String]
+    #
+    # @!attribute [rw] benchmark_target
+    #   The target endpoint to benchmark. Specify a SageMaker endpoint by
+    #   providing its name or Amazon Resource Name (ARN).
+    #   @return [Types::AIBenchmarkTarget]
+    #
+    # @!attribute [rw] output_config
+    #   The output configuration for the benchmark job, including the Amazon
+    #   S3 location where benchmark results are stored.
+    #   @return [Types::AIBenchmarkOutputConfig]
+    #
+    # @!attribute [rw] ai_workload_config_identifier
+    #   The name or Amazon Resource Name (ARN) of the AI workload
+    #   configuration to use for this benchmark job.
+    #   @return [String]
+    #
+    # @!attribute [rw] role_arn
+    #   The Amazon Resource Name (ARN) of an IAM role that enables Amazon
+    #   SageMaker AI to perform tasks on your behalf.
+    #   @return [String]
+    #
+    # @!attribute [rw] network_config
+    #   The network configuration for the benchmark job, including VPC
+    #   settings.
+    #   @return [Types::AIBenchmarkNetworkConfig]
+    #
+    # @!attribute [rw] tags
+    #   The metadata that you apply to Amazon Web Services resources to help
+    #   you categorize and organize them. Each tag consists of a key and a
+    #   value, both of which you define.
+    #   @return [Array<Types::Tag>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/CreateAIBenchmarkJobRequest AWS API Documentation
+    #
+    class CreateAIBenchmarkJobRequest < Struct.new(
+      :ai_benchmark_job_name,
+      :benchmark_target,
+      :output_config,
+      :ai_workload_config_identifier,
+      :role_arn,
+      :network_config,
+      :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] ai_benchmark_job_arn
+    #   The Amazon Resource Name (ARN) of the created benchmark job.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/CreateAIBenchmarkJobResponse AWS API Documentation
+    #
+    class CreateAIBenchmarkJobResponse < Struct.new(
+      :ai_benchmark_job_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] ai_recommendation_job_name
+    #   The name of the AI recommendation job. The name must be unique
+    #   within your Amazon Web Services account in the current Amazon Web
+    #   Services Region.
+    #   @return [String]
+    #
+    # @!attribute [rw] model_source
+    #   The source of the model to optimize. Specify the Amazon S3 location
+    #   of the model artifacts.
+    #   @return [Types::AIModelSource]
+    #
+    # @!attribute [rw] output_config
+    #   The output configuration for the recommendation job, including the
+    #   Amazon S3 location for results and an optional model package group
+    #   where the optimized model is registered.
+    #   @return [Types::AIRecommendationOutputConfig]
+    #
+    # @!attribute [rw] ai_workload_config_identifier
+    #   The name or Amazon Resource Name (ARN) of the AI workload
+    #   configuration to use for this recommendation job.
+    #   @return [String]
+    #
+    # @!attribute [rw] performance_target
+    #   The performance targets for the recommendation job. Specify
+    #   constraints on metrics such as time to first token (`ttft-ms`),
+    #   `throughput`, or `cost`.
+    #   @return [Types::AIRecommendationPerformanceTarget]
+    #
+    # @!attribute [rw] role_arn
+    #   The Amazon Resource Name (ARN) of an IAM role that enables Amazon
+    #   SageMaker AI to perform tasks on your behalf.
+    #   @return [String]
+    #
+    # @!attribute [rw] inference_specification
+    #   The inference framework configuration. Specify the framework (such
+    #   as LMI or vLLM) for the recommendation job.
+    #   @return [Types::AIRecommendationInferenceSpecification]
+    #
+    # @!attribute [rw] optimize_model
+    #   Whether to allow model optimization techniques such as quantization,
+    #   speculative decoding, and kernel tuning. The default is `true`.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] compute_spec
+    #   The compute resource specification for the recommendation job. You
+    #   can specify up to 3 instance types to consider, and optionally
+    #   provide capacity reservation configuration.
+    #   @return [Types::AIRecommendationComputeSpec]
+    #
+    # @!attribute [rw] adapter_source
+    #   The LoRA adapter source for the recommendation job. Specify either a
+    #   list of model package ARNs or Amazon S3 URIs for your LoRA adapters.
+    #   When this parameter is absent, the recommendation job runs without
+    #   LoRA adapter support.
+    #   @return [Types::AIAdapterSource]
+    #
+    # @!attribute [rw] tags
+    #   The metadata that you apply to Amazon Web Services resources to help
+    #   you categorize and organize them.
+    #   @return [Array<Types::Tag>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/CreateAIRecommendationJobRequest AWS API Documentation
+    #
+    class CreateAIRecommendationJobRequest < Struct.new(
+      :ai_recommendation_job_name,
+      :model_source,
+      :output_config,
+      :ai_workload_config_identifier,
+      :performance_target,
+      :role_arn,
+      :inference_specification,
+      :optimize_model,
+      :compute_spec,
+      :adapter_source,
+      :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] ai_recommendation_job_arn
+    #   The Amazon Resource Name (ARN) of the created recommendation job.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/CreateAIRecommendationJobResponse AWS API Documentation
+    #
+    class CreateAIRecommendationJobResponse < Struct.new(
+      :ai_recommendation_job_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] ai_workload_config_name
+    #   The name of the AI workload configuration. The name must be unique
+    #   within your Amazon Web Services account in the current Amazon Web
+    #   Services Region.
+    #   @return [String]
+    #
+    # @!attribute [rw] dataset_config
+    #   The dataset configuration for the workload. Specify input data
+    #   channels with their data sources for benchmark workloads.
+    #   @return [Types::AIDatasetConfig]
+    #
+    # @!attribute [rw] ai_workload_configs
+    #   The benchmark tool configuration and workload specification. Provide
+    #   the specification as an inline YAML or JSON string.
+    #   @return [Types::AIWorkloadConfigs]
+    #
+    # @!attribute [rw] tags
+    #   The metadata that you apply to Amazon Web Services resources to help
+    #   you categorize and organize them. Each tag consists of a key and a
+    #   value, both of which you define. For more information, see [Tagging
+    #   Amazon Web Services Resources][1] in the Amazon Web Services General
+    #   Reference.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html
+    #   @return [Array<Types::Tag>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/CreateAIWorkloadConfigRequest AWS API Documentation
+    #
+    class CreateAIWorkloadConfigRequest < Struct.new(
+      :ai_workload_config_name,
+      :dataset_config,
+      :ai_workload_configs,
+      :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] ai_workload_config_arn
+    #   The Amazon Resource Name (ARN) of the created AI workload
+    #   configuration.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/CreateAIWorkloadConfigResponse AWS API Documentation
+    #
+    class CreateAIWorkloadConfigResponse < Struct.new(
+      :ai_workload_config_arn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5853,6 +9442,10 @@ module Aws::SageMaker
     #    </note>
     #   @return [Types::ResourceSpec]
     #
+    # @!attribute [rw] recovery_mode
+    #   Indicates whether the application is launched in recovery mode.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/CreateAppRequest AWS API Documentation
     #
     class CreateAppRequest < Struct.new(
@@ -5862,7 +9455,8 @@ module Aws::SageMaker
       :app_type,
       :app_name,
       :tags,
-      :resource_spec)
+      :resource_spec,
+      :recovery_mode)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6184,6 +9778,16 @@ module Aws::SageMaker
     #   The instance groups to be created in the SageMaker HyperPod cluster.
     #   @return [Array<Types::ClusterInstanceGroupSpecification>]
     #
+    # @!attribute [rw] restricted_instance_groups
+    #   The specialized instance groups for training models like Amazon Nova
+    #   to be created in the SageMaker HyperPod cluster.
+    #   @return [Array<Types::ClusterRestrictedInstanceGroupSpecification>]
+    #
+    # @!attribute [rw] restricted_instance_groups_config
+    #   The configuration for the restricted instance groups (RIG) in the
+    #   SageMaker HyperPod cluster.
+    #   @return [Types::ClusterRestrictedInstanceGroupsConfig]
+    #
     # @!attribute [rw] vpc_config
     #   Specifies the Amazon Virtual Private Cloud (VPC) that is associated
     #   with the Amazon SageMaker HyperPod cluster. You can control access
@@ -6241,8 +9845,15 @@ module Aws::SageMaker
     #
     # @!attribute [rw] orchestrator
     #   The type of orchestrator to use for the SageMaker HyperPod cluster.
-    #   Currently, the only supported value is `"eks"`, which is to use an
-    #   Amazon Elastic Kubernetes Service (EKS) cluster as the orchestrator.
+    #   Currently, supported values are `"Eks"` and `"Slurm"`, which is to
+    #   use an Amazon Elastic Kubernetes Service or Slurm cluster as the
+    #   orchestrator.
+    #
+    #   <note markdown="1"> If you specify the `Orchestrator` field, you must provide exactly
+    #   one orchestrator configuration: either `Eks` or `Slurm`. Specifying
+    #   both or providing an empty configuration returns a validation error.
+    #
+    #    </note>
     #   @return [Types::ClusterOrchestrator]
     #
     # @!attribute [rw] node_recovery
@@ -6253,15 +9864,58 @@ module Aws::SageMaker
     #   cluster instances.
     #   @return [String]
     #
+    # @!attribute [rw] tiered_storage_config
+    #   The configuration for managed tier checkpointing on the HyperPod
+    #   cluster. When enabled, this feature uses a multi-tier storage
+    #   approach for storing model checkpoints, providing faster checkpoint
+    #   operations and improved fault tolerance across cluster nodes.
+    #   @return [Types::ClusterTieredStorageConfig]
+    #
+    # @!attribute [rw] node_provisioning_mode
+    #   The mode for provisioning nodes in the cluster. You can specify the
+    #   following modes:
+    #
+    #   * **Continuous**: Scaling behavior that enables 1) concurrent
+    #     operation execution within instance groups, 2) continuous retry
+    #     mechanisms for failed operations, 3) enhanced customer visibility
+    #     into cluster events through detailed event streams, 4) partial
+    #     provisioning capabilities. Your clusters and instance groups
+    #     remain `InService` while scaling. This mode is only supported for
+    #     EKS orchestrated clusters.
+    #
+    #   ^
+    #   @return [String]
+    #
+    # @!attribute [rw] cluster_role
+    #   The Amazon Resource Name (ARN) of the IAM role that HyperPod assumes
+    #   to perform cluster autoscaling operations. This role must have
+    #   permissions for `sagemaker:BatchAddClusterNodes` and
+    #   `sagemaker:BatchDeleteClusterNodes`. This is only required when
+    #   autoscaling is enabled and when HyperPod is performing autoscaling
+    #   operations.
+    #   @return [String]
+    #
+    # @!attribute [rw] auto_scaling
+    #   The autoscaling configuration for the cluster. Enables automatic
+    #   scaling of cluster nodes based on workload demand using a
+    #   Karpenter-based system.
+    #   @return [Types::ClusterAutoScalingConfig]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/CreateClusterRequest AWS API Documentation
     #
     class CreateClusterRequest < Struct.new(
       :cluster_name,
       :instance_groups,
+      :restricted_instance_groups,
+      :restricted_instance_groups_config,
       :vpc_config,
       :tags,
       :orchestrator,
-      :node_recovery)
+      :node_recovery,
+      :tiered_storage_config,
+      :node_provisioning_mode,
+      :cluster_role,
+      :auto_scaling)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6744,11 +10398,19 @@ module Aws::SageMaker
     #
     # @!attribute [rw] subnet_ids
     #   The VPC subnets that the domain uses for communication.
+    #
+    #   The field is optional when the `AppNetworkAccessType` parameter is
+    #   set to `PublicInternetOnly` for domains created from Amazon
+    #   SageMaker Unified Studio.
     #   @return [Array<String>]
     #
     # @!attribute [rw] vpc_id
     #   The ID of the Amazon Virtual Private Cloud (VPC) that the domain
     #   uses for communication.
+    #
+    #   The field is optional when the `AppNetworkAccessType` parameter is
+    #   set to `PublicInternetOnly` for domains created from Amazon
+    #   SageMaker Unified Studio.
     #   @return [String]
     #
     # @!attribute [rw] tags
@@ -6789,6 +10451,13 @@ module Aws::SageMaker
     #   value must be set to `Service`.
     #   @return [String]
     #
+    # @!attribute [rw] home_efs_file_system_creation
+    #   Indicates whether to create a home EFS file system for the domain.
+    #   Defaults to `Enabled`. Set to `Disabled` to skip EFS creation and
+    #   reduce domain creation time. You can enable EFS later by calling
+    #   `UpdateDomain`.
+    #   @return [String]
+    #
     # @!attribute [rw] tag_propagation
     #   Indicates whether custom tag propagation is supported for the
     #   domain. Defaults to `DISABLED`.
@@ -6813,6 +10482,7 @@ module Aws::SageMaker
       :home_efs_file_system_kms_key_id,
       :kms_key_id,
       :app_security_group_management,
+      :home_efs_file_system_creation,
       :tag_propagation,
       :default_space_settings)
       SENSITIVE = []
@@ -7009,13 +10679,10 @@ module Aws::SageMaker
     #
     #   <note markdown="1"> Certain Nitro-based instances include local storage, dependent on
     #   the instance type. Local storage volumes are encrypted using a
-    #   hardware module on the instance. You can't request a `KmsKeyId`
-    #   when using an instance type with local storage. If any of the models
-    #   that you specify in the `ProductionVariants` parameter use
-    #   nitro-based instances with local storage, do not specify a value for
-    #   the `KmsKeyId` parameter. If you specify a value for `KmsKeyId` when
-    #   using any nitro-based instances with local storage, the call to
-    #   `CreateEndpointConfig` fails.
+    #   hardware module on the instance. If any of the models that you
+    #   specify in the `ProductionVariants` parameter use nitro-based
+    #   instances with local storage, the `KmsKeyId` parameter does not
+    #   encrypt instance local storage.
     #
     #    For a list of instance types that support local instance storage,
     #   see [Instance Store Volumes][2].
@@ -7087,6 +10754,10 @@ module Aws::SageMaker
     #   made to or from the model containers.
     #   @return [Boolean]
     #
+    # @!attribute [rw] metrics_config
+    #   The configuration parameters for utilization metrics.
+    #   @return [Types::MetricsConfig]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/CreateEndpointConfigInput AWS API Documentation
     #
     class CreateEndpointConfigInput < Struct.new(
@@ -7100,7 +10771,8 @@ module Aws::SageMaker
       :shadow_production_variants,
       :execution_role_arn,
       :vpc_config,
-      :enable_network_isolation)
+      :enable_network_isolation,
+      :metrics_config)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7452,6 +11124,78 @@ module Aws::SageMaker
     #
     class CreateFlowDefinitionResponse < Struct.new(
       :flow_definition_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] hub_name
+    #   The name or Amazon Resource Name (ARN) of the hub that contains the
+    #   content. For public content, use `SageMakerPublicHub`.
+    #   @return [String]
+    #
+    # @!attribute [rw] hub_content_type
+    #   The type of hub content to access. Valid values include `Model`,
+    #   `Notebook`, and `ModelReference`.
+    #   @return [String]
+    #
+    # @!attribute [rw] hub_content_name
+    #   The name of the hub content for which to generate presigned URLs.
+    #   This identifies the specific model or content within the hub.
+    #   @return [String]
+    #
+    # @!attribute [rw] hub_content_version
+    #   The version of the hub content. If not specified, the latest version
+    #   is used.
+    #   @return [String]
+    #
+    # @!attribute [rw] access_config
+    #   Configuration settings for accessing the hub content, including
+    #   end-user license agreement acceptance for gated models and expected
+    #   S3 URL validation.
+    #   @return [Types::PresignedUrlAccessConfig]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of presigned URLs to return in the response.
+    #   Default value is 100. Large models may contain hundreds of files,
+    #   requiring pagination to retrieve all URLs.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   A token for pagination. Use this token to retrieve the next set of
+    #   presigned URLs when the response is truncated.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/CreateHubContentPresignedUrlsRequest AWS API Documentation
+    #
+    class CreateHubContentPresignedUrlsRequest < Struct.new(
+      :hub_name,
+      :hub_content_type,
+      :hub_content_name,
+      :hub_content_version,
+      :access_config,
+      :max_results,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] authorized_url_configs
+    #   An array of authorized URL configurations, each containing a
+    #   presigned URL and its corresponding local file path for proper file
+    #   organization during download.
+    #   @return [Array<Types::AuthorizedUrl>]
+    #
+    # @!attribute [rw] next_token
+    #   A token for pagination. If present, indicates that more presigned
+    #   URLs are available. Use this token in a subsequent request to
+    #   retrieve additional URLs.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/CreateHubContentPresignedUrlsResponse AWS API Documentation
+    #
+    class CreateHubContentPresignedUrlsResponse < Struct.new(
+      :authorized_url_configs,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7906,6 +11650,14 @@ module Aws::SageMaker
     #   including the model, container, and compute resources.
     #   @return [Types::InferenceComponentSpecification]
     #
+    # @!attribute [rw] specifications
+    #   A list of specification objects for the inference component, one per
+    #   instance type. Use this parameter when you want to deploy a
+    #   different model or resource configuration for the inference
+    #   component on each instance type. You can use either this parameter
+    #   or the singular `Specification` parameter, but not both.
+    #   @return [Array<Types::InferenceComponentSpecification>]
+    #
     # @!attribute [rw] runtime_config
     #   Runtime settings for a model that is deployed with an inference
     #   component.
@@ -7928,6 +11680,7 @@ module Aws::SageMaker
       :endpoint_name,
       :variant_name,
       :specification,
+      :specifications,
       :runtime_config,
       :tags)
       SENSITIVE = []
@@ -8180,6 +11933,69 @@ module Aws::SageMaker
       include Aws::Structure
     end
 
+    # @!attribute [rw] job_name
+    #   The name of the job. The name must be unique within your account and
+    #   Amazon Web Services Region.
+    #   @return [String]
+    #
+    # @!attribute [rw] role_arn
+    #   The Amazon Resource Name (ARN) of the IAM role that Amazon SageMaker
+    #   assumes to perform the job. The role must have the necessary
+    #   permissions to access the resources required by the job
+    #   configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_category
+    #   The category of the job. The category determines the type of
+    #   workload that the job runs.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_config_schema_version
+    #   The version of the configuration schema to use for the job
+    #   configuration document. Use `ListJobSchemaVersions` to get available
+    #   schema versions for a job category.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_config_document
+    #   The JSON configuration document for the job. The document must
+    #   conform to the schema specified by `JobConfigSchemaVersion`. Use
+    #   `DescribeJobSchemaVersion` to retrieve the schema for validation.
+    #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   An array of key-value pairs to apply to the job as tags. For more
+    #   information, see [Tagging Amazon Web Services Resources][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html
+    #   @return [Array<Types::Tag>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/CreateJobRequest AWS API Documentation
+    #
+    class CreateJobRequest < Struct.new(
+      :job_name,
+      :role_arn,
+      :job_category,
+      :job_config_schema_version,
+      :job_config_document,
+      :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] job_arn
+    #   The Amazon Resource Name (ARN) of the job.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/CreateJobResponse AWS API Documentation
+    #
+    class CreateJobResponse < Struct.new(
+      :job_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] labeling_job_name
     #   The name of the labeling job. This name is used to identify the job
     #   in a list of labeling jobs. Labeling job names must be unique within
@@ -8196,15 +12012,14 @@ module Aws::SageMaker
     #
     #   * The name can't end with "-metadata".
     #
-    #   * If you are using one of the following [built-in task types][1],
-    #     the attribute name *must* end with "-ref". If the task type you
-    #     are using is not listed below, the attribute name *must not* end
-    #     with "-ref".
+    #   * If you are using one of the [built-in task types][1] or one of the
+    #     following, the attribute name *must* end with "-ref".
     #
-    #     * Image semantic segmentation (`SemanticSegmentation)`, and
-    #       adjustment (`AdjustmentSemanticSegmentation`) and verification
-    #       (`VerificationSemanticSegmentation`) labeling jobs for this task
-    #       type.
+    #     * Image semantic segmentation (`SemanticSegmentation)` and
+    #       adjustment (`AdjustmentSemanticSegmentation`) labeling jobs for
+    #       this task type. One exception is that verification
+    #       (`VerificationSemanticSegmentation`) *must not* end with
+    #       -"ref".
     #
     #     * Video frame object detection (`VideoObjectDetection`), and
     #       adjustment and verification (`AdjustmentVideoObjectDetection`)
@@ -8391,6 +12206,80 @@ module Aws::SageMaker
       include Aws::Structure
     end
 
+    # @!attribute [rw] name
+    #   A string identifying the MLflow app name. This string is not part of
+    #   the tracking server ARN.
+    #   @return [String]
+    #
+    # @!attribute [rw] artifact_store_uri
+    #   The S3 URI for a general purpose bucket to use as the MLflow App
+    #   artifact store.
+    #   @return [String]
+    #
+    # @!attribute [rw] role_arn
+    #   The Amazon Resource Name (ARN) for an IAM role in your account that
+    #   the MLflow App uses to access the artifact store in Amazon S3. The
+    #   role should have the `AmazonS3FullAccess` permission.
+    #   @return [String]
+    #
+    # @!attribute [rw] model_registration_mode
+    #   Whether to enable or disable automatic registration of new MLflow
+    #   models to the SageMaker Model Registry. To enable automatic model
+    #   registration, set this value to `AutoModelRegistrationEnabled`. To
+    #   disable automatic model registration, set this value to
+    #   `AutoModelRegistrationDisabled`. If not specified,
+    #   `AutomaticModelRegistration` defaults to
+    #   `AutoModelRegistrationDisabled`.
+    #   @return [String]
+    #
+    # @!attribute [rw] weekly_maintenance_window_start
+    #   The day and time of the week in Coordinated Universal Time (UTC)
+    #   24-hour standard time that weekly maintenance updates are scheduled.
+    #   For example: TUE:03:30.
+    #   @return [String]
+    #
+    # @!attribute [rw] account_default_status
+    #   Indicates whether this MLflow app is the default for the entire
+    #   account.
+    #   @return [String]
+    #
+    # @!attribute [rw] default_domain_id_list
+    #   List of SageMaker domain IDs for which this MLflow App is used as
+    #   the default.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] tags
+    #   Tags consisting of key-value pairs used to manage metadata for the
+    #   MLflow App.
+    #   @return [Array<Types::Tag>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/CreateMlflowAppRequest AWS API Documentation
+    #
+    class CreateMlflowAppRequest < Struct.new(
+      :name,
+      :artifact_store_uri,
+      :role_arn,
+      :model_registration_mode,
+      :weekly_maintenance_window_start,
+      :account_default_status,
+      :default_domain_id_list,
+      :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] arn
+    #   The ARN of the MLflow App.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/CreateMlflowAppResponse AWS API Documentation
+    #
+    class CreateMlflowAppResponse < Struct.new(
+      :arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] tracking_server_name
     #   A unique string identifying the tracking server name. This string is
     #   part of the tracking server ARN.
@@ -8453,6 +12342,18 @@ module Aws::SageMaker
     #   tracking server.
     #   @return [Array<Types::Tag>]
     #
+    # @!attribute [rw] s3_bucket_owner_account_id
+    #   Expected Amazon Web Services account ID that owns the Amazon S3
+    #   bucket for artifact storage. Defaults to caller's account ID if not
+    #   provided.
+    #   @return [String]
+    #
+    # @!attribute [rw] s3_bucket_owner_verification
+    #   Enable Amazon S3 Ownership checks when interacting with Amazon S3
+    #   buckets from a SageMaker Managed MLflow Tracking Server. Defaults to
+    #   `True` if not provided.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/CreateMlflowTrackingServerRequest AWS API Documentation
     #
     class CreateMlflowTrackingServerRequest < Struct.new(
@@ -8463,7 +12364,9 @@ module Aws::SageMaker
       :role_arn,
       :automatic_model_registration,
       :weekly_maintenance_window_start,
-      :tags)
+      :tags,
+      :s3_bucket_owner_account_id,
+      :s3_bucket_owner_verification)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -8855,12 +12758,17 @@ module Aws::SageMaker
     #   [1]: https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html
     #   @return [Array<Types::Tag>]
     #
+    # @!attribute [rw] managed_configuration
+    #   The managed configuration of the model package group.
+    #   @return [Types::ManagedConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/CreateModelPackageGroupInput AWS API Documentation
     #
     class CreateModelPackageGroupInput < Struct.new(
       :model_package_group_name,
       :model_package_group_description,
-      :tags)
+      :tags,
+      :managed_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -8895,6 +12803,10 @@ module Aws::SageMaker
     #
     # @!attribute [rw] model_package_description
     #   A description of the model package.
+    #   @return [String]
+    #
+    # @!attribute [rw] model_package_registration_type
+    #   The package registration type of the model package input.
     #   @return [String]
     #
     # @!attribute [rw] inference_specification
@@ -9059,12 +12971,17 @@ module Aws::SageMaker
     #   cycle.
     #   @return [Types::ModelLifeCycle]
     #
+    # @!attribute [rw] managed_storage_type
+    #   The storage type of the model package.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/CreateModelPackageInput AWS API Documentation
     #
     class CreateModelPackageInput < Struct.new(
       :model_package_name,
       :model_package_group_name,
       :model_package_description,
+      :model_package_registration_type,
       :inference_specification,
       :validation_specification,
       :source_algorithm_specification,
@@ -9084,7 +13001,8 @@ module Aws::SageMaker
       :source_uri,
       :security_config,
       :model_card,
-      :model_life_cycle)
+      :model_life_cycle,
+      :managed_storage_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -9236,6 +13154,13 @@ module Aws::SageMaker
     #   groups must be for the same VPC as specified in the subnet.
     #   @return [Array<String>]
     #
+    # @!attribute [rw] ip_address_type
+    #   The IP address type for the notebook instance. Specify `ipv4` for
+    #   IPv4-only connectivity or `dualstack` for both IPv4 and IPv6
+    #   connectivity. When you specify `dualstack`, the subnet must support
+    #   IPv6 CIDR blocks. If not specified, defaults to `ipv4`.
+    #   @return [String]
+    #
     # @!attribute [rw] role_arn
     #   When you send any requests to Amazon Web Services resources from the
     #   notebook instance, SageMaker AI assumes this role to perform tasks
@@ -9364,7 +13289,7 @@ module Aws::SageMaker
     #
     # @!attribute [rw] platform_identifier
     #   The platform identifier of the notebook instance runtime
-    #   environment.
+    #   environment. The default value is `notebook-al2023-v1`.
     #   @return [String]
     #
     # @!attribute [rw] instance_metadata_service_configuration
@@ -9378,6 +13303,7 @@ module Aws::SageMaker
       :instance_type,
       :subnet_id,
       :security_group_ids,
+      :ip_address_type,
       :role_arn,
       :kms_key_id,
       :tags,
@@ -9409,12 +13335,24 @@ module Aws::SageMaker
     #   must be a base64-encoded string.
     #   @return [Array<Types::NotebookInstanceLifecycleHook>]
     #
+    # @!attribute [rw] tags
+    #   An array of key-value pairs. You can use tags to categorize your
+    #   Amazon Web Services resources in different ways, for example, by
+    #   purpose, owner, or environment. For more information, see [Tagging
+    #   Amazon Web Services Resources][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/tag-editor/latest/userguide/tagging.html
+    #   @return [Array<Types::Tag>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/CreateNotebookInstanceLifecycleConfigInput AWS API Documentation
     #
     class CreateNotebookInstanceLifecycleConfigInput < Struct.new(
       :notebook_instance_lifecycle_config_name,
       :on_create,
-      :on_start)
+      :on_start,
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -9482,6 +13420,10 @@ module Aws::SageMaker
     #   with the optimization job.
     #   @return [String]
     #
+    # @!attribute [rw] max_instance_count
+    #   The maximum number of instances to use for the optimization job.
+    #   @return [Integer]
+    #
     # @!attribute [rw] optimization_environment
     #   The environment variables to set in the model container.
     #   @return [Hash<String,String>]
@@ -9534,6 +13476,24 @@ module Aws::SageMaker
     #   A VPC in Amazon VPC that your optimized model has access to.
     #   @return [Types::OptimizationVpcConfig]
     #
+    # @!attribute [rw] training_plan_arns
+    #   The Amazon Resource Name (ARN) of the training plan to use for this
+    #   optimization job.
+    #
+    #   When you use reserved capacity from a training plan, the
+    #   optimization job runs on that reserved capacity instead of on-demand
+    #   capacity. If you omit this field, the job uses on-demand capacity.
+    #   You can specify at most one training plan.
+    #
+    #   For more information about how to reserve GPU capacity for your
+    #   optimization jobs using Amazon SageMaker Training Plans, see
+    #   [Reserve capacity with training plans][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/sagemaker/latest/dg/reserve-capacity-with-training-plans.html
+    #   @return [Array<String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/CreateOptimizationJobRequest AWS API Documentation
     #
     class CreateOptimizationJobRequest < Struct.new(
@@ -9541,12 +13501,14 @@ module Aws::SageMaker
       :role_arn,
       :model_source,
       :deployment_instance_type,
+      :max_instance_count,
       :optimization_environment,
       :optimization_configs,
       :output_config,
       :stopping_condition,
       :tags,
-      :vpc_config)
+      :vpc_config,
+      :training_plan_arns)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -9614,6 +13576,12 @@ module Aws::SageMaker
     #   The ARN of the IAM role that the partner application uses.
     #   @return [String]
     #
+    # @!attribute [rw] kms_key_id
+    #   SageMaker Partner AI Apps uses Amazon Web Services KMS to encrypt
+    #   data at rest using an Amazon Web Services managed key by default.
+    #   For more control, specify a customer managed key.
+    #   @return [String]
+    #
     # @!attribute [rw] maintenance_config
     #   Maintenance configuration settings for the SageMaker Partner AI App.
     #   @return [Types::PartnerAppMaintenanceConfig]
@@ -9638,6 +13606,12 @@ module Aws::SageMaker
     #   identity of the SageMaker Partner AI App user.
     #   @return [Boolean]
     #
+    # @!attribute [rw] enable_auto_minor_version_upgrade
+    #   When set to `TRUE`, the SageMaker Partner AI App is automatically
+    #   upgraded to the latest minor version during the next scheduled
+    #   maintenance window, if one is available. Default is `FALSE`.
+    #   @return [Boolean]
+    #
     # @!attribute [rw] client_token
     #   A unique token that guarantees that the call to this API is
     #   idempotent.
@@ -9657,11 +13631,13 @@ module Aws::SageMaker
       :name,
       :type,
       :execution_role_arn,
+      :kms_key_id,
       :maintenance_config,
       :tier,
       :application_config,
       :auth_type,
       :enable_iam_session_based_identity,
+      :enable_auto_minor_version_upgrade,
       :client_token,
       :tags)
       SENSITIVE = []
@@ -9831,6 +13807,42 @@ module Aws::SageMaker
       include Aws::Structure
     end
 
+    # @!attribute [rw] arn
+    #   The ARN of the MLflow App to connect to your MLflow UI.
+    #   @return [String]
+    #
+    # @!attribute [rw] expires_in_seconds
+    #   The duration in seconds that your presigned URL is valid. The
+    #   presigned URL can be used only once.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] session_expiration_duration_in_seconds
+    #   The duration in seconds that your presigned URL is valid. The
+    #   presigned URL can be used only once.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/CreatePresignedMlflowAppUrlRequest AWS API Documentation
+    #
+    class CreatePresignedMlflowAppUrlRequest < Struct.new(
+      :arn,
+      :expires_in_seconds,
+      :session_expiration_duration_in_seconds)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] authorized_url
+    #   A presigned URL with an authorization token.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/CreatePresignedMlflowAppUrlResponse AWS API Documentation
+    #
+    class CreatePresignedMlflowAppUrlResponse < Struct.new(
+      :authorized_url)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] tracking_server_name
     #   The name of the tracking server to connect to your MLflow UI.
     #   @return [String]
@@ -9927,6 +13939,13 @@ module Aws::SageMaker
     # @!attribute [rw] environment
     #   The environment variables to set in the Docker container. Up to 100
     #   key and values entries in the map are supported.
+    #
+    #   Do not include any security-sensitive information including account
+    #   access IDs, secrets, or tokens in any environment fields. As part of
+    #   the shared responsibility model, you are responsible for any
+    #   potential exposure, unauthorized access, or compromise of your
+    #   sensitive data if caused by security-sensitive information included
+    #   in the request environment variable or plain text fields.
     #   @return [Hash<String,String>]
     #
     # @!attribute [rw] network_config
@@ -9945,6 +13964,13 @@ module Aws::SageMaker
     #   (Optional) An array of key-value pairs. For more information, see
     #   [Using Cost Allocation Tags][1] in the *Amazon Web Services Billing
     #   and Cost Management User Guide*.
+    #
+    #   Do not include any security-sensitive information including account
+    #   access IDs, secrets, or tokens in any tags. As part of the shared
+    #   responsibility model, you are responsible for any potential
+    #   exposure, unauthorized access, or compromise of your sensitive data
+    #   if caused by security-sensitive information included in the request
+    #   tag variable or plain text fields.
     #
     #
     #
@@ -10029,13 +14055,19 @@ module Aws::SageMaker
     #   [1]: https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html
     #   @return [Array<Types::Tag>]
     #
+    # @!attribute [rw] template_providers
+    #   An array of template provider configurations for creating
+    #   infrastructure resources for the project.
+    #   @return [Array<Types::CreateTemplateProvider>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/CreateProjectInput AWS API Documentation
     #
     class CreateProjectInput < Struct.new(
       :project_name,
       :project_description,
       :service_catalog_provisioning_details,
-      :tags)
+      :tags,
+      :template_providers)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -10156,6 +14188,22 @@ module Aws::SageMaker
       include Aws::Structure
     end
 
+    # Contains configuration details for a template provider. Only one type
+    # of template provider can be specified.
+    #
+    # @!attribute [rw] cfn_template_provider
+    #   The CloudFormation template provider configuration for creating
+    #   infrastructure resources.
+    #   @return [Types::CfnCreateTemplateProvider]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/CreateTemplateProvider AWS API Documentation
+    #
+    class CreateTemplateProvider < Struct.new(
+      :cfn_template_provider)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] training_job_name
     #   The name of the training job. The name must be unique within an
     #   Amazon Web Services Region in an Amazon Web Services account.
@@ -10172,9 +14220,12 @@ module Aws::SageMaker
     #   256 characters, as specified by the `Length Constraint`.
     #
     #   Do not include any security-sensitive information including account
-    #   access IDs, secrets or tokens in any hyperparameter field. If the
-    #   use of security-sensitive credentials are detected, SageMaker will
-    #   reject your training job request and return an exception error.
+    #   access IDs, secrets, or tokens in any hyperparameter fields. As part
+    #   of the shared responsibility model, you are responsible for any
+    #   potential exposure, unauthorized access, or compromise of your
+    #   sensitive data if caused by any security-sensitive information
+    #   included in the request hyperparameter variable or plain text
+    #   fields.
     #
     #
     #
@@ -10286,6 +14337,13 @@ module Aws::SageMaker
     #   purpose, owner, or environment. For more information, see [Tagging
     #   Amazon Web Services Resources][1].
     #
+    #   Do not include any security-sensitive information including account
+    #   access IDs, secrets, or tokens in any tags. As part of the shared
+    #   responsibility model, you are responsible for any potential
+    #   exposure, unauthorized access, or compromise of your sensitive data
+    #   if caused by any security-sensitive information included in the
+    #   request tag variable or plain text fields.
+    #
     #
     #
     #   [1]: https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html
@@ -10386,6 +14444,13 @@ module Aws::SageMaker
     #
     # @!attribute [rw] environment
     #   The environment variables to set in the Docker container.
+    #
+    #   Do not include any security-sensitive information including account
+    #   access IDs, secrets, or tokens in any environment fields. As part of
+    #   the shared responsibility model, you are responsible for any
+    #   potential exposure, unauthorized access, or compromise of your
+    #   sensitive data if caused by security-sensitive information included
+    #   in the request environment variable or plain text fields.
     #   @return [Hash<String,String>]
     #
     # @!attribute [rw] retry_strategy
@@ -10414,6 +14479,18 @@ module Aws::SageMaker
     #   the training job.
     #   @return [Types::SessionChainingConfig]
     #
+    # @!attribute [rw] serverless_job_config
+    #   The configuration for serverless training jobs.
+    #   @return [Types::ServerlessJobConfig]
+    #
+    # @!attribute [rw] mlflow_config
+    #   The MLflow configuration using SageMaker managed MLflow.
+    #   @return [Types::MlflowConfig]
+    #
+    # @!attribute [rw] model_package_config
+    #   The configuration for the model package.
+    #   @return [Types::ModelPackageConfig]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/CreateTrainingJobRequest AWS API Documentation
     #
     class CreateTrainingJobRequest < Struct.new(
@@ -10441,7 +14518,10 @@ module Aws::SageMaker
       :retry_strategy,
       :remote_debug_config,
       :infra_check_config,
-      :session_chaining_config)
+      :session_chaining_config,
+      :serverless_job_config,
+      :mlflow_config,
+      :model_package_config)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -10467,6 +14547,11 @@ module Aws::SageMaker
     #   creating this plan.
     #   @return [String]
     #
+    # @!attribute [rw] spare_instance_count_per_ultra_server
+    #   Number of spare instances to reserve per UltraServer for enhanced
+    #   resiliency. Default is 1.
+    #   @return [Integer]
+    #
     # @!attribute [rw] tags
     #   An array of key-value pairs to apply to this training plan.
     #   @return [Array<Types::Tag>]
@@ -10476,6 +14561,7 @@ module Aws::SageMaker
     class CreateTrainingPlanRequest < Struct.new(
       :training_plan_name,
       :training_plan_offering_id,
+      :spare_instance_count_per_ultra_server,
       :tags)
       SENSITIVE = []
       include Aws::Structure
@@ -10907,6 +14993,11 @@ module Aws::SageMaker
     #   Use this parameter to configure a workforce using VPC.
     #   @return [Types::WorkforceVpcConfigRequest]
     #
+    # @!attribute [rw] ip_address_type
+    #   Use this parameter to specify whether you want `IPv4` only or
+    #   `dualstack` (`IPv4` and `IPv6`) to support your labeling workforce.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/CreateWorkforceRequest AWS API Documentation
     #
     class CreateWorkforceRequest < Struct.new(
@@ -10915,7 +15006,8 @@ module Aws::SageMaker
       :source_ip_config,
       :workforce_name,
       :tags,
-      :workforce_vpc_config)
+      :workforce_vpc_config,
+      :ip_address_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -11039,11 +15131,17 @@ module Aws::SageMaker
     #   A custom file system in Amazon FSx for Lustre.
     #   @return [Types::FSxLustreFileSystem]
     #
+    # @!attribute [rw] s3_file_system
+    #   A custom file system in Amazon S3. This is only supported in Amazon
+    #   SageMaker Unified Studio.
+    #   @return [Types::S3FileSystem]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/CustomFileSystem AWS API Documentation
     #
     class CustomFileSystem < Struct.new(
       :efs_file_system,
       :f_sx_lustre_file_system,
+      :s3_file_system,
       :unknown)
       SENSITIVE = []
       include Aws::Structure
@@ -11051,6 +15149,7 @@ module Aws::SageMaker
 
       class EfsFileSystem < CustomFileSystem; end
       class FSxLustreFileSystem < CustomFileSystem; end
+      class S3FileSystem < CustomFileSystem; end
       class Unknown < CustomFileSystem; end
     end
 
@@ -11070,11 +15169,16 @@ module Aws::SageMaker
     #   The settings for a custom Amazon FSx for Lustre file system.
     #   @return [Types::FSxLustreFileSystemConfig]
     #
+    # @!attribute [rw] s3_file_system_config
+    #   Configuration settings for a custom Amazon S3 file system.
+    #   @return [Types::S3FileSystemConfig]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/CustomFileSystemConfig AWS API Documentation
     #
     class CustomFileSystemConfig < Struct.new(
       :efs_file_system_config,
       :f_sx_lustre_file_system_config,
+      :s3_file_system_config,
       :unknown)
       SENSITIVE = []
       include Aws::Structure
@@ -11082,6 +15186,7 @@ module Aws::SageMaker
 
       class EfsFileSystemConfig < CustomFileSystemConfig; end
       class FSxLustreFileSystemConfig < CustomFileSystemConfig; end
+      class S3FileSystemConfig < CustomFileSystemConfig; end
       class Unknown < CustomFileSystemConfig; end
     end
 
@@ -11461,11 +15566,16 @@ module Aws::SageMaker
     #   The file system that is associated with a channel.
     #   @return [Types::FileSystemDataSource]
     #
+    # @!attribute [rw] dataset_source
+    #   The dataset resource that's associated with a channel.
+    #   @return [Types::DatasetSource]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DataSource AWS API Documentation
     #
     class DataSource < Struct.new(
       :s3_data_source,
-      :file_system_data_source)
+      :file_system_data_source,
+      :dataset_source)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -11511,6 +15621,20 @@ module Aws::SageMaker
       :local_path,
       :data_distribution_type,
       :input_mode)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Specifies a dataset source for a channel.
+    #
+    # @!attribute [rw] dataset_arn
+    #   The Amazon Resource Name (ARN) of the dataset resource.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DatasetSource AWS API Documentation
+    #
+    class DatasetSource < Struct.new(
+      :dataset_arn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -11739,6 +15863,79 @@ module Aws::SageMaker
     #
     class DefaultSpaceStorageSettings < Struct.new(
       :default_ebs_storage_settings)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] ai_benchmark_job_name
+    #   The name of the AI benchmark job to delete.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DeleteAIBenchmarkJobRequest AWS API Documentation
+    #
+    class DeleteAIBenchmarkJobRequest < Struct.new(
+      :ai_benchmark_job_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] ai_benchmark_job_arn
+    #   The Amazon Resource Name (ARN) of the deleted benchmark job.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DeleteAIBenchmarkJobResponse AWS API Documentation
+    #
+    class DeleteAIBenchmarkJobResponse < Struct.new(
+      :ai_benchmark_job_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] ai_recommendation_job_name
+    #   The name of the AI recommendation job to delete.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DeleteAIRecommendationJobRequest AWS API Documentation
+    #
+    class DeleteAIRecommendationJobRequest < Struct.new(
+      :ai_recommendation_job_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] ai_recommendation_job_arn
+    #   The Amazon Resource Name (ARN) of the deleted recommendation job.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DeleteAIRecommendationJobResponse AWS API Documentation
+    #
+    class DeleteAIRecommendationJobResponse < Struct.new(
+      :ai_recommendation_job_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] ai_workload_config_name
+    #   The name of the AI workload configuration to delete.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DeleteAIWorkloadConfigRequest AWS API Documentation
+    #
+    class DeleteAIWorkloadConfigRequest < Struct.new(
+      :ai_workload_config_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] ai_workload_config_arn
+    #   The Amazon Resource Name (ARN) of the deleted AI workload
+    #   configuration.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DeleteAIWorkloadConfigResponse AWS API Documentation
+    #
+    class DeleteAIWorkloadConfigResponse < Struct.new(
+      :ai_workload_config_arn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -12307,6 +16504,51 @@ module Aws::SageMaker
       include Aws::Structure
     end
 
+    # @!attribute [rw] job_name
+    #   The name of the job to delete.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_category
+    #   The category of the job to delete.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DeleteJobRequest AWS API Documentation
+    #
+    class DeleteJobRequest < Struct.new(
+      :job_name,
+      :job_category)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DeleteJobResponse AWS API Documentation
+    #
+    class DeleteJobResponse < Aws::EmptyStructure; end
+
+    # @!attribute [rw] arn
+    #   The ARN of the MLflow App to delete.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DeleteMlflowAppRequest AWS API Documentation
+    #
+    class DeleteMlflowAppRequest < Struct.new(
+      :arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] arn
+    #   The ARN of the deleted MLflow App.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DeleteMlflowAppResponse AWS API Documentation
+    #
+    class DeleteMlflowAppResponse < Struct.new(
+      :arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] tracking_server_name
     #   The name of the the tracking server to delete.
     #   @return [String]
@@ -12547,6 +16789,18 @@ module Aws::SageMaker
       include Aws::Structure
     end
 
+    # @!attribute [rw] processing_job_name
+    #   The name of the processing job to delete.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DeleteProcessingJobRequest AWS API Documentation
+    #
+    class DeleteProcessingJobRequest < Struct.new(
+      :processing_job_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] project_name
     #   The name of the project to delete.
     #   @return [String]
@@ -12610,6 +16864,18 @@ module Aws::SageMaker
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DeleteTagsOutput AWS API Documentation
     #
     class DeleteTagsOutput < Aws::EmptyStructure; end
+
+    # @!attribute [rw] training_job_name
+    #   The name of the training job to delete.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DeleteTrainingJobRequest AWS API Documentation
+    #
+    class DeleteTrainingJobRequest < Struct.new(
+      :training_job_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
 
     # @!attribute [rw] trial_component_name
     #   The name of the component to delete.
@@ -12790,6 +17056,33 @@ module Aws::SageMaker
       include Aws::Structure
     end
 
+    # The configuration to use when updating the AMI versions.
+    #
+    # @!attribute [rw] rolling_update_policy
+    #   The policy that SageMaker uses when updating the AMI versions of the
+    #   cluster.
+    #   @return [Types::RollingDeploymentPolicy]
+    #
+    # @!attribute [rw] wait_interval_in_seconds
+    #   The duration in seconds that SageMaker waits before updating more
+    #   instances in the cluster.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] auto_rollback_configuration
+    #   An array that contains the alarms that SageMaker monitors to know
+    #   whether to roll back the AMI update.
+    #   @return [Array<Types::AlarmDetails>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DeploymentConfiguration AWS API Documentation
+    #
+    class DeploymentConfiguration < Struct.new(
+      :rolling_update_policy,
+      :wait_interval_in_seconds,
+      :auto_rollback_configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # A set of recommended deployment configurations for the model. To get
     # more advanced recommendations, see
     # [CreateInferenceRecommendationsJob][1] to create an inference
@@ -12911,6 +17204,260 @@ module Aws::SageMaker
       include Aws::Structure
     end
 
+    # @!attribute [rw] ai_benchmark_job_name
+    #   The name of the AI benchmark job to describe.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DescribeAIBenchmarkJobRequest AWS API Documentation
+    #
+    class DescribeAIBenchmarkJobRequest < Struct.new(
+      :ai_benchmark_job_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] ai_benchmark_job_name
+    #   The name of the AI benchmark job.
+    #   @return [String]
+    #
+    # @!attribute [rw] ai_benchmark_job_arn
+    #   The Amazon Resource Name (ARN) of the AI benchmark job.
+    #   @return [String]
+    #
+    # @!attribute [rw] ai_benchmark_job_status
+    #   The status of the AI benchmark job.
+    #   @return [String]
+    #
+    # @!attribute [rw] failure_reason
+    #   If the benchmark job failed, the reason it failed.
+    #   @return [String]
+    #
+    # @!attribute [rw] benchmark_target
+    #   The target endpoint that was benchmarked.
+    #   @return [Types::AIBenchmarkTarget]
+    #
+    # @!attribute [rw] output_config
+    #   The output configuration for the benchmark job, including the Amazon
+    #   S3 output location and CloudWatch log information.
+    #   @return [Types::AIBenchmarkOutputResult]
+    #
+    # @!attribute [rw] ai_workload_config_identifier
+    #   The name or Amazon Resource Name (ARN) of the AI workload
+    #   configuration used for this benchmark job.
+    #   @return [String]
+    #
+    # @!attribute [rw] role_arn
+    #   The Amazon Resource Name (ARN) of the IAM role used by the benchmark
+    #   job.
+    #   @return [String]
+    #
+    # @!attribute [rw] network_config
+    #   The network configuration for the benchmark job.
+    #   @return [Types::AIBenchmarkNetworkConfig]
+    #
+    # @!attribute [rw] creation_time
+    #   A timestamp that indicates when the benchmark job was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] start_time
+    #   A timestamp that indicates when the benchmark job started running.
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_time
+    #   A timestamp that indicates when the benchmark job completed.
+    #   @return [Time]
+    #
+    # @!attribute [rw] tags
+    #   The tags associated with the benchmark job.
+    #   @return [Array<Types::Tag>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DescribeAIBenchmarkJobResponse AWS API Documentation
+    #
+    class DescribeAIBenchmarkJobResponse < Struct.new(
+      :ai_benchmark_job_name,
+      :ai_benchmark_job_arn,
+      :ai_benchmark_job_status,
+      :failure_reason,
+      :benchmark_target,
+      :output_config,
+      :ai_workload_config_identifier,
+      :role_arn,
+      :network_config,
+      :creation_time,
+      :start_time,
+      :end_time,
+      :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] ai_recommendation_job_name
+    #   The name of the AI recommendation job to describe.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DescribeAIRecommendationJobRequest AWS API Documentation
+    #
+    class DescribeAIRecommendationJobRequest < Struct.new(
+      :ai_recommendation_job_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] ai_recommendation_job_name
+    #   The name of the AI recommendation job.
+    #   @return [String]
+    #
+    # @!attribute [rw] ai_recommendation_job_arn
+    #   The Amazon Resource Name (ARN) of the AI recommendation job.
+    #   @return [String]
+    #
+    # @!attribute [rw] ai_recommendation_job_status
+    #   The status of the AI recommendation job.
+    #   @return [String]
+    #
+    # @!attribute [rw] failure_reason
+    #   If the recommendation job failed, the reason it failed.
+    #   @return [String]
+    #
+    # @!attribute [rw] model_source
+    #   The source of the model that was analyzed.
+    #   @return [Types::AIModelSource]
+    #
+    # @!attribute [rw] output_config
+    #   The output configuration for the recommendation job.
+    #   @return [Types::AIRecommendationOutputResult]
+    #
+    # @!attribute [rw] inference_specification
+    #   The inference framework configuration.
+    #   @return [Types::AIRecommendationInferenceSpecification]
+    #
+    # @!attribute [rw] ai_workload_config_identifier
+    #   The name or Amazon Resource Name (ARN) of the AI workload
+    #   configuration used for this recommendation job.
+    #   @return [String]
+    #
+    # @!attribute [rw] optimize_model
+    #   Whether model optimization techniques were allowed.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] performance_target
+    #   The performance targets specified for the recommendation job.
+    #   @return [Types::AIRecommendationPerformanceTarget]
+    #
+    # @!attribute [rw] recommendations
+    #   The list of optimization recommendations generated by the job. Each
+    #   recommendation includes optimization details, deployment
+    #   configuration, expected performance metrics, and the associated
+    #   benchmark job ARN.
+    #   @return [Array<Types::AIRecommendation>]
+    #
+    # @!attribute [rw] role_arn
+    #   The Amazon Resource Name (ARN) of the IAM role used by the
+    #   recommendation job.
+    #   @return [String]
+    #
+    # @!attribute [rw] compute_spec
+    #   The compute resource specification for the recommendation job.
+    #   @return [Types::AIRecommendationComputeSpec]
+    #
+    # @!attribute [rw] adapter_source
+    #   The LoRA adapter source that you specified when you created the
+    #   recommendation job. This field is absent when you created the job
+    #   without LoRA adapters.
+    #   @return [Types::AIAdapterSource]
+    #
+    # @!attribute [rw] creation_time
+    #   A timestamp that indicates when the recommendation job was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] start_time
+    #   A timestamp that indicates when the recommendation job started
+    #   running.
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_time
+    #   A timestamp that indicates when the recommendation job completed.
+    #   @return [Time]
+    #
+    # @!attribute [rw] tags
+    #   The tags associated with the recommendation job.
+    #   @return [Array<Types::Tag>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DescribeAIRecommendationJobResponse AWS API Documentation
+    #
+    class DescribeAIRecommendationJobResponse < Struct.new(
+      :ai_recommendation_job_name,
+      :ai_recommendation_job_arn,
+      :ai_recommendation_job_status,
+      :failure_reason,
+      :model_source,
+      :output_config,
+      :inference_specification,
+      :ai_workload_config_identifier,
+      :optimize_model,
+      :performance_target,
+      :recommendations,
+      :role_arn,
+      :compute_spec,
+      :adapter_source,
+      :creation_time,
+      :start_time,
+      :end_time,
+      :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] ai_workload_config_name
+    #   The name of the AI workload configuration to describe.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DescribeAIWorkloadConfigRequest AWS API Documentation
+    #
+    class DescribeAIWorkloadConfigRequest < Struct.new(
+      :ai_workload_config_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] ai_workload_config_name
+    #   The name of the AI workload configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] ai_workload_config_arn
+    #   The Amazon Resource Name (ARN) of the AI workload configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] dataset_config
+    #   The dataset configuration for the workload.
+    #   @return [Types::AIDatasetConfig]
+    #
+    # @!attribute [rw] ai_workload_configs
+    #   The benchmark tool configuration and workload specification.
+    #   @return [Types::AIWorkloadConfigs]
+    #
+    # @!attribute [rw] tags
+    #   The tags associated with the AI workload configuration.
+    #   @return [Array<Types::Tag>]
+    #
+    # @!attribute [rw] creation_time
+    #   A timestamp that indicates when the AI workload configuration was
+    #   created.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DescribeAIWorkloadConfigResponse AWS API Documentation
+    #
+    class DescribeAIWorkloadConfigResponse < Struct.new(
+      :ai_workload_config_name,
+      :ai_workload_config_arn,
+      :dataset_config,
+      :ai_workload_configs,
+      :tags,
+      :creation_time)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] action_name
     #   The name of the action to describe.
     #   @return [String]
@@ -12956,8 +17503,8 @@ module Aws::SageMaker
     #   @return [Time]
     #
     # @!attribute [rw] created_by
-    #   Information about the user who created or modified an experiment,
-    #   trial, trial component, lineage group, project, or model card.
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
     #   @return [Types::UserContext]
     #
     # @!attribute [rw] last_modified_time
@@ -12965,8 +17512,8 @@ module Aws::SageMaker
     #   @return [Time]
     #
     # @!attribute [rw] last_modified_by
-    #   Information about the user who created or modified an experiment,
-    #   trial, trial component, lineage group, project, or model card.
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
     #   @return [Types::UserContext]
     #
     # @!attribute [rw] metadata_properties
@@ -13190,6 +17737,18 @@ module Aws::SageMaker
     #   The status.
     #   @return [String]
     #
+    # @!attribute [rw] effective_trusted_identity_propagation_status
+    #   The effective status of Trusted Identity Propagation (TIP) for this
+    #   application. When enabled, user identities from IAM Identity Center
+    #   are being propagated through the application to TIP enabled Amazon
+    #   Web Services services. When disabled, standard IAM role-based access
+    #   is used.
+    #   @return [String]
+    #
+    # @!attribute [rw] recovery_mode
+    #   Indicates whether the application is launched in recovery mode.
+    #   @return [Boolean]
+    #
     # @!attribute [rw] last_health_check_timestamp
     #   The timestamp of the last health check.
     #   @return [Time]
@@ -13238,6 +17797,8 @@ module Aws::SageMaker
       :user_profile_name,
       :space_name,
       :status,
+      :effective_trusted_identity_propagation_status,
+      :recovery_mode,
       :last_health_check_timestamp,
       :last_user_activity_timestamp,
       :creation_time,
@@ -13285,8 +17846,8 @@ module Aws::SageMaker
     #   @return [Time]
     #
     # @!attribute [rw] created_by
-    #   Information about the user who created or modified an experiment,
-    #   trial, trial component, lineage group, project, or model card.
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
     #   @return [Types::UserContext]
     #
     # @!attribute [rw] last_modified_time
@@ -13294,8 +17855,8 @@ module Aws::SageMaker
     #   @return [Time]
     #
     # @!attribute [rw] last_modified_by
-    #   Information about the user who created or modified an experiment,
-    #   trial, trial component, lineage group, project, or model card.
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
     #   @return [Types::UserContext]
     #
     # @!attribute [rw] metadata_properties
@@ -13607,6 +18168,39 @@ module Aws::SageMaker
       include Aws::Structure
     end
 
+    # @!attribute [rw] event_id
+    #   The unique identifier (UUID) of the event to describe. This ID can
+    #   be obtained from the `ListClusterEvents` operation.
+    #   @return [String]
+    #
+    # @!attribute [rw] cluster_name
+    #   The name or Amazon Resource Name (ARN) of the HyperPod cluster
+    #   associated with the event.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DescribeClusterEventRequest AWS API Documentation
+    #
+    class DescribeClusterEventRequest < Struct.new(
+      :event_id,
+      :cluster_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] event_details
+    #   Detailed information about the requested cluster event, including
+    #   event metadata for various resource types such as `Cluster`,
+    #   `InstanceGroup`, `Instance`, and their associated attributes.
+    #   @return [Types::ClusterEventDetail]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DescribeClusterEventResponse AWS API Documentation
+    #
+    class DescribeClusterEventResponse < Struct.new(
+      :event_details)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] cluster_name
     #   The string name or the Amazon Resource Name (ARN) of the SageMaker
     #   HyperPod cluster in which the node is.
@@ -13616,11 +18210,19 @@ module Aws::SageMaker
     #   The ID of the SageMaker HyperPod cluster node.
     #   @return [String]
     #
+    # @!attribute [rw] node_logical_id
+    #   The logical identifier of the node to describe. You can specify
+    #   either `NodeLogicalId` or `InstanceId`, but not both.
+    #   `NodeLogicalId` can be used to describe nodes that are still being
+    #   provisioned and don't yet have an `InstanceId` assigned.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DescribeClusterNodeRequest AWS API Documentation
     #
     class DescribeClusterNodeRequest < Struct.new(
       :cluster_name,
-      :node_id)
+      :node_id,
+      :node_logical_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -13674,6 +18276,16 @@ module Aws::SageMaker
     #   The instance groups of the SageMaker HyperPod cluster.
     #   @return [Array<Types::ClusterInstanceGroupDetails>]
     #
+    # @!attribute [rw] restricted_instance_groups
+    #   The specialized instance groups for training models like Amazon Nova
+    #   to be created in the SageMaker HyperPod cluster.
+    #   @return [Array<Types::ClusterRestrictedInstanceGroupDetails>]
+    #
+    # @!attribute [rw] restricted_instance_groups_config
+    #   The configuration for the restricted instance groups (RIG) in the
+    #   SageMaker HyperPod cluster.
+    #   @return [Types::ClusterRestrictedInstanceGroupsConfigOutput]
+    #
     # @!attribute [rw] vpc_config
     #   Specifies an Amazon Virtual Private Cloud (VPC) that your SageMaker
     #   jobs, hosted models, and compute resources have access to. You can
@@ -13690,10 +18302,30 @@ module Aws::SageMaker
     #   The type of orchestrator used for the SageMaker HyperPod cluster.
     #   @return [Types::ClusterOrchestrator]
     #
+    # @!attribute [rw] tiered_storage_config
+    #   The current configuration for managed tier checkpointing on the
+    #   HyperPod cluster. For example, this shows whether the feature is
+    #   enabled and the percentage of cluster memory allocated for
+    #   checkpoint storage.
+    #   @return [Types::ClusterTieredStorageConfig]
+    #
     # @!attribute [rw] node_recovery
     #   The node recovery mode configured for the SageMaker HyperPod
     #   cluster.
     #   @return [String]
+    #
+    # @!attribute [rw] node_provisioning_mode
+    #   The mode used for provisioning nodes in the cluster.
+    #   @return [String]
+    #
+    # @!attribute [rw] cluster_role
+    #   The Amazon Resource Name (ARN) of the IAM role that HyperPod uses
+    #   for cluster autoscaling operations.
+    #   @return [String]
+    #
+    # @!attribute [rw] auto_scaling
+    #   The current autoscaling configuration and status for the autoscaler.
+    #   @return [Types::ClusterAutoScalingConfigOutput]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DescribeClusterResponse AWS API Documentation
     #
@@ -13704,9 +18336,15 @@ module Aws::SageMaker
       :creation_time,
       :failure_message,
       :instance_groups,
+      :restricted_instance_groups,
+      :restricted_instance_groups_config,
       :vpc_config,
       :orchestrator,
-      :node_recovery)
+      :tiered_storage_config,
+      :node_recovery,
+      :node_provisioning_mode,
+      :cluster_role,
+      :auto_scaling)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -13752,6 +18390,12 @@ module Aws::SageMaker
     #   Failure reason of the cluster policy.
     #   @return [String]
     #
+    # @!attribute [rw] status_details
+    #   Additional details about the status of the cluster policy. This
+    #   field provides context when the policy is in a non-active state,
+    #   such as during creation, updates, or if failures occur.
+    #   @return [Hash<String,String>]
+    #
     # @!attribute [rw] cluster_arn
     #   ARN of the cluster where the cluster policy is applied.
     #   @return [String]
@@ -13771,8 +18415,8 @@ module Aws::SageMaker
     #   @return [Time]
     #
     # @!attribute [rw] created_by
-    #   Information about the user who created or modified an experiment,
-    #   trial, trial component, lineage group, project, or model card.
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
     #   @return [Types::UserContext]
     #
     # @!attribute [rw] last_modified_time
@@ -13780,8 +18424,8 @@ module Aws::SageMaker
     #   @return [Time]
     #
     # @!attribute [rw] last_modified_by
-    #   Information about the user who created or modified an experiment,
-    #   trial, trial component, lineage group, project, or model card.
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
     #   @return [Types::UserContext]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DescribeClusterSchedulerConfigResponse AWS API Documentation
@@ -13793,6 +18437,7 @@ module Aws::SageMaker
       :cluster_scheduler_config_version,
       :status,
       :failure_reason,
+      :status_details,
       :cluster_arn,
       :scheduler_config,
       :description,
@@ -14062,8 +18707,8 @@ module Aws::SageMaker
     #   @return [Time]
     #
     # @!attribute [rw] created_by
-    #   Information about the user who created or modified an experiment,
-    #   trial, trial component, lineage group, project, or model card.
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
     #   @return [Types::UserContext]
     #
     # @!attribute [rw] last_modified_time
@@ -14071,8 +18716,8 @@ module Aws::SageMaker
     #   @return [Time]
     #
     # @!attribute [rw] last_modified_by
-    #   Information about the user who created or modified an experiment,
-    #   trial, trial component, lineage group, project, or model card.
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
     #   @return [Types::UserContext]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DescribeComputeQuotaResponse AWS API Documentation
@@ -14138,8 +18783,8 @@ module Aws::SageMaker
     #   @return [Time]
     #
     # @!attribute [rw] created_by
-    #   Information about the user who created or modified an experiment,
-    #   trial, trial component, lineage group, project, or model card.
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
     #   @return [Types::UserContext]
     #
     # @!attribute [rw] last_modified_time
@@ -14147,8 +18792,8 @@ module Aws::SageMaker
     #   @return [Time]
     #
     # @!attribute [rw] last_modified_by
-    #   Information about the user who created or modified an experiment,
-    #   trial, trial component, lineage group, project, or model card.
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
     #   @return [Types::UserContext]
     #
     # @!attribute [rw] lineage_group_arn
@@ -14513,6 +19158,10 @@ module Aws::SageMaker
     #   is provided.
     #   @return [String]
     #
+    # @!attribute [rw] home_efs_file_system_creation
+    #   Indicates whether a home EFS file system is created for the domain.
+    #   @return [String]
+    #
     # @!attribute [rw] tag_propagation
     #   Indicates whether custom tag propagation is supported for the
     #   domain.
@@ -14547,6 +19196,7 @@ module Aws::SageMaker
       :vpc_id,
       :kms_key_id,
       :app_security_group_management,
+      :home_efs_file_system_creation,
       :tag_propagation,
       :default_space_settings)
       SENSITIVE = []
@@ -14818,6 +19468,10 @@ module Aws::SageMaker
     #   made to or from the model containers.
     #   @return [Boolean]
     #
+    # @!attribute [rw] metrics_config
+    #   The configuration parameters for utilization metrics.
+    #   @return [Types::MetricsConfig]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DescribeEndpointConfigOutput AWS API Documentation
     #
     class DescribeEndpointConfigOutput < Struct.new(
@@ -14832,7 +19486,8 @@ module Aws::SageMaker
       :shadow_production_variants,
       :execution_role_arn,
       :vpc_config,
-      :enable_network_isolation)
+      :enable_network_isolation,
+      :metrics_config)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -14974,6 +19629,10 @@ module Aws::SageMaker
     #   [1]: https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_ProductionVariantSummary.html
     #   @return [Array<Types::ProductionVariantSummary>]
     #
+    # @!attribute [rw] metrics_config
+    #   The configuration parameters for utilization metrics.
+    #   @return [Types::MetricsConfig]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DescribeEndpointOutput AWS API Documentation
     #
     class DescribeEndpointOutput < Struct.new(
@@ -14990,7 +19649,8 @@ module Aws::SageMaker
       :async_inference_config,
       :pending_deployment_summary,
       :explainer_config,
-      :shadow_production_variants)
+      :shadow_production_variants,
+      :metrics_config)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -16028,6 +20688,14 @@ module Aws::SageMaker
     #   component.
     #   @return [Types::InferenceComponentSpecificationSummary]
     #
+    # @!attribute [rw] specifications
+    #   A list of specification summaries for the inference component, one
+    #   per instance type. This parameter is populated when the inference
+    #   component was created with multiple specifications. When this
+    #   parameter is populated, the singular `Specification` parameter is
+    #   not returned.
+    #   @return [Array<Types::InferenceComponentSpecificationSummary>]
+    #
     # @!attribute [rw] runtime_config
     #   Details about the runtime settings for the model that is deployed
     #   with the inference component.
@@ -16060,6 +20728,7 @@ module Aws::SageMaker
       :variant_name,
       :failure_reason,
       :specification,
+      :specifications,
       :runtime_config,
       :creation_time,
       :last_modified_time,
@@ -16314,6 +20983,144 @@ module Aws::SageMaker
       include Aws::Structure
     end
 
+    # @!attribute [rw] job_name
+    #   The name of the job to describe.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_category
+    #   The category of the job.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DescribeJobRequest AWS API Documentation
+    #
+    class DescribeJobRequest < Struct.new(
+      :job_name,
+      :job_category)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] job_name
+    #   The name of the job.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_arn
+    #   The Amazon Resource Name (ARN) of the job.
+    #   @return [String]
+    #
+    # @!attribute [rw] role_arn
+    #   The ARN of the IAM role associated with the job.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_category
+    #   The category of the job.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_config_schema_version
+    #   The schema version used for the job configuration document.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_config_document
+    #   The JSON configuration document for the job.
+    #   @return [String]
+    #
+    # @!attribute [rw] creation_time
+    #   The date and time that the job was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] last_modified_time
+    #   The date and time that the job was last modified.
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_time
+    #   The date and time that the job ended.
+    #   @return [Time]
+    #
+    # @!attribute [rw] job_status
+    #   The current status of the job.
+    #   @return [String]
+    #
+    # @!attribute [rw] secondary_status
+    #   The detailed secondary status of the job, providing more granular
+    #   information about the job's progress. Secondary statuses may change
+    #   between releases.
+    #   @return [String]
+    #
+    # @!attribute [rw] secondary_status_transitions
+    #   A list of secondary status transitions for the job, with timestamps
+    #   and optional status messages.
+    #   @return [Array<Types::JobSecondaryStatusTransition>]
+    #
+    # @!attribute [rw] failure_reason
+    #   If the job failed, the reason it failed.
+    #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   The tags associated with the job.
+    #   @return [Array<Types::Tag>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DescribeJobResponse AWS API Documentation
+    #
+    class DescribeJobResponse < Struct.new(
+      :job_name,
+      :job_arn,
+      :role_arn,
+      :job_category,
+      :job_config_schema_version,
+      :job_config_document,
+      :creation_time,
+      :last_modified_time,
+      :end_time,
+      :job_status,
+      :secondary_status,
+      :secondary_status_transitions,
+      :failure_reason,
+      :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] job_category
+    #   The category of the job schema to describe.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_config_schema_version
+    #   The version of the schema to retrieve. If not specified, the latest
+    #   version is returned.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DescribeJobSchemaVersionRequest AWS API Documentation
+    #
+    class DescribeJobSchemaVersionRequest < Struct.new(
+      :job_category,
+      :job_config_schema_version)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] job_category
+    #   The category of the job schema.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_config_schema_version
+    #   The version of the schema.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_config_schema
+    #   The JSON schema document that defines the structure of the job
+    #   configuration.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DescribeJobSchemaVersionResponse AWS API Documentation
+    #
+    class DescribeJobSchemaVersionResponse < Struct.new(
+      :job_category,
+      :job_config_schema_version,
+      :job_config_schema)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] labeling_job_name
     #   The name of the labeling job to return information for.
     #   @return [String]
@@ -16511,8 +21318,8 @@ module Aws::SageMaker
     #   @return [Time]
     #
     # @!attribute [rw] created_by
-    #   Information about the user who created or modified an experiment,
-    #   trial, trial component, lineage group, project, or model card.
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
     #   @return [Types::UserContext]
     #
     # @!attribute [rw] last_modified_time
@@ -16520,8 +21327,8 @@ module Aws::SageMaker
     #   @return [Time]
     #
     # @!attribute [rw] last_modified_by
-    #   Information about the user who created or modified an experiment,
-    #   trial, trial component, lineage group, project, or model card.
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
     #   @return [Types::UserContext]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DescribeLineageGroupResponse AWS API Documentation
@@ -16535,6 +21342,107 @@ module Aws::SageMaker
       :created_by,
       :last_modified_time,
       :last_modified_by)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] arn
+    #   The ARN of the MLflow App for which to get information.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DescribeMlflowAppRequest AWS API Documentation
+    #
+    class DescribeMlflowAppRequest < Struct.new(
+      :arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] arn
+    #   The ARN of the MLflow App.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the MLflow App.
+    #   @return [String]
+    #
+    # @!attribute [rw] artifact_store_uri
+    #   The S3 URI of the general purpose bucket used as the MLflow App
+    #   artifact store.
+    #   @return [String]
+    #
+    # @!attribute [rw] mlflow_version
+    #   The MLflow version used.
+    #   @return [String]
+    #
+    # @!attribute [rw] role_arn
+    #   The Amazon Resource Name (ARN) for an IAM role in your account that
+    #   the MLflow App uses to access the artifact store in Amazon S3.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The current creation status of the described MLflow App.
+    #   @return [String]
+    #
+    # @!attribute [rw] model_registration_mode
+    #   Whether automatic registration of new MLflow models to the SageMaker
+    #   Model Registry is enabled.
+    #   @return [String]
+    #
+    # @!attribute [rw] account_default_status
+    #   Indicates whether this MLflow app is the default for the entire
+    #   account.
+    #   @return [String]
+    #
+    # @!attribute [rw] default_domain_id_list
+    #   List of SageMaker Domain IDs for which this MLflow App is the
+    #   default.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] creation_time
+    #   The timestamp when the MLflow App was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] created_by
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
+    #   @return [Types::UserContext]
+    #
+    # @!attribute [rw] last_modified_time
+    #   The timestamp when the MLflow App was last modified.
+    #   @return [Time]
+    #
+    # @!attribute [rw] last_modified_by
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
+    #   @return [Types::UserContext]
+    #
+    # @!attribute [rw] weekly_maintenance_window_start
+    #   The day and time of the week when weekly maintenance occurs.
+    #   @return [String]
+    #
+    # @!attribute [rw] maintenance_status
+    #   Current maintenance status of the MLflow App.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DescribeMlflowAppResponse AWS API Documentation
+    #
+    class DescribeMlflowAppResponse < Struct.new(
+      :arn,
+      :name,
+      :artifact_store_uri,
+      :mlflow_version,
+      :role_arn,
+      :status,
+      :model_registration_mode,
+      :account_default_status,
+      :default_domain_id_list,
+      :creation_time,
+      :created_by,
+      :last_modified_time,
+      :last_modified_by,
+      :weekly_maintenance_window_start,
+      :maintenance_status)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -16582,6 +21490,11 @@ module Aws::SageMaker
     #   The current creation status of the described MLflow Tracking Server.
     #   @return [String]
     #
+    # @!attribute [rw] tracking_server_maintenance_status
+    #   The current maintenance status of the described MLflow Tracking
+    #   Server.
+    #   @return [String]
+    #
     # @!attribute [rw] is_active
     #   Whether the described MLflow Tracking Server is currently active.
     #   @return [String]
@@ -16607,8 +21520,8 @@ module Aws::SageMaker
     #   @return [Time]
     #
     # @!attribute [rw] created_by
-    #   Information about the user who created or modified an experiment,
-    #   trial, trial component, lineage group, project, or model card.
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
     #   @return [Types::UserContext]
     #
     # @!attribute [rw] last_modified_time
@@ -16617,9 +21530,19 @@ module Aws::SageMaker
     #   @return [Time]
     #
     # @!attribute [rw] last_modified_by
-    #   Information about the user who created or modified an experiment,
-    #   trial, trial component, lineage group, project, or model card.
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
     #   @return [Types::UserContext]
+    #
+    # @!attribute [rw] s3_bucket_owner_account_id
+    #   Expected Amazon Web Services account ID that owns the Amazon S3
+    #   bucket for artifact storage.
+    #   @return [String]
+    #
+    # @!attribute [rw] s3_bucket_owner_verification
+    #   Whether Amazon S3 Bucket Ownership checks are enabled whenever the
+    #   tracking server interacts with Amazon Amazon S3.
+    #   @return [Boolean]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DescribeMlflowTrackingServerResponse AWS API Documentation
     #
@@ -16631,6 +21554,7 @@ module Aws::SageMaker
       :mlflow_version,
       :role_arn,
       :tracking_server_status,
+      :tracking_server_maintenance_status,
       :is_active,
       :tracking_server_url,
       :weekly_maintenance_window_start,
@@ -16638,7 +21562,9 @@ module Aws::SageMaker
       :creation_time,
       :created_by,
       :last_modified_time,
-      :last_modified_by)
+      :last_modified_by,
+      :s3_bucket_owner_account_id,
+      :s3_bucket_owner_verification)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -16813,11 +21739,30 @@ module Aws::SageMaker
     #   provided, then the latest version of the model card is described.
     #   @return [Integer]
     #
+    # @!attribute [rw] included_data
+    #   Specifies the level of model card data to include in the response.
+    #   Use this parameter to call `DescribeModelCard` without requiring
+    #   `kms:Decrypt` permission on the customer-managed Amazon Web Services
+    #   KMS key.
+    #
+    #   * `AllData`: Returns the full model card `Content`. This option
+    #     requires `kms:Decrypt` permission on the customer-managed key, if
+    #     one is associated with the model card. This is the default.
+    #
+    #   * `MetadataOnly`: Returns the model card with sanitized `Content`
+    #     that includes only a small set of unencrypted metadata fields.
+    #     This option does not require `kms:Decrypt` permission. For the
+    #     list of fields preserved in the response, see `Content`.
+    #
+    #   If you don't specify a value, SageMaker returns `AllData`.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DescribeModelCardRequest AWS API Documentation
     #
     class DescribeModelCardRequest < Struct.new(
       :model_card_name,
-      :model_card_version)
+      :model_card_version,
+      :included_data)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -16835,7 +21780,32 @@ module Aws::SageMaker
     #   @return [Integer]
     #
     # @!attribute [rw] content
-    #   The content of the model card.
+    #   The content of the model card. Content is provided as a string in
+    #   the [model card JSON schema][1].
+    #
+    #   When you set `IncludedData` to `MetadataOnly` in the request,
+    #   SageMaker returns a sanitized version of `Content` that includes
+    #   only the following JSON paths, when present in the model card:
+    #
+    #   * `model_overview.model_id`
+    #
+    #   * `model_overview.model_name`
+    #
+    #   * `intended_uses.risk_rating`
+    #
+    #   * `model_package_details.model_package_group_name`
+    #
+    #   * `model_package_details.model_package_arn`
+    #
+    #   All other fields are removed from `Content` when `IncludedData` is
+    #   `MetadataOnly`, including model description, training details,
+    #   evaluation details, business details, and additional information. To
+    #   retrieve the complete `Content`, set `IncludedData` to `AllData` or
+    #   omit the parameter.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/sagemaker/latest/dg/model-cards.html#model-cards-json-schema
     #   @return [String]
     #
     # @!attribute [rw] model_card_status
@@ -16862,8 +21832,8 @@ module Aws::SageMaker
     #   @return [Time]
     #
     # @!attribute [rw] created_by
-    #   Information about the user who created or modified an experiment,
-    #   trial, trial component, lineage group, project, or model card.
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
     #   @return [Types::UserContext]
     #
     # @!attribute [rw] last_modified_time
@@ -16871,8 +21841,8 @@ module Aws::SageMaker
     #   @return [Time]
     #
     # @!attribute [rw] last_modified_by
-    #   Information about the user who created or modified an experiment,
-    #   trial, trial component, lineage group, project, or model card.
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
     #   @return [Types::UserContext]
     #
     # @!attribute [rw] model_card_processing_status
@@ -17104,13 +22074,17 @@ module Aws::SageMaker
     #   @return [Time]
     #
     # @!attribute [rw] created_by
-    #   Information about the user who created or modified an experiment,
-    #   trial, trial component, lineage group, project, or model card.
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
     #   @return [Types::UserContext]
     #
     # @!attribute [rw] model_package_group_status
     #   The status of the model group.
     #   @return [String]
+    #
+    # @!attribute [rw] managed_configuration
+    #   The managed configuration of the model package group.
+    #   @return [Types::ManagedConfiguration]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DescribeModelPackageGroupOutput AWS API Documentation
     #
@@ -17120,7 +22094,8 @@ module Aws::SageMaker
       :model_package_group_description,
       :creation_time,
       :created_by,
-      :model_package_group_status)
+      :model_package_group_status,
+      :managed_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -17133,10 +22108,39 @@ module Aws::SageMaker
     #   Valid characters are a-z, A-Z, 0-9, and - (hyphen).
     #   @return [String]
     #
+    # @!attribute [rw] included_data
+    #   Specifies the level of model package data to include in the
+    #   response. Use this parameter to call `DescribeModelPackage` on a
+    #   model package that has an associated model card without requiring
+    #   `kms:Decrypt` permission on the customer-managed KMS key associated
+    #   with the embedded model card.
+    #
+    #   * `AllData`: Returns the full model package response, including the
+    #     unredacted `ModelCard.ModelCardContent`. This option requires
+    #     `kms:Decrypt` permission on the customer-managed key, if one is
+    #     associated with the embedded model card. This is the default.
+    #
+    #   * `MetadataOnly`: Returns the full model package response, but with
+    #     the embedded `ModelCard.ModelCardContent` sanitized to include
+    #     only a small set of unencrypted metadata fields. This option does
+    #     not require `kms:Decrypt` permission. All other top-level response
+    #     fields, including `InferenceSpecification`, `ModelMetrics`,
+    #     `DriftCheckBaselines`, and `SecurityConfig`, are returned
+    #     unchanged. For the list of fields preserved within
+    #     `ModelCardContent`, see [ModelCard][1].
+    #
+    #   If you don't specify a value, SageMaker returns `AllData`.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_DescribeModelPackage.html#sagemaker-DescribeModelPackage-response-ModelCard
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DescribeModelPackageInput AWS API Documentation
     #
     class DescribeModelPackageInput < Struct.new(
-      :model_package_name)
+      :model_package_name,
+      :included_data)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -17153,6 +22157,10 @@ module Aws::SageMaker
     # @!attribute [rw] model_package_version
     #   The version of the model package.
     #   @return [Integer]
+    #
+    # @!attribute [rw] model_package_registration_type
+    #   The package registration type of the model package output.
+    #   @return [String]
     #
     # @!attribute [rw] model_package_arn
     #   The Amazon Resource Name (ARN) of the model package.
@@ -17199,8 +22207,8 @@ module Aws::SageMaker
     #   @return [String]
     #
     # @!attribute [rw] created_by
-    #   Information about the user who created or modified an experiment,
-    #   trial, trial component, lineage group, project, or model card.
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
     #   @return [Types::UserContext]
     #
     # @!attribute [rw] metadata_properties
@@ -17217,8 +22225,8 @@ module Aws::SageMaker
     #   @return [Time]
     #
     # @!attribute [rw] last_modified_by
-    #   Information about the user who created or modified an experiment,
-    #   trial, trial component, lineage group, project, or model card.
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
     #   @return [Types::UserContext]
     #
     # @!attribute [rw] approval_description
@@ -17290,6 +22298,29 @@ module Aws::SageMaker
     #   card associated with the model package, see [View the Details of a
     #   Model Version][2].
     #
+    #   When you set `IncludedData` to `MetadataOnly` in the request,
+    #   `ModelCardStatus` is preserved and `ModelCardContent` is sanitized
+    #   to include only the following JSON paths, when present in the model
+    #   card:
+    #
+    #   * `model_overview.model_id`
+    #
+    #   * `model_overview.model_name`
+    #
+    #   * `intended_uses.risk_rating`
+    #
+    #   * `model_package_details.model_package_group_name`
+    #
+    #   * `model_package_details.model_package_arn`
+    #
+    #   Because the `ModelPackageModelCard` schema does not include
+    #   `model_package_details` and limits `model_overview` to
+    #   `model_creator` and `model_artifact`, the sanitized
+    #   `ModelCardContent` for a model package typically contains only
+    #   `intended_uses.risk_rating` if it was provided when the model card
+    #   was created. To retrieve the complete `ModelCardContent`, set
+    #   `IncludedData` to `AllData` or omit the parameter.
+    #
     #
     #
     #   [1]: https://docs.aws.amazon.com/sagemaker/latest/dg/model-registry-details.html#model-card-schema
@@ -17301,12 +22332,17 @@ module Aws::SageMaker
     #   cycle.
     #   @return [Types::ModelLifeCycle]
     #
+    # @!attribute [rw] managed_storage_type
+    #   The storage type of the model package.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DescribeModelPackageOutput AWS API Documentation
     #
     class DescribeModelPackageOutput < Struct.new(
       :model_package_name,
       :model_package_group_name,
       :model_package_version,
+      :model_package_registration_type,
       :model_package_arn,
       :model_package_description,
       :creation_time,
@@ -17333,7 +22369,8 @@ module Aws::SageMaker
       :source_uri,
       :security_config,
       :model_card,
-      :model_life_cycle)
+      :model_life_cycle,
+      :managed_storage_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -17590,6 +22627,12 @@ module Aws::SageMaker
     #   The type of ML compute instance running on the notebook instance.
     #   @return [String]
     #
+    # @!attribute [rw] ip_address_type
+    #   The IP address type configured for the notebook instance. Returns
+    #   `ipv4` for IPv4-only connectivity or `dualstack` for both IPv4 and
+    #   IPv6 connectivity.
+    #   @return [String]
+    #
     # @!attribute [rw] subnet_id
     #   The ID of the VPC subnet.
     #   @return [String]
@@ -17723,6 +22766,7 @@ module Aws::SageMaker
       :failure_reason,
       :url,
       :instance_type,
+      :ip_address_type,
       :subnet_id,
       :security_groups,
       :role_arn,
@@ -17802,6 +22846,10 @@ module Aws::SageMaker
     #   with the optimization job.
     #   @return [String]
     #
+    # @!attribute [rw] max_instance_count
+    #   The maximum number of instances to use for the optimization job.
+    #   @return [Integer]
+    #
     # @!attribute [rw] optimization_configs
     #   Settings for each of the optimization techniques that the job
     #   applies.
@@ -17848,6 +22896,13 @@ module Aws::SageMaker
     #   A VPC in Amazon VPC that your optimized model has access to.
     #   @return [Types::OptimizationVpcConfig]
     #
+    # @!attribute [rw] training_plan_arns
+    #   The Amazon Resource Name (ARN) of the training plan associated with
+    #   this optimization job. This field appears only when you specified a
+    #   training plan when you created the job. Optimization jobs that use
+    #   on-demand capacity don't return this field.
+    #   @return [Array<String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DescribeOptimizationJobResponse AWS API Documentation
     #
     class DescribeOptimizationJobResponse < Struct.new(
@@ -17862,12 +22917,14 @@ module Aws::SageMaker
       :model_source,
       :optimization_environment,
       :deployment_instance_type,
+      :max_instance_count,
       :optimization_configs,
       :output_config,
       :optimization_output,
       :role_arn,
       :stopping_condition,
-      :vpc_config)
+      :vpc_config,
+      :training_plan_arns)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -17876,10 +22933,16 @@ module Aws::SageMaker
     #   The ARN of the SageMaker Partner AI App to describe.
     #   @return [String]
     #
+    # @!attribute [rw] include_available_upgrade
+    #   When set to `TRUE`, the response includes available upgrade
+    #   information for the SageMaker Partner AI App. Default is `FALSE`.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DescribePartnerAppRequest AWS API Documentation
     #
     class DescribePartnerAppRequest < Struct.new(
-      :arn)
+      :arn,
+      :include_available_upgrade)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -17899,15 +22962,45 @@ module Aws::SageMaker
     #
     # @!attribute [rw] status
     #   The status of the SageMaker Partner AI App.
+    #
+    #   * Creating: SageMaker AI is creating the partner AI app. The partner
+    #     AI app is not available during creation.
+    #
+    #   * Updating: SageMaker AI is updating the partner AI app. The partner
+    #     AI app is not available when updating.
+    #
+    #   * Deleting: SageMaker AI is deleting the partner AI app. The partner
+    #     AI app is not available during deletion.
+    #
+    #   * Available: The partner AI app is provisioned and accessible.
+    #
+    #   * Failed: The partner AI app is in a failed state and isn't
+    #     available. SageMaker AI is investigating the issue. For further
+    #     guidance, contact Amazon Web Services Support.
+    #
+    #   * UpdateFailed: The partner AI app couldn't be updated but is
+    #     available.
+    #
+    #   * Deleted: The partner AI app is permanently deleted and not
+    #     available.
     #   @return [String]
     #
     # @!attribute [rw] creation_time
     #   The time that the SageMaker Partner AI App was created.
     #   @return [Time]
     #
+    # @!attribute [rw] last_modified_time
+    #   The time that the SageMaker Partner AI App was last modified.
+    #   @return [Time]
+    #
     # @!attribute [rw] execution_role_arn
     #   The ARN of the IAM role associated with the SageMaker Partner AI
     #   App.
+    #   @return [String]
+    #
+    # @!attribute [rw] kms_key_id
+    #   The Amazon Web Services KMS customer managed key used to encrypt the
+    #   data at rest associated with SageMaker Partner AI Apps.
     #   @return [String]
     #
     # @!attribute [rw] base_url
@@ -17948,6 +23041,24 @@ module Aws::SageMaker
     #   reason for an operation failure.
     #   @return [Types::ErrorInfo]
     #
+    # @!attribute [rw] enable_auto_minor_version_upgrade
+    #   Indicates whether the SageMaker Partner AI App is configured for
+    #   automatic minor version upgrades during scheduled maintenance
+    #   windows.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] current_version_eol_date
+    #   The end-of-life date for the current version of the SageMaker
+    #   Partner AI App.
+    #   @return [Time]
+    #
+    # @!attribute [rw] available_upgrade
+    #   A map of available minor version upgrades for the SageMaker Partner
+    #   AI App. The key is the semantic version number, and the value is a
+    #   list of release notes for that version. A null value indicates no
+    #   upgrades are available.
+    #   @return [Types::AvailableUpgrade]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DescribePartnerAppResponse AWS API Documentation
     #
     class DescribePartnerAppResponse < Struct.new(
@@ -17956,7 +23067,9 @@ module Aws::SageMaker
       :type,
       :status,
       :creation_time,
+      :last_modified_time,
       :execution_role_arn,
+      :kms_key_id,
       :base_url,
       :maintenance_config,
       :tier,
@@ -17964,7 +23077,10 @@ module Aws::SageMaker
       :application_config,
       :auth_type,
       :enable_iam_session_based_identity,
-      :error)
+      :error,
+      :enable_auto_minor_version_upgrade,
+      :current_version_eol_date,
+      :available_upgrade)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -18048,13 +23164,13 @@ module Aws::SageMaker
     #   @return [Time]
     #
     # @!attribute [rw] created_by
-    #   Information about the user who created or modified an experiment,
-    #   trial, trial component, lineage group, project, or model card.
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
     #   @return [Types::UserContext]
     #
     # @!attribute [rw] last_modified_by
-    #   Information about the user who created or modified an experiment,
-    #   trial, trial component, lineage group, project, or model card.
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
     #   @return [Types::UserContext]
     #
     # @!attribute [rw] parallelism_configuration
@@ -18064,6 +23180,14 @@ module Aws::SageMaker
     # @!attribute [rw] selective_execution_config
     #   The selective execution configuration applied to the pipeline run.
     #   @return [Types::SelectiveExecutionConfig]
+    #
+    # @!attribute [rw] pipeline_version_id
+    #   The ID of the pipeline version.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] m_lflow_config
+    #   The MLflow configuration of the pipeline execution.
+    #   @return [Types::MLflowConfiguration]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DescribePipelineExecutionResponse AWS API Documentation
     #
@@ -18080,7 +23204,9 @@ module Aws::SageMaker
       :created_by,
       :last_modified_by,
       :parallelism_configuration,
-      :selective_execution_config)
+      :selective_execution_config,
+      :pipeline_version_id,
+      :m_lflow_config)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -18089,10 +23215,15 @@ module Aws::SageMaker
     #   The name or Amazon Resource Name (ARN) of the pipeline to describe.
     #   @return [String]
     #
+    # @!attribute [rw] pipeline_version_id
+    #   The ID of the pipeline version to describe.
+    #   @return [Integer]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DescribePipelineRequest AWS API Documentation
     #
     class DescribePipelineRequest < Struct.new(
-      :pipeline_name)
+      :pipeline_name,
+      :pipeline_version_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -18138,18 +23269,26 @@ module Aws::SageMaker
     #   @return [Time]
     #
     # @!attribute [rw] created_by
-    #   Information about the user who created or modified an experiment,
-    #   trial, trial component, lineage group, project, or model card.
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
     #   @return [Types::UserContext]
     #
     # @!attribute [rw] last_modified_by
-    #   Information about the user who created or modified an experiment,
-    #   trial, trial component, lineage group, project, or model card.
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
     #   @return [Types::UserContext]
     #
     # @!attribute [rw] parallelism_configuration
     #   Lists the parallelism configuration applied to the pipeline.
     #   @return [Types::ParallelismConfiguration]
+    #
+    # @!attribute [rw] pipeline_version_display_name
+    #   The display name of the pipeline version.
+    #   @return [String]
+    #
+    # @!attribute [rw] pipeline_version_description
+    #   The description of the pipeline version.
+    #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DescribePipelineResponse AWS API Documentation
     #
@@ -18166,7 +23305,9 @@ module Aws::SageMaker
       :last_run_time,
       :created_by,
       :last_modified_by,
-      :parallelism_configuration)
+      :parallelism_configuration,
+      :pipeline_version_display_name,
+      :pipeline_version_description)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -18348,9 +23489,13 @@ module Aws::SageMaker
     #   The status of the project.
     #   @return [String]
     #
+    # @!attribute [rw] template_provider_details
+    #   An array of template providers associated with the project.
+    #   @return [Array<Types::TemplateProviderDetail>]
+    #
     # @!attribute [rw] created_by
-    #   Information about the user who created or modified an experiment,
-    #   trial, trial component, lineage group, project, or model card.
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
     #   @return [Types::UserContext]
     #
     # @!attribute [rw] creation_time
@@ -18362,8 +23507,8 @@ module Aws::SageMaker
     #   @return [Time]
     #
     # @!attribute [rw] last_modified_by
-    #   Information about the user who created or modified an experiment,
-    #   trial, trial component, lineage group, project, or model card.
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
     #   @return [Types::UserContext]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DescribeProjectOutput AWS API Documentation
@@ -18376,10 +23521,99 @@ module Aws::SageMaker
       :service_catalog_provisioning_details,
       :service_catalog_provisioned_product_details,
       :project_status,
+      :template_provider_details,
       :created_by,
       :creation_time,
       :last_modified_time,
       :last_modified_by)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] reserved_capacity_arn
+    #   ARN of the reserved capacity to describe.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DescribeReservedCapacityRequest AWS API Documentation
+    #
+    class DescribeReservedCapacityRequest < Struct.new(
+      :reserved_capacity_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] reserved_capacity_arn
+    #   ARN of the reserved capacity.
+    #   @return [String]
+    #
+    # @!attribute [rw] reserved_capacity_type
+    #   The type of reserved capacity.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The current status of the reserved capacity.
+    #   @return [String]
+    #
+    # @!attribute [rw] availability_zone
+    #   The Availability Zone where the reserved capacity is provisioned.
+    #   @return [String]
+    #
+    # @!attribute [rw] duration_hours
+    #   The total duration of the reserved capacity in hours.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] duration_minutes
+    #   The number of minutes for the duration of the reserved capacity. For
+    #   example, if a reserved capacity starts at 08:55 and ends at 11:30,
+    #   the minutes field would be 35.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] start_time
+    #   The timestamp when the reserved capacity becomes active.
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_time
+    #   The timestamp when the reserved capacity expires.
+    #   @return [Time]
+    #
+    # @!attribute [rw] instance_type
+    #   The Amazon EC2 instance type used in the reserved capacity.
+    #   @return [String]
+    #
+    # @!attribute [rw] total_instance_count
+    #   The total number of instances allocated to this reserved capacity.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] available_instance_count
+    #   The number of instances currently available for use in this reserved
+    #   capacity.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] in_use_instance_count
+    #   The number of instances currently in use from this reserved
+    #   capacity.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] ultra_server_summary
+    #   A summary of the UltraServer associated with this reserved capacity.
+    #   @return [Types::UltraServerSummary]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DescribeReservedCapacityResponse AWS API Documentation
+    #
+    class DescribeReservedCapacityResponse < Struct.new(
+      :reserved_capacity_arn,
+      :reserved_capacity_type,
+      :status,
+      :availability_zone,
+      :duration_hours,
+      :duration_minutes,
+      :start_time,
+      :end_time,
+      :instance_type,
+      :total_instance_count,
+      :available_instance_count,
+      :in_use_instance_count,
+      :ultra_server_summary)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -18637,6 +23871,9 @@ module Aws::SageMaker
     #   InProgress
     #   : * `Starting` - Starting the training job.
     #
+    #     * `Pending` - The training job is waiting for compute capacity or
+    #       compute resource provision.
+    #
     #     * `Downloading` - An optional stage for algorithms that support
     #       `File` training input mode. It indicates that data is being
     #       downloaded to the ML storage volumes.
@@ -18835,6 +24072,10 @@ module Aws::SageMaker
     #   `TrainingTimeInSeconds` is 500, the savings is 80%.
     #   @return [Integer]
     #
+    # @!attribute [rw] billable_token_count
+    #   The billable token count for eligible serverless training jobs.
+    #   @return [Integer]
+    #
     # @!attribute [rw] debug_hook_config
     #   Configuration information for the Amazon SageMaker Debugger hook
     #   parameters, metric and tensor collections, and storage paths. To
@@ -18900,6 +24141,13 @@ module Aws::SageMaker
     #
     # @!attribute [rw] environment
     #   The environment variables to set in the Docker container.
+    #
+    #   Do not include any security-sensitive information including account
+    #   access IDs, secrets, or tokens in any environment fields. As part of
+    #   the shared responsibility model, you are responsible for any
+    #   potential exposure, unauthorized access, or compromise of your
+    #   sensitive data if caused by security-sensitive information included
+    #   in the request environment variable or plain text fields.
     #   @return [Hash<String,String>]
     #
     # @!attribute [rw] retry_strategy
@@ -18922,6 +24170,31 @@ module Aws::SageMaker
     #   Contains information about the infrastructure health check
     #   configuration for the training job.
     #   @return [Types::InfraCheckConfig]
+    #
+    # @!attribute [rw] serverless_job_config
+    #   The configuration for serverless training jobs.
+    #   @return [Types::ServerlessJobConfig]
+    #
+    # @!attribute [rw] mlflow_config
+    #   The MLflow configuration using SageMaker managed MLflow.
+    #   @return [Types::MlflowConfig]
+    #
+    # @!attribute [rw] model_package_config
+    #   The configuration for the model package.
+    #   @return [Types::ModelPackageConfig]
+    #
+    # @!attribute [rw] mlflow_details
+    #   The MLflow details of this job.
+    #   @return [Types::MlflowDetails]
+    #
+    # @!attribute [rw] progress_info
+    #   The Serverless training job progress information.
+    #   @return [Types::TrainingProgressInfo]
+    #
+    # @!attribute [rw] output_model_package_arn
+    #   The Amazon Resource Name (ARN) of the output model package
+    #   containing model weights or checkpoints.
+    #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DescribeTrainingJobResponse AWS API Documentation
     #
@@ -18956,6 +24229,7 @@ module Aws::SageMaker
       :checkpoint_config,
       :training_time_in_seconds,
       :billable_time_in_seconds,
+      :billable_token_count,
       :debug_hook_config,
       :experiment_config,
       :debug_rule_configurations,
@@ -18968,7 +24242,53 @@ module Aws::SageMaker
       :environment,
       :retry_strategy,
       :remote_debug_config,
-      :infra_check_config)
+      :infra_check_config,
+      :serverless_job_config,
+      :mlflow_config,
+      :model_package_config,
+      :mlflow_details,
+      :progress_info,
+      :output_model_package_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] training_plan_arn
+    #   The Amazon Resource Name (ARN); of the training plan to retrieve
+    #   extension history for.
+    #   @return [String]
+    #
+    # @!attribute [rw] next_token
+    #   A token to continue pagination if more results are available.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of extensions to return in the response.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DescribeTrainingPlanExtensionHistoryRequest AWS API Documentation
+    #
+    class DescribeTrainingPlanExtensionHistoryRequest < Struct.new(
+      :training_plan_arn,
+      :next_token,
+      :max_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] training_plan_extensions
+    #   A list of extensions for the specified training plan.
+    #   @return [Array<Types::TrainingPlanExtension>]
+    #
+    # @!attribute [rw] next_token
+    #   A token to continue pagination if more results are available.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DescribeTrainingPlanExtensionHistoryResponse AWS API Documentation
+    #
+    class DescribeTrainingPlanExtensionHistoryResponse < Struct.new(
+      :training_plan_extensions,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -19044,9 +24364,23 @@ module Aws::SageMaker
     #   The number of instances currently in use from this training plan.
     #   @return [Integer]
     #
+    # @!attribute [rw] unhealthy_instance_count
+    #   The number of instances in the training plan that are currently in
+    #   an unhealthy state.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] available_spare_instance_count
+    #   The number of available spare instances in the training plan.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] total_ultra_server_count
+    #   The total number of UltraServers reserved to this training plan.
+    #   @return [Integer]
+    #
     # @!attribute [rw] target_resources
     #   The target resources (e.g., SageMaker Training Jobs, SageMaker
-    #   HyperPod) that can use this training plan.
+    #   HyperPod, SageMaker Endpoints, Studio apps) that can use this
+    #   training plan.
     #
     #   Training plans are specific to their target resource.
     #
@@ -19055,6 +24389,13 @@ module Aws::SageMaker
     #
     #   * A training plan for HyperPod clusters can be used exclusively to
     #     provide compute resources to a cluster's instance group.
+    #
+    #   * A training plan for SageMaker endpoints can be used exclusively to
+    #     provide compute resources to SageMaker endpoints for model
+    #     deployment.
+    #
+    #   * A training plan for Studio apps can be used to launch JupyterLab
+    #     and Code Editor apps on reserved training plan capacity.
     #   @return [Array<String>]
     #
     # @!attribute [rw] reserved_capacity_summaries
@@ -19078,6 +24419,9 @@ module Aws::SageMaker
       :total_instance_count,
       :available_instance_count,
       :in_use_instance_count,
+      :unhealthy_instance_count,
+      :available_spare_instance_count,
+      :total_ultra_server_count,
       :target_resources,
       :reserved_capacity_summaries)
       SENSITIVE = []
@@ -19618,6 +24962,73 @@ module Aws::SageMaker
       include Aws::Structure
     end
 
+    # @!attribute [rw] cluster_arn
+    #   The Amazon Resource Name (ARN) of your SageMaker HyperPod cluster
+    #   containing the target node. Your cluster must use EKS as the
+    #   orchestration and be in the `InService` state.
+    #   @return [String]
+    #
+    # @!attribute [rw] node_id
+    #   The unique identifier of the cluster node from which you want to
+    #   detach the volume.
+    #   @return [String]
+    #
+    # @!attribute [rw] volume_id
+    #   The unique identifier of your EBS volume that you want to detach.
+    #   Your volume must be currently attached to the specified node.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DetachClusterNodeVolumeRequest AWS API Documentation
+    #
+    class DetachClusterNodeVolumeRequest < Struct.new(
+      :cluster_arn,
+      :node_id,
+      :volume_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] cluster_arn
+    #   The Amazon Resource Name (ARN) of your SageMaker HyperPod cluster
+    #   where the volume detachment operation was performed.
+    #   @return [String]
+    #
+    # @!attribute [rw] node_id
+    #   The unique identifier of the cluster node from which your volume was
+    #   detached.
+    #   @return [String]
+    #
+    # @!attribute [rw] volume_id
+    #   The unique identifier of your EBS volume that was detached.
+    #   @return [String]
+    #
+    # @!attribute [rw] attach_time
+    #   The original timestamp when your volume was initially attached to
+    #   the node.
+    #   @return [Time]
+    #
+    # @!attribute [rw] status
+    #   The current status of your volume detachment operation.
+    #   @return [String]
+    #
+    # @!attribute [rw] device_name
+    #   The device name assigned to your attached volume on the target
+    #   instance.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DetachClusterNodeVolumeResponse AWS API Documentation
+    #
+    class DetachClusterNodeVolumeResponse < Struct.new(
+      :cluster_arn,
+      :node_id,
+      :volume_id,
+      :attach_time,
+      :status,
+      :device_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Information of a particular device.
     #
     # @!attribute [rw] device_name
@@ -19918,11 +25329,16 @@ module Aws::SageMaker
     #   domain is created in VPC-only mode.
     #   @return [Array<String>]
     #
+    # @!attribute [rw] rootless_docker
+    #   Indicates whether to use rootless Docker.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DockerSettings AWS API Documentation
     #
     class DockerSettings < Struct.new(
       :enable_docker_access,
-      :vpc_only_trusted_accounts)
+      :vpc_only_trusted_accounts,
+      :rootless_docker)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -19994,6 +25410,13 @@ module Aws::SageMaker
     #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_control-access_monitor.html
     #   @return [String]
     #
+    # @!attribute [rw] trusted_identity_propagation_settings
+    #   The Trusted Identity Propagation (TIP) settings for the SageMaker
+    #   domain. These settings determine how user identities from IAM
+    #   Identity Center are propagated through the domain to TIP enabled
+    #   Amazon Web Services services.
+    #   @return [Types::TrustedIdentityPropagationSettings]
+    #
     # @!attribute [rw] docker_settings
     #   A collection of settings that configure the domain's Docker
     #   interaction.
@@ -20005,14 +25428,29 @@ module Aws::SageMaker
     #   must be `SSO`.
     #   @return [Types::AmazonQSettings]
     #
+    # @!attribute [rw] unified_studio_settings
+    #   The settings that apply to an SageMaker AI domain when you use it in
+    #   Amazon SageMaker Unified Studio.
+    #   @return [Types::UnifiedStudioSettings]
+    #
+    # @!attribute [rw] ip_address_type
+    #   The IP address type for the domain. Specify `ipv4` for IPv4-only
+    #   connectivity or `dualstack` for both IPv4 and IPv6 connectivity.
+    #   When you specify `dualstack`, the subnet must support IPv6 CIDR
+    #   blocks. If not specified, defaults to `ipv4`.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DomainSettings AWS API Documentation
     #
     class DomainSettings < Struct.new(
       :security_group_ids,
       :r_studio_server_pro_domain_settings,
       :execution_role_identity_config,
+      :trusted_identity_propagation_settings,
       :docker_settings,
-      :amazon_q_settings)
+      :amazon_q_settings,
+      :unified_studio_settings,
+      :ip_address_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -20042,6 +25480,13 @@ module Aws::SageMaker
     #   apps.
     #   @return [Array<String>]
     #
+    # @!attribute [rw] trusted_identity_propagation_settings
+    #   The Trusted Identity Propagation (TIP) settings for the SageMaker
+    #   domain. These settings determine how user identities from IAM
+    #   Identity Center are propagated through the domain to TIP enabled
+    #   Amazon Web Services services.
+    #   @return [Types::TrustedIdentityPropagationSettings]
+    #
     # @!attribute [rw] docker_settings
     #   A collection of settings that configure the domain's Docker
     #   interaction.
@@ -20052,14 +25497,29 @@ module Aws::SageMaker
     #   within the domain.
     #   @return [Types::AmazonQSettings]
     #
+    # @!attribute [rw] unified_studio_settings
+    #   The settings that apply to an SageMaker AI domain when you use it in
+    #   Amazon SageMaker Unified Studio.
+    #   @return [Types::UnifiedStudioSettings]
+    #
+    # @!attribute [rw] ip_address_type
+    #   The IP address type for the domain. Specify `ipv4` for IPv4-only
+    #   connectivity or `dualstack` for both IPv4 and IPv6 connectivity.
+    #   When you specify `dualstack`, the subnet must support IPv6 CIDR
+    #   blocks.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DomainSettingsForUpdate AWS API Documentation
     #
     class DomainSettingsForUpdate < Struct.new(
       :r_studio_server_pro_domain_settings_for_update,
       :execution_role_identity_config,
       :security_group_ids,
+      :trusted_identity_propagation_settings,
       :docker_settings,
-      :amazon_q_settings)
+      :amazon_q_settings,
+      :unified_studio_settings,
+      :ip_address_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -20299,6 +25759,40 @@ module Aws::SageMaker
     #
     class EbsStorageSettings < Struct.new(
       :ebs_volume_size_in_gb)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The EC2 capacity reservations that are shared to an ML capacity
+    # reservation.
+    #
+    # @!attribute [rw] ec2_capacity_reservation_id
+    #   The unique identifier for an EC2 capacity reservation that's part
+    #   of the ML capacity reservation.
+    #   @return [String]
+    #
+    # @!attribute [rw] total_instance_count
+    #   The number of instances that you allocated to the EC2 capacity
+    #   reservation.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] available_instance_count
+    #   The number of instances that are currently available in the EC2
+    #   capacity reservation.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] used_by_current_endpoint
+    #   The number of instances from the EC2 capacity reservation that are
+    #   being used by the endpoint.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/Ec2CapacityReservation AWS API Documentation
+    #
+    class Ec2CapacityReservation < Struct.new(
+      :ec2_capacity_reservation_id,
+      :total_instance_count,
+      :available_instance_count,
+      :used_by_current_endpoint)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -20700,12 +26194,13 @@ module Aws::SageMaker
       include Aws::Structure
     end
 
-    # <note markdown="1"> This data type is intended for use exclusively by SageMaker Canvas and
+    # <note markdown="1"> This data type is intended for use exclusively by
+    # SageMaker Canvas and
     # cannot be used in other contexts at the moment.
     #
     #  </note>
     #
-    # Specifies the compute configuration for the EMR Serverless job.
+    #  Specifies the compute configuration for the EMR Serverless job.
     #
     # @!attribute [rw] execution_role_arn
     #   The ARN of the IAM role granting the AutoML job V2 the necessary
@@ -21241,6 +26736,44 @@ module Aws::SageMaker
       include Aws::Structure
     end
 
+    # The configuration for the restricted instance groups (RIG)
+    # environment.
+    #
+    # @!attribute [rw] f_sx_lustre_config
+    #   Configuration settings for an Amazon FSx for Lustre file system to
+    #   be used with the cluster.
+    #   @return [Types::FSxLustreConfig]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/EnvironmentConfig AWS API Documentation
+    #
+    class EnvironmentConfig < Struct.new(
+      :f_sx_lustre_config)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration details for the restricted instance groups (RIG)
+    # environment.
+    #
+    # @!attribute [rw] f_sx_lustre_config
+    #   Configuration settings for an Amazon FSx for Lustre file system to
+    #   be used with the cluster.
+    #   @return [Types::FSxLustreConfig]
+    #
+    # @!attribute [rw] s3_output_path
+    #   The Amazon S3 path where output data from the restricted instance
+    #   group (RIG) environment will be stored.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/EnvironmentConfigDetails AWS API Documentation
+    #
+    class EnvironmentConfigDetails < Struct.new(
+      :f_sx_lustre_config,
+      :s3_output_path)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # A list of environment parameters suggested by the Amazon SageMaker
     # Inference Recommender.
     #
@@ -21302,6 +26835,61 @@ module Aws::SageMaker
       include Aws::Structure
     end
 
+    # Detailed information about a specific event, including event metadata.
+    #
+    # @!attribute [rw] event_metadata
+    #   Metadata specific to the event, which may include information about
+    #   the cluster, instance group, or instance involved.
+    #   @return [Types::EventMetadata]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/EventDetails AWS API Documentation
+    #
+    class EventDetails < Struct.new(
+      :event_metadata)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Metadata associated with a cluster event, which may include details
+    # about various resource types.
+    #
+    # @note EventMetadata is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of EventMetadata corresponding to the set member.
+    #
+    # @!attribute [rw] cluster
+    #   Metadata specific to cluster-level events.
+    #   @return [Types::ClusterMetadata]
+    #
+    # @!attribute [rw] instance_group
+    #   Metadata specific to instance group-level events.
+    #   @return [Types::InstanceGroupMetadata]
+    #
+    # @!attribute [rw] instance_group_scaling
+    #   Metadata related to instance group scaling events.
+    #   @return [Types::InstanceGroupScalingMetadata]
+    #
+    # @!attribute [rw] instance
+    #   Metadata specific to instance-level events.
+    #   @return [Types::InstanceMetadata]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/EventMetadata AWS API Documentation
+    #
+    class EventMetadata < Struct.new(
+      :cluster,
+      :instance_group,
+      :instance_group_scaling,
+      :instance,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class Cluster < EventMetadata; end
+      class InstanceGroup < EventMetadata; end
+      class InstanceGroupScaling < EventMetadata; end
+      class Instance < EventMetadata; end
+      class Unknown < EventMetadata; end
+    end
+
     # The properties of an experiment as returned by the [Search][1] API.
     # For information about experiments, see the [CreateExperiment][2] API.
     #
@@ -21344,8 +26932,8 @@ module Aws::SageMaker
     #   @return [Time]
     #
     # @!attribute [rw] last_modified_by
-    #   Information about the user who created or modified an experiment,
-    #   trial, trial component, lineage group, project, or model card.
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
     #   @return [Types::UserContext]
     #
     # @!attribute [rw] tags
@@ -21510,6 +27098,55 @@ module Aws::SageMaker
     #
     class ExplainerConfig < Struct.new(
       :clarify_explainer_config)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] training_plan_extension_offering_id
+    #   The unique identifier of the extension offering to purchase. You can
+    #   retrieve this ID from the `TrainingPlanExtensionOfferings` in the
+    #   response of the `SearchTrainingPlanOfferings` API.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ExtendTrainingPlanRequest AWS API Documentation
+    #
+    class ExtendTrainingPlanRequest < Struct.new(
+      :training_plan_extension_offering_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] training_plan_extensions
+    #   The list of extensions for the training plan, including the newly
+    #   created extension.
+    #   @return [Array<Types::TrainingPlanExtension>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ExtendTrainingPlanResponse AWS API Documentation
+    #
+    class ExtendTrainingPlanResponse < Struct.new(
+      :training_plan_extensions)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration settings for an Amazon FSx for Lustre file system to be
+    # used with the cluster.
+    #
+    # @!attribute [rw] size_in_gi_b
+    #   The storage capacity of the Amazon FSx for Lustre file system,
+    #   specified in gibibytes (GiB).
+    #   @return [Integer]
+    #
+    # @!attribute [rw] per_unit_storage_throughput
+    #   The throughput capacity of the Amazon FSx for Lustre file system,
+    #   measured in MB/s per TiB of storage.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/FSxLustreConfig AWS API Documentation
+    #
+    class FSxLustreConfig < Struct.new(
+      :size_in_gi_b,
+      :per_unit_storage_throughput)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -23815,6 +29452,33 @@ module Aws::SageMaker
     #
     #   * `arn:aws:lambda:ca-central-1:918755190332:function:PRE-Adjustment3DPointCloudSemanticSegmentation`
     #
+    #   **Generative AI/Custom** - Direct passthrough of input data without
+    #   any transformation.
+    #
+    #   * `arn:aws:lambda:us-east-1:432418664414:function:PRE-PassThrough`
+    #
+    #   * `arn:aws:lambda:us-east-2:266458841044:function:PRE-PassThrough`
+    #
+    #   * `arn:aws:lambda:us-west-2:081040173940:function:PRE-PassThrough`
+    #
+    #   * `arn:aws:lambda:ca-central-1:918755190332:function:PRE-PassThrough`
+    #
+    #   * `arn:aws:lambda:eu-west-1:568282634449:function:PRE-PassThrough`
+    #
+    #   * `arn:aws:lambda:eu-west-2:487402164563:function:PRE-PassThrough`
+    #
+    #   * `arn:aws:lambda:eu-central-1:203001061592:function:PRE-PassThrough`
+    #
+    #   * `arn:aws:lambda:ap-northeast-1:477331159723:function:PRE-PassThrough`
+    #
+    #   * `arn:aws:lambda:ap-northeast-2:845288260483:function:PRE-PassThrough`
+    #
+    #   * `arn:aws:lambda:ap-south-1:565803892007:function:PRE-PassThrough`
+    #
+    #   * `arn:aws:lambda:ap-southeast-1:377565633583:function:PRE-PassThrough`
+    #
+    #   * `arn:aws:lambda:ap-southeast-2:454466003867:function:PRE-PassThrough`
+    #
     #
     #
     #   [1]: https://docs.aws.amazon.com/sagemaker/latest/dg/sms-task-types.html
@@ -25430,6 +31094,40 @@ module Aws::SageMaker
       include Aws::Structure
     end
 
+    # Configuration for balancing inference component copies across
+    # Availability Zones.
+    #
+    # @!attribute [rw] enforcement_mode
+    #   Determines how strictly the Availability Zone balance constraint is
+    #   enforced.
+    #
+    #   PERMISSIVE
+    #
+    #   : The endpoint attempts to balance copies across Availability Zones
+    #     but proceeds with scheduling even if balance can't be achieved
+    #     due to available capacity or instance distribution across
+    #     Availability Zones.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_imbalance
+    #   The maximum allowed difference in the number of inference component
+    #   copies between any two Availability Zones. This parameter applies
+    #   only when the endpoint has instances across two or more Availability
+    #   Zones. A copy placement is allowed if it reduces imbalance or the
+    #   resulting imbalance is within this value.
+    #
+    #   Default value: `0`.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/InferenceComponentAvailabilityZoneBalance AWS API Documentation
+    #
+    class InferenceComponentAvailabilityZoneBalance < Struct.new(
+      :enforcement_mode,
+      :max_imbalance)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Specifies the type and size of the endpoint capacity to activate for a
     # rolling deployment or a rollback strategy. You can specify your
     # batches as either of the following:
@@ -25527,12 +31225,23 @@ module Aws::SageMaker
     #   up to 1024. We support up to 16 entries in the map.
     #   @return [Hash<String,String>]
     #
+    # @!attribute [rw] container_metrics_config
+    #   The configuration for container metrics scraping. Specifies the
+    #   metrics endpoint path and publishing frequency for the inference
+    #   component's container. If not specified when
+    #   `EnableDetailedObservability` is `True`, the default path `/metrics`
+    #   on port `8080` is used. For first-party and Deep Learning Containers
+    #   (DLC), the endpoint path is determined automatically and this
+    #   configuration is optional.
+    #   @return [Types::ContainerMetricsConfig]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/InferenceComponentContainerSpecification AWS API Documentation
     #
     class InferenceComponentContainerSpecification < Struct.new(
       :image,
       :artifact_url,
-      :environment)
+      :environment,
+      :container_metrics_config)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -25566,12 +31275,55 @@ module Aws::SageMaker
     #   The environment variables to set in the Docker container.
     #   @return [Hash<String,String>]
     #
+    # @!attribute [rw] container_metrics_config
+    #   The container metrics scraping configuration for this inference
+    #   component, including the metrics endpoint path and publishing
+    #   frequency.
+    #   @return [Types::ContainerMetricsConfig]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/InferenceComponentContainerSpecificationSummary AWS API Documentation
     #
     class InferenceComponentContainerSpecificationSummary < Struct.new(
       :deployed_image,
       :artifact_url,
-      :environment)
+      :environment,
+      :container_metrics_config)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Settings that affect how the inference component caches data.
+    #
+    # @!attribute [rw] enable_caching
+    #   Sets whether the endpoint that hosts the inference component caches
+    #   the model artifacts and container image.
+    #
+    #   With caching enabled, the endpoint caches this data in each instance
+    #   that it provisions for the inference component. That way, the
+    #   inference component deploys faster during the auto scaling process.
+    #   If caching isn't enabled, the inference component takes longer to
+    #   deploy because of the time it spends downloading the data.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/InferenceComponentDataCacheConfig AWS API Documentation
+    #
+    class InferenceComponentDataCacheConfig < Struct.new(
+      :enable_caching)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Settings that affect how the inference component caches data.
+    #
+    # @!attribute [rw] enable_caching
+    #   Indicates whether the inference component caches model artifacts as
+    #   part of the auto scaling process.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/InferenceComponentDataCacheConfigSummary AWS API Documentation
+    #
+    class InferenceComponentDataCacheConfigSummary < Struct.new(
+      :enable_caching)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -25595,6 +31347,43 @@ module Aws::SageMaker
     class InferenceComponentDeploymentConfig < Struct.new(
       :rolling_update_policy,
       :auto_rollback_configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The metadata of the inference component.
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the inference component.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/InferenceComponentMetadata AWS API Documentation
+    #
+    class InferenceComponentMetadata < Struct.new(
+      :arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The placement status of an inference component on a specific instance
+    # type. Shows the number of inference component copies currently placed
+    # on instances of a given type.
+    #
+    # @!attribute [rw] instance_type
+    #   The ML compute instance type where the inference component copies
+    #   are placed.
+    #   @return [String]
+    #
+    # @!attribute [rw] current_copy_count
+    #   The number of inference component copies currently placed on
+    #   instances of this type.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/InferenceComponentPlacementStatus AWS API Documentation
+    #
+    class InferenceComponentPlacementStatus < Struct.new(
+      :instance_type,
+      :current_copy_count)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -25668,17 +31457,65 @@ module Aws::SageMaker
     #   currently deployed.
     #   @return [Integer]
     #
+    # @!attribute [rw] placement_status
+    #   The placement status of the inference component across instance
+    #   types. Shows how the inference component copies are distributed
+    #   across instance types.
+    #   @return [Array<Types::InferenceComponentPlacementStatus>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/InferenceComponentRuntimeConfigSummary AWS API Documentation
     #
     class InferenceComponentRuntimeConfigSummary < Struct.new(
       :desired_copy_count,
-      :current_copy_count)
+      :current_copy_count,
+      :placement_status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The scheduling configuration that determines how inference component
+    # copies are placed across available instances when copies are added or
+    # removed.
+    #
+    # @!attribute [rw] placement_strategy
+    #   The strategy for placing inference component copies across available
+    #   instances. If you also set `AvailabilityZoneBalance`, this strategy
+    #   applies to placement within each Availability Zone.
+    #
+    #   SPREAD
+    #
+    #   : Distributes copies evenly across available instances for better
+    #     resilience.
+    #
+    #   BINPACK
+    #
+    #   : Packs copies onto fewer instances to optimize resource
+    #     utilization.
+    #   @return [String]
+    #
+    # @!attribute [rw] availability_zone_balance
+    #   Configuration for balancing inference component copies across
+    #   Availability Zones.
+    #   @return [Types::InferenceComponentAvailabilityZoneBalance]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/InferenceComponentSchedulingConfig AWS API Documentation
+    #
+    class InferenceComponentSchedulingConfig < Struct.new(
+      :placement_strategy,
+      :availability_zone_balance)
       SENSITIVE = []
       include Aws::Structure
     end
 
     # Details about the resources to deploy with this inference component,
     # including the model, container, and compute resources.
+    #
+    # @!attribute [rw] instance_type
+    #   The ML compute instance type for the inference component
+    #   specification. Specifies which instance type this specification
+    #   applies to. Required when using the `Specifications` parameter with
+    #   multiple entries.
+    #   @return [String]
     #
     # @!attribute [rw] model_name
     #   The name of an existing SageMaker AI model object in your account
@@ -25726,20 +31563,38 @@ module Aws::SageMaker
     #   that you want to adapt.
     #   @return [String]
     #
+    # @!attribute [rw] data_cache_config
+    #   Settings that affect how the inference component caches data.
+    #   @return [Types::InferenceComponentDataCacheConfig]
+    #
+    # @!attribute [rw] scheduling_config
+    #   The scheduling configuration that determines how inference component
+    #   copies are placed across available instances when copies are added
+    #   or removed.
+    #   @return [Types::InferenceComponentSchedulingConfig]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/InferenceComponentSpecification AWS API Documentation
     #
     class InferenceComponentSpecification < Struct.new(
+      :instance_type,
       :model_name,
       :container,
       :startup_parameters,
       :compute_resource_requirements,
-      :base_inference_component_name)
+      :base_inference_component_name,
+      :data_cache_config,
+      :scheduling_config)
       SENSITIVE = []
       include Aws::Structure
     end
 
     # Details about the resources that are deployed with this inference
     # component.
+    #
+    # @!attribute [rw] instance_type
+    #   The ML compute instance type associated with this inference
+    #   component specification.
+    #   @return [String]
     #
     # @!attribute [rw] model_name
     #   The name of the SageMaker AI model object that is deployed with the
@@ -25765,14 +31620,27 @@ module Aws::SageMaker
     #   inference component.
     #   @return [String]
     #
+    # @!attribute [rw] data_cache_config
+    #   Settings that affect how the inference component caches data.
+    #   @return [Types::InferenceComponentDataCacheConfigSummary]
+    #
+    # @!attribute [rw] scheduling_config
+    #   The scheduling configuration that determines how inference component
+    #   copies are placed across available instances when copies are added
+    #   or removed.
+    #   @return [Types::InferenceComponentSchedulingConfig]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/InferenceComponentSpecificationSummary AWS API Documentation
     #
     class InferenceComponentSpecificationSummary < Struct.new(
+      :instance_type,
       :model_name,
       :container,
       :startup_parameters,
       :compute_resource_requirements,
-      :base_inference_component_name)
+      :base_inference_component_name,
+      :data_cache_config,
+      :scheduling_config)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -26491,6 +32359,163 @@ module Aws::SageMaker
       include Aws::Structure
     end
 
+    # The configuration of deep health checks for an instance group.
+    #
+    # <note markdown="1"> Overlapping deep health check configurations will be merged into a
+    # single operation.
+    #
+    #  </note>
+    #
+    # @!attribute [rw] instance_group_name
+    #   The name of the instance group.
+    #   @return [String]
+    #
+    # @!attribute [rw] instance_ids
+    #   A list of Amazon Elastic Compute Cloud (EC2) instance IDs on which
+    #   to perform deep health checks.
+    #
+    #   <note markdown="1"> Leave this field blank to perform deep health checks on the entire
+    #   instance group.
+    #
+    #    </note>
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] deep_health_checks
+    #   A list of deep health checks to be performed.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/InstanceGroupHealthCheckConfiguration AWS API Documentation
+    #
+    class InstanceGroupHealthCheckConfiguration < Struct.new(
+      :instance_group_name,
+      :instance_ids,
+      :deep_health_checks)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Metadata information about an instance group in a HyperPod cluster.
+    #
+    # @!attribute [rw] failure_message
+    #   An error message describing why the instance group level operation
+    #   (such as creating, scaling, or deleting) failed.
+    #   @return [String]
+    #
+    # @!attribute [rw] availability_zone_id
+    #   The ID of the Availability Zone where the instance group is located.
+    #   @return [String]
+    #
+    # @!attribute [rw] capacity_reservation
+    #   Information about the Capacity Reservation used by the instance
+    #   group.
+    #   @return [Types::CapacityReservation]
+    #
+    # @!attribute [rw] subnet_id
+    #   The ID of the subnet where the instance group is located.
+    #   @return [String]
+    #
+    # @!attribute [rw] security_group_ids
+    #   A list of security group IDs associated with the instance group.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] ami_override
+    #   If you use a custom Amazon Machine Image (AMI) for the instance
+    #   group, this field shows the ID of the custom AMI.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/InstanceGroupMetadata AWS API Documentation
+    #
+    class InstanceGroupMetadata < Struct.new(
+      :failure_message,
+      :availability_zone_id,
+      :capacity_reservation,
+      :subnet_id,
+      :security_group_ids,
+      :ami_override)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Metadata information about scaling operations for an instance group.
+    #
+    # @!attribute [rw] instance_count
+    #   The current number of instances in the group.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] target_count
+    #   The desired number of instances for the group after scaling.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] min_count
+    #   Minimum instance count of the instance group.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] failure_message
+    #   An error message describing why the scaling operation failed, if
+    #   applicable.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/InstanceGroupScalingMetadata AWS API Documentation
+    #
+    class InstanceGroupScalingMetadata < Struct.new(
+      :instance_count,
+      :target_count,
+      :min_count,
+      :failure_message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Metadata information about an instance in a HyperPod cluster.
+    #
+    # @!attribute [rw] customer_eni
+    #   The ID of the customer-managed Elastic Network Interface (ENI)
+    #   associated with the instance.
+    #   @return [String]
+    #
+    # @!attribute [rw] additional_enis
+    #   Information about additional Elastic Network Interfaces (ENIs)
+    #   associated with the instance.
+    #   @return [Types::AdditionalEnis]
+    #
+    # @!attribute [rw] instance_requirements_eni_configurations
+    #   The ENI configurations for the instance types in the instance
+    #   requirements, grouped by network interface category (for example,
+    #   ENI-only or EFA with ENIs). At most one configuration per category.
+    #   @return [Array<Types::InstanceRequirementsEniConfiguration>]
+    #
+    # @!attribute [rw] capacity_reservation
+    #   Information about the Capacity Reservation used by the instance.
+    #   @return [Types::CapacityReservation]
+    #
+    # @!attribute [rw] failure_message
+    #   An error message describing why the instance creation or update
+    #   failed, if applicable.
+    #   @return [String]
+    #
+    # @!attribute [rw] lcs_execution_state
+    #   The execution state of the Lifecycle Script (LCS) for the instance.
+    #   @return [String]
+    #
+    # @!attribute [rw] node_logical_id
+    #   The unique logical identifier of the node within the cluster. The ID
+    #   used here is the same object as in the `BatchAddClusterNodes` API.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/InstanceMetadata AWS API Documentation
+    #
+    class InstanceMetadata < Struct.new(
+      :customer_eni,
+      :additional_enis,
+      :instance_requirements_eni_configurations,
+      :capacity_reservation,
+      :failure_message,
+      :lcs_execution_state,
+      :node_logical_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Information on the IMDS configuration of the notebook instance
     #
     # @!attribute [rw] minimum_instance_metadata_service_version
@@ -26505,6 +32530,107 @@ module Aws::SageMaker
     #
     class InstanceMetadataServiceConfiguration < Struct.new(
       :minimum_instance_metadata_service_version)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration for how instances are placed and allocated within
+    # UltraServers. This is only applicable for UltraServer capacity.
+    #
+    # @!attribute [rw] enable_multiple_jobs
+    #   If set to true, allows multiple jobs to share the same UltraServer
+    #   instances. If set to false, ensures this job's instances are placed
+    #   on an UltraServer exclusively, with no other jobs sharing the same
+    #   UltraServer. Default is false.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] placement_specifications
+    #   A list of specifications for how instances should be placed on
+    #   specific UltraServers. Maximum of 10 items is supported.
+    #   @return [Array<Types::PlacementSpecification>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/InstancePlacementConfig AWS API Documentation
+    #
+    class InstancePlacementConfig < Struct.new(
+      :enable_multiple_jobs,
+      :placement_specifications)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Specifies an instance type and its priority for a heterogeneous
+    # endpoint. Use instance pools to configure a production variant with
+    # multiple instance types, enabling the endpoint to provision instances
+    # across different types based on priority.
+    #
+    # @!attribute [rw] instance_type
+    #   The ML compute instance type for the instance pool.
+    #   @return [String]
+    #
+    # @!attribute [rw] model_name_override
+    #   The name of a SageMaker model to use for this instance pool instead
+    #   of the model specified for the production variant. Use this to
+    #   deploy a different model optimized for the instance type in this
+    #   pool.
+    #   @return [String]
+    #
+    # @!attribute [rw] priority
+    #   The priority for the instance pool. SageMaker attempts to provision
+    #   instances in order of priority, starting with the lowest value. If
+    #   instances for a higher-priority pool are unavailable, SageMaker
+    #   attempts to provision from the next pool.
+    #
+    #   Valid values: 1 to 5, where 1 is the highest priority.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/InstancePool AWS API Documentation
+    #
+    class InstancePool < Struct.new(
+      :instance_type,
+      :model_name_override,
+      :priority)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A summary of an instance pool for a production variant, including the
+    # instance type and the current number of instances.
+    #
+    # @!attribute [rw] instance_type
+    #   The ML compute instance type for the instance pool.
+    #   @return [String]
+    #
+    # @!attribute [rw] current_instance_count
+    #   The current number of instances of this type in the instance pool.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/InstancePoolSummary AWS API Documentation
+    #
+    class InstancePoolSummary < Struct.new(
+      :instance_type,
+      :current_instance_count)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The customer ENI and additional ENIs associated with a network
+    # interface category.
+    #
+    # @!attribute [rw] customer_eni
+    #   The ID of the customer-managed Elastic Network Interface (ENI)
+    #   associated with the instance type category.
+    #   @return [String]
+    #
+    # @!attribute [rw] additional_enis
+    #   Information about additional Elastic Network Interfaces (ENIs)
+    #   associated with the instance type category.
+    #   @return [Types::AdditionalEnis]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/InstanceRequirementsEniConfiguration AWS API Documentation
+    #
+    class InstanceRequirementsEniConfiguration < Struct.new(
+      :customer_eni,
+      :additional_enis)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -26579,6 +32705,204 @@ module Aws::SageMaker
     class IntegerParameterRangeSpecification < Struct.new(
       :min_value,
       :max_value)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The properties of a job returned by the [Search][1] API.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_Search.html
+    #
+    # @!attribute [rw] job_name
+    #   The name of the job.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_arn
+    #   The Amazon Resource Name (ARN) of the job.
+    #   @return [String]
+    #
+    # @!attribute [rw] role_arn
+    #   The ARN of the IAM role associated with the job.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_category
+    #   The category of the job.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_config_schema_version
+    #   The schema version used for the job configuration document.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_config_document
+    #   The JSON configuration document for the job.
+    #   @return [String]
+    #
+    # @!attribute [rw] creation_time
+    #   The date and time that the job was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] last_modified_time
+    #   The date and time that the job was last modified.
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_time
+    #   The date and time that the job ended.
+    #   @return [Time]
+    #
+    # @!attribute [rw] job_status
+    #   The current status of the job.
+    #   @return [String]
+    #
+    # @!attribute [rw] secondary_status
+    #   The detailed secondary status of the job, providing more granular
+    #   information about the job's progress.
+    #   @return [String]
+    #
+    # @!attribute [rw] secondary_status_transitions
+    #   A list of secondary status transitions for the job, with timestamps
+    #   and optional status messages.
+    #   @return [Array<Types::JobSecondaryStatusTransition>]
+    #
+    # @!attribute [rw] failure_reason
+    #   If the job failed, the reason it failed.
+    #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   The tags associated with the job.
+    #   @return [Array<Types::Tag>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/Job AWS API Documentation
+    #
+    class Job < Struct.new(
+      :job_name,
+      :job_arn,
+      :role_arn,
+      :job_category,
+      :job_config_schema_version,
+      :job_config_document,
+      :creation_time,
+      :last_modified_time,
+      :end_time,
+      :job_status,
+      :secondary_status,
+      :secondary_status_transitions,
+      :failure_reason,
+      :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Provides summary information about a job configuration schema version.
+    #
+    # @!attribute [rw] job_config_schema_version
+    #   The version of the job configuration schema.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/JobConfigSchemaVersionSummary AWS API Documentation
+    #
+    class JobConfigSchemaVersionSummary < Struct.new(
+      :job_config_schema_version)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Represents a secondary status transition for a job. Jobs progress
+    # through multiple secondary statuses during execution. Each transition
+    # records the status, start time, optional end time, and an optional
+    # message with additional details.
+    #
+    # @!attribute [rw] status
+    #   The secondary status of the job at this transition point.
+    #   @return [String]
+    #
+    # @!attribute [rw] start_time
+    #   The date and time that the status transition started.
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_time
+    #   The date and time that the status transition ended.
+    #   @return [Time]
+    #
+    # @!attribute [rw] status_message
+    #   A detailed message about the status transition.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/JobSecondaryStatusTransition AWS API Documentation
+    #
+    class JobSecondaryStatusTransition < Struct.new(
+      :status,
+      :start_time,
+      :end_time,
+      :status_message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Metadata for a SageMaker job step.
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the SageMaker job that was run by
+    #   this step execution.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/JobStepMetadata AWS API Documentation
+    #
+    class JobStepMetadata < Struct.new(
+      :arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Provides summary information about a job, returned by the `ListJobs`
+    # operation. Use `DescribeJob` to get full details for a specific job.
+    #
+    # @!attribute [rw] job_arn
+    #   The Amazon Resource Name (ARN) of the job.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_name
+    #   The name of the job.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_category
+    #   The category of the job.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_status
+    #   The current status of the job.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_secondary_status
+    #   The secondary status of the job, providing more granular information
+    #   about the job's progress. Secondary statuses may change between
+    #   releases.
+    #   @return [String]
+    #
+    # @!attribute [rw] creation_time
+    #   The date and time that the job was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] last_modified_time
+    #   The date and time that the job was last modified.
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_time
+    #   The date and time that the job ended.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/JobSummary AWS API Documentation
+    #
+    class JobSummary < Struct.new(
+      :job_arn,
+      :job_name,
+      :job_category,
+      :job_status,
+      :job_secondary_status,
+      :creation_time,
+      :last_modified_time,
+      :end_time)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -27392,6 +33716,244 @@ module Aws::SageMaker
       include Aws::Structure
     end
 
+    # The metadata that tracks relationships between ML artifacts, actions,
+    # and contexts.
+    #
+    # @!attribute [rw] action_arns
+    #   The Amazon Resource Name (ARN) of the lineage action.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] artifact_arns
+    #   The Amazon Resource Name (ARN) of the lineage artifact.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] context_arns
+    #   The Amazon Resource Name (ARN) of the lineage context.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] associations
+    #   The lineage associations.
+    #   @return [Array<Types::AssociationInfo>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/LineageMetadata AWS API Documentation
+    #
+    class LineageMetadata < Struct.new(
+      :action_arns,
+      :artifact_arns,
+      :context_arns,
+      :associations)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] max_results
+    #   The maximum number of benchmark jobs to return in the response.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   If the previous call to `ListAIBenchmarkJobs` didn't return the
+    #   full set of jobs, the call returns a token for getting the next set.
+    #   @return [String]
+    #
+    # @!attribute [rw] name_contains
+    #   A string in the job name. This filter returns only jobs whose name
+    #   contains the specified string.
+    #   @return [String]
+    #
+    # @!attribute [rw] status_equals
+    #   A filter that returns only benchmark jobs with the specified status.
+    #   @return [String]
+    #
+    # @!attribute [rw] creation_time_after
+    #   A filter that returns only jobs created after the specified time.
+    #   @return [Time]
+    #
+    # @!attribute [rw] creation_time_before
+    #   A filter that returns only jobs created before the specified time.
+    #   @return [Time]
+    #
+    # @!attribute [rw] sort_by
+    #   The field to sort results by. The default is `CreationTime`.
+    #   @return [String]
+    #
+    # @!attribute [rw] sort_order
+    #   The sort order for results. The default is `Descending`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ListAIBenchmarkJobsRequest AWS API Documentation
+    #
+    class ListAIBenchmarkJobsRequest < Struct.new(
+      :max_results,
+      :next_token,
+      :name_contains,
+      :status_equals,
+      :creation_time_after,
+      :creation_time_before,
+      :sort_by,
+      :sort_order)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] ai_benchmark_jobs
+    #   An array of `AIBenchmarkJobSummary` objects, one for each benchmark
+    #   job that matches the specified filters.
+    #   @return [Array<Types::AIBenchmarkJobSummary>]
+    #
+    # @!attribute [rw] next_token
+    #   If the response is truncated, Amazon SageMaker AI returns this
+    #   token. To retrieve the next set of jobs, use it in the subsequent
+    #   request.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ListAIBenchmarkJobsResponse AWS API Documentation
+    #
+    class ListAIBenchmarkJobsResponse < Struct.new(
+      :ai_benchmark_jobs,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] max_results
+    #   The maximum number of recommendation jobs to return in the response.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   If the previous call to `ListAIRecommendationJobs` didn't return
+    #   the full set of jobs, the call returns a token for getting the next
+    #   set.
+    #   @return [String]
+    #
+    # @!attribute [rw] name_contains
+    #   A string in the job name. This filter returns only jobs whose name
+    #   contains the specified string.
+    #   @return [String]
+    #
+    # @!attribute [rw] status_equals
+    #   A filter that returns only recommendation jobs with the specified
+    #   status.
+    #   @return [String]
+    #
+    # @!attribute [rw] creation_time_after
+    #   A filter that returns only jobs created after the specified time.
+    #   @return [Time]
+    #
+    # @!attribute [rw] creation_time_before
+    #   A filter that returns only jobs created before the specified time.
+    #   @return [Time]
+    #
+    # @!attribute [rw] sort_by
+    #   The field to sort results by. The default is `CreationTime`.
+    #   @return [String]
+    #
+    # @!attribute [rw] sort_order
+    #   The sort order for results. The default is `Descending`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ListAIRecommendationJobsRequest AWS API Documentation
+    #
+    class ListAIRecommendationJobsRequest < Struct.new(
+      :max_results,
+      :next_token,
+      :name_contains,
+      :status_equals,
+      :creation_time_after,
+      :creation_time_before,
+      :sort_by,
+      :sort_order)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] ai_recommendation_jobs
+    #   An array of `AIRecommendationJobSummary` objects, one for each
+    #   recommendation job that matches the specified filters.
+    #   @return [Array<Types::AIRecommendationJobSummary>]
+    #
+    # @!attribute [rw] next_token
+    #   If the response is truncated, Amazon SageMaker AI returns this
+    #   token. To retrieve the next set of jobs, use it in the subsequent
+    #   request.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ListAIRecommendationJobsResponse AWS API Documentation
+    #
+    class ListAIRecommendationJobsResponse < Struct.new(
+      :ai_recommendation_jobs,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] max_results
+    #   The maximum number of AI workload configurations to return in the
+    #   response.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   If the previous call to `ListAIWorkloadConfigs` didn't return the
+    #   full set of configurations, the call returns a token for getting the
+    #   next set of configurations.
+    #   @return [String]
+    #
+    # @!attribute [rw] name_contains
+    #   A string in the configuration name. This filter returns only
+    #   configurations whose name contains the specified string.
+    #   @return [String]
+    #
+    # @!attribute [rw] creation_time_after
+    #   A filter that returns only configurations created after the
+    #   specified time.
+    #   @return [Time]
+    #
+    # @!attribute [rw] creation_time_before
+    #   A filter that returns only configurations created before the
+    #   specified time.
+    #   @return [Time]
+    #
+    # @!attribute [rw] sort_by
+    #   The field to sort results by. The default is `CreationTime`.
+    #   @return [String]
+    #
+    # @!attribute [rw] sort_order
+    #   The sort order for results. The default is `Descending`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ListAIWorkloadConfigsRequest AWS API Documentation
+    #
+    class ListAIWorkloadConfigsRequest < Struct.new(
+      :max_results,
+      :next_token,
+      :name_contains,
+      :creation_time_after,
+      :creation_time_before,
+      :sort_by,
+      :sort_order)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] ai_workload_configs
+    #   An array of `AIWorkloadConfigSummary` objects, one for each AI
+    #   workload configuration that matches the specified filters.
+    #   @return [Array<Types::AIWorkloadConfigSummary>]
+    #
+    # @!attribute [rw] next_token
+    #   If the response is truncated, Amazon SageMaker AI returns this
+    #   token. To retrieve the next set of configurations, use it in the
+    #   subsequent request.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ListAIWorkloadConfigsResponse AWS API Documentation
+    #
+    class ListAIWorkloadConfigsResponse < Struct.new(
+      :ai_workload_configs,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] source_uri
     #   A filter that returns only actions with the specified source URI.
     #   @return [String]
@@ -28033,6 +34595,91 @@ module Aws::SageMaker
     end
 
     # @!attribute [rw] cluster_name
+    #   The name or Amazon Resource Name (ARN) of the HyperPod cluster for
+    #   which to list events.
+    #   @return [String]
+    #
+    # @!attribute [rw] instance_group_name
+    #   The name of the instance group to filter events. If specified, only
+    #   events related to this instance group are returned.
+    #   @return [String]
+    #
+    # @!attribute [rw] node_id
+    #   The EC2 instance ID to filter events. If specified, only events
+    #   related to this instance are returned.
+    #   @return [String]
+    #
+    # @!attribute [rw] event_time_after
+    #   The start of the time range for filtering events. Only events that
+    #   occurred after this time are included in the results.
+    #   @return [Time]
+    #
+    # @!attribute [rw] event_time_before
+    #   The end of the time range for filtering events. Only events that
+    #   occurred before this time are included in the results.
+    #   @return [Time]
+    #
+    # @!attribute [rw] sort_by
+    #   The field to use for sorting the event list. Currently, the only
+    #   supported value is `EventTime`.
+    #   @return [String]
+    #
+    # @!attribute [rw] sort_order
+    #   The order in which to sort the results. Valid values are `Ascending`
+    #   or `Descending` (the default is `Descending`).
+    #   @return [String]
+    #
+    # @!attribute [rw] resource_type
+    #   The type of resource for which to filter events. Valid values are
+    #   `Cluster`, `InstanceGroup`, or `Instance`.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of events to return in the response. Valid range
+    #   is 1 to 100.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   A token to retrieve the next set of results. This token is obtained
+    #   from the output of a previous `ListClusterEvents` call.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ListClusterEventsRequest AWS API Documentation
+    #
+    class ListClusterEventsRequest < Struct.new(
+      :cluster_name,
+      :instance_group_name,
+      :node_id,
+      :event_time_after,
+      :event_time_before,
+      :sort_by,
+      :sort_order,
+      :resource_type,
+      :max_results,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] next_token
+    #   A token to retrieve the next set of results. Include this token in
+    #   subsequent `ListClusterEvents` calls to fetch more events.
+    #   @return [String]
+    #
+    # @!attribute [rw] events
+    #   A list of event summaries matching the specified criteria.
+    #   @return [Array<Types::ClusterEventSummary>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ListClusterEventsResponse AWS API Documentation
+    #
+    class ListClusterEventsResponse < Struct.new(
+      :next_token,
+      :events)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] cluster_name
     #   The string name or the Amazon Resource Name (ARN) of the SageMaker
     #   HyperPod cluster in which you want to retrieve the list of nodes.
     #   @return [String]
@@ -28100,6 +34747,13 @@ module Aws::SageMaker
     #   The sort order for results. The default value is `Ascending`.
     #   @return [String]
     #
+    # @!attribute [rw] include_node_logical_ids
+    #   Specifies whether to include nodes that are still being provisioned
+    #   in the response. When set to true, the response includes all nodes
+    #   regardless of their provisioning status. When set to `False`
+    #   (default), only nodes with assigned `InstanceIds` are returned.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ListClusterNodesRequest AWS API Documentation
     #
     class ListClusterNodesRequest < Struct.new(
@@ -28110,7 +34764,8 @@ module Aws::SageMaker
       :max_results,
       :next_token,
       :sort_by,
-      :sort_order)
+      :sort_order,
+      :include_node_logical_ids)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -28261,7 +34916,12 @@ module Aws::SageMaker
     #   @return [Time]
     #
     # @!attribute [rw] max_results
-    #   Set the maximum number of SageMaker HyperPod clusters to list.
+    #   Specifies the maximum number of clusters to evaluate for the
+    #   operation (not necessarily the number of matching items). After
+    #   SageMaker processes the number of clusters up to `MaxResults`, it
+    #   stops the operation and returns the matching clusters up to that
+    #   point. If all the matching clusters are desired, SageMaker will go
+    #   through all the clusters until `NextToken` is empty.
     #   @return [Integer]
     #
     # @!attribute [rw] name_contains
@@ -30281,6 +36941,134 @@ module Aws::SageMaker
       include Aws::Structure
     end
 
+    # @!attribute [rw] job_category
+    #   The category of job schemas to list.
+    #   @return [String]
+    #
+    # @!attribute [rw] next_token
+    #   If the previous response was truncated, this token retrieves the
+    #   next set of results.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of schema versions to return in the response. The
+    #   default value is 5.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ListJobSchemaVersionsRequest AWS API Documentation
+    #
+    class ListJobSchemaVersionsRequest < Struct.new(
+      :job_category,
+      :next_token,
+      :max_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] next_token
+    #   If the response is truncated, this token retrieves the next set of
+    #   results.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_config_schemas
+    #   An array of `JobConfigSchemaVersionSummary` objects listing the
+    #   available schema versions.
+    #   @return [Array<Types::JobConfigSchemaVersionSummary>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ListJobSchemaVersionsResponse AWS API Documentation
+    #
+    class ListJobSchemaVersionsResponse < Struct.new(
+      :next_token,
+      :job_config_schemas)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] job_category
+    #   The category of jobs to list.
+    #   @return [String]
+    #
+    # @!attribute [rw] next_token
+    #   If the previous response was truncated, this token retrieves the
+    #   next set of results.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of jobs to return in the response. The default
+    #   value is 50.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] creation_time_after
+    #   A filter that returns only jobs created after the specified time.
+    #   @return [Time]
+    #
+    # @!attribute [rw] creation_time_before
+    #   A filter that returns only jobs created before the specified time.
+    #   @return [Time]
+    #
+    # @!attribute [rw] last_modified_time_after
+    #   A filter that returns only jobs modified after the specified time.
+    #   @return [Time]
+    #
+    # @!attribute [rw] last_modified_time_before
+    #   A filter that returns only jobs modified before the specified time.
+    #   @return [Time]
+    #
+    # @!attribute [rw] name_contains
+    #   A string in the job name to filter results. Only jobs whose name
+    #   contains the specified string are returned.
+    #   @return [String]
+    #
+    # @!attribute [rw] sort_by
+    #   The field to sort results by.
+    #   @return [String]
+    #
+    # @!attribute [rw] sort_order
+    #   The sort order for results. Valid values are `Ascending` and
+    #   `Descending`.
+    #   @return [String]
+    #
+    # @!attribute [rw] status_equals
+    #   A filter that returns only jobs with the specified status.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ListJobsRequest AWS API Documentation
+    #
+    class ListJobsRequest < Struct.new(
+      :job_category,
+      :next_token,
+      :max_results,
+      :creation_time_after,
+      :creation_time_before,
+      :last_modified_time_after,
+      :last_modified_time_before,
+      :name_contains,
+      :sort_by,
+      :sort_order,
+      :status_equals)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] next_token
+    #   If the response is truncated, this token retrieves the next set of
+    #   results.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_summaries
+    #   An array of `JobSummary` objects that provide summary information
+    #   about the jobs.
+    #   @return [Array<Types::JobSummary>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ListJobsResponse AWS API Documentation
+    #
+    class ListJobsResponse < Struct.new(
+      :next_token,
+      :job_summaries)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] workteam_arn
     #   The Amazon Resource Name (ARN) of the work team for which you want
     #   to see labeling jobs for.
@@ -30497,6 +37285,92 @@ module Aws::SageMaker
     #
     class ListLineageGroupsResponse < Struct.new(
       :lineage_group_summaries,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] created_after
+    #   Use the `CreatedAfter` filter to only list MLflow Apps created after
+    #   a specific date and time. Listed MLflow Apps are shown with a date
+    #   and time such as `"2024-03-16T01:46:56+00:00"`. The `CreatedAfter`
+    #   parameter takes in a Unix timestamp.
+    #   @return [Time]
+    #
+    # @!attribute [rw] created_before
+    #   Use the `CreatedBefore` filter to only list MLflow Apps created
+    #   before a specific date and time. Listed MLflow Apps are shown with a
+    #   date and time such as `"2024-03-16T01:46:56+00:00"`. The
+    #   `CreatedAfter` parameter takes in a Unix timestamp.
+    #   @return [Time]
+    #
+    # @!attribute [rw] status
+    #   Filter for Mlflow apps with a specific creation status.
+    #   @return [String]
+    #
+    # @!attribute [rw] mlflow_version
+    #   Filter for Mlflow Apps with the specified version.
+    #   @return [String]
+    #
+    # @!attribute [rw] default_for_domain_id
+    #   Filter for MLflow Apps with the specified default SageMaker Domain
+    #   ID.
+    #   @return [String]
+    #
+    # @!attribute [rw] account_default_status
+    #   Filter for MLflow Apps with the specified `AccountDefaultStatus`.
+    #   @return [String]
+    #
+    # @!attribute [rw] sort_by
+    #   Filter for MLflow Apps sorting by name, creation time, or creation
+    #   status.
+    #   @return [String]
+    #
+    # @!attribute [rw] sort_order
+    #   Change the order of the listed MLflow Apps. By default, MLflow Apps
+    #   are listed in `Descending` order by creation time. To change the
+    #   list order, specify `SortOrder` to be `Ascending`.
+    #   @return [String]
+    #
+    # @!attribute [rw] next_token
+    #   If the previous response was truncated, use this token in your next
+    #   request to receive the next set of results.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of MLflow Apps to list.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ListMlflowAppsRequest AWS API Documentation
+    #
+    class ListMlflowAppsRequest < Struct.new(
+      :created_after,
+      :created_before,
+      :status,
+      :mlflow_version,
+      :default_for_domain_id,
+      :account_default_status,
+      :sort_by,
+      :sort_order,
+      :next_token,
+      :max_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] summaries
+    #   A list of MLflow Apps according to chosen filters.
+    #   @return [Array<Types::MlflowAppSummary>]
+    #
+    # @!attribute [rw] next_token
+    #   If the previous response was truncated, you will receive this token.
+    #   Use it in your next request to receive the next set of results.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ListMlflowAppsResponse AWS API Documentation
+    #
+    class ListMlflowAppsResponse < Struct.new(
+      :summaries,
       :next_token)
       SENSITIVE = []
       include Aws::Structure
@@ -32139,6 +39013,69 @@ module Aws::SageMaker
       include Aws::Structure
     end
 
+    # @!attribute [rw] pipeline_name
+    #   The Amazon Resource Name (ARN) of the pipeline.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_after
+    #   A filter that returns the pipeline versions that were created after
+    #   a specified time.
+    #   @return [Time]
+    #
+    # @!attribute [rw] created_before
+    #   A filter that returns the pipeline versions that were created before
+    #   a specified time.
+    #   @return [Time]
+    #
+    # @!attribute [rw] sort_order
+    #   The sort order for the results.
+    #   @return [String]
+    #
+    # @!attribute [rw] next_token
+    #   If the result of the previous `ListPipelineVersions` request was
+    #   truncated, the response includes a `NextToken`. To retrieve the next
+    #   set of pipeline versions, use this token in your next request.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of pipeline versions to return in the response.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ListPipelineVersionsRequest AWS API Documentation
+    #
+    class ListPipelineVersionsRequest < Struct.new(
+      :pipeline_name,
+      :created_after,
+      :created_before,
+      :sort_order,
+      :next_token,
+      :max_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] pipeline_version_summaries
+    #   Contains a sorted list of pipeline version summary objects matching
+    #   the specified filters. Each version summary includes the pipeline
+    #   version ID, the creation date, and the last pipeline execution
+    #   created from that version. This list can be empty.
+    #   @return [Array<Types::PipelineVersionSummary>]
+    #
+    # @!attribute [rw] next_token
+    #   If the result of the previous `ListPipelineVersions` request was
+    #   truncated, the response includes a `NextToken`. To retrieve the next
+    #   set of pipeline versions, use this token in your next request.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ListPipelineVersionsResponse AWS API Documentation
+    #
+    class ListPipelineVersionsResponse < Struct.new(
+      :pipeline_version_summaries,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] pipeline_name_prefix
     #   The prefix of the pipeline name.
     #   @return [String]
@@ -33175,6 +40112,49 @@ module Aws::SageMaker
       include Aws::Structure
     end
 
+    # @!attribute [rw] reserved_capacity_arn
+    #   The ARN of the reserved capacity to list UltraServers for.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of UltraServers to return in the response. The
+    #   default value is 10.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   If the previous response was truncated, you receive this token. Use
+    #   it in your next request to receive the next set of results.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ListUltraServersByReservedCapacityRequest AWS API Documentation
+    #
+    class ListUltraServersByReservedCapacityRequest < Struct.new(
+      :reserved_capacity_arn,
+      :max_results,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] next_token
+    #   If the response is truncated, SageMaker returns this token. Use it
+    #   in the next request to retrieve the next set of UltraServers.
+    #   @return [String]
+    #
+    # @!attribute [rw] ultra_servers
+    #   A list of UltraServers that are part of the specified reserved
+    #   capacity.
+    #   @return [Array<Types::UltraServer>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ListUltraServersByReservedCapacityResponse AWS API Documentation
+    #
+    class ListUltraServersByReservedCapacityResponse < Struct.new(
+      :next_token,
+      :ultra_servers)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] next_token
     #   If the previous response was truncated, you will receive this token.
     #   Use it in your next request to receive the next set of results.
@@ -33343,6 +40323,39 @@ module Aws::SageMaker
       include Aws::Structure
     end
 
+    # The MLflow configuration.
+    #
+    # @!attribute [rw] mlflow_resource_arn
+    #   The Amazon Resource Name (ARN) of MLflow configuration resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] mlflow_experiment_name
+    #   The name of the MLflow configuration.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/MLflowConfiguration AWS API Documentation
+    #
+    class MLflowConfiguration < Struct.new(
+      :mlflow_resource_arn,
+      :mlflow_experiment_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The managed configuration of a model package group.
+    #
+    # @!attribute [rw] managed_storage_type
+    #   The storage type of the model package.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ManagedConfiguration AWS API Documentation
+    #
+    class ManagedConfiguration < Struct.new(
+      :managed_storage_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Defines an Amazon Cognito or your own OIDC IdP user group that is part
     # of a work team.
     #
@@ -33429,14 +40442,6 @@ module Aws::SageMaker
     #   The name of the metric.
     #   @return [String]
     #
-    # @!attribute [rw] value
-    #   The value of the metric.
-    #   @return [Float]
-    #
-    # @!attribute [rw] set
-    #   The dataset split from which the AutoML job produced the metric.
-    #   @return [String]
-    #
     # @!attribute [rw] standard_metric_name
     #   The name of the standard metric.
     #
@@ -33450,13 +40455,21 @@ module Aws::SageMaker
     #   [1]: https://docs.aws.amazon.com/sagemaker/latest/dg/autopilot-model-support-validation.html#autopilot-metrics
     #   @return [String]
     #
+    # @!attribute [rw] value
+    #   The value of the metric.
+    #   @return [Float]
+    #
+    # @!attribute [rw] set
+    #   The dataset split from which the AutoML job produced the metric.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/MetricDatum AWS API Documentation
     #
     class MetricDatum < Struct.new(
       :metric_name,
+      :standard_metric_name,
       :value,
-      :set,
-      :standard_metric_name)
+      :set)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -33525,6 +40538,101 @@ module Aws::SageMaker
       class Unknown < MetricSpecification; end
     end
 
+    # The configuration for Utilization metrics.
+    #
+    # @!attribute [rw] enable_enhanced_metrics
+    #   Specifies whether to enable enhanced metrics for the endpoint.
+    #   Enhanced metrics provide utilization and invocation data at instance
+    #   and container granularity. Container granularity is supported for
+    #   Inference Components. The default is `False`.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] enable_detailed_observability
+    #   Indicates whether detailed observability is enabled for the
+    #   endpoint. When set to `True`, the following metrics are published at
+    #   the configured frequency:
+    #
+    #   * Container-level inference metrics scraped from the container's
+    #     Prometheus endpoint (such as request latency, error counts, and
+    #     throughput). Available metrics vary by framework.
+    #
+    #   * Per-GPU metrics (utilization, memory, and temperature) attributed
+    #     to individual inference components.
+    #
+    #   * Per-instance host metrics (CPU, memory, and disk utilization).
+    #
+    #   * Inference component placement metrics (copy count per Availability
+    #     Zone).
+    #
+    #   For first-party and Deep Learning Containers (DLC), the Prometheus
+    #   endpoint path is determined automatically. For
+    #   Bring-Your-Own-Container (BYOC) cases, you can optionally set
+    #   `ContainerMetricsConfig` to specify a custom endpoint path. If not
+    #   specified, the default path `/metrics` on port `8080` is used.
+    #
+    #   When set to `False`, these additional metrics are not published.
+    #   Standard invocation and utilization metrics controlled by
+    #   `EnableEnhancedMetrics` are unaffected.
+    #
+    #   The default value for new endpoint configurations is `True`. For
+    #   existing endpoint configurations created before this feature, the
+    #   value is `False` unless explicitly set.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] metric_publish_frequency_in_seconds
+    #   The interval, in seconds, at which metrics are published to Amazon
+    #   CloudWatch. Defaults to `60`. Valid values: `10`, `30`, `60`, `120`,
+    #   `180`, `240`, `300`.
+    #
+    #   When `EnableEnhancedMetrics` is set to `False`, this interval
+    #   applies to utilization metrics only. Invocation metrics continue to
+    #   be published at the default 60-second interval. When
+    #   `EnableEnhancedMetrics` is set to `True`, this interval applies to
+    #   both utilization and invocation metrics.
+    #
+    #   When `EnableDetailedObservability` is set to `True`, this interval
+    #   applies to per-GPU metrics, per-instance host metrics, container
+    #   metrics, and fleet-level inference component lifecycle and placement
+    #   metrics.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/MetricsConfig AWS API Documentation
+    #
+    class MetricsConfig < Struct.new(
+      :enable_enhanced_metrics,
+      :enable_detailed_observability,
+      :metric_publish_frequency_in_seconds)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Specifies a metrics endpoint for a container, including the path where
+    # the container exposes Prometheus-formatted metrics and the frequency
+    # at which to publish them to Amazon CloudWatch.
+    #
+    # @!attribute [rw] metrics_endpoint_path
+    #   The path to the metrics endpoint exposed by the container. For
+    #   example, `/metrics` or `/server/metrics`. The path must start with
+    #   `/` and can contain alphanumeric characters, forward slashes,
+    #   underscores, hyphens, and periods. Maximum length is 256 characters.
+    #   If not specified, defaults to `/metrics`.
+    #   @return [String]
+    #
+    # @!attribute [rw] metric_publish_frequency_in_seconds
+    #   The interval, in seconds, at which container metrics scraped from
+    #   the endpoint are published to Amazon CloudWatch. Valid values: `10`,
+    #   `30`, `60`, `120`, `180`, `240`, `300`. Defaults to `60`.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/MetricsEndpoint AWS API Documentation
+    #
+    class MetricsEndpoint < Struct.new(
+      :metrics_endpoint_path,
+      :metric_publish_frequency_in_seconds)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Details about the metrics source.
     #
     # @!attribute [rw] content_type
@@ -33545,6 +40653,88 @@ module Aws::SageMaker
       :content_type,
       :content_digest,
       :s3_uri)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The summary of the Mlflow App to list.
+    #
+    # @!attribute [rw] arn
+    #   The ARN of a listed MLflow App.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the MLflow App.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status of the MLflow App.
+    #   @return [String]
+    #
+    # @!attribute [rw] creation_time
+    #   The creation time of a listed MLflow App.
+    #   @return [Time]
+    #
+    # @!attribute [rw] last_modified_time
+    #   The last modified time of a listed MLflow App.
+    #   @return [Time]
+    #
+    # @!attribute [rw] mlflow_version
+    #   The version of a listed MLflow App.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/MlflowAppSummary AWS API Documentation
+    #
+    class MlflowAppSummary < Struct.new(
+      :arn,
+      :name,
+      :status,
+      :creation_time,
+      :last_modified_time,
+      :mlflow_version)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The MLflow configuration using SageMaker managed MLflow.
+    #
+    # @!attribute [rw] mlflow_resource_arn
+    #   The Amazon Resource Name (ARN) of the MLflow resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] mlflow_experiment_name
+    #   The MLflow experiment name used for this job.
+    #   @return [String]
+    #
+    # @!attribute [rw] mlflow_run_name
+    #   The MLflow run name used for this job.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/MlflowConfig AWS API Documentation
+    #
+    class MlflowConfig < Struct.new(
+      :mlflow_resource_arn,
+      :mlflow_experiment_name,
+      :mlflow_run_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The MLflow details of this job.
+    #
+    # @!attribute [rw] mlflow_experiment_id
+    #   The MLflow experiment ID used for this job.
+    #   @return [String]
+    #
+    # @!attribute [rw] mlflow_run_id
+    #   The MLflow run ID used for this job.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/MlflowDetails AWS API Documentation
+    #
+    class MlflowDetails < Struct.new(
+      :mlflow_experiment_id,
+      :mlflow_run_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -33811,8 +41001,8 @@ module Aws::SageMaker
     #   @return [Time]
     #
     # @!attribute [rw] created_by
-    #   Information about the user who created or modified an experiment,
-    #   trial, trial component, lineage group, project, or model card.
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
     #   @return [Types::UserContext]
     #
     # @!attribute [rw] last_modified_time
@@ -33820,8 +41010,8 @@ module Aws::SageMaker
     #   @return [Time]
     #
     # @!attribute [rw] last_modified_by
-    #   Information about the user who created or modified an experiment,
-    #   trial, trial component, lineage group, project, or model card.
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
     #   @return [Types::UserContext]
     #
     # @!attribute [rw] tags
@@ -34246,8 +41436,8 @@ module Aws::SageMaker
     #   @return [Time]
     #
     # @!attribute [rw] created_by
-    #   Information about the user who created or modified an experiment,
-    #   trial, trial component, lineage group, project, or model card.
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
     #   @return [Types::UserContext]
     #
     # @!attribute [rw] last_modified_time
@@ -34255,8 +41445,8 @@ module Aws::SageMaker
     #   @return [Time]
     #
     # @!attribute [rw] last_modified_by
-    #   Information about the user who created or modified an experiment,
-    #   trial, trial component, lineage group, project, or model card.
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
     #   @return [Types::UserContext]
     #
     # @!attribute [rw] tags
@@ -34750,6 +41940,10 @@ module Aws::SageMaker
     #   The version number of a versioned model.
     #   @return [Integer]
     #
+    # @!attribute [rw] model_package_registration_type
+    #   The package registration type of the model package.
+    #   @return [String]
+    #
     # @!attribute [rw] model_package_arn
     #   The Amazon Resource Name (ARN) of the model package.
     #   @return [String]
@@ -34931,6 +42125,7 @@ module Aws::SageMaker
       :model_package_name,
       :model_package_group_name,
       :model_package_version,
+      :model_package_registration_type,
       :model_package_arn,
       :model_package_description,
       :creation_time,
@@ -34959,6 +42154,27 @@ module Aws::SageMaker
       :customer_metadata_properties,
       :drift_check_baselines,
       :skip_model_validation)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration for the Model package.
+    #
+    # @!attribute [rw] model_package_group_arn
+    #   The Amazon Resource Name (ARN) of the model package group of output
+    #   model package.
+    #   @return [String]
+    #
+    # @!attribute [rw] source_model_package_arn
+    #   The Amazon Resource Name (ARN) of the source model package used for
+    #   continued fine-tuning and custom model evaluation.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ModelPackageConfig AWS API Documentation
+    #
+    class ModelPackageConfig < Struct.new(
+      :model_package_group_arn,
+      :source_model_package_arn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -35035,6 +42251,12 @@ module Aws::SageMaker
     #   `ListModelMetadata`.
     #   @return [String]
     #
+    # @!attribute [rw] additional_model_data_sources
+    #   Data sources that are available to your model in addition to the one
+    #   that you specify for `ModelDataSource` when you use the
+    #   `CreateModelPackage` action.
+    #   @return [Array<Types::AdditionalModelDataSource>]
+    #
     # @!attribute [rw] additional_s3_data_source
     #   The additional data source that is used during inference in the
     #   Docker container for your model package.
@@ -35043,6 +42265,15 @@ module Aws::SageMaker
     # @!attribute [rw] model_data_etag
     #   The ETag associated with Model Data URL.
     #   @return [String]
+    #
+    # @!attribute [rw] is_checkpoint
+    #   Specifies whether the model data is a training checkpoint.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] base_model
+    #   Identifies the foundation model that was used as the starting point
+    #   for model customization.
+    #   @return [Types::BaseModel]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ModelPackageContainerDefinition AWS API Documentation
     #
@@ -35058,8 +42289,11 @@ module Aws::SageMaker
       :framework,
       :framework_version,
       :nearest_model_name,
+      :additional_model_data_sources,
       :additional_s3_data_source,
-      :model_data_etag)
+      :model_data_etag,
+      :is_checkpoint,
+      :base_model)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -35083,8 +42317,8 @@ module Aws::SageMaker
     #   @return [Time]
     #
     # @!attribute [rw] created_by
-    #   Information about the user who created or modified an experiment,
-    #   trial, trial component, lineage group, project, or model card.
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
     #   @return [Types::UserContext]
     #
     # @!attribute [rw] model_package_group_status
@@ -35151,6 +42385,10 @@ module Aws::SageMaker
     #   The status of the model group.
     #   @return [String]
     #
+    # @!attribute [rw] managed_configuration
+    #   The managed configuration of the model package group.
+    #   @return [Types::ManagedConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ModelPackageGroupSummary AWS API Documentation
     #
     class ModelPackageGroupSummary < Struct.new(
@@ -35158,7 +42396,8 @@ module Aws::SageMaker
       :model_package_group_arn,
       :model_package_group_description,
       :creation_time,
-      :model_package_group_status)
+      :model_package_group_status,
+      :managed_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -35319,6 +42558,15 @@ module Aws::SageMaker
     #     approval.
     #   @return [String]
     #
+    # @!attribute [rw] model_life_cycle
+    #   A structure describing the current state of the model in its life
+    #   cycle.
+    #   @return [Types::ModelLifeCycle]
+    #
+    # @!attribute [rw] model_package_registration_type
+    #   The package registration type of the model package summary.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ModelPackageSummary AWS API Documentation
     #
     class ModelPackageSummary < Struct.new(
@@ -35329,7 +42577,9 @@ module Aws::SageMaker
       :model_package_description,
       :creation_time,
       :model_package_status,
-      :model_approval_status)
+      :model_approval_status,
+      :model_life_cycle,
+      :model_package_registration_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -35563,6 +42813,53 @@ module Aws::SageMaker
     class ModelShardingConfig < Struct.new(
       :image,
       :override_environment)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Settings for the model speculative decoding technique that's applied
+    # by a model optimization job.
+    #
+    # @!attribute [rw] technique
+    #   The speculative decoding technique to apply during model
+    #   optimization.
+    #   @return [String]
+    #
+    # @!attribute [rw] training_data_source
+    #   The location of the training data to use for speculative decoding.
+    #   The data must be formatted as ShareGPT, OpenAI Completions or OpenAI
+    #   Chat Completions. The input can also be unencrypted captured data
+    #   from a SageMaker endpoint as long as the endpoint uses one of the
+    #   above formats.
+    #   @return [Types::ModelSpeculativeDecodingTrainingDataSource]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ModelSpeculativeDecodingConfig AWS API Documentation
+    #
+    class ModelSpeculativeDecodingConfig < Struct.new(
+      :technique,
+      :training_data_source)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains information about the training data source for speculative
+    # decoding.
+    #
+    # @!attribute [rw] s3_uri
+    #   The Amazon S3 URI that points to the training data for speculative
+    #   decoding.
+    #   @return [String]
+    #
+    # @!attribute [rw] s3_data_type
+    #   The type of data stored in the Amazon S3 location. Valid values are
+    #   `S3Prefix` or `ManifestFile`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ModelSpeculativeDecodingTrainingDataSource AWS API Documentation
+    #
+    class ModelSpeculativeDecodingTrainingDataSource < Struct.new(
+      :s3_uri,
+      :s3_data_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -36581,6 +43878,43 @@ module Aws::SageMaker
       include Aws::Structure
     end
 
+    # Information about a node that was successfully added to the cluster.
+    #
+    # @!attribute [rw] node_logical_id
+    #   A unique identifier assigned to the node that can be used to track
+    #   its provisioning status through the `DescribeClusterNode` operation.
+    #   @return [String]
+    #
+    # @!attribute [rw] instance_group_name
+    #   The name of the instance group to which the node was added.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The current status of the node. Possible values include `Pending`,
+    #   `Running`, `Failed`, `ShuttingDown`, `SystemUpdating`,
+    #   `DeepHealthCheckInProgress`, and `NotFound`.
+    #   @return [String]
+    #
+    # @!attribute [rw] availability_zones
+    #   The availability zones associated with the successfully added node.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] instance_types
+    #   The instance types associated with the successfully added node.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/NodeAdditionResult AWS API Documentation
+    #
+    class NodeAdditionResult < Struct.new(
+      :node_logical_id,
+      :instance_group_name,
+      :status,
+      :availability_zones,
+      :instance_types)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Provides a summary of a notebook instance lifecycle configuration.
     #
     # @!attribute [rw] notebook_instance_lifecycle_config_name
@@ -36805,8 +44139,19 @@ module Aws::SageMaker
     # @!attribute [rw] disable_glue_table_creation
     #   Set to `True` to disable the automatic creation of an Amazon Web
     #   Services Glue table when configuring an `OfflineStore`. If set to
-    #   `False`, Feature Store will name the `OfflineStore` Glue table
-    #   following [Athena's naming recommendations][1].
+    #   `True` and `DataCatalogConfig` is provided, Feature Store associates
+    #   the provided catalog configuration with the feature group without
+    #   creating a table. In this case, you are responsible for creating and
+    #   managing the Glue table. If set to `True` without
+    #   `DataCatalogConfig`, no Glue table is created or associated with the
+    #   feature group. The `Iceberg` table format is only supported when
+    #   this is set to `False`.
+    #
+    #   If set to `False` and `DataCatalogConfig` is provided, Feature Store
+    #   creates the table using the specified names. If set to `False`
+    #   without `DataCatalogConfig`, Feature Store auto-generates the table
+    #   name following [Athena's naming recommendations][1]. This applies
+    #   to both Glue and Apache Iceberg table formats.
     #
     #   The default value is `False`.
     #
@@ -36816,8 +44161,11 @@ module Aws::SageMaker
     #   @return [Boolean]
     #
     # @!attribute [rw] data_catalog_config
-    #   The meta data of the Glue table that is autogenerated when an
-    #   `OfflineStore` is created.
+    #   The meta data of the Glue table for the `OfflineStore`. If not
+    #   provided, Feature Store auto-generates the table name, database, and
+    #   catalog when the `OfflineStore` is created. You can optionally
+    #   provide this configuration to specify custom values. This applies to
+    #   both Glue and Apache Iceberg table formats.
     #   @return [Types::DataCatalogConfig]
     #
     # @!attribute [rw] table_format
@@ -37152,12 +44500,18 @@ module Aws::SageMaker
     #   optimization job.
     #   @return [Types::ModelShardingConfig]
     #
+    # @!attribute [rw] model_speculative_decoding_config
+    #   Settings for the model speculative decoding technique that's
+    #   applied by a model optimization job.
+    #   @return [Types::ModelSpeculativeDecodingConfig]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/OptimizationConfig AWS API Documentation
     #
     class OptimizationConfig < Struct.new(
       :model_quantization_config,
       :model_compilation_config,
       :model_sharding_config,
+      :model_speculative_decoding_config,
       :unknown)
       SENSITIVE = []
       include Aws::Structure
@@ -37166,6 +44520,7 @@ module Aws::SageMaker
       class ModelQuantizationConfig < OptimizationConfig; end
       class ModelCompilationConfig < OptimizationConfig; end
       class ModelShardingConfig < OptimizationConfig; end
+      class ModelSpeculativeDecodingConfig < OptimizationConfig; end
       class Unknown < OptimizationConfig; end
     end
 
@@ -37176,10 +44531,16 @@ module Aws::SageMaker
     #   optimization job.
     #   @return [Types::OptimizationJobModelSourceS3]
     #
+    # @!attribute [rw] sage_maker_model
+    #   The name of an existing SageMaker model to optimize with an
+    #   optimization job.
+    #   @return [Types::OptimizationSageMakerModel]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/OptimizationJobModelSource AWS API Documentation
     #
     class OptimizationJobModelSource < Struct.new(
-      :s3)
+      :s3,
+      :sage_maker_model)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -37221,11 +44582,17 @@ module Aws::SageMaker
     #   create with an optimization job.
     #   @return [String]
     #
+    # @!attribute [rw] sage_maker_model
+    #   The name of a SageMaker model to use as the output destination for
+    #   an optimization job.
+    #   @return [Types::OptimizationSageMakerModel]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/OptimizationJobOutputConfig AWS API Documentation
     #
     class OptimizationJobOutputConfig < Struct.new(
       :kms_key_id,
-      :s3_output_location)
+      :s3_output_location,
+      :sage_maker_model)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -37266,6 +44633,10 @@ module Aws::SageMaker
     #   with the optimization job.
     #   @return [String]
     #
+    # @!attribute [rw] max_instance_count
+    #   The maximum number of instances to use for the optimization job.
+    #   @return [Integer]
+    #
     # @!attribute [rw] optimization_types
     #   The optimization techniques that are applied by the optimization
     #   job.
@@ -37282,6 +44653,7 @@ module Aws::SageMaker
       :optimization_end_time,
       :last_modified_time,
       :deployment_instance_type,
+      :max_instance_count,
       :optimization_types)
       SENSITIVE = []
       include Aws::Structure
@@ -37319,6 +44691,21 @@ module Aws::SageMaker
     #
     class OptimizationOutput < Struct.new(
       :recommended_inference_image)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A SageMaker model to use as the source or destination for an
+    # optimization job.
+    #
+    # @!attribute [rw] model_name
+    #   The name of a SageMaker model.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/OptimizationSageMakerModel AWS API Documentation
+    #
+    class OptimizationSageMakerModel < Struct.new(
+      :model_name)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -37833,11 +45220,31 @@ module Aws::SageMaker
     #   value pair that is specific to the user and application.
     #   @return [Hash<String,String>]
     #
+    # @!attribute [rw] assigned_group_patterns
+    #   A list of Amazon Web Services IAM Identity Center group patterns
+    #   that can access the SageMaker Partner AI App. Group names support
+    #   wildcard matching using `*`. An empty list indicates the app will
+    #   not use Identity Center group features. All groups specified in
+    #   `RoleGroupAssignments` must match patterns in this list.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] role_group_assignments
+    #   A map of in-app roles to Amazon Web Services IAM Identity Center
+    #   group patterns. Groups assigned to specific roles receive those
+    #   permissions, while groups in `AssignedGroupPatterns` but not in this
+    #   map receive default in-app role depending on app type. Group
+    #   patterns support wildcard matching using `*`. Currently supported by
+    #   Fiddler version 1.3 and later with roles: `ORG_MEMBER` (default) and
+    #   `ORG_ADMIN`.
+    #   @return [Array<Types::RoleGroupAssignment>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/PartnerAppConfig AWS API Documentation
     #
     class PartnerAppConfig < Struct.new(
       :admin_users,
-      :arguments)
+      :arguments,
+      :assigned_group_patterns,
+      :role_group_assignments)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -37992,6 +45399,12 @@ module Aws::SageMaker
     #   The type of instances associated with the variant.
     #   @return [String]
     #
+    # @!attribute [rw] instance_pools
+    #   A list of instance pools for the production variant. Each pool
+    #   indicates the instance type and the current number of instances of
+    #   that type.
+    #   @return [Array<Types::InstancePoolSummary>]
+    #
     # @!attribute [rw] accelerator_type
     #   This parameter is no longer supported. Elastic Inference (EI) is no
     #   longer available.
@@ -38034,6 +45447,7 @@ module Aws::SageMaker
       :current_instance_count,
       :desired_instance_count,
       :instance_type,
+      :instance_pools,
       :accelerator_type,
       :variant_status,
       :current_serverless_config,
@@ -38111,13 +45525,13 @@ module Aws::SageMaker
     #   @return [Time]
     #
     # @!attribute [rw] created_by
-    #   Information about the user who created or modified an experiment,
-    #   trial, trial component, lineage group, project, or model card.
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
     #   @return [Types::UserContext]
     #
     # @!attribute [rw] last_modified_by
-    #   Information about the user who created or modified an experiment,
-    #   trial, trial component, lineage group, project, or model card.
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
     #   @return [Types::UserContext]
     #
     # @!attribute [rw] parallelism_configuration
@@ -38214,13 +45628,13 @@ module Aws::SageMaker
     #   @return [Time]
     #
     # @!attribute [rw] created_by
-    #   Information about the user who created or modified an experiment,
-    #   trial, trial component, lineage group, project, or model card.
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
     #   @return [Types::UserContext]
     #
     # @!attribute [rw] last_modified_by
-    #   Information about the user who created or modified an experiment,
-    #   trial, trial component, lineage group, project, or model card.
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
     #   @return [Types::UserContext]
     #
     # @!attribute [rw] parallelism_configuration
@@ -38234,6 +45648,15 @@ module Aws::SageMaker
     # @!attribute [rw] pipeline_parameters
     #   Contains a list of pipeline parameters. This list can be empty.
     #   @return [Array<Types::Parameter>]
+    #
+    # @!attribute [rw] pipeline_version_id
+    #   The ID of the pipeline version that started this execution.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] pipeline_version_display_name
+    #   The display name of the pipeline version that started this
+    #   execution.
+    #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/PipelineExecution AWS API Documentation
     #
@@ -38251,7 +45674,9 @@ module Aws::SageMaker
       :last_modified_by,
       :parallelism_configuration,
       :selective_execution_config,
-      :pipeline_parameters)
+      :pipeline_parameters,
+      :pipeline_version_id,
+      :pipeline_version_display_name)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -38448,6 +45873,39 @@ module Aws::SageMaker
     #   step execution.
     #   @return [Types::EndpointConfigStepMetadata]
     #
+    # @!attribute [rw] bedrock_custom_model
+    #   The metadata of the Amazon Bedrock custom model used in the pipeline
+    #   execution step.
+    #   @return [Types::BedrockCustomModelMetadata]
+    #
+    # @!attribute [rw] bedrock_custom_model_deployment
+    #   The metadata of the Amazon Bedrock custom model deployment used in
+    #   pipeline execution step.
+    #   @return [Types::BedrockCustomModelDeploymentMetadata]
+    #
+    # @!attribute [rw] bedrock_provisioned_model_throughput
+    #   The metadata of the Amazon Bedrock provisioned model throughput used
+    #   in the pipeline execution step.
+    #   @return [Types::BedrockProvisionedModelThroughputMetadata]
+    #
+    # @!attribute [rw] bedrock_model_import
+    #   The metadata of Amazon Bedrock model import used in pipeline
+    #   execution step.
+    #   @return [Types::BedrockModelImportMetadata]
+    #
+    # @!attribute [rw] inference_component
+    #   The metadata of the inference component used in pipeline execution
+    #   step.
+    #   @return [Types::InferenceComponentMetadata]
+    #
+    # @!attribute [rw] lineage
+    #   The metadata of the lineage used in pipeline execution step.
+    #   @return [Types::LineageMetadata]
+    #
+    # @!attribute [rw] job
+    #   The metadata for a SageMaker job used in a pipeline execution step.
+    #   @return [Types::JobStepMetadata]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/PipelineExecutionStepMetadata AWS API Documentation
     #
     class PipelineExecutionStepMetadata < Struct.new(
@@ -38466,7 +45924,14 @@ module Aws::SageMaker
       :fail,
       :auto_ml_job,
       :endpoint,
-      :endpoint_config)
+      :endpoint_config,
+      :bedrock_custom_model,
+      :bedrock_custom_model_deployment,
+      :bedrock_provisioned_model_throughput,
+      :bedrock_model_import,
+      :inference_component,
+      :lineage,
+      :job)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -38579,6 +46044,136 @@ module Aws::SageMaker
       include Aws::Structure
     end
 
+    # The version of the pipeline.
+    #
+    # @!attribute [rw] pipeline_arn
+    #   The Amazon Resource Name (ARN) of the pipeline.
+    #   @return [String]
+    #
+    # @!attribute [rw] pipeline_version_id
+    #   The ID of the pipeline version.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] pipeline_version_display_name
+    #   The display name of the pipeline version.
+    #   @return [String]
+    #
+    # @!attribute [rw] pipeline_version_description
+    #   The description of the pipeline version.
+    #   @return [String]
+    #
+    # @!attribute [rw] creation_time
+    #   The creation time of the pipeline version.
+    #   @return [Time]
+    #
+    # @!attribute [rw] last_modified_time
+    #   The time when the pipeline version was last modified.
+    #   @return [Time]
+    #
+    # @!attribute [rw] created_by
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
+    #   @return [Types::UserContext]
+    #
+    # @!attribute [rw] last_modified_by
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
+    #   @return [Types::UserContext]
+    #
+    # @!attribute [rw] last_executed_pipeline_execution_arn
+    #   The Amazon Resource Name (ARN) of the most recent pipeline execution
+    #   created from this pipeline version.
+    #   @return [String]
+    #
+    # @!attribute [rw] last_executed_pipeline_execution_display_name
+    #   The display name of the most recent pipeline execution created from
+    #   this pipeline version.
+    #   @return [String]
+    #
+    # @!attribute [rw] last_executed_pipeline_execution_status
+    #   The status of the most recent pipeline execution created from this
+    #   pipeline version.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/PipelineVersion AWS API Documentation
+    #
+    class PipelineVersion < Struct.new(
+      :pipeline_arn,
+      :pipeline_version_id,
+      :pipeline_version_display_name,
+      :pipeline_version_description,
+      :creation_time,
+      :last_modified_time,
+      :created_by,
+      :last_modified_by,
+      :last_executed_pipeline_execution_arn,
+      :last_executed_pipeline_execution_display_name,
+      :last_executed_pipeline_execution_status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The summary of the pipeline version.
+    #
+    # @!attribute [rw] pipeline_arn
+    #   The Amazon Resource Name (ARN) of the pipeline.
+    #   @return [String]
+    #
+    # @!attribute [rw] pipeline_version_id
+    #   The ID of the pipeline version.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] creation_time
+    #   The creation time of the pipeline version.
+    #   @return [Time]
+    #
+    # @!attribute [rw] pipeline_version_description
+    #   The description of the pipeline version.
+    #   @return [String]
+    #
+    # @!attribute [rw] pipeline_version_display_name
+    #   The display name of the pipeline version.
+    #   @return [String]
+    #
+    # @!attribute [rw] last_execution_pipeline_execution_arn
+    #   The Amazon Resource Name (ARN) of the most recent pipeline execution
+    #   created from this pipeline version.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/PipelineVersionSummary AWS API Documentation
+    #
+    class PipelineVersionSummary < Struct.new(
+      :pipeline_arn,
+      :pipeline_version_id,
+      :creation_time,
+      :pipeline_version_description,
+      :pipeline_version_display_name,
+      :last_execution_pipeline_execution_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Specifies how instances should be placed on a specific UltraServer.
+    #
+    # @!attribute [rw] ultra_server_id
+    #   The unique identifier of the UltraServer where instances should be
+    #   placed.
+    #   @return [String]
+    #
+    # @!attribute [rw] instance_count
+    #   The number of ML compute instances required to be placed together on
+    #   the same UltraServer. Minimum value of 1.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/PlacementSpecification AWS API Documentation
+    #
+    class PlacementSpecification < Struct.new(
+      :ultra_server_id,
+      :instance_count)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # A specification for a predefined metric.
     #
     # @!attribute [rw] predefined_metric_type
@@ -38590,6 +46185,68 @@ module Aws::SageMaker
     #
     class PredefinedMetricSpecification < Struct.new(
       :predefined_metric_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration for prefix-aware routing on a SageMaker real-time
+    # inference endpoint. Specify `PrefixLength` and `ConcurrencyThreshold`
+    # to control routing behavior.
+    #
+    # @!attribute [rw] prefix_length
+    #   The maximum length of the prefix used for routing decisions.
+    #   Required when `RoutingStrategy` is `PREFIX_AWARE`.
+    #
+    #   * For the SageMaker Runtime `InvokeEndpoint` and
+    #     `InvokeEndpointWithResponseStream` APIs, this value specifies the
+    #     number of bytes from the beginning of the request body.
+    #
+    #   * For OpenAI-compatible API, this value specifies the number of
+    #     characters from the text content of the messages array.
+    #
+    #   The endpoint routes requests that share the same prefix to the same
+    #   instance. Set this value to cover shared content (such as system
+    #   prompts) plus enough unique content to distribute workloads across
+    #   instances.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] concurrency_threshold
+    #   The maximum number of in-flight requests on the target instance
+    #   before the endpoint routes to another instance. Required when
+    #   `RoutingStrategy` is `PREFIX_AWARE`. When in-flight requests on the
+    #   prefix-selected instance reach this threshold, the endpoint routes
+    #   the request to an instance with more available capacity.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/PrefixAwareRoutingConfig AWS API Documentation
+    #
+    class PrefixAwareRoutingConfig < Struct.new(
+      :prefix_length,
+      :concurrency_threshold)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration for accessing hub content through presigned URLs,
+    # including license agreement acceptance and URL validation settings.
+    #
+    # @!attribute [rw] accept_eula
+    #   Indicates acceptance of the End User License Agreement (EULA) for
+    #   gated models. Set to true to acknowledge acceptance of the license
+    #   terms required for accessing gated content.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] expected_s3_url
+    #   The expected S3 URL prefix for validation purposes. This parameter
+    #   helps ensure consistency between the resolved S3 URIs and the
+    #   deployment configuration, reducing potential compatibility issues.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/PresignedUrlAccessConfig AWS API Documentation
+    #
+    class PresignedUrlAccessConfig < Struct.new(
+      :accept_eula,
+      :expected_s3_url)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -39072,7 +46729,7 @@ module Aws::SageMaker
     # @!attribute [rw] s3_data_distribution_type
     #   Whether to distribute the data from Amazon S3 to all processing
     #   instances with `FullyReplicated`, or whether the data from Amazon S3
-    #   is shared by Amazon S3 key, downloading one shard of data to each
+    #   is sharded by Amazon S3 key, downloading one shard of data to each
     #   processing instance.
     #   @return [String]
     #
@@ -39170,6 +46827,24 @@ module Aws::SageMaker
     # @!attribute [rw] instance_type
     #   The ML compute instance type.
     #   @return [String]
+    #
+    # @!attribute [rw] instance_pools
+    #   A list of instance pools for the production variant. Each instance
+    #   pool specifies an instance type and its priority for provisioning.
+    #   Use instance pools to configure heterogeneous endpoints that deploy
+    #   models across multiple instance types.
+    #   @return [Array<Types::InstancePool>]
+    #
+    # @!attribute [rw] variant_instance_provision_timeout_in_seconds
+    #   The timeout value, in seconds, for provisioning instances for the
+    #   production variant. When SageMaker encounters an insufficient
+    #   capacity error while provisioning instances, it retries with the
+    #   next instance pool (if configured) or waits until the timeout
+    #   expires. This timeout applies only to capacity provisioning and does
+    #   not include the time for model download or container startup.
+    #
+    #   Valid values: 300 to 3600.
+    #   @return [Integer]
     #
     # @!attribute [rw] initial_variant_weight
     #   Determines initial traffic distribution among all of the models that
@@ -39278,7 +46953,26 @@ module Aws::SageMaker
     #     * CUDA version: 12.4
     #
     #     * NVIDIA Container Toolkit with disabled CUDA-compat mounting
+    #
+    #   al2023-ami-sagemaker-inference-gpu-4-1
+    #   : * Accelerator: GPU
+    #
+    #     * NVIDIA driver version: 580
+    #
+    #     * CUDA version: 13.0
+    #
+    #     * NVIDIA Container Toolkit with disabled CUDA-compat mounting
+    #
+    #   al2-ami-sagemaker-inference-neuron-2
+    #   : * Accelerator: Inferentia2 and Trainium
+    #
+    #     * Neuron driver version: 2.19
     #   @return [String]
+    #
+    # @!attribute [rw] capacity_reservation_config
+    #   Settings for the capacity reservation for the compute instances that
+    #   SageMaker AI reserves for an endpoint.
+    #   @return [Types::ProductionVariantCapacityReservationConfig]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ProductionVariant AWS API Documentation
     #
@@ -39287,6 +46981,8 @@ module Aws::SageMaker
       :model_name,
       :initial_instance_count,
       :instance_type,
+      :instance_pools,
+      :variant_instance_provision_timeout_in_seconds,
       :initial_variant_weight,
       :accelerator_type,
       :core_dump_config,
@@ -39297,7 +46993,89 @@ module Aws::SageMaker
       :enable_ssm_access,
       :managed_instance_scaling,
       :routing_config,
-      :inference_ami_version)
+      :inference_ami_version,
+      :capacity_reservation_config)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Settings for the capacity reservation for the compute instances that
+    # SageMaker AI reserves for an endpoint.
+    #
+    # @!attribute [rw] capacity_reservation_preference
+    #   Options that you can choose for the capacity reservation. SageMaker
+    #   AI supports the following options:
+    #
+    #   capacity-reservations-only
+    #
+    #   : SageMaker AI launches instances only into an ML capacity
+    #     reservation. If no capacity is available, the instances fail to
+    #     launch.
+    #   @return [String]
+    #
+    # @!attribute [rw] ml_reservation_arn
+    #   The Amazon Resource Name (ARN) that uniquely identifies the ML
+    #   capacity reservation that SageMaker AI applies when it deploys the
+    #   endpoint.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ProductionVariantCapacityReservationConfig AWS API Documentation
+    #
+    class ProductionVariantCapacityReservationConfig < Struct.new(
+      :capacity_reservation_preference,
+      :ml_reservation_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Details about an ML capacity reservation.
+    #
+    # @!attribute [rw] ml_reservation_arn
+    #   The Amazon Resource Name (ARN) that uniquely identifies the ML
+    #   capacity reservation that SageMaker AI applies when it deploys the
+    #   endpoint.
+    #   @return [String]
+    #
+    # @!attribute [rw] capacity_reservation_preference
+    #   The option that you chose for the capacity reservation. SageMaker AI
+    #   supports the following options:
+    #
+    #   capacity-reservations-only
+    #
+    #   : SageMaker AI launches instances only into an ML capacity
+    #     reservation. If no capacity is available, the instances fail to
+    #     launch.
+    #   @return [String]
+    #
+    # @!attribute [rw] total_instance_count
+    #   The number of instances that you allocated to the ML capacity
+    #   reservation.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] available_instance_count
+    #   The number of instances that are currently available in the ML
+    #   capacity reservation.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] used_by_current_endpoint
+    #   The number of instances from the ML capacity reservation that are
+    #   being used by the endpoint.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] ec2_capacity_reservations
+    #   The EC2 capacity reservations that are shared to this ML capacity
+    #   reservation, if any.
+    #   @return [Array<Types::Ec2CapacityReservation>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ProductionVariantCapacityReservationSummary AWS API Documentation
+    #
+    class ProductionVariantCapacityReservationSummary < Struct.new(
+      :ml_reservation_arn,
+      :capacity_reservation_preference,
+      :total_instance_count,
+      :available_instance_count,
+      :used_by_current_endpoint,
+      :ec2_capacity_reservations)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -39380,12 +47158,60 @@ module Aws::SageMaker
     #   it scales up to accommodate an increase in traffic.
     #   @return [Integer]
     #
+    # @!attribute [rw] scale_in_policy
+    #   Configures the scale-in behavior for managed instance scaling.
+    #   @return [Types::ProductionVariantManagedInstanceScalingScaleInPolicy]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ProductionVariantManagedInstanceScaling AWS API Documentation
     #
     class ProductionVariantManagedInstanceScaling < Struct.new(
       :status,
       :min_instance_count,
-      :max_instance_count)
+      :max_instance_count,
+      :scale_in_policy)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configures the scale-in behavior for managed instance scaling.
+    #
+    # @!attribute [rw] strategy
+    #   The strategy for scaling in instances.
+    #
+    #   IDLE\_RELEASE
+    #
+    #   : Releases instances that have no hosted inference component copies.
+    #
+    #   CONSOLIDATION
+    #
+    #   : Consolidates inference component copies onto fewer instances to
+    #     release more instances. Consolidation honors the scheduling
+    #     configuration of each inference component. For example, if an
+    #     inference component specifies Availability Zone balance,
+    #     consolidation only proceeds when the resulting distribution does
+    #     not increase the imbalance.
+    #   @return [String]
+    #
+    # @!attribute [rw] maximum_step_size
+    #   The maximum number of instances that the endpoint can terminate at a
+    #   time during a consolidation scale-in operation.
+    #
+    #   Default value: `1`.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] cooldown_in_minutes
+    #   The cooldown period, in minutes, after the last endpoint operation
+    #   before the endpoint evaluates consolidation scale-in opportunities.
+    #
+    #   Default value: `20`.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ProductionVariantManagedInstanceScalingScaleInPolicy AWS API Documentation
+    #
+    class ProductionVariantManagedInstanceScalingScaleInPolicy < Struct.new(
+      :strategy,
+      :maximum_step_size,
+      :cooldown_in_minutes)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -39401,12 +47227,24 @@ module Aws::SageMaker
     #
     #   * `RANDOM`: The endpoint routes each request to a randomly chosen
     #     instance.
+    #
+    #   * `PREFIX_AWARE`: The endpoint routes requests that share the same
+    #     prompt prefix to the same instance. When the number of in-flight
+    #     requests on the selected instance reaches the configured
+    #     threshold, the endpoint routes the request to an instance with
+    #     more available capacity.
     #   @return [String]
+    #
+    # @!attribute [rw] prefix_aware_routing_config
+    #   The configuration for prefix-aware routing. Specify this parameter
+    #   only when you set `RoutingStrategy` to `PREFIX_AWARE`.
+    #   @return [Types::PrefixAwareRoutingConfig]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ProductionVariantRoutingConfig AWS API Documentation
     #
     class ProductionVariantRoutingConfig < Struct.new(
-      :routing_strategy)
+      :routing_strategy,
+      :prefix_aware_routing_config)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -39545,6 +47383,12 @@ module Aws::SageMaker
     #   `UpdateEndpointWeightsAndCapacities` request.
     #   @return [Integer]
     #
+    # @!attribute [rw] instance_pools
+    #   A list of instance pools for the production variant. Each pool
+    #   indicates the instance type and the current number of instances of
+    #   that type.
+    #   @return [Array<Types::InstancePoolSummary>]
+    #
     # @!attribute [rw] variant_status
     #   The endpoint variant status which describes the current deployment
     #   stage status or operational status.
@@ -39568,6 +47412,11 @@ module Aws::SageMaker
     #   the instances that the endpoint hosts.
     #   @return [Types::ProductionVariantRoutingConfig]
     #
+    # @!attribute [rw] capacity_reservation_config
+    #   Settings for the capacity reservation for the compute instances that
+    #   SageMaker AI reserves for an endpoint.
+    #   @return [Types::ProductionVariantCapacityReservationSummary]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ProductionVariantSummary AWS API Documentation
     #
     class ProductionVariantSummary < Struct.new(
@@ -39577,11 +47426,13 @@ module Aws::SageMaker
       :desired_weight,
       :current_instance_count,
       :desired_instance_count,
+      :instance_pools,
       :variant_status,
       :current_serverless_config,
       :desired_serverless_config,
       :managed_instance_scaling,
-      :routing_config)
+      :routing_config,
+      :capacity_reservation_config)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -39811,6 +47662,10 @@ module Aws::SageMaker
     #   A timestamp specifying when the project was created.
     #   @return [Time]
     #
+    # @!attribute [rw] template_provider_details
+    #   An array of template providers associated with the project.
+    #   @return [Array<Types::TemplateProviderDetail>]
+    #
     # @!attribute [rw] tags
     #   An array of key-value pairs. You can use tags to categorize your
     #   Amazon Web Services resources in different ways, for example, by
@@ -39827,8 +47682,8 @@ module Aws::SageMaker
     #   @return [Time]
     #
     # @!attribute [rw] last_modified_by
-    #   Information about the user who created or modified an experiment,
-    #   trial, trial component, lineage group, project, or model card.
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
     #   @return [Types::UserContext]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/Project AWS API Documentation
@@ -39843,6 +47698,7 @@ module Aws::SageMaker
       :project_status,
       :created_by,
       :creation_time,
+      :template_provider_details,
       :tags,
       :last_modified_time,
       :last_modified_by)
@@ -41330,6 +49186,20 @@ module Aws::SageMaker
     # SageMaker HyperPod clusters using Amazon SageMaker Training Plan, see
     # ` CreateTrainingPlan `.
     #
+    # @!attribute [rw] reserved_capacity_type
+    #   The type of reserved capacity offering.
+    #   @return [String]
+    #
+    # @!attribute [rw] ultra_server_type
+    #   The type of UltraServer included in this reserved capacity offering,
+    #   such as ml.u-p6e-gb200x72.
+    #   @return [String]
+    #
+    # @!attribute [rw] ultra_server_count
+    #   The number of UltraServers included in this reserved capacity
+    #   offering.
+    #   @return [Integer]
+    #
     # @!attribute [rw] instance_type
     #   The instance type for the reserved capacity offering.
     #   @return [String]
@@ -41360,16 +49230,29 @@ module Aws::SageMaker
     #   The end time of the reserved capacity offering.
     #   @return [Time]
     #
+    # @!attribute [rw] extension_start_time
+    #   The start time of the extension for the reserved capacity offering.
+    #   @return [Time]
+    #
+    # @!attribute [rw] extension_end_time
+    #   The end time of the extension for the reserved capacity offering.
+    #   @return [Time]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ReservedCapacityOffering AWS API Documentation
     #
     class ReservedCapacityOffering < Struct.new(
+      :reserved_capacity_type,
+      :ultra_server_type,
+      :ultra_server_count,
       :instance_type,
       :instance_count,
       :availability_zone,
       :duration_hours,
       :duration_minutes,
       :start_time,
-      :end_time)
+      :end_time,
+      :extension_start_time,
+      :extension_end_time)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -41383,6 +49266,19 @@ module Aws::SageMaker
     # @!attribute [rw] reserved_capacity_arn
     #   The Amazon Resource Name (ARN); of the reserved capacity.
     #   @return [String]
+    #
+    # @!attribute [rw] reserved_capacity_type
+    #   The type of reserved capacity.
+    #   @return [String]
+    #
+    # @!attribute [rw] ultra_server_type
+    #   The type of UltraServer included in this reserved capacity, such as
+    #   ml.u-p6e-gb200x72.
+    #   @return [String]
+    #
+    # @!attribute [rw] ultra_server_count
+    #   The number of UltraServers included in this reserved capacity.
+    #   @return [Integer]
     #
     # @!attribute [rw] instance_type
     #   The instance type for the reserved capacity.
@@ -41398,6 +49294,10 @@ module Aws::SageMaker
     #
     # @!attribute [rw] availability_zone
     #   The availability zone for the reserved capacity.
+    #   @return [String]
+    #
+    # @!attribute [rw] availability_zone_id
+    #   The Availability Zone ID of the reserved capacity.
     #   @return [String]
     #
     # @!attribute [rw] duration_hours
@@ -41422,10 +49322,14 @@ module Aws::SageMaker
     #
     class ReservedCapacitySummary < Struct.new(
       :reserved_capacity_arn,
+      :reserved_capacity_type,
+      :ultra_server_type,
+      :ultra_server_count,
       :instance_type,
       :total_instance_count,
       :status,
       :availability_zone,
+      :availability_zone_id,
       :duration_hours,
       :duration_minutes,
       :start_time,
@@ -41502,32 +49406,6 @@ module Aws::SageMaker
     #
     # @!attribute [rw] instance_type
     #   The ML compute instance type.
-    #
-    #   <note markdown="1"> SageMaker Training on Amazon Elastic Compute Cloud (EC2) P4de
-    #   instances is in preview release starting December 9th, 2022.
-    #
-    #    [Amazon EC2 P4de instances][1] (currently in preview) are powered by
-    #   8 NVIDIA A100 GPUs with 80GB high-performance HBM2e GPU memory,
-    #   which accelerate the speed of training ML models that need to be
-    #   trained on large datasets of high-resolution data. In this preview
-    #   release, Amazon SageMaker supports ML training jobs on P4de
-    #   instances (`ml.p4de.24xlarge`) to reduce model training time. The
-    #   `ml.p4de.24xlarge` instances are available in the following Amazon
-    #   Web Services Regions.
-    #
-    #    * US East (N. Virginia) (us-east-1)
-    #
-    #   * US West (Oregon) (us-west-2)
-    #
-    #    To request quota limit increase and start using P4de instances,
-    #   contact the SageMaker Training service team through your account
-    #   team.
-    #
-    #    </note>
-    #
-    #
-    #
-    #   [1]: http://aws.amazon.com/ec2/instance-types/p4/
     #   @return [String]
     #
     # @!attribute [rw] instance_count
@@ -41537,6 +49415,9 @@ module Aws::SageMaker
     #
     # @!attribute [rw] volume_size_in_gb
     #   The size of the ML storage volume that you want to provision.
+    #
+    #   SageMaker automatically selects the volume size for serverless
+    #   training jobs. You cannot customize this setting.
     #
     #   ML storage volumes store model artifacts and incremental states.
     #   Training algorithms might also use the ML storage volume for scratch
@@ -41620,6 +49501,12 @@ module Aws::SageMaker
     #   resource configuration.
     #   @return [String]
     #
+    # @!attribute [rw] instance_placement_config
+    #   Configuration for how training job instances are placed and
+    #   allocated within UltraServers. Only applicable for UltraServer
+    #   capacity.
+    #   @return [Types::InstancePlacementConfig]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ResourceConfig AWS API Documentation
     #
     class ResourceConfig < Struct.new(
@@ -41629,7 +49516,8 @@ module Aws::SageMaker
       :volume_kms_key_id,
       :keep_alive_period_in_seconds,
       :instance_groups,
-      :training_plan_arn)
+      :training_plan_arn,
+      :instance_placement_config)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -41742,11 +49630,20 @@ module Aws::SageMaker
     #   Default is `50`.
     #   @return [Integer]
     #
+    # @!attribute [rw] absolute_borrow_limits
+    #   The absolute limits on compute resources that can be borrowed from
+    #   idle compute. When specified, these limits define the maximum amount
+    #   of specific resource types (such as accelerators, vCPU, or memory)
+    #   that an entity can borrow, regardless of the percentage-based
+    #   `BorrowLimit`.
+    #   @return [Array<Types::ComputeQuotaResourceConfig>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ResourceSharingConfig AWS API Documentation
     #
     class ResourceSharingConfig < Struct.new(
       :strategy,
-      :borrow_limit)
+      :borrow_limit,
+      :absolute_borrow_limits)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -41794,6 +49691,21 @@ module Aws::SageMaker
     #   attached to the Resource.
     #   @return [String]
     #
+    # @!attribute [rw] training_plan_arn
+    #   The ARN of the SageMaker AI Training Plan to use for this app. When
+    #   you specify a training plan, the app launches on reserved GPU
+    #   capacity. This field is supported for JupyterLab and CodeEditor app
+    #   types.
+    #
+    #   For more information about how to reserve GPU capacity with
+    #   SageMaker AI Training Plans, see [Using training plans in Studio
+    #   applications][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/sagemaker/latest/dg/training-plan-utilization-for-studio-apps.html
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ResourceSpec AWS API Documentation
     #
     class ResourceSpec < Struct.new(
@@ -41801,7 +49713,8 @@ module Aws::SageMaker
       :sage_maker_image_version_arn,
       :sage_maker_image_version_alias,
       :instance_type,
-      :lifecycle_config_arn)
+      :lifecycle_config_arn,
+      :training_plan_arn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -41883,6 +49796,51 @@ module Aws::SageMaker
       include Aws::Structure
     end
 
+    # Defines the mapping between an in-app role and the Amazon Web Services
+    # IAM Identity Center group patterns that should be assigned to that
+    # role within the SageMaker Partner AI App.
+    #
+    # @!attribute [rw] role_name
+    #   The name of the in-app role within the SageMaker Partner AI App. The
+    #   specific roles available depend on the app type and version.
+    #   @return [String]
+    #
+    # @!attribute [rw] group_patterns
+    #   A list of Amazon Web Services IAM Identity Center group patterns
+    #   that should be assigned to the specified role. Group patterns
+    #   support wildcard matching using `*`.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/RoleGroupAssignment AWS API Documentation
+    #
+    class RoleGroupAssignment < Struct.new(
+      :role_name,
+      :group_patterns)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configurations that SageMaker uses when updating the AMI versions.
+    #
+    # @!attribute [rw] maximum_batch_size
+    #   The maximum amount of instances in the cluster that SageMaker can
+    #   update at a time.
+    #   @return [Types::CapacitySizeConfig]
+    #
+    # @!attribute [rw] rollback_maximum_batch_size
+    #   The maximum amount of instances in the cluster that SageMaker can
+    #   roll back at a time.
+    #   @return [Types::CapacitySizeConfig]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/RollingDeploymentPolicy AWS API Documentation
+    #
+    class RollingDeploymentPolicy < Struct.new(
+      :maximum_batch_size,
+      :rollback_maximum_batch_size)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Specifies a rolling deployment strategy for updating a SageMaker
     # endpoint.
     #
@@ -41942,6 +49900,11 @@ module Aws::SageMaker
     #   contains the data you want to use for model training.
     #   `AugmentedManifestFile` can only be used if the Channel's input
     #   mode is `Pipe`.
+    #
+    #   If you choose `Converse`, `S3Uri` identifies an Amazon S3 location
+    #   that contains data formatted according to Converse format. This
+    #   format structures conversational messages with specific roles and
+    #   content types used for training and fine-tuning foundational models.
     #   @return [String]
     #
     # @!attribute [rw] s3_uri
@@ -42064,6 +50027,43 @@ module Aws::SageMaker
       :instance_group_names,
       :model_access_config,
       :hub_access_config)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A custom file system in Amazon S3. This is only supported in Amazon
+    # SageMaker Unified Studio.
+    #
+    # @!attribute [rw] s3_uri
+    #   The Amazon S3 URI that specifies the location in S3 where files are
+    #   stored, which is mounted within the Studio environment. For example:
+    #   `s3://<bucket-name>/<prefix>/`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/S3FileSystem AWS API Documentation
+    #
+    class S3FileSystem < Struct.new(
+      :s3_uri)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration for the custom Amazon S3 file system.
+    #
+    # @!attribute [rw] mount_path
+    #   The file system path where the Amazon S3 storage location will be
+    #   mounted within the Amazon SageMaker Studio environment.
+    #   @return [String]
+    #
+    # @!attribute [rw] s3_uri
+    #   The Amazon S3 URI of the S3 file system configuration.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/S3FileSystemConfig AWS API Documentation
+    #
+    class S3FileSystemConfig < Struct.new(
+      :mount_path,
+      :s3_uri)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -42417,6 +50417,27 @@ module Aws::SageMaker
       include Aws::Structure
     end
 
+    # The configuration object of the schedule that SageMaker follows when
+    # updating the AMI.
+    #
+    # @!attribute [rw] schedule_expression
+    #   A cron expression that specifies the schedule that SageMaker follows
+    #   when updating the AMI.
+    #   @return [String]
+    #
+    # @!attribute [rw] deployment_config
+    #   The configuration to use when updating the AMI versions.
+    #   @return [Types::DeploymentConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ScheduledUpdateConfig AWS API Documentation
+    #
+    class ScheduledUpdateConfig < Struct.new(
+      :schedule_expression,
+      :deployment_config)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Cluster policy configuration. This policy is used for task
     # prioritization and fair-share allocation. This helps prioritize
     # critical workloads and distributes idle compute across entities.
@@ -42437,11 +50458,18 @@ module Aws::SageMaker
     #   Default is `Enabled`.
     #   @return [String]
     #
+    # @!attribute [rw] idle_resource_sharing
+    #   Configuration for sharing idle compute resources across entities in
+    #   the cluster. When enabled, unallocated resources are automatically
+    #   calculated and made available for entities to borrow.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/SchedulerConfig AWS API Documentation
     #
     class SchedulerConfig < Struct.new(
       :priority_classes,
-      :fair_share)
+      :fair_share,
+      :idle_resource_sharing)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -42555,6 +50583,10 @@ module Aws::SageMaker
     #   An execution of a pipeline.
     #   @return [Types::PipelineExecution]
     #
+    # @!attribute [rw] pipeline_version
+    #   The version of the pipeline.
+    #   @return [Types::PipelineVersion]
+    #
     # @!attribute [rw] feature_group
     #   Amazon SageMaker Feature Store stores features in a collection
     #   called Feature Group. A Feature Group can be visualized as a table
@@ -42584,6 +50616,10 @@ module Aws::SageMaker
     #   A model displayed in the Amazon SageMaker Model Dashboard.
     #   @return [Types::ModelDashboardModel]
     #
+    # @!attribute [rw] job
+    #   The properties of a job.
+    #   @return [Types::Job]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/SearchRecord AWS API Documentation
     #
     class SearchRecord < Struct.new(
@@ -42596,12 +50632,14 @@ module Aws::SageMaker
       :model_package_group,
       :pipeline,
       :pipeline_execution,
+      :pipeline_version,
       :feature_group,
       :feature_metadata,
       :project,
       :hyper_parameter_tuning_job,
       :model_card,
-      :model)
+      :model,
+      :job)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -42684,11 +50722,16 @@ module Aws::SageMaker
     #   use the token in the next request.
     #   @return [String]
     #
+    # @!attribute [rw] total_hits
+    #   The total number of matching results.
+    #   @return [Types::TotalHits]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/SearchResponse AWS API Documentation
     #
     class SearchResponse < Struct.new(
       :results,
-      :next_token)
+      :next_token,
+      :total_hits)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -42711,6 +50754,14 @@ module Aws::SageMaker
     #   match your requirements.
     #   @return [Integer]
     #
+    # @!attribute [rw] ultra_server_type
+    #   The type of UltraServer to search for, such as ml.u-p6e-gb200x72.
+    #   @return [String]
+    #
+    # @!attribute [rw] ultra_server_count
+    #   The number of UltraServers to search for.
+    #   @return [Integer]
+    #
     # @!attribute [rw] start_time_after
     #   A filter to search for training plan offerings with a start time
     #   after a specified date.
@@ -42727,7 +50778,8 @@ module Aws::SageMaker
     #
     # @!attribute [rw] target_resources
     #   The target resources (e.g., SageMaker Training Jobs, SageMaker
-    #   HyperPod) to search for in the offerings.
+    #   HyperPod, SageMaker Endpoints, Studio apps) to search for in the
+    #   offerings.
     #
     #   Training plans are specific to their target resource.
     #
@@ -42736,17 +50788,34 @@ module Aws::SageMaker
     #
     #   * A training plan for HyperPod clusters can be used exclusively to
     #     provide compute resources to a cluster's instance group.
+    #
+    #   * A training plan for SageMaker endpoints can be used exclusively to
+    #     provide compute resources to SageMaker endpoints for model
+    #     deployment.
+    #
+    #   * A training plan for Studio apps can be used to launch JupyterLab
+    #     and Code Editor apps on reserved training plan capacity.
     #   @return [Array<String>]
+    #
+    # @!attribute [rw] training_plan_arn
+    #   The Amazon Resource Name (ARN); of an existing training plan to
+    #   search for extension offerings. When specified, the API returns
+    #   extension offerings that can be used to extend the specified
+    #   training plan.
+    #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/SearchTrainingPlanOfferingsRequest AWS API Documentation
     #
     class SearchTrainingPlanOfferingsRequest < Struct.new(
       :instance_type,
       :instance_count,
+      :ultra_server_type,
+      :ultra_server_count,
       :start_time_after,
       :end_time_before,
       :duration_hours,
-      :target_resources)
+      :target_resources,
+      :training_plan_arn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -42755,10 +50824,17 @@ module Aws::SageMaker
     #   A list of training plan offerings that match the search criteria.
     #   @return [Array<Types::TrainingPlanOffering>]
     #
+    # @!attribute [rw] training_plan_extension_offerings
+    #   A list of extension offerings available for the specified training
+    #   plan. These offerings can be used with the ` ExtendTrainingPlan `
+    #   API to extend an existing training plan.
+    #   @return [Array<Types::TrainingPlanExtensionOffering>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/SearchTrainingPlanOfferingsResponse AWS API Documentation
     #
     class SearchTrainingPlanOfferingsResponse < Struct.new(
-      :training_plan_offerings)
+      :training_plan_offerings,
+      :training_plan_extension_offerings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -43027,6 +51103,96 @@ module Aws::SageMaker
     #
     class SendPipelineExecutionStepSuccessResponse < Struct.new(
       :pipeline_execution_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration for the serverless training job.
+    #
+    # @!attribute [rw] base_model_arn
+    #   The base model Amazon Resource Name (ARN) in [SageMaker Public
+    #   Hub][1]. SageMaker always selects the latest version of the provided
+    #   model.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/sagemaker/latest/dg/jumpstart-foundation-models-use.html
+    #   @return [String]
+    #
+    # @!attribute [rw] accept_eula
+    #   Specifies agreement to the model end-user license agreement (EULA).
+    #   The `AcceptEula` value must be explicitly defined as `True` in order
+    #   to accept the EULA that this model requires. You are responsible for
+    #   reviewing and complying with any applicable license terms and making
+    #   sure they are acceptable for your use case before downloading or
+    #   using a model. For more information, see [End-user license
+    #   agreements][1] section for more details on accepting the EULA.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/sagemaker/latest/dg/jumpstart-foundation-models-choose.html#jumpstart-foundation-models-choose-eula
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] job_type
+    #   The serverless training job type.
+    #   @return [String]
+    #
+    # @!attribute [rw] customization_technique
+    #   The model customization technique.
+    #   @return [String]
+    #
+    # @!attribute [rw] peft
+    #   The parameter-efficient fine-tuning configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] evaluation_type
+    #   The evaluation job type. Required when serverless job type is
+    #   `Evaluation`.
+    #   @return [String]
+    #
+    # @!attribute [rw] evaluator_arn
+    #   The evaluator Amazon Resource Name (ARN) used as reward function or
+    #   reward prompt.
+    #   @return [String]
+    #
+    # @!attribute [rw] sequence_length
+    #   The maximum sequence length, in tokens, that the customization job
+    #   supports. SageMaker uses this value to select a training
+    #   configuration for the base model that you specify. The parameter
+    #   supports the following values:
+    #
+    #   * `1K`
+    #
+    #   * `2K`
+    #
+    #   * `4K`
+    #
+    #   * `8K`
+    #
+    #   * `16K`
+    #
+    #   * `32K`
+    #
+    #   * `64K`
+    #
+    #   * `128K`
+    #
+    #   If you don't specify a value, SageMaker selects a training
+    #   configuration based on the other values that you specify. The
+    #   selection is not restricted to a particular sequence length.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/ServerlessJobConfig AWS API Documentation
+    #
+    class ServerlessJobConfig < Struct.new(
+      :base_model_arn,
+      :accept_eula,
+      :job_type,
+      :customization_technique,
+      :peft,
+      :evaluation_type,
+      :evaluator_arn,
+      :sequence_length)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -43547,11 +51713,26 @@ module Aws::SageMaker
     #   The storage settings for a space.
     #   @return [Types::SpaceStorageSettings]
     #
+    # @!attribute [rw] space_managed_resources
+    #   If you enable this option, SageMaker AI creates the following
+    #   resources on your behalf when you create the space:
+    #
+    #   * The user profile that possesses the space.
+    #
+    #   * The app that the space contains.
+    #   @return [String]
+    #
     # @!attribute [rw] custom_file_systems
     #   A file system, created by you, that you assign to a space for an
     #   Amazon SageMaker AI Domain. Permitted users can access this file
     #   system in Amazon SageMaker AI Studio.
     #   @return [Array<Types::CustomFileSystem>]
+    #
+    # @!attribute [rw] remote_access
+    #   A setting that enables or disables remote access for a SageMaker
+    #   space. When enabled, this allows you to connect to the remote space
+    #   from your local IDE.
+    #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/SpaceSettings AWS API Documentation
     #
@@ -43562,7 +51743,9 @@ module Aws::SageMaker
       :jupyter_lab_app_settings,
       :app_type,
       :space_storage_settings,
-      :custom_file_systems)
+      :space_managed_resources,
+      :custom_file_systems,
+      :remote_access)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -43573,6 +51756,12 @@ module Aws::SageMaker
     #   The type of app created within the space.
     #   @return [String]
     #
+    # @!attribute [rw] remote_access
+    #   A setting that enables or disables remote access for a SageMaker
+    #   space. When enabled, this allows you to connect to the remote space
+    #   from your local IDE.
+    #   @return [String]
+    #
     # @!attribute [rw] space_storage_settings
     #   The storage settings for a space.
     #   @return [Types::SpaceStorageSettings]
@@ -43581,6 +51770,7 @@ module Aws::SageMaker
     #
     class SpaceSettingsSummary < Struct.new(
       :app_type,
+      :remote_access,
       :space_storage_settings)
       SENSITIVE = []
       include Aws::Structure
@@ -43652,6 +51842,38 @@ module Aws::SageMaker
       :duration_in_seconds,
       :number_of_steps,
       :users_per_step)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] cluster_name
+    #   The string name or the Amazon Resource Name (ARN) of the SageMaker
+    #   HyperPod cluster.
+    #   @return [String]
+    #
+    # @!attribute [rw] deep_health_check_configurations
+    #   A list of configurations containing instance group names, EC2
+    #   instance IDs, and deep health checks to perform.
+    #   @return [Array<Types::InstanceGroupHealthCheckConfiguration>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/StartClusterHealthCheckRequest AWS API Documentation
+    #
+    class StartClusterHealthCheckRequest < Struct.new(
+      :cluster_name,
+      :deep_health_check_configurations)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] cluster_arn
+    #   The Amazon Resource Name (ARN) of the SageMaker HyperPod cluster on
+    #   which the deep health checks were initiated.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/StartClusterHealthCheckResponse AWS API Documentation
+    #
+    class StartClusterHealthCheckResponse < Struct.new(
+      :cluster_arn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -43779,6 +52001,14 @@ module Aws::SageMaker
     #   The selective execution configuration applied to the pipeline run.
     #   @return [Types::SelectiveExecutionConfig]
     #
+    # @!attribute [rw] pipeline_version_id
+    #   The ID of the pipeline version to start execution from.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] mlflow_experiment_name
+    #   The MLflow experiment name of the pipeline execution.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/StartPipelineExecutionRequest AWS API Documentation
     #
     class StartPipelineExecutionRequest < Struct.new(
@@ -43788,7 +52018,9 @@ module Aws::SageMaker
       :pipeline_execution_description,
       :client_request_token,
       :parallelism_configuration,
-      :selective_execution_config)
+      :selective_execution_config,
+      :pipeline_version_id,
+      :mlflow_experiment_name)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -43801,6 +52033,92 @@ module Aws::SageMaker
     #
     class StartPipelineExecutionResponse < Struct.new(
       :pipeline_execution_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] resource_identifier
+    #   The Amazon Resource Name (ARN) of the resource to which the remote
+    #   connection will be established. For example, this identifies the
+    #   specific ARN space application you want to connect to from your
+    #   local IDE.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/StartSessionRequest AWS API Documentation
+    #
+    class StartSessionRequest < Struct.new(
+      :resource_identifier)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] session_id
+    #   A unique identifier for the established remote connection session.
+    #   @return [String]
+    #
+    # @!attribute [rw] stream_url
+    #   A WebSocket URL used to establish a SSH connection between the local
+    #   IDE and remote SageMaker space.
+    #   @return [String]
+    #
+    # @!attribute [rw] token_value
+    #   An encrypted token value containing session and caller information.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/StartSessionResponse AWS API Documentation
+    #
+    class StartSessionResponse < Struct.new(
+      :session_id,
+      :stream_url,
+      :token_value)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] ai_benchmark_job_name
+    #   The name of the AI benchmark job to stop.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/StopAIBenchmarkJobRequest AWS API Documentation
+    #
+    class StopAIBenchmarkJobRequest < Struct.new(
+      :ai_benchmark_job_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] ai_benchmark_job_arn
+    #   The Amazon Resource Name (ARN) of the stopped benchmark job.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/StopAIBenchmarkJobResponse AWS API Documentation
+    #
+    class StopAIBenchmarkJobResponse < Struct.new(
+      :ai_benchmark_job_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] ai_recommendation_job_name
+    #   The name of the AI recommendation job to stop.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/StopAIRecommendationJobRequest AWS API Documentation
+    #
+    class StopAIRecommendationJobRequest < Struct.new(
+      :ai_recommendation_job_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] ai_recommendation_job_arn
+    #   The Amazon Resource Name (ARN) of the stopped recommendation job.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/StopAIRecommendationJobResponse AWS API Documentation
+    #
+    class StopAIRecommendationJobResponse < Struct.new(
+      :ai_recommendation_job_arn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -43940,6 +52258,27 @@ module Aws::SageMaker
       SENSITIVE = []
       include Aws::Structure
     end
+
+    # @!attribute [rw] job_name
+    #   The name of the job to stop.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_category
+    #   The category of the job to stop.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/StopJobRequest AWS API Documentation
+    #
+    class StopJobRequest < Struct.new(
+      :job_name,
+      :job_category)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/StopJobResponse AWS API Documentation
+    #
+    class StopJobResponse < Aws::EmptyStructure; end
 
     # @!attribute [rw] labeling_job_name
     #   The name of the labeling job to stop.
@@ -44139,6 +52478,27 @@ module Aws::SageMaker
     # @!attribute [rw] max_pending_time_in_seconds
     #   The maximum length of time, in seconds, that a training or
     #   compilation job can be pending before it is stopped.
+    #
+    #   <note markdown="1"> When working with training jobs that use capacity from [training
+    #   plans][1], not all `Pending` job states count against the
+    #   `MaxPendingTimeInSeconds` limit. The following scenarios do not
+    #   increment the `MaxPendingTimeInSeconds` counter:
+    #
+    #    * The plan is in a `Scheduled` state: Jobs queued (in `Pending`
+    #     status) before a plan's start date (waiting for scheduled start
+    #     time)
+    #
+    #   * Between capacity reservations: Jobs temporarily back to `Pending`
+    #     status between two capacity reservation periods
+    #
+    #    `MaxPendingTimeInSeconds` only increments when jobs are actively
+    #   waiting for capacity in an `Active` plan.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/sagemaker/latest/dg/reserve-capacity-with-training-plans.html
     #   @return [Integer]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/StoppingCondition AWS API Documentation
@@ -44212,13 +52572,24 @@ module Aws::SageMaker
     #   The version aliases you are hiding from the Studio user interface.
     #   @return [Array<Types::HiddenSageMakerImage>]
     #
+    # @!attribute [rw] execution_role_session_name_mode
+    #   The execution role session name mode. If this value is set to
+    #   `USER_IDENTITY`, the session name of the execution role corresponds
+    #   to the user's identity. For IAM domains, the session name is the
+    #   IAM session name used to generate the presigned URL. For IAM
+    #   Identity Center domains, the session name is the username of the
+    #   associated IAM Identity Center user. If this value is set to
+    #   `STATIC` or is not set, the session name defaults to `SageMaker`.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/StudioWebPortalSettings AWS API Documentation
     #
     class StudioWebPortalSettings < Struct.new(
       :hidden_ml_tools,
       :hidden_app_types,
       :hidden_instance_types,
-      :hidden_sage_maker_image_version_aliases)
+      :hidden_sage_maker_image_version_aliases,
+      :execution_role_session_name_mode)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -44554,6 +52925,22 @@ module Aws::SageMaker
     class TargetTrackingScalingPolicyConfiguration < Struct.new(
       :metric_specification,
       :target_value)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Details about a template provider configuration and associated
+    # provisioning information.
+    #
+    # @!attribute [rw] cfn_template_provider_detail
+    #   Details about a CloudFormation template provider configuration and
+    #   associated provisioning information.
+    #   @return [Types::CfnTemplateProviderDetail]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/TemplateProviderDetail AWS API Documentation
+    #
+    class TemplateProviderDetail < Struct.new(
+      :cfn_template_provider_detail)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -45098,6 +53485,38 @@ module Aws::SageMaker
       include Aws::Structure
     end
 
+    # Represents the total number of matching results and indicates how
+    # accurate that count is.
+    #
+    # The `Value` field provides the count, which may be exact or estimated.
+    # The `Relation` field indicates whether it's an exact figure or a
+    # lower bound. This helps understand the full scope of search results,
+    # especially when dealing with large result sets.
+    #
+    # @!attribute [rw] value
+    #   The total number of matching results. This value may be exact or an
+    #   estimate, depending on the `Relation` field.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] relation
+    #   Indicates the relationship between the returned `Value` and the
+    #   actual total number of matching results. Possible values are:
+    #
+    #   * `EqualTo`: The `Value` is the exact count of matching results.
+    #
+    #   * `GreaterThanOrEqualTo`: The `Value` is a lower bound of the actual
+    #     count of matching results.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/TotalHits AWS API Documentation
+    #
+    class TotalHits < Struct.new(
+      :value,
+      :relation)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The summary of the tracking server to list.
     #
     # @!attribute [rw] tracking_server_arn
@@ -45378,6 +53797,10 @@ module Aws::SageMaker
     #   that are configured for model training.
     #   @return [Types::ResourceConfig]
     #
+    # @!attribute [rw] warm_pool_status
+    #   The status of the warm pool associated with the training job.
+    #   @return [Types::WarmPoolStatus]
+    #
     # @!attribute [rw] vpc_config
     #   A [VpcConfig][1] object that specifies the VPC that this training
     #   job has access to. For more information, see [Protect Training Jobs
@@ -45519,6 +53942,15 @@ module Aws::SageMaker
     #   training job.
     #   @return [Array<Types::DebugRuleEvaluationStatus>]
     #
+    # @!attribute [rw] output_model_package_arn
+    #   The output model package Amazon Resource Name (ARN) that contains
+    #   model weights or checkpoint.
+    #   @return [String]
+    #
+    # @!attribute [rw] model_package_config
+    #   The model package configuration.
+    #   @return [Types::ModelPackageConfig]
+    #
     # @!attribute [rw] profiler_config
     #   Configuration information for Amazon SageMaker Debugger system
     #   monitoring, framework profiling, and storage paths.
@@ -45562,6 +53994,7 @@ module Aws::SageMaker
       :input_data_config,
       :output_data_config,
       :resource_config,
+      :warm_pool_status,
       :vpc_config,
       :stopping_condition,
       :creation_time,
@@ -45581,6 +54014,8 @@ module Aws::SageMaker
       :debug_rule_configurations,
       :tensor_board_output_config,
       :debug_rule_evaluation_statuses,
+      :output_model_package_arn,
+      :model_package_config,
       :profiler_config,
       :environment,
       :retry_strategy,
@@ -45798,6 +54233,119 @@ module Aws::SageMaker
       include Aws::Structure
     end
 
+    # Details about an extension to a training plan, including the offering
+    # ID, dates, status, and cost information.
+    #
+    # @!attribute [rw] training_plan_extension_offering_id
+    #   The unique identifier of the extension offering that was used to
+    #   create this extension.
+    #   @return [String]
+    #
+    # @!attribute [rw] extended_at
+    #   The timestamp when the extension was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] start_date
+    #   The start date of the extension period.
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_date
+    #   The end date of the extension period.
+    #   @return [Time]
+    #
+    # @!attribute [rw] status
+    #   The current status of the extension (e.g., Pending, Active,
+    #   Scheduled, Failed, Expired).
+    #   @return [String]
+    #
+    # @!attribute [rw] payment_status
+    #   The payment processing status of the extension.
+    #   @return [String]
+    #
+    # @!attribute [rw] availability_zone
+    #   The Availability Zone of the extension.
+    #   @return [String]
+    #
+    # @!attribute [rw] availability_zone_id
+    #   The Availability Zone ID of the extension.
+    #   @return [String]
+    #
+    # @!attribute [rw] duration_hours
+    #   The duration of the extension in hours.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] upfront_fee
+    #   The upfront fee for the extension.
+    #   @return [String]
+    #
+    # @!attribute [rw] currency_code
+    #   The currency code for the upfront fee (e.g., USD).
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/TrainingPlanExtension AWS API Documentation
+    #
+    class TrainingPlanExtension < Struct.new(
+      :training_plan_extension_offering_id,
+      :extended_at,
+      :start_date,
+      :end_date,
+      :status,
+      :payment_status,
+      :availability_zone,
+      :availability_zone_id,
+      :duration_hours,
+      :upfront_fee,
+      :currency_code)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Details about an available extension offering for a training plan. Use
+    # the offering ID with the ` ExtendTrainingPlan ` API to extend a
+    # training plan.
+    #
+    # @!attribute [rw] training_plan_extension_offering_id
+    #   The unique identifier for this extension offering.
+    #   @return [String]
+    #
+    # @!attribute [rw] availability_zone
+    #   The Availability Zone for this extension offering.
+    #   @return [String]
+    #
+    # @!attribute [rw] start_date
+    #   The start date of this extension offering.
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_date
+    #   The end date of this extension offering.
+    #   @return [Time]
+    #
+    # @!attribute [rw] duration_hours
+    #   The duration of this extension offering in hours.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] upfront_fee
+    #   The upfront fee for this extension offering.
+    #   @return [String]
+    #
+    # @!attribute [rw] currency_code
+    #   The currency code for the upfront fee (e.g., USD).
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/TrainingPlanExtensionOffering AWS API Documentation
+    #
+    class TrainingPlanExtensionOffering < Struct.new(
+      :training_plan_extension_offering_id,
+      :availability_zone,
+      :start_date,
+      :end_date,
+      :duration_hours,
+      :upfront_fee,
+      :currency_code)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # A filter to apply when listing or searching for training plans.
     #
     # For more information about how to reserve GPU capacity for your
@@ -45833,7 +54381,8 @@ module Aws::SageMaker
     #
     # @!attribute [rw] target_resources
     #   The target resources (e.g., SageMaker Training Jobs, SageMaker
-    #   HyperPod) for this training plan offering.
+    #   HyperPod, SageMaker Endpoints, Studio apps) for this training plan
+    #   offering.
     #
     #   Training plans are specific to their target resource.
     #
@@ -45842,6 +54391,13 @@ module Aws::SageMaker
     #
     #   * A training plan for HyperPod clusters can be used exclusively to
     #     provide compute resources to a cluster's instance group.
+    #
+    #   * A training plan for SageMaker endpoints can be used exclusively to
+    #     provide compute resources to SageMaker endpoints for model
+    #     deployment.
+    #
+    #   * A training plan for Studio apps can be used to launch JupyterLab
+    #     and Code Editor apps on reserved training plan capacity.
     #   @return [Array<String>]
     #
     # @!attribute [rw] requested_start_time_after
@@ -45958,9 +54514,13 @@ module Aws::SageMaker
     #   The number of instances currently in use from this training plan.
     #   @return [Integer]
     #
+    # @!attribute [rw] total_ultra_server_count
+    #   The total number of UltraServers allocated to this training plan.
+    #   @return [Integer]
+    #
     # @!attribute [rw] target_resources
-    #   The target resources (e.g., training jobs, HyperPod clusters) that
-    #   can use this training plan.
+    #   The target resources (e.g., training jobs, HyperPod clusters,
+    #   Endpoints, Studio apps) that can use this training plan.
     #
     #   Training plans are specific to their target resource.
     #
@@ -45969,6 +54529,13 @@ module Aws::SageMaker
     #
     #   * A training plan for HyperPod clusters can be used exclusively to
     #     provide compute resources to a cluster's instance group.
+    #
+    #   * A training plan for SageMaker endpoints can be used exclusively to
+    #     provide compute resources to SageMaker endpoints for model
+    #     deployment.
+    #
+    #   * A training plan for Studio apps can be used to launch JupyterLab
+    #     and Code Editor apps on reserved training plan capacity.
     #   @return [Array<String>]
     #
     # @!attribute [rw] reserved_capacity_summaries
@@ -45993,8 +54560,38 @@ module Aws::SageMaker
       :total_instance_count,
       :available_instance_count,
       :in_use_instance_count,
+      :total_ultra_server_count,
       :target_resources,
       :reserved_capacity_summaries)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The serverless training job progress information.
+    #
+    # @!attribute [rw] total_step_count_per_epoch
+    #   The total step count per epoch.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] current_step
+    #   The current step number.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] current_epoch
+    #   The current epoch number.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] max_epoch
+    #   The maximum number of epochs for this job.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/TrainingProgressInfo AWS API Documentation
+    #
+    class TrainingProgressInfo < Struct.new(
+      :total_step_count_per_epoch,
+      :current_step,
+      :current_epoch,
+      :max_epoch)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -46618,12 +55215,29 @@ module Aws::SageMaker
     #   [2]: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ssd-instance-store.html
     #   @return [String]
     #
+    # @!attribute [rw] transform_ami_version
+    #   Specifies an option from a collection of preconfigured Amazon
+    #   Machine Image (AMI) images. Each image is configured by Amazon Web
+    #   Services with a set of software and driver versions.
+    #
+    #   al2-ami-sagemaker-batch-gpu-470
+    #   : * Accelerator: GPU
+    #
+    #     * NVIDIA driver version: 470
+    #
+    #   al2-ami-sagemaker-batch-gpu-535
+    #   : * Accelerator: GPU
+    #
+    #     * NVIDIA driver version: 535
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/TransformResources AWS API Documentation
     #
     class TransformResources < Struct.new(
       :instance_type,
       :instance_count,
-      :volume_kms_key_id)
+      :volume_kms_key_id,
+      :transform_ami_version)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -46734,8 +55348,8 @@ module Aws::SageMaker
     #   @return [Time]
     #
     # @!attribute [rw] last_modified_by
-    #   Information about the user who created or modified an experiment,
-    #   trial, trial component, lineage group, project, or model card.
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
     #   @return [Types::UserContext]
     #
     # @!attribute [rw] metadata_properties
@@ -46826,8 +55440,8 @@ module Aws::SageMaker
     #   @return [Time]
     #
     # @!attribute [rw] last_modified_by
-    #   Information about the user who created or modified an experiment,
-    #   trial, trial component, lineage group, project, or model card.
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
     #   @return [Types::UserContext]
     #
     # @!attribute [rw] parameters
@@ -47043,8 +55657,8 @@ module Aws::SageMaker
     #   @return [Time]
     #
     # @!attribute [rw] created_by
-    #   Information about the user who created or modified an experiment,
-    #   trial, trial component, lineage group, project, or model card.
+    #   Information about the user who created or modified a SageMaker
+    #   resource.
     #   @return [Types::UserContext]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/TrialComponentSimpleSummary AWS API Documentation
@@ -47274,6 +55888,34 @@ module Aws::SageMaker
       include Aws::Structure
     end
 
+    # The Trusted Identity Propagation (TIP) settings for the SageMaker
+    # domain. These settings determine how user identities from IAM Identity
+    # Center are propagated through the domain to TIP enabled Amazon Web
+    # Services services.
+    #
+    # @!attribute [rw] status
+    #   The status of Trusted Identity Propagation (TIP) at the SageMaker
+    #   domain level.
+    #
+    #   When disabled, standard IAM role-based access is used.
+    #
+    #   When enabled:
+    #
+    #   * User identities from IAM Identity Center are propagated through
+    #     the application to TIP enabled Amazon Web Services services.
+    #
+    #   * New applications or existing applications that are automatically
+    #     patched, will use the domain level configuration.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/TrustedIdentityPropagationSettings AWS API Documentation
+    #
+    class TrustedIdentityPropagationSettings < Struct.new(
+      :status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Time to live duration, where the record is hard deleted after the
     # expiration time is reached; `ExpiresAt` = `EventTime` + `TtlDuration`.
     # For information on HardDelete, see the [DeleteRecord][1] API in the
@@ -47490,6 +56132,208 @@ module Aws::SageMaker
       include Aws::Structure
     end
 
+    # Represents a high-performance compute server used for distributed
+    # training in SageMaker AI. An UltraServer consists of multiple
+    # instances within a shared NVLink interconnect domain.
+    #
+    # @!attribute [rw] ultra_server_id
+    #   The unique identifier for the UltraServer.
+    #   @return [String]
+    #
+    # @!attribute [rw] ultra_server_type
+    #   The type of UltraServer, such as ml.u-p6e-gb200x72.
+    #   @return [String]
+    #
+    # @!attribute [rw] availability_zone
+    #   The name of the Availability Zone where the UltraServer is
+    #   provisioned.
+    #   @return [String]
+    #
+    # @!attribute [rw] instance_type
+    #   The Amazon EC2 instance type used in the UltraServer.
+    #   @return [String]
+    #
+    # @!attribute [rw] total_instance_count
+    #   The total number of instances in this UltraServer.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] configured_spare_instance_count
+    #   The number of spare instances configured for this UltraServer to
+    #   provide enhanced resiliency.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] available_instance_count
+    #   The number of instances currently available for use in this
+    #   UltraServer.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] in_use_instance_count
+    #   The number of instances currently in use in this UltraServer.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] available_spare_instance_count
+    #   The number of available spare instances in the UltraServer.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] unhealthy_instance_count
+    #   The number of instances in this UltraServer that are currently in an
+    #   unhealthy state.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] health_status
+    #   The overall health status of the UltraServer.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/UltraServer AWS API Documentation
+    #
+    class UltraServer < Struct.new(
+      :ultra_server_id,
+      :ultra_server_type,
+      :availability_zone,
+      :instance_type,
+      :total_instance_count,
+      :configured_spare_instance_count,
+      :available_instance_count,
+      :in_use_instance_count,
+      :available_spare_instance_count,
+      :unhealthy_instance_count,
+      :health_status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains information about the UltraServer object.
+    #
+    # @!attribute [rw] id
+    #   The unique identifier of the UltraServer.
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   The type of the UltraServer.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/UltraServerInfo AWS API Documentation
+    #
+    class UltraServerInfo < Struct.new(
+      :id,
+      :type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A summary of UltraServer resources and their current status.
+    #
+    # @!attribute [rw] ultra_server_type
+    #   The type of UltraServer, such as ml.u-p6e-gb200x72.
+    #   @return [String]
+    #
+    # @!attribute [rw] instance_type
+    #   The Amazon EC2 instance type used in the UltraServer.
+    #   @return [String]
+    #
+    # @!attribute [rw] ultra_server_count
+    #   The number of UltraServers of this type.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] available_spare_instance_count
+    #   The number of available spare instances in the UltraServers.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] unhealthy_instance_count
+    #   The total number of instances across all UltraServers of this type
+    #   that are currently in an unhealthy state.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/UltraServerSummary AWS API Documentation
+    #
+    class UltraServerSummary < Struct.new(
+      :ultra_server_type,
+      :instance_type,
+      :ultra_server_count,
+      :available_spare_instance_count,
+      :unhealthy_instance_count)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The settings that apply to an Amazon SageMaker AI domain when you use
+    # it in Amazon SageMaker Unified Studio.
+    #
+    # @!attribute [rw] studio_web_portal_access
+    #   Sets whether you can access the domain in Amazon SageMaker Studio:
+    #
+    #   ENABLED
+    #
+    #   : You can access the domain in Amazon SageMaker Studio. If you
+    #     migrate the domain to Amazon SageMaker Unified Studio, you can
+    #     access it in both studio interfaces.
+    #
+    #   DISABLED
+    #
+    #   : You can't access the domain in Amazon SageMaker Studio. If you
+    #     migrate the domain to Amazon SageMaker Unified Studio, you can
+    #     access it only in that studio interface.
+    #
+    #   To migrate a domain to Amazon SageMaker Unified Studio, you specify
+    #   the UnifiedStudioSettings data type when you use the UpdateDomain
+    #   action.
+    #   @return [String]
+    #
+    # @!attribute [rw] domain_account_id
+    #   The ID of the Amazon Web Services account that has the Amazon
+    #   SageMaker Unified Studio domain. The default value, if you don't
+    #   specify an ID, is the ID of the account that has the Amazon
+    #   SageMaker AI domain.
+    #   @return [String]
+    #
+    # @!attribute [rw] domain_region
+    #   The Amazon Web Services Region where the domain is located in Amazon
+    #   SageMaker Unified Studio. The default value, if you don't specify a
+    #   Region, is the Region where the Amazon SageMaker AI domain is
+    #   located.
+    #   @return [String]
+    #
+    # @!attribute [rw] domain_id
+    #   The ID of the Amazon SageMaker Unified Studio domain associated with
+    #   this domain.
+    #   @return [String]
+    #
+    # @!attribute [rw] project_id
+    #   The ID of the Amazon SageMaker Unified Studio project that
+    #   corresponds to the domain.
+    #   @return [String]
+    #
+    # @!attribute [rw] environment_id
+    #   The ID of the environment that Amazon SageMaker Unified Studio
+    #   associates with the domain.
+    #   @return [String]
+    #
+    # @!attribute [rw] project_s3_path
+    #   The location where Amazon S3 stores temporary execution data and
+    #   other artifacts for the project that corresponds to the domain.
+    #   @return [String]
+    #
+    # @!attribute [rw] single_sign_on_application_arn
+    #   The ARN of the Amazon DataZone application managed by Amazon
+    #   SageMaker Unified Studio in the Amazon Web Services IAM Identity
+    #   Center.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/UnifiedStudioSettings AWS API Documentation
+    #
+    class UnifiedStudioSettings < Struct.new(
+      :studio_web_portal_access,
+      :domain_account_id,
+      :domain_region,
+      :domain_id,
+      :project_id,
+      :environment_id,
+      :project_s3_path,
+      :single_sign_on_application_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] action_name
     #   The name of the action to update.
     #   @return [String]
@@ -47621,6 +56465,23 @@ module Aws::SageMaker
     #   Specify the instance groups to update.
     #   @return [Array<Types::ClusterInstanceGroupSpecification>]
     #
+    # @!attribute [rw] restricted_instance_groups
+    #   The specialized instance groups for training models like Amazon Nova
+    #   to be created in the SageMaker HyperPod cluster.
+    #   @return [Array<Types::ClusterRestrictedInstanceGroupSpecification>]
+    #
+    # @!attribute [rw] restricted_instance_groups_config
+    #   The configuration for the restricted instance groups (RIG) in the
+    #   SageMaker HyperPod cluster.
+    #   @return [Types::ClusterRestrictedInstanceGroupsConfig]
+    #
+    # @!attribute [rw] tiered_storage_config
+    #   Updates the configuration for managed tier checkpointing on the
+    #   HyperPod cluster. For example, you can enable or disable the feature
+    #   and modify the percentage of cluster memory allocated for checkpoint
+    #   storage.
+    #   @return [Types::ClusterTieredStorageConfig]
+    #
     # @!attribute [rw] node_recovery
     #   The node recovery mode to be applied to the SageMaker HyperPod
     #   cluster.
@@ -47631,13 +56492,44 @@ module Aws::SageMaker
     #   as the separator between multiple names.
     #   @return [Array<String>]
     #
+    # @!attribute [rw] node_provisioning_mode
+    #   Determines how instance provisioning is handled during cluster
+    #   operations. In `Continuous` mode, the cluster provisions available
+    #   instances incrementally and retries until the target count is
+    #   reached. The cluster becomes operational once cluster-level
+    #   resources are ready. Use `CurrentCount` and `TargetCount` in
+    #   `DescribeCluster` to track provisioning progress.
+    #   @return [String]
+    #
+    # @!attribute [rw] cluster_role
+    #   The Amazon Resource Name (ARN) of the IAM role that HyperPod assumes
+    #   for cluster autoscaling operations. Cannot be updated while
+    #   autoscaling is enabled.
+    #   @return [String]
+    #
+    # @!attribute [rw] auto_scaling
+    #   Updates the autoscaling configuration for the cluster. Use to enable
+    #   or disable automatic node scaling.
+    #   @return [Types::ClusterAutoScalingConfig]
+    #
+    # @!attribute [rw] orchestrator
+    #   The type of orchestrator used for the SageMaker HyperPod cluster.
+    #   @return [Types::ClusterOrchestrator]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/UpdateClusterRequest AWS API Documentation
     #
     class UpdateClusterRequest < Struct.new(
       :cluster_name,
       :instance_groups,
+      :restricted_instance_groups,
+      :restricted_instance_groups_config,
+      :tiered_storage_config,
       :node_recovery,
-      :instance_groups_to_delete)
+      :instance_groups_to_delete,
+      :node_provisioning_mode,
+      :cluster_role,
+      :auto_scaling,
+      :orchestrator)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -47699,15 +56591,77 @@ module Aws::SageMaker
       include Aws::Structure
     end
 
+    # The configuration that describes specifications of the instance groups
+    # to update.
+    #
+    # @!attribute [rw] instance_group_name
+    #   The name of the instance group to update.
+    #   @return [String]
+    #
+    # @!attribute [rw] image_release_version
+    #   The version of the HyperPod-managed AMI to update to for the
+    #   instance group. Uses semantic versioning in the format
+    #   `MAJOR.MINOR.PATCH`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/UpdateClusterSoftwareInstanceGroupSpecification AWS API Documentation
+    #
+    class UpdateClusterSoftwareInstanceGroupSpecification < Struct.new(
+      :instance_group_name,
+      :image_release_version)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] cluster_name
     #   Specify the name or the Amazon Resource Name (ARN) of the SageMaker
     #   HyperPod cluster you want to update for security patching.
     #   @return [String]
     #
+    # @!attribute [rw] instance_groups
+    #   The array of instance groups for which to update AMI versions.
+    #   @return [Array<Types::UpdateClusterSoftwareInstanceGroupSpecification>]
+    #
+    # @!attribute [rw] deployment_config
+    #   The configuration to use when updating the AMI versions.
+    #   @return [Types::DeploymentConfiguration]
+    #
+    # @!attribute [rw] image_id
+    #   When configuring your HyperPod cluster, you can specify an image ID
+    #   using one of the following options:
+    #
+    #   * `HyperPodPublicAmiId`: Use a HyperPod public AMI
+    #
+    #   * `CustomAmiId`: Use your custom AMI
+    #
+    #   * `default`: Use the default latest system image
+    #
+    #   If you choose to use a custom AMI (`CustomAmiId`), ensure it meets
+    #   the following requirements:
+    #
+    #   * Encryption: The custom AMI must be unencrypted.
+    #
+    #   * Ownership: The custom AMI must be owned by the same Amazon Web
+    #     Services account that is creating the HyperPod cluster.
+    #
+    #   * Volume support: Only the primary AMI snapshot volume is supported;
+    #     additional AMI volumes are not supported.
+    #
+    #   When updating the instance group's AMI through the
+    #   `UpdateClusterSoftware` operation, if an instance group uses a
+    #   custom AMI, you must provide an `ImageId` or use the default as
+    #   input. Note that if you don't specify an instance group in your
+    #   `UpdateClusterSoftware` request, then all of the instance groups are
+    #   patched with the specified image.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/UpdateClusterSoftwareRequest AWS API Documentation
     #
     class UpdateClusterSoftwareRequest < Struct.new(
-      :cluster_name)
+      :cluster_name,
+      :instance_groups,
+      :deployment_config,
+      :image_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -47968,6 +56922,21 @@ module Aws::SageMaker
     #   domain. Defaults to `DISABLED`.
     #   @return [String]
     #
+    # @!attribute [rw] home_efs_file_system_creation
+    #   Indicates whether to create a home EFS file system for the domain.
+    #   You can change from `Disabled` to `Enabled` to provision EFS on
+    #   demand, but you cannot change from `Enabled` to `Disabled`.
+    #   @return [String]
+    #
+    # @!attribute [rw] vpc_id
+    #   The identifier for the VPC used by the domain for network
+    #   communication. Use this field only when adding VPC configuration to
+    #   a SageMaker AI domain used in Amazon SageMaker Unified Studio that
+    #   was created without VPC settings. SageMaker AI doesn't
+    #   automatically apply VPC updates to existing applications. Stop and
+    #   restart your applications to apply the changes.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/UpdateDomainRequest AWS API Documentation
     #
     class UpdateDomainRequest < Struct.new(
@@ -47978,7 +56947,9 @@ module Aws::SageMaker
       :default_space_settings,
       :subnet_ids,
       :app_network_access_type,
-      :tag_propagation)
+      :tag_propagation,
+      :home_efs_file_system_creation,
+      :vpc_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -48540,6 +57511,14 @@ module Aws::SageMaker
     #   including the model, container, and compute resources.
     #   @return [Types::InferenceComponentSpecification]
     #
+    # @!attribute [rw] specifications
+    #   A list of specification objects for the inference component, one per
+    #   instance type. Use this parameter when you want to specify different
+    #   model or resource configurations for the inference component on each
+    #   instance type. You can use either this parameter or the singular
+    #   `Specification` parameter, but not both.
+    #   @return [Array<Types::InferenceComponentSpecification>]
+    #
     # @!attribute [rw] runtime_config
     #   Runtime settings for a model that is deployed with an inference
     #   component.
@@ -48556,6 +57535,7 @@ module Aws::SageMaker
     class UpdateInferenceComponentInput < Struct.new(
       :inference_component_name,
       :specification,
+      :specifications,
       :runtime_config,
       :deployment_config)
       SENSITIVE = []
@@ -48663,6 +57643,71 @@ module Aws::SageMaker
       include Aws::Structure
     end
 
+    # @!attribute [rw] arn
+    #   The ARN of the MLflow App to update.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the MLflow App to update.
+    #   @return [String]
+    #
+    # @!attribute [rw] artifact_store_uri
+    #   The new S3 URI for the general purpose bucket to use as the artifact
+    #   store for the MLflow App.
+    #   @return [String]
+    #
+    # @!attribute [rw] model_registration_mode
+    #   Whether to enable or disable automatic registration of new MLflow
+    #   models to the SageMaker Model Registry. To enable automatic model
+    #   registration, set this value to `AutoModelRegistrationEnabled`. To
+    #   disable automatic model registration, set this value to
+    #   `AutoModelRegistrationDisabled`. If not specified,
+    #   `AutomaticModelRegistration` defaults to
+    #   `AutoModelRegistrationEnabled`
+    #   @return [String]
+    #
+    # @!attribute [rw] weekly_maintenance_window_start
+    #   The new weekly maintenance window start day and time to update. The
+    #   maintenance window day and time should be in Coordinated Universal
+    #   Time (UTC) 24-hour standard time. For example: TUE:03:30.
+    #   @return [String]
+    #
+    # @!attribute [rw] default_domain_id_list
+    #   List of SageMaker Domain IDs for which this MLflow App is the
+    #   default.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] account_default_status
+    #   Indicates whether this this MLflow App is the default for the
+    #   account.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/UpdateMlflowAppRequest AWS API Documentation
+    #
+    class UpdateMlflowAppRequest < Struct.new(
+      :arn,
+      :name,
+      :artifact_store_uri,
+      :model_registration_mode,
+      :weekly_maintenance_window_start,
+      :default_domain_id_list,
+      :account_default_status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] arn
+    #   The ARN of the updated MLflow App.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/UpdateMlflowAppResponse AWS API Documentation
+    #
+    class UpdateMlflowAppResponse < Struct.new(
+      :arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] tracking_server_name
     #   The name of the MLflow Tracking Server to update.
     #   @return [String]
@@ -48690,6 +57735,16 @@ module Aws::SageMaker
     #   Time (UTC) 24-hour standard time. For example: TUE:03:30.
     #   @return [String]
     #
+    # @!attribute [rw] s3_bucket_owner_account_id
+    #   The new expected Amazon Web Services account ID that owns the Amazon
+    #   S3 bucket for artifact storage.
+    #   @return [String]
+    #
+    # @!attribute [rw] s3_bucket_owner_verification
+    #   Whether to enable or disable Amazon S3 Bucket Owenrship Verifaction
+    #   whenever the MLflow Tracking Server interacts with Amazon Amazon S3.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/UpdateMlflowTrackingServerRequest AWS API Documentation
     #
     class UpdateMlflowTrackingServerRequest < Struct.new(
@@ -48697,7 +57752,9 @@ module Aws::SageMaker
       :artifact_store_uri,
       :tracking_server_size,
       :automatic_model_registration,
-      :weekly_maintenance_window_start)
+      :weekly_maintenance_window_start,
+      :s3_bucket_owner_account_id,
+      :s3_bucket_owner_verification)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -48775,6 +57832,10 @@ module Aws::SageMaker
     #   The approval status of the model.
     #   @return [String]
     #
+    # @!attribute [rw] model_package_registration_type
+    #   The package registration type of the model package input.
+    #   @return [String]
+    #
     # @!attribute [rw] approval_description
     #   A description for the approval status of the model.
     #   @return [String]
@@ -48848,6 +57909,7 @@ module Aws::SageMaker
     class UpdateModelPackageInput < Struct.new(
       :model_package_arn,
       :model_approval_status,
+      :model_package_registration_type,
       :approval_description,
       :customer_metadata_properties,
       :customer_metadata_properties_to_remove,
@@ -48956,6 +58018,19 @@ module Aws::SageMaker
     #
     # @!attribute [rw] instance_type
     #   The Amazon ML compute instance type.
+    #   @return [String]
+    #
+    # @!attribute [rw] ip_address_type
+    #   The IP address type for the notebook instance. Specify `ipv4` for
+    #   IPv4-only connectivity or `dualstack` for both IPv4 and IPv6
+    #   connectivity. The notebook instance must be stopped before updating
+    #   this setting. When you specify `dualstack`, the subnet must support
+    #   IPv6 addressing.
+    #   @return [String]
+    #
+    # @!attribute [rw] platform_identifier
+    #   The platform identifier of the notebook instance runtime
+    #   environment.
     #   @return [String]
     #
     # @!attribute [rw] role_arn
@@ -49084,6 +58159,8 @@ module Aws::SageMaker
     class UpdateNotebookInstanceInput < Struct.new(
       :notebook_instance_name,
       :instance_type,
+      :ip_address_type,
+      :platform_identifier,
       :role_arn,
       :lifecycle_config_name,
       :disassociate_lifecycle_config,
@@ -49156,6 +58233,19 @@ module Aws::SageMaker
     #   identity of the SageMaker Partner AI App user.
     #   @return [Boolean]
     #
+    # @!attribute [rw] enable_auto_minor_version_upgrade
+    #   When set to `TRUE`, the SageMaker Partner AI App is automatically
+    #   upgraded to the latest minor version during the next scheduled
+    #   maintenance window, if one is available.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] app_version
+    #   The semantic version to upgrade the SageMaker Partner AI App to.
+    #   Must be the same semantic version returned in the `AvailableUpgrade`
+    #   field from `DescribePartnerApp`. Version skipping and downgrades are
+    #   not supported.
+    #   @return [String]
+    #
     # @!attribute [rw] client_token
     #   A unique token that guarantees that the call to this API is
     #   idempotent.
@@ -49177,6 +58267,8 @@ module Aws::SageMaker
       :tier,
       :application_config,
       :enable_iam_session_based_identity,
+      :enable_auto_minor_version_upgrade,
+      :app_version,
       :client_token,
       :tags)
       SENSITIVE = []
@@ -49284,10 +58376,59 @@ module Aws::SageMaker
     #   The Amazon Resource Name (ARN) of the updated pipeline.
     #   @return [String]
     #
+    # @!attribute [rw] pipeline_version_id
+    #   The ID of the pipeline version.
+    #   @return [Integer]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/UpdatePipelineResponse AWS API Documentation
     #
     class UpdatePipelineResponse < Struct.new(
-      :pipeline_arn)
+      :pipeline_arn,
+      :pipeline_version_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] pipeline_arn
+    #   The Amazon Resource Name (ARN) of the pipeline.
+    #   @return [String]
+    #
+    # @!attribute [rw] pipeline_version_id
+    #   The pipeline version ID to update.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] pipeline_version_display_name
+    #   The display name of the pipeline version.
+    #   @return [String]
+    #
+    # @!attribute [rw] pipeline_version_description
+    #   The description of the pipeline version.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/UpdatePipelineVersionRequest AWS API Documentation
+    #
+    class UpdatePipelineVersionRequest < Struct.new(
+      :pipeline_arn,
+      :pipeline_version_id,
+      :pipeline_version_display_name,
+      :pipeline_version_description)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] pipeline_arn
+    #   The Amazon Resource Name (ARN) of the pipeline.
+    #   @return [String]
+    #
+    # @!attribute [rw] pipeline_version_id
+    #   The ID of the pipeline version.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/UpdatePipelineVersionResponse AWS API Documentation
+    #
+    class UpdatePipelineVersionResponse < Struct.new(
+      :pipeline_arn,
+      :pipeline_version_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -49327,13 +58468,18 @@ module Aws::SageMaker
     #   [2]: https://docs.aws.amazon.com/servicecatalog/latest/adminguide/constraints-resourceupdate.html
     #   @return [Array<Types::Tag>]
     #
+    # @!attribute [rw] template_providers_to_update
+    #   The template providers to update in the project.
+    #   @return [Array<Types::UpdateTemplateProvider>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/UpdateProjectInput AWS API Documentation
     #
     class UpdateProjectInput < Struct.new(
       :project_name,
       :project_description,
       :service_catalog_provisioning_update_details,
-      :tags)
+      :tags,
+      :template_providers_to_update)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -49386,6 +58532,21 @@ module Aws::SageMaker
     #
     class UpdateSpaceResponse < Struct.new(
       :space_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains configuration details for updating an existing template
+    # provider in the project.
+    #
+    # @!attribute [rw] cfn_template_provider
+    #   The CloudFormation template provider configuration to update.
+    #   @return [Types::CfnUpdateTemplateProvider]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/UpdateTemplateProvider AWS API Documentation
+    #
+    class UpdateTemplateProvider < Struct.new(
+      :cfn_template_provider)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -49625,13 +58786,19 @@ module Aws::SageMaker
     #   Use this parameter to update your VPC configuration for a workforce.
     #   @return [Types::WorkforceVpcConfigRequest]
     #
+    # @!attribute [rw] ip_address_type
+    #   Use this parameter to specify whether you want `IPv4` only or
+    #   `dualstack` (`IPv4` and `IPv6`) to support your labeling workforce.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/UpdateWorkforceRequest AWS API Documentation
     #
     class UpdateWorkforceRequest < Struct.new(
       :workforce_name,
       :source_ip_config,
       :oidc_config,
-      :workforce_vpc_config)
+      :workforce_vpc_config,
+      :ip_address_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -49732,8 +58899,8 @@ module Aws::SageMaker
       include Aws::Structure
     end
 
-    # Information about the user who created or modified an experiment,
-    # trial, trial component, lineage group, project, or model card.
+    # Information about the user who created or modified a SageMaker
+    # resource.
     #
     # @!attribute [rw] user_profile_arn
     #   The Amazon Resource Name (ARN) of the user's profile.
@@ -50245,6 +59412,11 @@ module Aws::SageMaker
     #   The reason your workforce failed.
     #   @return [String]
     #
+    # @!attribute [rw] ip_address_type
+    #   The IP address type you specify - either `IPv4` only or `dualstack`
+    #   (`IPv4` and `IPv6`) - to support your labeling workforce.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/Workforce AWS API Documentation
     #
     class Workforce < Struct.new(
@@ -50258,7 +59430,8 @@ module Aws::SageMaker
       :create_date,
       :workforce_vpc_config,
       :status,
-      :failure_reason)
+      :failure_reason,
+      :ip_address_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -50318,6 +59491,30 @@ module Aws::SageMaker
       :vpc_endpoint_id)
       SENSITIVE = []
       include Aws::Structure
+    end
+
+    # The workload specification for benchmark tool configuration. Provide
+    # an inline YAML or JSON string.
+    #
+    # @note WorkloadSpec is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @note WorkloadSpec is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of WorkloadSpec corresponding to the set member.
+    #
+    # @!attribute [rw] inline
+    #   An inline YAML or JSON string that defines benchmark parameters.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/WorkloadSpec AWS API Documentation
+    #
+    class WorkloadSpec < Struct.new(
+      :inline,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class Inline < WorkloadSpec; end
+      class Unknown < WorkloadSpec; end
     end
 
     # The workspace settings for the SageMaker Canvas application.

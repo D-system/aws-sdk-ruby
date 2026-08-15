@@ -95,8 +95,8 @@ module Aws::IoT
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::IoT
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::IoT
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::IoT
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::IoT
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::IoT
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::IoT
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::IoT
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -1583,25 +1587,40 @@ module Aws::IoT
     #   A short text decription of the command.
     #
     # @option params [Types::CommandPayload] :payload
-    #   The payload object for the command. You must specify this information
-    #   when using the `AWS-IoT` namespace.
+    #   The payload object for the static command.
     #
     #   You can upload a static payload file from your local storage that
     #   contains the instructions for the device to process. The payload file
     #   can use any format. To make sure that the device correctly interprets
     #   the payload, we recommend you to specify the payload content type.
     #
+    # @option params [String] :payload_template
+    #   The payload template for the dynamic command.
+    #
+    #   <note markdown="1"> This parameter is required for dynamic commands where the command
+    #   execution placeholders are supplied either from `mandatoryParameters`
+    #   or when `StartCommandExecution` is invoked.
+    #
+    #    </note>
+    #
+    # @option params [Types::CommandPreprocessor] :preprocessor
+    #   Configuration that determines how `payloadTemplate` is processed to
+    #   generate command execution payload.
+    #
+    #   <note markdown="1"> This parameter is required for dynamic commands, along with
+    #   `payloadTemplate`, and `mandatoryParameters`.
+    #
+    #    </note>
+    #
     # @option params [Array<Types::CommandParameter>] :mandatory_parameters
-    #   A list of parameters that are required by the `StartCommandExecution`
-    #   API. These parameters need to be specified only when using the
-    #   `AWS-IoT-FleetWise` namespace. You can either specify them here or
-    #   when running the command using the `StartCommandExecution` API.
+    #   A list of parameters that are used by `StartCommandExecution` API for
+    #   execution payload generation.
     #
     # @option params [String] :role_arn
     #   The IAM role that you must provide when using the `AWS-IoT-FleetWise`
     #   namespace. The role grants IoT Device Management the permission to
     #   access IoT FleetWise resources for generating the payload for the
-    #   command. This field is not required when you use the `AWS-IoT`
+    #   command. This field is not supported when you use the `AWS-IoT`
     #   namespace.
     #
     # @option params [Array<Types::Tag>] :tags
@@ -1623,9 +1642,16 @@ module Aws::IoT
     #       content: "data",
     #       content_type: "MimeType",
     #     },
+    #     payload_template: "CommandPayloadTemplateString",
+    #     preprocessor: {
+    #       aws_json_substitution: {
+    #         output_format: "JSON", # required, accepts JSON, CBOR
+    #       },
+    #     },
     #     mandatory_parameters: [
     #       {
     #         name: "CommandParameterName", # required
+    #         type: "STRING", # accepts STRING, INTEGER, DOUBLE, LONG, UNSIGNEDLONG, BOOLEAN, BINARY
     #         value: {
     #           s: "StringParameterValue",
     #           b: false,
@@ -1644,6 +1670,21 @@ module Aws::IoT
     #           bin: "data",
     #           ul: "UnsignedLongParameterValue",
     #         },
+    #         value_conditions: [
+    #           {
+    #             comparison_operator: "EQUALS", # required, accepts EQUALS, NOT_EQUALS, LESS_THAN, LESS_THAN_EQUALS, GREATER_THAN, GREATER_THAN_EQUALS, IN_SET, NOT_IN_SET, IN_RANGE, NOT_IN_RANGE
+    #             operand: { # required
+    #               number: "StringParameterValue",
+    #               numbers: ["StringParameterValue"],
+    #               string: "StringParameterValue",
+    #               strings: ["StringParameterValue"],
+    #               number_range: {
+    #                 min: "StringParameterValue", # required
+    #                 max: "StringParameterValue", # required
+    #               },
+    #             },
+    #           },
+    #         ],
     #         description: "CommandParameterDescription",
     #       },
     #     ],
@@ -4057,6 +4098,13 @@ module Aws::IoT
     #                 role_arn: "AwsArn", # required
     #               },
     #             },
+    #             enable_batching: false,
+    #             batch_config: {
+    #               max_batch_open_ms: 1,
+    #               max_batch_size: 1,
+    #               max_batch_size_bytes: 1,
+    #               batch_across_topics: false,
+    #             },
     #           },
     #           kafka: {
     #             destination_arn: "AwsArn", # required
@@ -4265,6 +4313,13 @@ module Aws::IoT
     #               service_name: "ServiceName", # required
     #               role_arn: "AwsArn", # required
     #             },
+    #           },
+    #           enable_batching: false,
+    #           batch_config: {
+    #             max_batch_open_ms: 1,
+    #             max_batch_size: 1,
+    #             max_batch_size_bytes: 1,
+    #             batch_across_topics: false,
     #           },
     #         },
     #         kafka: {
@@ -6369,6 +6424,59 @@ module Aws::IoT
       req.send_request(options)
     end
 
+    # Retrieves the encryption configuration for resources and data of your
+    # Amazon Web Services account in Amazon Web Services IoT Core. For more
+    # information, see [Data encryption at rest][1] in the *Amazon Web
+    # Services IoT Core Developer Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/iot/latest/developerguide/encryption-at-rest.html
+    #
+    # @return [Types::DescribeEncryptionConfigurationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DescribeEncryptionConfigurationResponse#encryption_type #encryption_type} => String
+    #   * {Types::DescribeEncryptionConfigurationResponse#kms_key_arn #kms_key_arn} => String
+    #   * {Types::DescribeEncryptionConfigurationResponse#kms_access_role_arn #kms_access_role_arn} => String
+    #   * {Types::DescribeEncryptionConfigurationResponse#configuration_details #configuration_details} => Types::ConfigurationDetails
+    #   * {Types::DescribeEncryptionConfigurationResponse#last_modified_date #last_modified_date} => Time
+    #
+    #
+    # @example Example: DescribeEncryptionConfiguration
+    #
+    #   # DescribeEncryptionConfiguration API operation example
+    #
+    #   resp = client.describe_encryption_configuration({
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     configuration_details: {
+    #       configuration_status: "HEALTHY", 
+    #     }, 
+    #     encryption_type: "CUSTOMER_MANAGED_KMS_KEY", 
+    #     kms_access_role_arn: "arn:aws:iam:us-west-2:111122223333:role/myrole", 
+    #     kms_key_arn: "arn:aws:kms:us-west-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab", 
+    #     last_modified_date: Time.parse("2024-09-26T22:01:02.365000-07:00"), 
+    #   }
+    #
+    # @example Response structure
+    #
+    #   resp.encryption_type #=> String, one of "CUSTOMER_MANAGED_KMS_KEY", "AWS_OWNED_KMS_KEY"
+    #   resp.kms_key_arn #=> String
+    #   resp.kms_access_role_arn #=> String
+    #   resp.configuration_details.configuration_status #=> String, one of "HEALTHY", "UNHEALTHY"
+    #   resp.configuration_details.error_code #=> String
+    #   resp.configuration_details.error_message #=> String
+    #   resp.last_modified_date #=> Time
+    #
+    # @overload describe_encryption_configuration(params = {})
+    # @param [Hash] params ({})
+    def describe_encryption_configuration(params = {}, options = {})
+      req = build_request(:describe_encryption_configuration, params)
+      req.send_request(options)
+    end
+
     # Returns or creates a unique endpoint specific to the Amazon Web
     # Services account making the call.
     #
@@ -7786,6 +7894,8 @@ module Aws::IoT
     #   * {Types::GetCommandResponse#description #description} => String
     #   * {Types::GetCommandResponse#mandatory_parameters #mandatory_parameters} => Array&lt;Types::CommandParameter&gt;
     #   * {Types::GetCommandResponse#payload #payload} => Types::CommandPayload
+    #   * {Types::GetCommandResponse#payload_template #payload_template} => String
+    #   * {Types::GetCommandResponse#preprocessor #preprocessor} => Types::CommandPreprocessor
     #   * {Types::GetCommandResponse#role_arn #role_arn} => String
     #   * {Types::GetCommandResponse#created_at #created_at} => Time
     #   * {Types::GetCommandResponse#last_updated_at #last_updated_at} => Time
@@ -7807,6 +7917,7 @@ module Aws::IoT
     #   resp.description #=> String
     #   resp.mandatory_parameters #=> Array
     #   resp.mandatory_parameters[0].name #=> String
+    #   resp.mandatory_parameters[0].type #=> String, one of "STRING", "INTEGER", "DOUBLE", "LONG", "UNSIGNEDLONG", "BOOLEAN", "BINARY"
     #   resp.mandatory_parameters[0].value.s #=> String
     #   resp.mandatory_parameters[0].value.b #=> Boolean
     #   resp.mandatory_parameters[0].value.i #=> Integer
@@ -7821,9 +7932,21 @@ module Aws::IoT
     #   resp.mandatory_parameters[0].default_value.d #=> Float
     #   resp.mandatory_parameters[0].default_value.bin #=> String
     #   resp.mandatory_parameters[0].default_value.ul #=> String
+    #   resp.mandatory_parameters[0].value_conditions #=> Array
+    #   resp.mandatory_parameters[0].value_conditions[0].comparison_operator #=> String, one of "EQUALS", "NOT_EQUALS", "LESS_THAN", "LESS_THAN_EQUALS", "GREATER_THAN", "GREATER_THAN_EQUALS", "IN_SET", "NOT_IN_SET", "IN_RANGE", "NOT_IN_RANGE"
+    #   resp.mandatory_parameters[0].value_conditions[0].operand.number #=> String
+    #   resp.mandatory_parameters[0].value_conditions[0].operand.numbers #=> Array
+    #   resp.mandatory_parameters[0].value_conditions[0].operand.numbers[0] #=> String
+    #   resp.mandatory_parameters[0].value_conditions[0].operand.string #=> String
+    #   resp.mandatory_parameters[0].value_conditions[0].operand.strings #=> Array
+    #   resp.mandatory_parameters[0].value_conditions[0].operand.strings[0] #=> String
+    #   resp.mandatory_parameters[0].value_conditions[0].operand.number_range.min #=> String
+    #   resp.mandatory_parameters[0].value_conditions[0].operand.number_range.max #=> String
     #   resp.mandatory_parameters[0].description #=> String
     #   resp.payload.content #=> String
     #   resp.payload.content_type #=> String
+    #   resp.payload_template #=> String
+    #   resp.preprocessor.aws_json_substitution.output_format #=> String, one of "JSON", "CBOR"
     #   resp.role_arn #=> String
     #   resp.created_at #=> Time
     #   resp.last_updated_at #=> Time
@@ -7992,6 +8115,8 @@ module Aws::IoT
     #   resp.thing_indexing_configuration.filter.geo_locations #=> Array
     #   resp.thing_indexing_configuration.filter.geo_locations[0].name #=> String
     #   resp.thing_indexing_configuration.filter.geo_locations[0].order #=> String, one of "LatLon", "LonLat"
+    #   resp.thing_indexing_configuration.filter.connectivity.include_socket_information #=> Array
+    #   resp.thing_indexing_configuration.filter.connectivity.include_socket_information[0] #=> String, one of "GET_THING_CONNECTIVITY_DATA"
     #   resp.thing_group_indexing_configuration.thing_group_indexing_mode #=> String, one of "OFF", "ON"
     #   resp.thing_group_indexing_configuration.managed_fields #=> Array
     #   resp.thing_group_indexing_configuration.managed_fields[0].name #=> String
@@ -8520,10 +8645,21 @@ module Aws::IoT
       req.send_request(options)
     end
 
-    # Retrieves the live connectivity status per device.
+    # Retrieves the live connectivity status per device. If a device has
+    # never connected to IoT Core or was disconnected for more than 1 hour
+    # before fleet indexing's `thingConnectivityIndexingMode` was enabled,
+    # the response will have the `connected` field set to `false` with no
+    # additional session details.
     #
     # @option params [required, String] :thing_name
     #   The name of your IoT thing.
+    #
+    # @option params [Boolean] :include_socket_information
+    #   Specifies if socket information (sourcePort, targetPort, sourceIp,
+    #   targetIp, vpcEndpointId) should be included in the
+    #   GetThingConnectivityData response. Set to `true` to include socket
+    #   information. Set to `false` to omit socket information. By default,
+    #   this is set to `false`.
     #
     # @return [Types::GetThingConnectivityDataResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -8531,11 +8667,21 @@ module Aws::IoT
     #   * {Types::GetThingConnectivityDataResponse#connected #connected} => Boolean
     #   * {Types::GetThingConnectivityDataResponse#timestamp #timestamp} => Time
     #   * {Types::GetThingConnectivityDataResponse#disconnect_reason #disconnect_reason} => String
+    #   * {Types::GetThingConnectivityDataResponse#source_ip #source_ip} => String
+    #   * {Types::GetThingConnectivityDataResponse#source_port #source_port} => Integer
+    #   * {Types::GetThingConnectivityDataResponse#target_ip #target_ip} => String
+    #   * {Types::GetThingConnectivityDataResponse#target_port #target_port} => Integer
+    #   * {Types::GetThingConnectivityDataResponse#vpc_endpoint_id #vpc_endpoint_id} => String
+    #   * {Types::GetThingConnectivityDataResponse#keep_alive_duration #keep_alive_duration} => Integer
+    #   * {Types::GetThingConnectivityDataResponse#clean_session #clean_session} => Boolean
+    #   * {Types::GetThingConnectivityDataResponse#session_expiry #session_expiry} => Integer
+    #   * {Types::GetThingConnectivityDataResponse#client_id #client_id} => String
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_thing_connectivity_data({
     #     thing_name: "ConnectivityApiThingName", # required
+    #     include_socket_information: false,
     #   })
     #
     # @example Response structure
@@ -8543,7 +8689,16 @@ module Aws::IoT
     #   resp.thing_name #=> String
     #   resp.connected #=> Boolean
     #   resp.timestamp #=> Time
-    #   resp.disconnect_reason #=> String, one of "AUTH_ERROR", "CLIENT_INITIATED_DISCONNECT", "CLIENT_ERROR", "CONNECTION_LOST", "DUPLICATE_CLIENTID", "FORBIDDEN_ACCESS", "MQTT_KEEP_ALIVE_TIMEOUT", "SERVER_ERROR", "SERVER_INITIATED_DISCONNECT", "THROTTLED", "WEBSOCKET_TTL_EXPIRATION", "CUSTOMAUTH_TTL_EXPIRATION", "UNKNOWN", "NONE"
+    #   resp.disconnect_reason #=> String, one of "AUTH_ERROR", "CLIENT_INITIATED_DISCONNECT", "CLIENT_ERROR", "CONNECTION_LOST", "DUPLICATE_CLIENTID", "FORBIDDEN_ACCESS", "MQTT_KEEP_ALIVE_TIMEOUT", "SERVER_ERROR", "SERVER_INITIATED_DISCONNECT", "API_INITIATED_DISCONNECT", "THROTTLED", "WEBSOCKET_TTL_EXPIRATION", "CUSTOMAUTH_TTL_EXPIRATION", "UNKNOWN", "NONE"
+    #   resp.source_ip #=> String
+    #   resp.source_port #=> Integer
+    #   resp.target_ip #=> String
+    #   resp.target_port #=> Integer
+    #   resp.vpc_endpoint_id #=> String
+    #   resp.keep_alive_duration #=> Integer
+    #   resp.clean_session #=> Boolean
+    #   resp.session_expiry #=> Integer
+    #   resp.client_id #=> String
     #
     # @overload get_thing_connectivity_data(params = {})
     # @param [Hash] params ({})
@@ -8684,6 +8839,11 @@ module Aws::IoT
     #   resp.rule.actions[0].http.auth.sigv4.signing_region #=> String
     #   resp.rule.actions[0].http.auth.sigv4.service_name #=> String
     #   resp.rule.actions[0].http.auth.sigv4.role_arn #=> String
+    #   resp.rule.actions[0].http.enable_batching #=> Boolean
+    #   resp.rule.actions[0].http.batch_config.max_batch_open_ms #=> Integer
+    #   resp.rule.actions[0].http.batch_config.max_batch_size #=> Integer
+    #   resp.rule.actions[0].http.batch_config.max_batch_size_bytes #=> Integer
+    #   resp.rule.actions[0].http.batch_config.batch_across_topics #=> Boolean
     #   resp.rule.actions[0].kafka.destination_arn #=> String
     #   resp.rule.actions[0].kafka.topic #=> String
     #   resp.rule.actions[0].kafka.key #=> String
@@ -8809,6 +8969,11 @@ module Aws::IoT
     #   resp.rule.error_action.http.auth.sigv4.signing_region #=> String
     #   resp.rule.error_action.http.auth.sigv4.service_name #=> String
     #   resp.rule.error_action.http.auth.sigv4.role_arn #=> String
+    #   resp.rule.error_action.http.enable_batching #=> Boolean
+    #   resp.rule.error_action.http.batch_config.max_batch_open_ms #=> Integer
+    #   resp.rule.error_action.http.batch_config.max_batch_size #=> Integer
+    #   resp.rule.error_action.http.batch_config.max_batch_size_bytes #=> Integer
+    #   resp.rule.error_action.http.batch_config.batch_across_topics #=> Boolean
     #   resp.rule.error_action.kafka.destination_arn #=> String
     #   resp.rule.error_action.kafka.topic #=> String
     #   resp.rule.error_action.kafka.key #=> String
@@ -8889,17 +9054,32 @@ module Aws::IoT
     #
     # [1]: https://docs.aws.amazon.com/service-authorization/latest/reference/list_awsiot.html#awsiot-actions-as-permissions
     #
+    # @option params [Boolean] :verbose
+    #   The flag is used to get all the event types and their respective
+    #   configuration that event-based logging supports.
+    #
     # @return [Types::GetV2LoggingOptionsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::GetV2LoggingOptionsResponse#role_arn #role_arn} => String
     #   * {Types::GetV2LoggingOptionsResponse#default_log_level #default_log_level} => String
     #   * {Types::GetV2LoggingOptionsResponse#disable_all_logs #disable_all_logs} => Boolean
+    #   * {Types::GetV2LoggingOptionsResponse#event_configurations #event_configurations} => Array&lt;Types::LogEventConfiguration&gt;
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_v2_logging_options({
+    #     verbose: false,
+    #   })
     #
     # @example Response structure
     #
     #   resp.role_arn #=> String
     #   resp.default_log_level #=> String, one of "DEBUG", "INFO", "ERROR", "WARN", "DISABLED"
     #   resp.disable_all_logs #=> Boolean
+    #   resp.event_configurations #=> Array
+    #   resp.event_configurations[0].event_type #=> String
+    #   resp.event_configurations[0].log_level #=> String, one of "DEBUG", "INFO", "ERROR", "WARN", "DISABLED"
+    #   resp.event_configurations[0].log_destination #=> String
     #
     # @overload get_v2_logging_options(params = {})
     # @param [Hash] params ({})
@@ -13376,6 +13556,13 @@ module Aws::IoT
     #                 role_arn: "AwsArn", # required
     #               },
     #             },
+    #             enable_batching: false,
+    #             batch_config: {
+    #               max_batch_open_ms: 1,
+    #               max_batch_size: 1,
+    #               max_batch_size_bytes: 1,
+    #               batch_across_topics: false,
+    #             },
     #           },
     #           kafka: {
     #             destination_arn: "AwsArn", # required
@@ -13585,6 +13772,13 @@ module Aws::IoT
     #               role_arn: "AwsArn", # required
     #             },
     #           },
+    #           enable_batching: false,
+    #           batch_config: {
+    #             max_batch_open_ms: 1,
+    #             max_batch_size: 1,
+    #             max_batch_size_bytes: 1,
+    #             batch_across_topics: false,
+    #           },
     #         },
     #         kafka: {
     #           destination_arn: "AwsArn", # required
@@ -13630,7 +13824,13 @@ module Aws::IoT
       req.send_request(options)
     end
 
-    # The query search index.
+    # Searches the specified index.
+    #
+    # If a device has never connected to IoT Core or was disconnected for
+    # more than 1 hour before fleet indexing's
+    # `thingConnectivityIndexingMode` was enabled, the `connectivity` object
+    # for this device in the response will have the `connected` field set to
+    # `false` with no additional session details.
     #
     # Requires permission to access the [SearchIndex][1] action.
     #
@@ -13698,6 +13898,10 @@ module Aws::IoT
     #   resp.things[0].connectivity.connected #=> Boolean
     #   resp.things[0].connectivity.timestamp #=> Integer
     #   resp.things[0].connectivity.disconnect_reason #=> String
+    #   resp.things[0].connectivity.keep_alive_duration #=> Integer
+    #   resp.things[0].connectivity.clean_session #=> Boolean
+    #   resp.things[0].connectivity.session_expiry #=> Integer
+    #   resp.things[0].connectivity.client_id #=> String
     #   resp.thing_groups #=> Array
     #   resp.thing_groups[0].thing_group_name #=> String
     #   resp.thing_groups[0].thing_group_id #=> String
@@ -13864,6 +14068,9 @@ module Aws::IoT
     # @option params [Boolean] :disable_all_logs
     #   If true all logs are disabled. The default is false.
     #
+    # @option params [Array<Types::LogEventConfiguration>] :event_configurations
+    #   The list of event configurations that override account-level logging.
+    #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     # @example Request syntax with placeholder values
@@ -13872,6 +14079,13 @@ module Aws::IoT
     #     role_arn: "AwsArn",
     #     default_log_level: "DEBUG", # accepts DEBUG, INFO, ERROR, WARN, DISABLED
     #     disable_all_logs: false,
+    #     event_configurations: [
+    #       {
+    #         event_type: "LogEventType", # required
+    #         log_level: "DEBUG", # accepts DEBUG, INFO, ERROR, WARN, DISABLED
+    #         log_destination: "LogDestination",
+    #       },
+    #     ],
     #   })
     #
     # @overload set_v2_logging_options(params = {})
@@ -14174,9 +14388,8 @@ module Aws::IoT
     #
     # @option params [String] :principal
     #   The principal. Valid principals are CertificateArn
-    #   (arn:aws:iot:*region*:*accountId*:cert/*certificateId*), thingGroupArn
-    #   (arn:aws:iot:*region*:*accountId*:thinggroup/*groupName*) and
-    #   CognitoId (*region*:*id*).
+    #   (arn:aws:iot:*region*:*accountId*:cert/*certificateId*) and CognitoId
+    #   (*region*:*id*).
     #
     # @option params [String] :cognito_identity_pool_id
     #   The Cognito identity pool ID.
@@ -14322,16 +14535,41 @@ module Aws::IoT
     #
     # Requires permission to access the [TransferCertificate][1] action.
     #
-    # You can cancel the transfer until it is acknowledged by the recipient.
+    # You can cancel the transfer until it is accepted by the recipient.
     #
-    # No notification is sent to the transfer destination's account. It is
-    # up to the caller to notify the transfer target.
+    # No notification is sent to the transfer destination's account. The
+    # caller is responsible for notifying the transfer target.
     #
-    # The certificate being transferred must not be in the ACTIVE state. You
-    # can use the UpdateCertificate action to deactivate it.
+    # The certificate being transferred must not be in the `ACTIVE` state.
+    # You can use the UpdateCertificate action to deactivate it.
     #
     # The certificate must not have any policies attached to it. You can use
     # the DetachPolicy action to detach them.
+    #
+    # **Customer managed key behavior:** When you use a customer managed key
+    # to encrypt your data and then transfer the certificate to a customer
+    # in a different account using the `TransferCertificate` operation, the
+    # certificates will no longer be encrypted by their customer managed key
+    # configuration. During the transfer process, certificates are encrypted
+    # using Amazon Web Services IoT Core owned keys.
+    #
+    # While a certificate is in the **PENDING\_TRANSFER** state, it's
+    # always protected by Amazon Web Services IoT Core owned keys,
+    # regardless of the customer managed key configuration of either the
+    # source or destination account.
+    #
+    # Once the transfer is completed through AcceptCertificateTransfer,
+    # RejectCertificateTransfer, or CancelCertificateTransfer, the
+    # certificate will be protected by the customer managed key
+    # configuration of the account that owns the certificate after the
+    # transfer operation:
+    #
+    # * If the transfer is accepted: The certificate is encrypted by the
+    #   target account's customer managed key configuration.
+    #
+    # * If the transfer is rejected or cancelled: The certificate is
+    #   protected by the source account's customer managed key
+    #   configuration.
     #
     #
     #
@@ -15125,6 +15363,60 @@ module Aws::IoT
       req.send_request(options)
     end
 
+    # Updates the encryption configuration. By default, Amazon Web Services
+    # IoT Core encrypts your data at rest using Amazon Web Services owned
+    # keys. Amazon Web Services IoT Core also supports symmetric customer
+    # managed keys from Key Management Service (KMS). With customer managed
+    # keys, you create, own, and manage the KMS keys in your Amazon Web
+    # Services account.
+    #
+    # Before using this API, you must set up permissions for Amazon Web
+    # Services IoT Core to access KMS. For more information, see [Data
+    # encryption at rest][1] in the *Amazon Web Services IoT Core Developer
+    # Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/iot/latest/developerguide/encryption-at-rest.html
+    #
+    # @option params [required, String] :encryption_type
+    #   The type of the KMS key.
+    #
+    # @option params [String] :kms_key_arn
+    #   The ARN of the customer managedKMS key.
+    #
+    # @option params [String] :kms_access_role_arn
+    #   The Amazon Resource Name (ARN) of the IAM role assumed by Amazon Web
+    #   Services IoT Core to call KMS on behalf of the customer.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    #
+    # @example Example: UpdateEncryptionConfiguration example
+    #
+    #   # This operation updates the encryption configuration. 
+    #
+    #   resp = client.update_encryption_configuration({
+    #     encryption_type: "CUSTOMER_MANAGED_KMS_KEY", 
+    #     kms_access_role_arn: "arn:aws:kms:us-west-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab", 
+    #     kms_key_arn: "arn:aws:iam:us-west-2:111122223333:role/myrole", 
+    #   })
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_encryption_configuration({
+    #     encryption_type: "CUSTOMER_MANAGED_KMS_KEY", # required, accepts CUSTOMER_MANAGED_KMS_KEY, AWS_OWNED_KMS_KEY
+    #     kms_key_arn: "KmsKeyArn",
+    #     kms_access_role_arn: "KmsAccessRoleArn",
+    #   })
+    #
+    # @overload update_encryption_configuration(params = {})
+    # @param [Hash] params ({})
+    def update_encryption_configuration(params = {}, options = {})
+      req = build_request(:update_encryption_configuration, params)
+      req.send_request(options)
+    end
+
     # Updates the event configurations.
     #
     # Requires permission to access the [UpdateEventConfigurations][1]
@@ -15272,6 +15564,9 @@ module Aws::IoT
     #             order: "LatLon", # accepts LatLon, LonLat
     #           },
     #         ],
+    #         connectivity: {
+    #           include_socket_information: ["GET_THING_CONNECTIVITY_DATA"], # accepts GET_THING_CONNECTIVITY_DATA
+    #         },
     #       },
     #     },
     #     thing_group_indexing_configuration: {
@@ -16412,7 +16707,7 @@ module Aws::IoT
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-iot'
-      context[:gem_version] = '1.146.0'
+      context[:gem_version] = '1.172.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

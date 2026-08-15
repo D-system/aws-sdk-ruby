@@ -1,6 +1,226 @@
 Unreleased Changes
 ------------------
 
+1.192.0 (2026-07-30)
+------------------
+
+* Feature - Add Python3.15 (python3.15) and NodeJs 26 (nodejs26.x) support to AWS Lambda
+
+1.191.0 (2026-07-14)
+------------------
+
+* Feature - AWS Lambda now returns a new DependencyError value in StateReasonCode and LastUpdateStatusReasonCode to provide more actionable information when a function reaches a failed state due to an error from an upstream dependency or service.
+
+1.190.0 (2026-07-13)
+------------------
+
+* Feature - Add Java 8, 11 and 17 on AL2023 (java8.al2023, java11.al2023, java17.al2023) support to AWS Lambda.
+
+1.189.0 (2026-07-10)
+------------------
+
+* Feature - Added TelemetryConfig support for Managed Instances Capacity Provider, enabling customers to configure system log level and custom log group for managed instance logging.
+
+1.188.0 (2026-07-09)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.187.0 (2026-07-07)
+------------------
+
+* Feature - AWS Lambda Durable Functions now supports customer managed KMS keys. This allows customers to configure a KMS key in Durable Config to have all their durable execution data encrypted.
+
+1.186.0 (2026-06-29)
+------------------
+
+* Feature - Lambda now supports self-managed S3 buckets for Lambda code storage giving you the option for Lambda to reference a copy of your source code from your own S3 buckets. This allows you to maintain a single copy of your source code and manage your own code storage limits.
+
+1.185.0 (2026-06-22)
+------------------
+
+* Feature - Add support for tagging Network Connector resources in AWS Lambda.
+
+1.184.0 (2026-06-18)
+------------------
+
+* Feature - Converging and fixing existing documentation gaps in Lambda SDK
+
+1.183.0 (2026-06-02)
+------------------
+
+* Feature - Adds configuration for tag propagation to Lambda-managed resources.
+
+1.182.0 (2026-06-01)
+------------------
+
+* Feature - Adding new BDD representation of endpoint ruleset
+
+1.181.0 (2026-05-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.180.0 (2026-05-19)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.179.0 (2026-05-13)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.178.0 (2026-04-22)
+------------------
+
+* Feature - Add Ruby 4.0 (ruby4.0) support to AWS Lambda.
+
+1.177.0 (2026-04-07)
+------------------
+
+* Feature - Launching Lambda integration with S3 Files as a new file system configuration.
+
+1.176.0 (2026-03-18)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.175.0 (2026-01-28)
+------------------
+
+* Feature - We are launching ESM Metrics and logging for Kafka ESM to allow customers to monitor Kafka event processing using CloudWatch Metrics and Logs.
+
+1.174.0 (2026-01-16)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.173.0 (2026-01-08)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.172.0 (2026-01-05)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.171.0 (2025-12-11)
+------------------
+
+* Feature - Add Dotnet 10 (dotnet10) support to AWS Lambda.
+
+1.170.0 (2025-12-04)
+------------------
+
+* Feature - Add DisallowedByVpcEncryptionControl to the LastUpdateStatusReasonCode and StateReasonCode enums to represent failures caused by VPC Encryption Controls.
+
+1.169.0 (2025-12-02)
+------------------
+
+* Feature - Launching Lambda durable functions - a new feature to build reliable multi-step applications and AI workflows natively within the Lambda developer experience.
+
+1.168.0 (2025-12-01)
+------------------
+
+* Feature - Launching Lambda Managed Instances - a new feature to run Lambda on EC2.
+
+1.167.0 (2025-11-21)
+------------------
+
+* Feature - Launching Enhanced Error Handling and ESM Grouping capabilities for Kafka ESMs
+
+1.166.0 (2025-11-19)
+------------------
+
+* Feature - Added support for creating and invoking Tenant Isolated functions in AWS Lambda APIs.
+
+1.165.0 (2025-10-31)
+------------------
+
+* Feature - Add Python3.14 (python3.14) and Java 25 (java25) support to AWS Lambda
+
+1.164.0 (2025-10-28)
+------------------
+
+* Feature - Added SerializedRequestEntityTooLargeException to Lambda Invoke API
+
+1.163.0 (2025-10-23)
+------------------
+
+* Feature - Add NodeJs 24 (nodejs24.x) support to AWS Lambda.
+
+1.162.0 (2025-10-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.161.0 (2025-10-10)
+------------------
+
+* Feature - Add InvokedViaFunctionUrl context key to limit invocations to only FURL invokes.
+
+1.160.0 (2025-08-26)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.159.0 (2025-08-25)
+------------------
+
+* Feature - Remove incorrect endpoint tests
+
+1.158.0 (2025-08-11)
+------------------
+
+* Feature - Doc-only update for Lambda that updates the maximum payload size for response streaming invocations to 200 MB.
+
+1.157.0 (2025-08-04)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.156.0 (2025-07-31)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.155.0 (2025-07-22)
+------------------
+
+* Feature - This release migrated the model to Smithy keeping all features unchanged.
+
+1.154.0 (2025-07-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.153.0 (2025-06-19)
+------------------
+
+* Feature - Support Schema Registry feature for Kafka Event Source Mapping. Customers can now configure a Schema Registry to enable schema validation and filtering for Avro, Protobuf, and JSON-formatted events in Lambda for Kafka Event Source.
+
+1.152.0 (2025-06-02)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.151.0 (2025-05-12)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.150.0 (2025-05-01)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.149.0 (2025-04-28)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
 1.148.0 (2025-03-19)
 ------------------
 

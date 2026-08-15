@@ -52,6 +52,10 @@ module Aws::QBusiness
     AppliedOrchestrationConfiguration = Shapes::StructureShape.new(name: 'AppliedOrchestrationConfiguration')
     AssociatePermissionRequest = Shapes::StructureShape.new(name: 'AssociatePermissionRequest')
     AssociatePermissionResponse = Shapes::StructureShape.new(name: 'AssociatePermissionResponse')
+    AssociatedGroup = Shapes::StructureShape.new(name: 'AssociatedGroup')
+    AssociatedGroups = Shapes::ListShape.new(name: 'AssociatedGroups')
+    AssociatedUser = Shapes::StructureShape.new(name: 'AssociatedUser')
+    AssociatedUsers = Shapes::ListShape.new(name: 'AssociatedUsers')
     Attachment = Shapes::StructureShape.new(name: 'Attachment')
     AttachmentId = Shapes::StringShape.new(name: 'AttachmentId')
     AttachmentInput = Shapes::StructureShape.new(name: 'AttachmentInput')
@@ -104,8 +108,16 @@ module Aws::QBusiness
     ChatModeConfiguration = Shapes::UnionShape.new(name: 'ChatModeConfiguration')
     ChatOutput = Shapes::StructureShape.new(name: 'ChatOutput')
     ChatOutputStream = Shapes::StructureShape.new(name: 'ChatOutputStream')
+    ChatResponseConfiguration = Shapes::StructureShape.new(name: 'ChatResponseConfiguration')
+    ChatResponseConfigurationArn = Shapes::StringShape.new(name: 'ChatResponseConfigurationArn')
+    ChatResponseConfigurationDetail = Shapes::StructureShape.new(name: 'ChatResponseConfigurationDetail')
+    ChatResponseConfigurationId = Shapes::StringShape.new(name: 'ChatResponseConfigurationId')
+    ChatResponseConfigurationStatus = Shapes::StringShape.new(name: 'ChatResponseConfigurationStatus')
+    ChatResponseConfigurations = Shapes::ListShape.new(name: 'ChatResponseConfigurations')
     ChatSyncInput = Shapes::StructureShape.new(name: 'ChatSyncInput')
     ChatSyncOutput = Shapes::StructureShape.new(name: 'ChatSyncOutput')
+    CheckDocumentAccessRequest = Shapes::StructureShape.new(name: 'CheckDocumentAccessRequest')
+    CheckDocumentAccessResponse = Shapes::StructureShape.new(name: 'CheckDocumentAccessResponse')
     ClientIdForOIDC = Shapes::StringShape.new(name: 'ClientIdForOIDC')
     ClientIdsForOIDC = Shapes::ListShape.new(name: 'ClientIdsForOIDC')
     ClientNamespace = Shapes::StringShape.new(name: 'ClientNamespace')
@@ -122,8 +134,12 @@ module Aws::QBusiness
     ConversationTitle = Shapes::StringShape.new(name: 'ConversationTitle')
     Conversations = Shapes::ListShape.new(name: 'Conversations')
     CopyFromSource = Shapes::UnionShape.new(name: 'CopyFromSource')
+    CreateAnonymousWebExperienceUrlRequest = Shapes::StructureShape.new(name: 'CreateAnonymousWebExperienceUrlRequest')
+    CreateAnonymousWebExperienceUrlResponse = Shapes::StructureShape.new(name: 'CreateAnonymousWebExperienceUrlResponse')
     CreateApplicationRequest = Shapes::StructureShape.new(name: 'CreateApplicationRequest')
     CreateApplicationResponse = Shapes::StructureShape.new(name: 'CreateApplicationResponse')
+    CreateChatResponseConfigurationRequest = Shapes::StructureShape.new(name: 'CreateChatResponseConfigurationRequest')
+    CreateChatResponseConfigurationResponse = Shapes::StructureShape.new(name: 'CreateChatResponseConfigurationResponse')
     CreateDataAccessorRequest = Shapes::StructureShape.new(name: 'CreateDataAccessorRequest')
     CreateDataAccessorResponse = Shapes::StructureShape.new(name: 'CreateDataAccessorResponse')
     CreateDataSourceRequest = Shapes::StructureShape.new(name: 'CreateDataSourceRequest')
@@ -148,7 +164,13 @@ module Aws::QBusiness
     CustomizationConfiguration = Shapes::StructureShape.new(name: 'CustomizationConfiguration')
     DataAccessor = Shapes::StructureShape.new(name: 'DataAccessor')
     DataAccessorArn = Shapes::StringShape.new(name: 'DataAccessorArn')
+    DataAccessorAuthenticationConfiguration = Shapes::UnionShape.new(name: 'DataAccessorAuthenticationConfiguration')
+    DataAccessorAuthenticationDetail = Shapes::StructureShape.new(name: 'DataAccessorAuthenticationDetail')
+    DataAccessorAuthenticationType = Shapes::StringShape.new(name: 'DataAccessorAuthenticationType')
+    DataAccessorExternalId = Shapes::StringShape.new(name: 'DataAccessorExternalId')
+    DataAccessorExternalIds = Shapes::ListShape.new(name: 'DataAccessorExternalIds')
     DataAccessorId = Shapes::StringShape.new(name: 'DataAccessorId')
+    DataAccessorIdcTrustedTokenIssuerConfiguration = Shapes::StructureShape.new(name: 'DataAccessorIdcTrustedTokenIssuerConfiguration')
     DataAccessorName = Shapes::StringShape.new(name: 'DataAccessorName')
     DataAccessors = Shapes::ListShape.new(name: 'DataAccessors')
     DataSource = Shapes::StructureShape.new(name: 'DataSource')
@@ -172,6 +194,8 @@ module Aws::QBusiness
     DeleteAttachmentResponse = Shapes::StructureShape.new(name: 'DeleteAttachmentResponse')
     DeleteChatControlsConfigurationRequest = Shapes::StructureShape.new(name: 'DeleteChatControlsConfigurationRequest')
     DeleteChatControlsConfigurationResponse = Shapes::StructureShape.new(name: 'DeleteChatControlsConfigurationResponse')
+    DeleteChatResponseConfigurationRequest = Shapes::StructureShape.new(name: 'DeleteChatResponseConfigurationRequest')
+    DeleteChatResponseConfigurationResponse = Shapes::StructureShape.new(name: 'DeleteChatResponseConfigurationResponse')
     DeleteConversationRequest = Shapes::StructureShape.new(name: 'DeleteConversationRequest')
     DeleteConversationResponse = Shapes::StructureShape.new(name: 'DeleteConversationResponse')
     DeleteDataAccessorRequest = Shapes::StructureShape.new(name: 'DeleteDataAccessorRequest')
@@ -195,7 +219,16 @@ module Aws::QBusiness
     Description = Shapes::StringShape.new(name: 'Description')
     DisassociatePermissionRequest = Shapes::StructureShape.new(name: 'DisassociatePermissionRequest')
     DisassociatePermissionResponse = Shapes::StructureShape.new(name: 'DisassociatePermissionResponse')
+    DisplayName = Shapes::StringShape.new(name: 'DisplayName')
     Document = Shapes::StructureShape.new(name: 'Document')
+    DocumentAcl = Shapes::StructureShape.new(name: 'DocumentAcl')
+    DocumentAclCondition = Shapes::StructureShape.new(name: 'DocumentAclCondition')
+    DocumentAclConditions = Shapes::ListShape.new(name: 'DocumentAclConditions')
+    DocumentAclGroup = Shapes::StructureShape.new(name: 'DocumentAclGroup')
+    DocumentAclGroups = Shapes::ListShape.new(name: 'DocumentAclGroups')
+    DocumentAclMembership = Shapes::StructureShape.new(name: 'DocumentAclMembership')
+    DocumentAclUser = Shapes::StructureShape.new(name: 'DocumentAclUser')
+    DocumentAclUsers = Shapes::ListShape.new(name: 'DocumentAclUsers')
     DocumentAttribute = Shapes::StructureShape.new(name: 'DocumentAttribute')
     DocumentAttributeBoostingConfiguration = Shapes::UnionShape.new(name: 'DocumentAttributeBoostingConfiguration')
     DocumentAttributeBoostingLevel = Shapes::StringShape.new(name: 'DocumentAttributeBoostingLevel')
@@ -239,10 +272,14 @@ module Aws::QBusiness
     GetApplicationResponse = Shapes::StructureShape.new(name: 'GetApplicationResponse')
     GetChatControlsConfigurationRequest = Shapes::StructureShape.new(name: 'GetChatControlsConfigurationRequest')
     GetChatControlsConfigurationResponse = Shapes::StructureShape.new(name: 'GetChatControlsConfigurationResponse')
+    GetChatResponseConfigurationRequest = Shapes::StructureShape.new(name: 'GetChatResponseConfigurationRequest')
+    GetChatResponseConfigurationResponse = Shapes::StructureShape.new(name: 'GetChatResponseConfigurationResponse')
     GetDataAccessorRequest = Shapes::StructureShape.new(name: 'GetDataAccessorRequest')
     GetDataAccessorResponse = Shapes::StructureShape.new(name: 'GetDataAccessorResponse')
     GetDataSourceRequest = Shapes::StructureShape.new(name: 'GetDataSourceRequest')
     GetDataSourceResponse = Shapes::StructureShape.new(name: 'GetDataSourceResponse')
+    GetDocumentContentRequest = Shapes::StructureShape.new(name: 'GetDocumentContentRequest')
+    GetDocumentContentResponse = Shapes::StructureShape.new(name: 'GetDocumentContentResponse')
     GetGroupRequest = Shapes::StructureShape.new(name: 'GetGroupRequest')
     GetGroupResponse = Shapes::StructureShape.new(name: 'GetGroupResponse')
     GetIndexRequest = Shapes::StructureShape.new(name: 'GetIndexRequest')
@@ -267,10 +304,13 @@ module Aws::QBusiness
     GroupStatusDetails = Shapes::ListShape.new(name: 'GroupStatusDetails')
     GroupSummary = Shapes::StructureShape.new(name: 'GroupSummary')
     GroupSummaryList = Shapes::ListShape.new(name: 'GroupSummaryList')
+    HallucinationReductionConfiguration = Shapes::StructureShape.new(name: 'HallucinationReductionConfiguration')
+    HallucinationReductionControl = Shapes::StringShape.new(name: 'HallucinationReductionControl')
     HookConfiguration = Shapes::StructureShape.new(name: 'HookConfiguration')
     IAMIdentityProviderArn = Shapes::StringShape.new(name: 'IAMIdentityProviderArn')
     IdcApplicationArn = Shapes::StringShape.new(name: 'IdcApplicationArn')
     IdcAuthConfiguration = Shapes::StructureShape.new(name: 'IdcAuthConfiguration')
+    IdcTrustedTokenIssuerArn = Shapes::StringShape.new(name: 'IdcTrustedTokenIssuerArn')
     IdentityProviderConfiguration = Shapes::UnionShape.new(name: 'IdentityProviderConfiguration')
     IdentityType = Shapes::StringShape.new(name: 'IdentityType')
     ImageExtractionConfiguration = Shapes::StructureShape.new(name: 'ImageExtractionConfiguration')
@@ -291,6 +331,8 @@ module Aws::QBusiness
     InlineDocumentEnrichmentConfiguration = Shapes::StructureShape.new(name: 'InlineDocumentEnrichmentConfiguration')
     InlineDocumentEnrichmentConfigurations = Shapes::ListShape.new(name: 'InlineDocumentEnrichmentConfigurations')
     InstanceArn = Shapes::StringShape.new(name: 'InstanceArn')
+    Instruction = Shapes::StringShape.new(name: 'Instruction')
+    InstructionCollection = Shapes::StructureShape.new(name: 'InstructionCollection')
     Integer = Shapes::IntegerShape.new(name: 'Integer')
     InternalServerException = Shapes::StructureShape.new(name: 'InternalServerException')
     KendraIndexConfiguration = Shapes::StructureShape.new(name: 'KendraIndexConfiguration')
@@ -302,6 +344,8 @@ module Aws::QBusiness
     ListApplicationsResponse = Shapes::StructureShape.new(name: 'ListApplicationsResponse')
     ListAttachmentsRequest = Shapes::StructureShape.new(name: 'ListAttachmentsRequest')
     ListAttachmentsResponse = Shapes::StructureShape.new(name: 'ListAttachmentsResponse')
+    ListChatResponseConfigurationsRequest = Shapes::StructureShape.new(name: 'ListChatResponseConfigurationsRequest')
+    ListChatResponseConfigurationsResponse = Shapes::StructureShape.new(name: 'ListChatResponseConfigurationsResponse')
     ListConversationsRequest = Shapes::StructureShape.new(name: 'ListConversationsRequest')
     ListConversationsResponse = Shapes::StructureShape.new(name: 'ListConversationsResponse')
     ListDataAccessorsRequest = Shapes::StructureShape.new(name: 'ListDataAccessorsRequest')
@@ -387,7 +431,14 @@ module Aws::QBusiness
     OrchestrationConfiguration = Shapes::StructureShape.new(name: 'OrchestrationConfiguration')
     OrchestrationControl = Shapes::StringShape.new(name: 'OrchestrationControl')
     Origin = Shapes::StringShape.new(name: 'Origin')
+    OutputFormat = Shapes::StringShape.new(name: 'OutputFormat')
     Payload = Shapes::StringShape.new(name: 'Payload')
+    PermissionCondition = Shapes::StructureShape.new(name: 'PermissionCondition')
+    PermissionConditionKey = Shapes::StringShape.new(name: 'PermissionConditionKey')
+    PermissionConditionOperator = Shapes::StringShape.new(name: 'PermissionConditionOperator')
+    PermissionConditionValue = Shapes::StringShape.new(name: 'PermissionConditionValue')
+    PermissionConditionValues = Shapes::ListShape.new(name: 'PermissionConditionValues')
+    PermissionConditions = Shapes::ListShape.new(name: 'PermissionConditions')
     PersonalizationConfiguration = Shapes::StructureShape.new(name: 'PersonalizationConfiguration')
     PersonalizationControlMode = Shapes::StringShape.new(name: 'PersonalizationControlMode')
     Plugin = Shapes::StructureShape.new(name: 'Plugin')
@@ -421,6 +472,10 @@ module Aws::QBusiness
     RelevantContent = Shapes::StructureShape.new(name: 'RelevantContent')
     RelevantContentList = Shapes::ListShape.new(name: 'RelevantContentList')
     ResourceNotFoundException = Shapes::StructureShape.new(name: 'ResourceNotFoundException')
+    ResponseConfiguration = Shapes::StructureShape.new(name: 'ResponseConfiguration')
+    ResponseConfigurationSummary = Shapes::StringShape.new(name: 'ResponseConfigurationSummary')
+    ResponseConfigurationType = Shapes::StringShape.new(name: 'ResponseConfigurationType')
+    ResponseConfigurations = Shapes::MapShape.new(name: 'ResponseConfigurations')
     ResponseScope = Shapes::StringShape.new(name: 'ResponseScope')
     Retriever = Shapes::StructureShape.new(name: 'Retriever')
     RetrieverArn = Shapes::StringShape.new(name: 'RetrieverArn')
@@ -452,6 +507,7 @@ module Aws::QBusiness
     SecurityGroupId = Shapes::StringShape.new(name: 'SecurityGroupId')
     SecurityGroupIds = Shapes::ListShape.new(name: 'SecurityGroupIds')
     ServiceQuotaExceededException = Shapes::StructureShape.new(name: 'ServiceQuotaExceededException')
+    SessionDurationInMinutes = Shapes::IntegerShape.new(name: 'SessionDurationInMinutes')
     SnippetExcerpt = Shapes::StructureShape.new(name: 'SnippetExcerpt')
     SnippetExcerptText = Shapes::StringShape.new(name: 'SnippetExcerptText')
     SourceAttribution = Shapes::StructureShape.new(name: 'SourceAttribution')
@@ -481,6 +537,7 @@ module Aws::QBusiness
     SyncSchedule = Shapes::StringShape.new(name: 'SyncSchedule')
     SystemMessageId = Shapes::StringShape.new(name: 'SystemMessageId')
     SystemMessageOverride = Shapes::StringShape.new(name: 'SystemMessageOverride')
+    SystemMessageType = Shapes::StringShape.new(name: 'SystemMessageType')
     Tag = Shapes::StructureShape.new(name: 'Tag')
     TagKey = Shapes::StringShape.new(name: 'TagKey')
     TagKeys = Shapes::ListShape.new(name: 'TagKeys')
@@ -506,6 +563,8 @@ module Aws::QBusiness
     UpdateApplicationResponse = Shapes::StructureShape.new(name: 'UpdateApplicationResponse')
     UpdateChatControlsConfigurationRequest = Shapes::StructureShape.new(name: 'UpdateChatControlsConfigurationRequest')
     UpdateChatControlsConfigurationResponse = Shapes::StructureShape.new(name: 'UpdateChatControlsConfigurationResponse')
+    UpdateChatResponseConfigurationRequest = Shapes::StructureShape.new(name: 'UpdateChatResponseConfigurationRequest')
+    UpdateChatResponseConfigurationResponse = Shapes::StructureShape.new(name: 'UpdateChatResponseConfigurationResponse')
     UpdateDataAccessorRequest = Shapes::StructureShape.new(name: 'UpdateDataAccessorRequest')
     UpdateDataAccessorResponse = Shapes::StructureShape.new(name: 'UpdateDataAccessorResponse')
     UpdateDataSourceRequest = Shapes::StructureShape.new(name: 'UpdateDataSourceRequest')
@@ -663,11 +722,24 @@ module Aws::QBusiness
     AssociatePermissionRequest.add_member(:application_id, Shapes::ShapeRef.new(shape: ApplicationId, required: true, location: "uri", location_name: "applicationId"))
     AssociatePermissionRequest.add_member(:statement_id, Shapes::ShapeRef.new(shape: StatementId, required: true, location_name: "statementId"))
     AssociatePermissionRequest.add_member(:actions, Shapes::ShapeRef.new(shape: QIamActions, required: true, location_name: "actions"))
+    AssociatePermissionRequest.add_member(:conditions, Shapes::ShapeRef.new(shape: PermissionConditions, location_name: "conditions"))
     AssociatePermissionRequest.add_member(:principal, Shapes::ShapeRef.new(shape: PrincipalRoleArn, required: true, location_name: "principal"))
     AssociatePermissionRequest.struct_class = Types::AssociatePermissionRequest
 
     AssociatePermissionResponse.add_member(:statement, Shapes::ShapeRef.new(shape: String, location_name: "statement"))
     AssociatePermissionResponse.struct_class = Types::AssociatePermissionResponse
+
+    AssociatedGroup.add_member(:name, Shapes::ShapeRef.new(shape: GroupName, location_name: "name"))
+    AssociatedGroup.add_member(:type, Shapes::ShapeRef.new(shape: MembershipType, location_name: "type"))
+    AssociatedGroup.struct_class = Types::AssociatedGroup
+
+    AssociatedGroups.member = Shapes::ShapeRef.new(shape: AssociatedGroup)
+
+    AssociatedUser.add_member(:id, Shapes::ShapeRef.new(shape: String, location_name: "id"))
+    AssociatedUser.add_member(:type, Shapes::ShapeRef.new(shape: MembershipType, location_name: "type"))
+    AssociatedUser.struct_class = Types::AssociatedUser
+
+    AssociatedUsers.member = Shapes::ShapeRef.new(shape: AssociatedUser)
 
     Attachment.add_member(:attachment_id, Shapes::ShapeRef.new(shape: AttachmentId, location_name: "attachmentId"))
     Attachment.add_member(:conversation_id, Shapes::ShapeRef.new(shape: ConversationId, location_name: "conversationId"))
@@ -801,7 +873,7 @@ module Aws::QBusiness
     ChatInput.add_member(:user_groups, Shapes::ShapeRef.new(shape: UserGroups, location: "querystring", location_name: "userGroups"))
     ChatInput.add_member(:conversation_id, Shapes::ShapeRef.new(shape: ConversationId, location: "querystring", location_name: "conversationId"))
     ChatInput.add_member(:parent_message_id, Shapes::ShapeRef.new(shape: MessageId, location: "querystring", location_name: "parentMessageId"))
-    ChatInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location: "querystring", location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    ChatInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location: "querystring", location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     ChatInput.add_member(:input_stream, Shapes::ShapeRef.new(shape: ChatInputStream, eventstream: true, location_name: "inputStream"))
     ChatInput.struct_class = Types::ChatInput
     ChatInput[:payload] = :input_stream
@@ -833,6 +905,24 @@ module Aws::QBusiness
     ChatOutputStream.add_member(:auth_challenge_request_event, Shapes::ShapeRef.new(shape: AuthChallengeRequestEvent, event: true, location_name: "authChallengeRequestEvent"))
     ChatOutputStream.struct_class = Types::ChatOutputStream
 
+    ChatResponseConfiguration.add_member(:chat_response_configuration_id, Shapes::ShapeRef.new(shape: ChatResponseConfigurationId, required: true, location_name: "chatResponseConfigurationId"))
+    ChatResponseConfiguration.add_member(:chat_response_configuration_arn, Shapes::ShapeRef.new(shape: ChatResponseConfigurationArn, required: true, location_name: "chatResponseConfigurationArn"))
+    ChatResponseConfiguration.add_member(:display_name, Shapes::ShapeRef.new(shape: DisplayName, required: true, location_name: "displayName"))
+    ChatResponseConfiguration.add_member(:response_configuration_summary, Shapes::ShapeRef.new(shape: ResponseConfigurationSummary, location_name: "responseConfigurationSummary"))
+    ChatResponseConfiguration.add_member(:status, Shapes::ShapeRef.new(shape: ChatResponseConfigurationStatus, required: true, location_name: "status"))
+    ChatResponseConfiguration.add_member(:created_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "createdAt"))
+    ChatResponseConfiguration.add_member(:updated_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "updatedAt"))
+    ChatResponseConfiguration.struct_class = Types::ChatResponseConfiguration
+
+    ChatResponseConfigurationDetail.add_member(:response_configurations, Shapes::ShapeRef.new(shape: ResponseConfigurations, location_name: "responseConfigurations"))
+    ChatResponseConfigurationDetail.add_member(:response_configuration_summary, Shapes::ShapeRef.new(shape: String, location_name: "responseConfigurationSummary"))
+    ChatResponseConfigurationDetail.add_member(:status, Shapes::ShapeRef.new(shape: ChatResponseConfigurationStatus, location_name: "status"))
+    ChatResponseConfigurationDetail.add_member(:error, Shapes::ShapeRef.new(shape: ErrorDetail, location_name: "error"))
+    ChatResponseConfigurationDetail.add_member(:updated_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "updatedAt"))
+    ChatResponseConfigurationDetail.struct_class = Types::ChatResponseConfigurationDetail
+
+    ChatResponseConfigurations.member = Shapes::ShapeRef.new(shape: ChatResponseConfiguration)
+
     ChatSyncInput.add_member(:application_id, Shapes::ShapeRef.new(shape: ApplicationId, required: true, location: "uri", location_name: "applicationId"))
     ChatSyncInput.add_member(:user_id, Shapes::ShapeRef.new(shape: UserId, location: "querystring", location_name: "userId"))
     ChatSyncInput.add_member(:user_groups, Shapes::ShapeRef.new(shape: UserGroups, location: "querystring", location_name: "userGroups"))
@@ -845,7 +935,7 @@ module Aws::QBusiness
     ChatSyncInput.add_member(:attribute_filter, Shapes::ShapeRef.new(shape: AttributeFilter, location_name: "attributeFilter"))
     ChatSyncInput.add_member(:chat_mode, Shapes::ShapeRef.new(shape: ChatMode, location_name: "chatMode"))
     ChatSyncInput.add_member(:chat_mode_configuration, Shapes::ShapeRef.new(shape: ChatModeConfiguration, location_name: "chatModeConfiguration"))
-    ChatSyncInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    ChatSyncInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     ChatSyncInput.struct_class = Types::ChatSyncInput
 
     ChatSyncOutput.add_member(:conversation_id, Shapes::ShapeRef.new(shape: ConversationId, location_name: "conversationId"))
@@ -857,6 +947,19 @@ module Aws::QBusiness
     ChatSyncOutput.add_member(:source_attributions, Shapes::ShapeRef.new(shape: SourceAttributions, location_name: "sourceAttributions"))
     ChatSyncOutput.add_member(:failed_attachments, Shapes::ShapeRef.new(shape: AttachmentsOutput, location_name: "failedAttachments"))
     ChatSyncOutput.struct_class = Types::ChatSyncOutput
+
+    CheckDocumentAccessRequest.add_member(:application_id, Shapes::ShapeRef.new(shape: ApplicationId, required: true, location: "uri", location_name: "applicationId"))
+    CheckDocumentAccessRequest.add_member(:index_id, Shapes::ShapeRef.new(shape: IndexId, required: true, location: "uri", location_name: "indexId"))
+    CheckDocumentAccessRequest.add_member(:user_id, Shapes::ShapeRef.new(shape: String, required: true, location: "uri", location_name: "userId"))
+    CheckDocumentAccessRequest.add_member(:document_id, Shapes::ShapeRef.new(shape: DocumentId, required: true, location: "uri", location_name: "documentId"))
+    CheckDocumentAccessRequest.add_member(:data_source_id, Shapes::ShapeRef.new(shape: DataSourceId, location: "querystring", location_name: "dataSourceId"))
+    CheckDocumentAccessRequest.struct_class = Types::CheckDocumentAccessRequest
+
+    CheckDocumentAccessResponse.add_member(:user_groups, Shapes::ShapeRef.new(shape: AssociatedGroups, location_name: "userGroups"))
+    CheckDocumentAccessResponse.add_member(:user_aliases, Shapes::ShapeRef.new(shape: AssociatedUsers, location_name: "userAliases"))
+    CheckDocumentAccessResponse.add_member(:has_access, Shapes::ShapeRef.new(shape: Boolean, location_name: "hasAccess"))
+    CheckDocumentAccessResponse.add_member(:document_acl, Shapes::ShapeRef.new(shape: DocumentAcl, location_name: "documentAcl"))
+    CheckDocumentAccessResponse.struct_class = Types::CheckDocumentAccessResponse
 
     ClientIdsForOIDC.member = Shapes::ShapeRef.new(shape: ClientIdForOIDC)
 
@@ -899,6 +1002,14 @@ module Aws::QBusiness
     CopyFromSource.add_member_subclass(:unknown, Types::CopyFromSource::Unknown)
     CopyFromSource.struct_class = Types::CopyFromSource
 
+    CreateAnonymousWebExperienceUrlRequest.add_member(:application_id, Shapes::ShapeRef.new(shape: ApplicationId, required: true, location: "uri", location_name: "applicationId"))
+    CreateAnonymousWebExperienceUrlRequest.add_member(:web_experience_id, Shapes::ShapeRef.new(shape: WebExperienceId, required: true, location: "uri", location_name: "webExperienceId"))
+    CreateAnonymousWebExperienceUrlRequest.add_member(:session_duration_in_minutes, Shapes::ShapeRef.new(shape: SessionDurationInMinutes, location_name: "sessionDurationInMinutes"))
+    CreateAnonymousWebExperienceUrlRequest.struct_class = Types::CreateAnonymousWebExperienceUrlRequest
+
+    CreateAnonymousWebExperienceUrlResponse.add_member(:anonymous_url, Shapes::ShapeRef.new(shape: Url, location_name: "anonymousUrl"))
+    CreateAnonymousWebExperienceUrlResponse.struct_class = Types::CreateAnonymousWebExperienceUrlResponse
+
     CreateApplicationRequest.add_member(:display_name, Shapes::ShapeRef.new(shape: ApplicationName, required: true, location_name: "displayName"))
     CreateApplicationRequest.add_member(:role_arn, Shapes::ShapeRef.new(shape: RoleArn, location_name: "roleArn"))
     CreateApplicationRequest.add_member(:identity_type, Shapes::ShapeRef.new(shape: IdentityType, location_name: "identityType"))
@@ -908,7 +1019,7 @@ module Aws::QBusiness
     CreateApplicationRequest.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     CreateApplicationRequest.add_member(:encryption_configuration, Shapes::ShapeRef.new(shape: EncryptionConfiguration, location_name: "encryptionConfiguration"))
     CreateApplicationRequest.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
-    CreateApplicationRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    CreateApplicationRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateApplicationRequest.add_member(:attachments_configuration, Shapes::ShapeRef.new(shape: AttachmentsConfiguration, location_name: "attachmentsConfiguration"))
     CreateApplicationRequest.add_member(:q_apps_configuration, Shapes::ShapeRef.new(shape: QAppsConfiguration, location_name: "qAppsConfiguration"))
     CreateApplicationRequest.add_member(:personalization_configuration, Shapes::ShapeRef.new(shape: PersonalizationConfiguration, location_name: "personalizationConfiguration"))
@@ -919,11 +1030,23 @@ module Aws::QBusiness
     CreateApplicationResponse.add_member(:application_arn, Shapes::ShapeRef.new(shape: ApplicationArn, location_name: "applicationArn"))
     CreateApplicationResponse.struct_class = Types::CreateApplicationResponse
 
+    CreateChatResponseConfigurationRequest.add_member(:application_id, Shapes::ShapeRef.new(shape: ApplicationId, required: true, location: "uri", location_name: "applicationId"))
+    CreateChatResponseConfigurationRequest.add_member(:display_name, Shapes::ShapeRef.new(shape: DisplayName, required: true, location_name: "displayName"))
+    CreateChatResponseConfigurationRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: String, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    CreateChatResponseConfigurationRequest.add_member(:response_configurations, Shapes::ShapeRef.new(shape: ResponseConfigurations, required: true, location_name: "responseConfigurations"))
+    CreateChatResponseConfigurationRequest.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
+    CreateChatResponseConfigurationRequest.struct_class = Types::CreateChatResponseConfigurationRequest
+
+    CreateChatResponseConfigurationResponse.add_member(:chat_response_configuration_id, Shapes::ShapeRef.new(shape: ChatResponseConfigurationId, required: true, location_name: "chatResponseConfigurationId"))
+    CreateChatResponseConfigurationResponse.add_member(:chat_response_configuration_arn, Shapes::ShapeRef.new(shape: ChatResponseConfigurationArn, required: true, location_name: "chatResponseConfigurationArn"))
+    CreateChatResponseConfigurationResponse.struct_class = Types::CreateChatResponseConfigurationResponse
+
     CreateDataAccessorRequest.add_member(:application_id, Shapes::ShapeRef.new(shape: ApplicationId, required: true, location: "uri", location_name: "applicationId"))
     CreateDataAccessorRequest.add_member(:principal, Shapes::ShapeRef.new(shape: PrincipalRoleArn, required: true, location_name: "principal"))
     CreateDataAccessorRequest.add_member(:action_configurations, Shapes::ShapeRef.new(shape: ActionConfigurationList, required: true, location_name: "actionConfigurations"))
-    CreateDataAccessorRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    CreateDataAccessorRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateDataAccessorRequest.add_member(:display_name, Shapes::ShapeRef.new(shape: DataAccessorName, required: true, location_name: "displayName"))
+    CreateDataAccessorRequest.add_member(:authentication_detail, Shapes::ShapeRef.new(shape: DataAccessorAuthenticationDetail, location_name: "authenticationDetail"))
     CreateDataAccessorRequest.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
     CreateDataAccessorRequest.struct_class = Types::CreateDataAccessorRequest
 
@@ -941,7 +1064,7 @@ module Aws::QBusiness
     CreateDataSourceRequest.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
     CreateDataSourceRequest.add_member(:sync_schedule, Shapes::ShapeRef.new(shape: SyncSchedule, location_name: "syncSchedule"))
     CreateDataSourceRequest.add_member(:role_arn, Shapes::ShapeRef.new(shape: RoleArn, location_name: "roleArn"))
-    CreateDataSourceRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    CreateDataSourceRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateDataSourceRequest.add_member(:document_enrichment_configuration, Shapes::ShapeRef.new(shape: DocumentEnrichmentConfiguration, location_name: "documentEnrichmentConfiguration"))
     CreateDataSourceRequest.add_member(:media_extraction_configuration, Shapes::ShapeRef.new(shape: MediaExtractionConfiguration, location_name: "mediaExtractionConfiguration"))
     CreateDataSourceRequest.struct_class = Types::CreateDataSourceRequest
@@ -956,7 +1079,7 @@ module Aws::QBusiness
     CreateIndexRequest.add_member(:type, Shapes::ShapeRef.new(shape: IndexType, location_name: "type"))
     CreateIndexRequest.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
     CreateIndexRequest.add_member(:capacity_configuration, Shapes::ShapeRef.new(shape: IndexCapacityConfiguration, location_name: "capacityConfiguration"))
-    CreateIndexRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    CreateIndexRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateIndexRequest.struct_class = Types::CreateIndexRequest
 
     CreateIndexResponse.add_member(:index_id, Shapes::ShapeRef.new(shape: IndexId, location_name: "indexId"))
@@ -970,7 +1093,7 @@ module Aws::QBusiness
     CreatePluginRequest.add_member(:server_url, Shapes::ShapeRef.new(shape: Url, location_name: "serverUrl"))
     CreatePluginRequest.add_member(:custom_plugin_configuration, Shapes::ShapeRef.new(shape: CustomPluginConfiguration, location_name: "customPluginConfiguration"))
     CreatePluginRequest.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
-    CreatePluginRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    CreatePluginRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreatePluginRequest.struct_class = Types::CreatePluginRequest
 
     CreatePluginResponse.add_member(:plugin_id, Shapes::ShapeRef.new(shape: PluginId, location_name: "pluginId"))
@@ -983,7 +1106,7 @@ module Aws::QBusiness
     CreateRetrieverRequest.add_member(:display_name, Shapes::ShapeRef.new(shape: RetrieverName, required: true, location_name: "displayName"))
     CreateRetrieverRequest.add_member(:configuration, Shapes::ShapeRef.new(shape: RetrieverConfiguration, required: true, location_name: "configuration"))
     CreateRetrieverRequest.add_member(:role_arn, Shapes::ShapeRef.new(shape: RoleArn, location_name: "roleArn"))
-    CreateRetrieverRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    CreateRetrieverRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateRetrieverRequest.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
     CreateRetrieverRequest.struct_class = Types::CreateRetrieverRequest
 
@@ -994,7 +1117,7 @@ module Aws::QBusiness
     CreateSubscriptionRequest.add_member(:application_id, Shapes::ShapeRef.new(shape: ApplicationId, required: true, location: "uri", location_name: "applicationId"))
     CreateSubscriptionRequest.add_member(:principal, Shapes::ShapeRef.new(shape: SubscriptionPrincipal, required: true, location_name: "principal"))
     CreateSubscriptionRequest.add_member(:type, Shapes::ShapeRef.new(shape: SubscriptionType, required: true, location_name: "type"))
-    CreateSubscriptionRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    CreateSubscriptionRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateSubscriptionRequest.struct_class = Types::CreateSubscriptionRequest
 
     CreateSubscriptionResponse.add_member(:subscription_id, Shapes::ShapeRef.new(shape: SubscriptionId, location_name: "subscriptionId"))
@@ -1006,7 +1129,7 @@ module Aws::QBusiness
     CreateUserRequest.add_member(:application_id, Shapes::ShapeRef.new(shape: ApplicationId, required: true, location: "uri", location_name: "applicationId"))
     CreateUserRequest.add_member(:user_id, Shapes::ShapeRef.new(shape: String, required: true, location_name: "userId"))
     CreateUserRequest.add_member(:user_aliases, Shapes::ShapeRef.new(shape: CreateUserRequestUserAliasesList, location_name: "userAliases"))
-    CreateUserRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    CreateUserRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateUserRequest.struct_class = Types::CreateUserRequest
 
     CreateUserRequestUserAliasesList.member = Shapes::ShapeRef.new(shape: UserAlias)
@@ -1021,7 +1144,7 @@ module Aws::QBusiness
     CreateWebExperienceRequest.add_member(:origins, Shapes::ShapeRef.new(shape: WebExperienceOrigins, location_name: "origins"))
     CreateWebExperienceRequest.add_member(:role_arn, Shapes::ShapeRef.new(shape: RoleArn, location_name: "roleArn"))
     CreateWebExperienceRequest.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
-    CreateWebExperienceRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    CreateWebExperienceRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateWebExperienceRequest.add_member(:identity_provider_configuration, Shapes::ShapeRef.new(shape: IdentityProviderConfiguration, location_name: "identityProviderConfiguration"))
     CreateWebExperienceRequest.add_member(:browser_extension_configuration, Shapes::ShapeRef.new(shape: BrowserExtensionConfiguration, location_name: "browserExtensionConfiguration"))
     CreateWebExperienceRequest.add_member(:customization_configuration, Shapes::ShapeRef.new(shape: CustomizationConfiguration, location_name: "customizationConfiguration"))
@@ -1036,7 +1159,7 @@ module Aws::QBusiness
 
     CustomPluginConfiguration.add_member(:description, Shapes::ShapeRef.new(shape: PluginDescription, required: true, location_name: "description"))
     CustomPluginConfiguration.add_member(:api_schema_type, Shapes::ShapeRef.new(shape: APISchemaType, required: true, location_name: "apiSchemaType"))
-    CustomPluginConfiguration.add_member(:api_schema, Shapes::ShapeRef.new(shape: APISchema, required: true, location_name: "apiSchema"))
+    CustomPluginConfiguration.add_member(:api_schema, Shapes::ShapeRef.new(shape: APISchema, location_name: "apiSchema"))
     CustomPluginConfiguration.struct_class = Types::CustomPluginConfiguration
 
     CustomizationConfiguration.add_member(:custom_css_url, Shapes::ShapeRef.new(shape: CustomCSSUrl, location_name: "customCSSUrl"))
@@ -1050,9 +1173,26 @@ module Aws::QBusiness
     DataAccessor.add_member(:data_accessor_arn, Shapes::ShapeRef.new(shape: DataAccessorArn, location_name: "dataAccessorArn"))
     DataAccessor.add_member(:idc_application_arn, Shapes::ShapeRef.new(shape: IdcApplicationArn, location_name: "idcApplicationArn"))
     DataAccessor.add_member(:principal, Shapes::ShapeRef.new(shape: PrincipalRoleArn, location_name: "principal"))
+    DataAccessor.add_member(:authentication_detail, Shapes::ShapeRef.new(shape: DataAccessorAuthenticationDetail, location_name: "authenticationDetail"))
     DataAccessor.add_member(:created_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "createdAt"))
     DataAccessor.add_member(:updated_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "updatedAt"))
     DataAccessor.struct_class = Types::DataAccessor
+
+    DataAccessorAuthenticationConfiguration.add_member(:idc_trusted_token_issuer_configuration, Shapes::ShapeRef.new(shape: DataAccessorIdcTrustedTokenIssuerConfiguration, location_name: "idcTrustedTokenIssuerConfiguration"))
+    DataAccessorAuthenticationConfiguration.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
+    DataAccessorAuthenticationConfiguration.add_member_subclass(:idc_trusted_token_issuer_configuration, Types::DataAccessorAuthenticationConfiguration::IdcTrustedTokenIssuerConfiguration)
+    DataAccessorAuthenticationConfiguration.add_member_subclass(:unknown, Types::DataAccessorAuthenticationConfiguration::Unknown)
+    DataAccessorAuthenticationConfiguration.struct_class = Types::DataAccessorAuthenticationConfiguration
+
+    DataAccessorAuthenticationDetail.add_member(:authentication_type, Shapes::ShapeRef.new(shape: DataAccessorAuthenticationType, required: true, location_name: "authenticationType"))
+    DataAccessorAuthenticationDetail.add_member(:authentication_configuration, Shapes::ShapeRef.new(shape: DataAccessorAuthenticationConfiguration, location_name: "authenticationConfiguration"))
+    DataAccessorAuthenticationDetail.add_member(:external_ids, Shapes::ShapeRef.new(shape: DataAccessorExternalIds, location_name: "externalIds"))
+    DataAccessorAuthenticationDetail.struct_class = Types::DataAccessorAuthenticationDetail
+
+    DataAccessorExternalIds.member = Shapes::ShapeRef.new(shape: DataAccessorExternalId)
+
+    DataAccessorIdcTrustedTokenIssuerConfiguration.add_member(:idc_trusted_token_issuer_arn, Shapes::ShapeRef.new(shape: IdcTrustedTokenIssuerArn, required: true, location_name: "idcTrustedTokenIssuerArn"))
+    DataAccessorIdcTrustedTokenIssuerConfiguration.struct_class = Types::DataAccessorIdcTrustedTokenIssuerConfiguration
 
     DataAccessors.member = Shapes::ShapeRef.new(shape: DataAccessor)
 
@@ -1111,6 +1251,12 @@ module Aws::QBusiness
     DeleteChatControlsConfigurationRequest.struct_class = Types::DeleteChatControlsConfigurationRequest
 
     DeleteChatControlsConfigurationResponse.struct_class = Types::DeleteChatControlsConfigurationResponse
+
+    DeleteChatResponseConfigurationRequest.add_member(:application_id, Shapes::ShapeRef.new(shape: ApplicationId, required: true, location: "uri", location_name: "applicationId"))
+    DeleteChatResponseConfigurationRequest.add_member(:chat_response_configuration_id, Shapes::ShapeRef.new(shape: ChatResponseConfigurationId, required: true, location: "uri", location_name: "chatResponseConfigurationId"))
+    DeleteChatResponseConfigurationRequest.struct_class = Types::DeleteChatResponseConfigurationRequest
+
+    DeleteChatResponseConfigurationResponse.struct_class = Types::DeleteChatResponseConfigurationResponse
 
     DeleteConversationRequest.add_member(:conversation_id, Shapes::ShapeRef.new(shape: ConversationId, required: true, location: "uri", location_name: "conversationId"))
     DeleteConversationRequest.add_member(:application_id, Shapes::ShapeRef.new(shape: ApplicationId, required: true, location: "uri", location_name: "applicationId"))
@@ -1190,6 +1336,33 @@ module Aws::QBusiness
     Document.add_member(:document_enrichment_configuration, Shapes::ShapeRef.new(shape: DocumentEnrichmentConfiguration, location_name: "documentEnrichmentConfiguration"))
     Document.add_member(:media_extraction_configuration, Shapes::ShapeRef.new(shape: MediaExtractionConfiguration, location_name: "mediaExtractionConfiguration"))
     Document.struct_class = Types::Document
+
+    DocumentAcl.add_member(:allowlist, Shapes::ShapeRef.new(shape: DocumentAclMembership, location_name: "allowlist"))
+    DocumentAcl.add_member(:deny_list, Shapes::ShapeRef.new(shape: DocumentAclMembership, location_name: "denyList"))
+    DocumentAcl.struct_class = Types::DocumentAcl
+
+    DocumentAclCondition.add_member(:member_relation, Shapes::ShapeRef.new(shape: MemberRelation, location_name: "memberRelation"))
+    DocumentAclCondition.add_member(:users, Shapes::ShapeRef.new(shape: DocumentAclUsers, location_name: "users"))
+    DocumentAclCondition.add_member(:groups, Shapes::ShapeRef.new(shape: DocumentAclGroups, location_name: "groups"))
+    DocumentAclCondition.struct_class = Types::DocumentAclCondition
+
+    DocumentAclConditions.member = Shapes::ShapeRef.new(shape: DocumentAclCondition)
+
+    DocumentAclGroup.add_member(:name, Shapes::ShapeRef.new(shape: GroupName, location_name: "name"))
+    DocumentAclGroup.add_member(:type, Shapes::ShapeRef.new(shape: MembershipType, location_name: "type"))
+    DocumentAclGroup.struct_class = Types::DocumentAclGroup
+
+    DocumentAclGroups.member = Shapes::ShapeRef.new(shape: DocumentAclGroup)
+
+    DocumentAclMembership.add_member(:member_relation, Shapes::ShapeRef.new(shape: MemberRelation, location_name: "memberRelation"))
+    DocumentAclMembership.add_member(:conditions, Shapes::ShapeRef.new(shape: DocumentAclConditions, location_name: "conditions"))
+    DocumentAclMembership.struct_class = Types::DocumentAclMembership
+
+    DocumentAclUser.add_member(:id, Shapes::ShapeRef.new(shape: String, location_name: "id"))
+    DocumentAclUser.add_member(:type, Shapes::ShapeRef.new(shape: MembershipType, location_name: "type"))
+    DocumentAclUser.struct_class = Types::DocumentAclUser
+
+    DocumentAclUsers.member = Shapes::ShapeRef.new(shape: DocumentAclUser)
 
     DocumentAttribute.add_member(:name, Shapes::ShapeRef.new(shape: DocumentAttributeKey, required: true, location_name: "name"))
     DocumentAttribute.add_member(:value, Shapes::ShapeRef.new(shape: DocumentAttributeValue, required: true, location_name: "value"))
@@ -1335,7 +1508,20 @@ module Aws::QBusiness
     GetChatControlsConfigurationResponse.add_member(:topic_configurations, Shapes::ShapeRef.new(shape: TopicConfigurations, location_name: "topicConfigurations"))
     GetChatControlsConfigurationResponse.add_member(:creator_mode_configuration, Shapes::ShapeRef.new(shape: AppliedCreatorModeConfiguration, location_name: "creatorModeConfiguration"))
     GetChatControlsConfigurationResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
+    GetChatControlsConfigurationResponse.add_member(:hallucination_reduction_configuration, Shapes::ShapeRef.new(shape: HallucinationReductionConfiguration, location_name: "hallucinationReductionConfiguration"))
     GetChatControlsConfigurationResponse.struct_class = Types::GetChatControlsConfigurationResponse
+
+    GetChatResponseConfigurationRequest.add_member(:application_id, Shapes::ShapeRef.new(shape: ApplicationId, required: true, location: "uri", location_name: "applicationId"))
+    GetChatResponseConfigurationRequest.add_member(:chat_response_configuration_id, Shapes::ShapeRef.new(shape: ChatResponseConfigurationId, required: true, location: "uri", location_name: "chatResponseConfigurationId"))
+    GetChatResponseConfigurationRequest.struct_class = Types::GetChatResponseConfigurationRequest
+
+    GetChatResponseConfigurationResponse.add_member(:chat_response_configuration_id, Shapes::ShapeRef.new(shape: ChatResponseConfigurationId, location_name: "chatResponseConfigurationId"))
+    GetChatResponseConfigurationResponse.add_member(:chat_response_configuration_arn, Shapes::ShapeRef.new(shape: ChatResponseConfigurationArn, location_name: "chatResponseConfigurationArn"))
+    GetChatResponseConfigurationResponse.add_member(:display_name, Shapes::ShapeRef.new(shape: DisplayName, location_name: "displayName"))
+    GetChatResponseConfigurationResponse.add_member(:created_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "createdAt"))
+    GetChatResponseConfigurationResponse.add_member(:in_use_configuration, Shapes::ShapeRef.new(shape: ChatResponseConfigurationDetail, location_name: "inUseConfiguration"))
+    GetChatResponseConfigurationResponse.add_member(:last_update_configuration, Shapes::ShapeRef.new(shape: ChatResponseConfigurationDetail, location_name: "lastUpdateConfiguration"))
+    GetChatResponseConfigurationResponse.struct_class = Types::GetChatResponseConfigurationResponse
 
     GetDataAccessorRequest.add_member(:application_id, Shapes::ShapeRef.new(shape: ApplicationId, required: true, location: "uri", location_name: "applicationId"))
     GetDataAccessorRequest.add_member(:data_accessor_id, Shapes::ShapeRef.new(shape: DataAccessorId, required: true, location: "uri", location_name: "dataAccessorId"))
@@ -1348,6 +1534,7 @@ module Aws::QBusiness
     GetDataAccessorResponse.add_member(:idc_application_arn, Shapes::ShapeRef.new(shape: IdcApplicationArn, location_name: "idcApplicationArn"))
     GetDataAccessorResponse.add_member(:principal, Shapes::ShapeRef.new(shape: PrincipalRoleArn, location_name: "principal"))
     GetDataAccessorResponse.add_member(:action_configurations, Shapes::ShapeRef.new(shape: ActionConfigurationList, location_name: "actionConfigurations"))
+    GetDataAccessorResponse.add_member(:authentication_detail, Shapes::ShapeRef.new(shape: DataAccessorAuthenticationDetail, location_name: "authenticationDetail"))
     GetDataAccessorResponse.add_member(:created_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "createdAt"))
     GetDataAccessorResponse.add_member(:updated_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "updatedAt"))
     GetDataAccessorResponse.struct_class = Types::GetDataAccessorResponse
@@ -1375,6 +1562,17 @@ module Aws::QBusiness
     GetDataSourceResponse.add_member(:document_enrichment_configuration, Shapes::ShapeRef.new(shape: DocumentEnrichmentConfiguration, location_name: "documentEnrichmentConfiguration"))
     GetDataSourceResponse.add_member(:media_extraction_configuration, Shapes::ShapeRef.new(shape: MediaExtractionConfiguration, location_name: "mediaExtractionConfiguration"))
     GetDataSourceResponse.struct_class = Types::GetDataSourceResponse
+
+    GetDocumentContentRequest.add_member(:application_id, Shapes::ShapeRef.new(shape: ApplicationId, required: true, location: "uri", location_name: "applicationId"))
+    GetDocumentContentRequest.add_member(:index_id, Shapes::ShapeRef.new(shape: IndexId, required: true, location: "uri", location_name: "indexId"))
+    GetDocumentContentRequest.add_member(:data_source_id, Shapes::ShapeRef.new(shape: DataSourceId, location: "querystring", location_name: "dataSourceId"))
+    GetDocumentContentRequest.add_member(:document_id, Shapes::ShapeRef.new(shape: DocumentId, required: true, location: "uri", location_name: "documentId"))
+    GetDocumentContentRequest.add_member(:output_format, Shapes::ShapeRef.new(shape: OutputFormat, location: "querystring", location_name: "outputFormat"))
+    GetDocumentContentRequest.struct_class = Types::GetDocumentContentRequest
+
+    GetDocumentContentResponse.add_member(:presigned_url, Shapes::ShapeRef.new(shape: String, required: true, location_name: "presignedUrl"))
+    GetDocumentContentResponse.add_member(:mime_type, Shapes::ShapeRef.new(shape: String, required: true, location_name: "mimeType"))
+    GetDocumentContentResponse.struct_class = Types::GetDocumentContentResponse
 
     GetGroupRequest.add_member(:application_id, Shapes::ShapeRef.new(shape: ApplicationId, required: true, location: "uri", location_name: "applicationId"))
     GetGroupRequest.add_member(:index_id, Shapes::ShapeRef.new(shape: IndexId, required: true, location: "uri", location_name: "indexId"))
@@ -1480,7 +1678,7 @@ module Aws::QBusiness
     GetWebExperienceResponse.add_member(:origins, Shapes::ShapeRef.new(shape: WebExperienceOrigins, location_name: "origins"))
     GetWebExperienceResponse.add_member(:role_arn, Shapes::ShapeRef.new(shape: RoleArn, location_name: "roleArn"))
     GetWebExperienceResponse.add_member(:identity_provider_configuration, Shapes::ShapeRef.new(shape: IdentityProviderConfiguration, location_name: "identityProviderConfiguration"))
-    GetWebExperienceResponse.add_member(:authentication_configuration, Shapes::ShapeRef.new(shape: WebExperienceAuthConfiguration, deprecated: true, location_name: "authenticationConfiguration", metadata: {"deprecatedMessage"=>"Property associated with legacy SAML IdP flow. Deprecated in favor of using AWS IAM Identity Center for user management."}))
+    GetWebExperienceResponse.add_member(:authentication_configuration, Shapes::ShapeRef.new(shape: WebExperienceAuthConfiguration, deprecated: true, location_name: "authenticationConfiguration", metadata: {"deprecatedMessage" => "Property associated with legacy SAML IdP flow. Deprecated in favor of using AWS IAM Identity Center for user management."}))
     GetWebExperienceResponse.add_member(:error, Shapes::ShapeRef.new(shape: ErrorDetail, location_name: "error"))
     GetWebExperienceResponse.add_member(:browser_extension_configuration, Shapes::ShapeRef.new(shape: BrowserExtensionConfiguration, location_name: "browserExtensionConfiguration"))
     GetWebExperienceResponse.add_member(:customization_configuration, Shapes::ShapeRef.new(shape: CustomizationConfiguration, location_name: "customizationConfiguration"))
@@ -1502,6 +1700,9 @@ module Aws::QBusiness
     GroupSummary.struct_class = Types::GroupSummary
 
     GroupSummaryList.member = Shapes::ShapeRef.new(shape: GroupSummary)
+
+    HallucinationReductionConfiguration.add_member(:hallucination_reduction_control, Shapes::ShapeRef.new(shape: HallucinationReductionControl, location_name: "hallucinationReductionControl"))
+    HallucinationReductionConfiguration.struct_class = Types::HallucinationReductionConfiguration
 
     HookConfiguration.add_member(:invocation_condition, Shapes::ShapeRef.new(shape: DocumentAttributeCondition, location_name: "invocationCondition"))
     HookConfiguration.add_member(:lambda_arn, Shapes::ShapeRef.new(shape: LambdaArn, location_name: "lambdaArn"))
@@ -1550,6 +1751,16 @@ module Aws::QBusiness
 
     InlineDocumentEnrichmentConfigurations.member = Shapes::ShapeRef.new(shape: InlineDocumentEnrichmentConfiguration)
 
+    InstructionCollection.add_member(:response_length, Shapes::ShapeRef.new(shape: Instruction, location_name: "responseLength"))
+    InstructionCollection.add_member(:target_audience, Shapes::ShapeRef.new(shape: Instruction, location_name: "targetAudience"))
+    InstructionCollection.add_member(:perspective, Shapes::ShapeRef.new(shape: Instruction, location_name: "perspective"))
+    InstructionCollection.add_member(:output_style, Shapes::ShapeRef.new(shape: Instruction, location_name: "outputStyle"))
+    InstructionCollection.add_member(:identity, Shapes::ShapeRef.new(shape: Instruction, location_name: "identity"))
+    InstructionCollection.add_member(:tone, Shapes::ShapeRef.new(shape: Instruction, location_name: "tone"))
+    InstructionCollection.add_member(:custom_instructions, Shapes::ShapeRef.new(shape: Instruction, location_name: "customInstructions"))
+    InstructionCollection.add_member(:examples, Shapes::ShapeRef.new(shape: Instruction, location_name: "examples"))
+    InstructionCollection.struct_class = Types::InstructionCollection
+
     InternalServerException.add_member(:message, Shapes::ShapeRef.new(shape: ErrorMessage, required: true, location_name: "message"))
     InternalServerException.struct_class = Types::InternalServerException
 
@@ -1577,6 +1788,15 @@ module Aws::QBusiness
     ListAttachmentsResponse.add_member(:attachments, Shapes::ShapeRef.new(shape: AttachmentList, location_name: "attachments"))
     ListAttachmentsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
     ListAttachmentsResponse.struct_class = Types::ListAttachmentsResponse
+
+    ListChatResponseConfigurationsRequest.add_member(:application_id, Shapes::ShapeRef.new(shape: ApplicationId, required: true, location: "uri", location_name: "applicationId"))
+    ListChatResponseConfigurationsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: Integer, location: "querystring", location_name: "maxResults"))
+    ListChatResponseConfigurationsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location: "querystring", location_name: "nextToken"))
+    ListChatResponseConfigurationsRequest.struct_class = Types::ListChatResponseConfigurationsRequest
+
+    ListChatResponseConfigurationsResponse.add_member(:chat_response_configurations, Shapes::ShapeRef.new(shape: ChatResponseConfigurations, location_name: "chatResponseConfigurations"))
+    ListChatResponseConfigurationsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
+    ListChatResponseConfigurationsResponse.struct_class = Types::ListChatResponseConfigurationsResponse
 
     ListConversationsRequest.add_member(:application_id, Shapes::ShapeRef.new(shape: ApplicationId, required: true, location: "uri", location_name: "applicationId"))
     ListConversationsRequest.add_member(:user_id, Shapes::ShapeRef.new(shape: UserId, location: "querystring", location_name: "userId"))
@@ -1781,6 +2001,7 @@ module Aws::QBusiness
     MetadataEvent.struct_class = Types::MetadataEvent
 
     NativeIndexConfiguration.add_member(:index_id, Shapes::ShapeRef.new(shape: IndexId, required: true, location_name: "indexId"))
+    NativeIndexConfiguration.add_member(:version, Shapes::ShapeRef.new(shape: Long, location_name: "version"))
     NativeIndexConfiguration.add_member(:boosting_override, Shapes::ShapeRef.new(shape: DocumentAttributeBoostingOverrideMap, location_name: "boostingOverride"))
     NativeIndexConfiguration.struct_class = Types::NativeIndexConfiguration
 
@@ -1802,6 +2023,15 @@ module Aws::QBusiness
 
     OrchestrationConfiguration.add_member(:control, Shapes::ShapeRef.new(shape: OrchestrationControl, required: true, location_name: "control"))
     OrchestrationConfiguration.struct_class = Types::OrchestrationConfiguration
+
+    PermissionCondition.add_member(:condition_operator, Shapes::ShapeRef.new(shape: PermissionConditionOperator, required: true, location_name: "conditionOperator"))
+    PermissionCondition.add_member(:condition_key, Shapes::ShapeRef.new(shape: PermissionConditionKey, required: true, location_name: "conditionKey"))
+    PermissionCondition.add_member(:condition_values, Shapes::ShapeRef.new(shape: PermissionConditionValues, required: true, location_name: "conditionValues"))
+    PermissionCondition.struct_class = Types::PermissionCondition
+
+    PermissionConditionValues.member = Shapes::ShapeRef.new(shape: PermissionConditionValue)
+
+    PermissionConditions.member = Shapes::ShapeRef.new(shape: PermissionCondition)
 
     PersonalizationConfiguration.add_member(:personalization_control_mode, Shapes::ShapeRef.new(shape: PersonalizationControlMode, required: true, location_name: "personalizationControlMode"))
     PersonalizationConfiguration.struct_class = Types::PersonalizationConfiguration
@@ -1900,6 +2130,12 @@ module Aws::QBusiness
     ResourceNotFoundException.add_member(:resource_type, Shapes::ShapeRef.new(shape: String, required: true, location_name: "resourceType"))
     ResourceNotFoundException.struct_class = Types::ResourceNotFoundException
 
+    ResponseConfiguration.add_member(:instruction_collection, Shapes::ShapeRef.new(shape: InstructionCollection, location_name: "instructionCollection"))
+    ResponseConfiguration.struct_class = Types::ResponseConfiguration
+
+    ResponseConfigurations.key = Shapes::ShapeRef.new(shape: ResponseConfigurationType)
+    ResponseConfigurations.value = Shapes::ShapeRef.new(shape: ResponseConfiguration)
+
     Retriever.add_member(:application_id, Shapes::ShapeRef.new(shape: ApplicationId, location_name: "applicationId"))
     Retriever.add_member(:retriever_id, Shapes::ShapeRef.new(shape: RetrieverId, location_name: "retrieverId"))
     Retriever.add_member(:type, Shapes::ShapeRef.new(shape: RetrieverType, location_name: "type"))
@@ -1956,7 +2192,7 @@ module Aws::QBusiness
     SearchRelevantContentRequest.add_member(:query_text, Shapes::ShapeRef.new(shape: QueryText, required: true, location_name: "queryText"))
     SearchRelevantContentRequest.add_member(:content_source, Shapes::ShapeRef.new(shape: ContentSource, required: true, location_name: "contentSource"))
     SearchRelevantContentRequest.add_member(:attribute_filter, Shapes::ShapeRef.new(shape: AttributeFilter, location_name: "attributeFilter"))
-    SearchRelevantContentRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location_name: "maxResults"))
+    SearchRelevantContentRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location_name: "maxResults", metadata: {"box" => true}))
     SearchRelevantContentRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
     SearchRelevantContentRequest.struct_class = Types::SearchRelevantContentRequest
 
@@ -1980,6 +2216,9 @@ module Aws::QBusiness
     SourceAttribution.add_member(:citation_number, Shapes::ShapeRef.new(shape: Integer, location_name: "citationNumber"))
     SourceAttribution.add_member(:updated_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "updatedAt"))
     SourceAttribution.add_member(:text_message_segments, Shapes::ShapeRef.new(shape: TextSegmentList, location_name: "textMessageSegments"))
+    SourceAttribution.add_member(:document_id, Shapes::ShapeRef.new(shape: String, location_name: "documentId"))
+    SourceAttribution.add_member(:index_id, Shapes::ShapeRef.new(shape: String, location_name: "indexId"))
+    SourceAttribution.add_member(:datasource_id, Shapes::ShapeRef.new(shape: String, location_name: "datasourceId"))
     SourceAttribution.struct_class = Types::SourceAttribution
 
     SourceAttributions.member = Shapes::ShapeRef.new(shape: SourceAttribution)
@@ -2062,6 +2301,7 @@ module Aws::QBusiness
     TextInputEvent.add_member(:user_message, Shapes::ShapeRef.new(shape: UserMessage, required: true, location_name: "userMessage"))
     TextInputEvent.struct_class = Types::TextInputEvent
 
+    TextOutputEvent.add_member(:system_message_type, Shapes::ShapeRef.new(shape: SystemMessageType, location_name: "systemMessageType"))
     TextOutputEvent.add_member(:conversation_id, Shapes::ShapeRef.new(shape: ConversationId, location_name: "conversationId"))
     TextOutputEvent.add_member(:user_message_id, Shapes::ShapeRef.new(shape: MessageId, location_name: "userMessageId"))
     TextOutputEvent.add_member(:system_message_id, Shapes::ShapeRef.new(shape: MessageId, location_name: "systemMessageId"))
@@ -2071,8 +2311,8 @@ module Aws::QBusiness
     TextSegment.add_member(:begin_offset, Shapes::ShapeRef.new(shape: Integer, location_name: "beginOffset"))
     TextSegment.add_member(:end_offset, Shapes::ShapeRef.new(shape: Integer, location_name: "endOffset"))
     TextSegment.add_member(:snippet_excerpt, Shapes::ShapeRef.new(shape: SnippetExcerpt, location_name: "snippetExcerpt"))
-    TextSegment.add_member(:media_id, Shapes::ShapeRef.new(shape: SourceAttributionMediaId, deprecated: true, location_name: "mediaId", metadata: {"deprecatedMessage"=>"Deprecated in favor of using mediaId within the respective sourceDetails field.", "deprecatedSince"=>"2025-02-28"}))
-    TextSegment.add_member(:media_mime_type, Shapes::ShapeRef.new(shape: String, deprecated: true, location_name: "mediaMimeType", metadata: {"deprecatedMessage"=>"Deprecated in favor of using mediaMimeType within the respective sourceDetails field.", "deprecatedSince"=>"2025-02-28"}))
+    TextSegment.add_member(:media_id, Shapes::ShapeRef.new(shape: SourceAttributionMediaId, deprecated: true, location_name: "mediaId", metadata: {"deprecatedMessage" => "Deprecated in favor of using mediaId within the respective sourceDetails field.", "deprecatedSince" => "2025-02-28"}))
+    TextSegment.add_member(:media_mime_type, Shapes::ShapeRef.new(shape: String, deprecated: true, location_name: "mediaMimeType", metadata: {"deprecatedMessage" => "Deprecated in favor of using mediaMimeType within the respective sourceDetails field.", "deprecatedSince" => "2025-02-28"}))
     TextSegment.add_member(:source_details, Shapes::ShapeRef.new(shape: SourceDetails, location_name: "sourceDetails"))
     TextSegment.struct_class = Types::TextSegment
 
@@ -2109,20 +2349,31 @@ module Aws::QBusiness
     UpdateApplicationResponse.struct_class = Types::UpdateApplicationResponse
 
     UpdateChatControlsConfigurationRequest.add_member(:application_id, Shapes::ShapeRef.new(shape: ApplicationId, required: true, location: "uri", location_name: "applicationId"))
-    UpdateChatControlsConfigurationRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    UpdateChatControlsConfigurationRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     UpdateChatControlsConfigurationRequest.add_member(:response_scope, Shapes::ShapeRef.new(shape: ResponseScope, location_name: "responseScope"))
     UpdateChatControlsConfigurationRequest.add_member(:orchestration_configuration, Shapes::ShapeRef.new(shape: OrchestrationConfiguration, location_name: "orchestrationConfiguration"))
     UpdateChatControlsConfigurationRequest.add_member(:blocked_phrases_configuration_update, Shapes::ShapeRef.new(shape: BlockedPhrasesConfigurationUpdate, location_name: "blockedPhrasesConfigurationUpdate"))
     UpdateChatControlsConfigurationRequest.add_member(:topic_configurations_to_create_or_update, Shapes::ShapeRef.new(shape: TopicConfigurations, location_name: "topicConfigurationsToCreateOrUpdate"))
     UpdateChatControlsConfigurationRequest.add_member(:topic_configurations_to_delete, Shapes::ShapeRef.new(shape: TopicConfigurations, location_name: "topicConfigurationsToDelete"))
     UpdateChatControlsConfigurationRequest.add_member(:creator_mode_configuration, Shapes::ShapeRef.new(shape: CreatorModeConfiguration, location_name: "creatorModeConfiguration"))
+    UpdateChatControlsConfigurationRequest.add_member(:hallucination_reduction_configuration, Shapes::ShapeRef.new(shape: HallucinationReductionConfiguration, location_name: "hallucinationReductionConfiguration"))
     UpdateChatControlsConfigurationRequest.struct_class = Types::UpdateChatControlsConfigurationRequest
 
     UpdateChatControlsConfigurationResponse.struct_class = Types::UpdateChatControlsConfigurationResponse
 
+    UpdateChatResponseConfigurationRequest.add_member(:application_id, Shapes::ShapeRef.new(shape: ApplicationId, required: true, location: "uri", location_name: "applicationId"))
+    UpdateChatResponseConfigurationRequest.add_member(:chat_response_configuration_id, Shapes::ShapeRef.new(shape: ChatResponseConfigurationId, required: true, location: "uri", location_name: "chatResponseConfigurationId"))
+    UpdateChatResponseConfigurationRequest.add_member(:display_name, Shapes::ShapeRef.new(shape: DisplayName, location_name: "displayName"))
+    UpdateChatResponseConfigurationRequest.add_member(:response_configurations, Shapes::ShapeRef.new(shape: ResponseConfigurations, required: true, location_name: "responseConfigurations"))
+    UpdateChatResponseConfigurationRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: String, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    UpdateChatResponseConfigurationRequest.struct_class = Types::UpdateChatResponseConfigurationRequest
+
+    UpdateChatResponseConfigurationResponse.struct_class = Types::UpdateChatResponseConfigurationResponse
+
     UpdateDataAccessorRequest.add_member(:application_id, Shapes::ShapeRef.new(shape: ApplicationId, required: true, location: "uri", location_name: "applicationId"))
     UpdateDataAccessorRequest.add_member(:data_accessor_id, Shapes::ShapeRef.new(shape: DataAccessorId, required: true, location: "uri", location_name: "dataAccessorId"))
     UpdateDataAccessorRequest.add_member(:action_configurations, Shapes::ShapeRef.new(shape: ActionConfigurationList, required: true, location_name: "actionConfigurations"))
+    UpdateDataAccessorRequest.add_member(:authentication_detail, Shapes::ShapeRef.new(shape: DataAccessorAuthenticationDetail, location_name: "authenticationDetail"))
     UpdateDataAccessorRequest.add_member(:display_name, Shapes::ShapeRef.new(shape: DataAccessorName, location_name: "displayName"))
     UpdateDataAccessorRequest.struct_class = Types::UpdateDataAccessorRequest
 
@@ -2197,7 +2448,7 @@ module Aws::QBusiness
     UpdateWebExperienceRequest.add_member(:application_id, Shapes::ShapeRef.new(shape: ApplicationId, required: true, location: "uri", location_name: "applicationId"))
     UpdateWebExperienceRequest.add_member(:web_experience_id, Shapes::ShapeRef.new(shape: WebExperienceId, required: true, location: "uri", location_name: "webExperienceId"))
     UpdateWebExperienceRequest.add_member(:role_arn, Shapes::ShapeRef.new(shape: RoleArn, location_name: "roleArn"))
-    UpdateWebExperienceRequest.add_member(:authentication_configuration, Shapes::ShapeRef.new(shape: WebExperienceAuthConfiguration, deprecated: true, location_name: "authenticationConfiguration", metadata: {"deprecatedMessage"=>"Property associated with legacy SAML IdP flow. Deprecated in favor of using AWS IAM Identity Center for user management."}))
+    UpdateWebExperienceRequest.add_member(:authentication_configuration, Shapes::ShapeRef.new(shape: WebExperienceAuthConfiguration, deprecated: true, location_name: "authenticationConfiguration", metadata: {"deprecatedMessage" => "Property associated with legacy SAML IdP flow. Deprecated in favor of using AWS IAM Identity Center for user management."}))
     UpdateWebExperienceRequest.add_member(:title, Shapes::ShapeRef.new(shape: WebExperienceTitle, location_name: "title"))
     UpdateWebExperienceRequest.add_member(:subtitle, Shapes::ShapeRef.new(shape: WebExperienceSubtitle, location_name: "subtitle"))
     UpdateWebExperienceRequest.add_member(:welcome_message, Shapes::ShapeRef.new(shape: WebExperienceWelcomeMessage, location_name: "welcomeMessage"))
@@ -2274,7 +2525,7 @@ module Aws::QBusiness
         "auth" => ["aws.auth#sigv4"],
         "endpointPrefix" => "qbusiness",
         "protocol" => "rest-json",
-        "protocolSettings" => {"h2"=>"eventstream"},
+        "protocolSettings" => {"h2" => "eventstream"},
         "protocols" => ["rest-json"],
         "serviceFullName" => "QBusiness",
         "serviceId" => "QBusiness",
@@ -2289,8 +2540,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/policy"
         o.input = Shapes::ShapeRef.new(shape: AssociatePermissionRequest)
         o.output = Shapes::ShapeRef.new(shape: AssociatePermissionResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -2304,8 +2555,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/indices/{indexId}/documents/delete"
         o.input = Shapes::ShapeRef.new(shape: BatchDeleteDocumentRequest)
         o.output = Shapes::ShapeRef.new(shape: BatchDeleteDocumentResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -2318,8 +2569,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/indices/{indexId}/documents"
         o.input = Shapes::ShapeRef.new(shape: BatchPutDocumentRequest)
         o.output = Shapes::ShapeRef.new(shape: BatchPutDocumentResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -2333,8 +2584,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/subscriptions/{subscriptionId}"
         o.input = Shapes::ShapeRef.new(shape: CancelSubscriptionRequest)
         o.output = Shapes::ShapeRef.new(shape: CancelSubscriptionResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
@@ -2346,10 +2597,10 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/conversations"
         o.input = Shapes::ShapeRef.new(shape: ChatInput)
         o.output = Shapes::ShapeRef.new(shape: ChatOutput)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
-        o.errors << Shapes::ShapeRef.new(shape: LicenseNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: LicenseNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ExternalResourceException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -2363,14 +2614,41 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/conversations?sync"
         o.input = Shapes::ShapeRef.new(shape: ChatSyncInput)
         o.output = Shapes::ShapeRef.new(shape: ChatSyncOutput)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
-        o.errors << Shapes::ShapeRef.new(shape: LicenseNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: LicenseNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ExternalResourceException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+      end)
+
+      api.add_operation(:check_document_access, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "CheckDocumentAccess"
+        o.http_method = "GET"
+        o.http_request_uri = "/applications/{applicationId}/index/{indexId}/users/{userId}/documents/{documentId}/check-document-access"
+        o.input = Shapes::ShapeRef.new(shape: CheckDocumentAccessRequest)
+        o.output = Shapes::ShapeRef.new(shape: CheckDocumentAccessResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+      end)
+
+      api.add_operation(:create_anonymous_web_experience_url, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "CreateAnonymousWebExperienceUrl"
+        o.http_method = "POST"
+        o.http_request_uri = "/applications/{applicationId}/experiences/{webExperienceId}/anonymous-url"
+        o.input = Shapes::ShapeRef.new(shape: CreateAnonymousWebExperienceUrlRequest)
+        o.output = Shapes::ShapeRef.new(shape: CreateAnonymousWebExperienceUrlResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
       end)
 
       api.add_operation(:create_application, Seahorse::Model::Operation.new.tap do |o|
@@ -2379,8 +2657,23 @@ module Aws::QBusiness
         o.http_request_uri = "/applications"
         o.input = Shapes::ShapeRef.new(shape: CreateApplicationRequest)
         o.output = Shapes::ShapeRef.new(shape: CreateApplicationResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
+      end)
+
+      api.add_operation(:create_chat_response_configuration, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "CreateChatResponseConfiguration"
+        o.http_method = "POST"
+        o.http_request_uri = "/applications/{applicationId}/chatresponseconfigurations"
+        o.input = Shapes::ShapeRef.new(shape: CreateChatResponseConfigurationRequest)
+        o.output = Shapes::ShapeRef.new(shape: CreateChatResponseConfigurationResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -2394,8 +2687,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/dataaccessors"
         o.input = Shapes::ShapeRef.new(shape: CreateDataAccessorRequest)
         o.output = Shapes::ShapeRef.new(shape: CreateDataAccessorResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -2409,8 +2702,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/indices/{indexId}/datasources"
         o.input = Shapes::ShapeRef.new(shape: CreateDataSourceRequest)
         o.output = Shapes::ShapeRef.new(shape: CreateDataSourceResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -2424,8 +2717,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/indices"
         o.input = Shapes::ShapeRef.new(shape: CreateIndexRequest)
         o.output = Shapes::ShapeRef.new(shape: CreateIndexResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -2439,8 +2732,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/plugins"
         o.input = Shapes::ShapeRef.new(shape: CreatePluginRequest)
         o.output = Shapes::ShapeRef.new(shape: CreatePluginResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -2454,8 +2747,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/retrievers"
         o.input = Shapes::ShapeRef.new(shape: CreateRetrieverRequest)
         o.output = Shapes::ShapeRef.new(shape: CreateRetrieverResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -2469,8 +2762,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/subscriptions"
         o.input = Shapes::ShapeRef.new(shape: CreateSubscriptionRequest)
         o.output = Shapes::ShapeRef.new(shape: CreateSubscriptionResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -2483,8 +2776,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/users"
         o.input = Shapes::ShapeRef.new(shape: CreateUserRequest)
         o.output = Shapes::ShapeRef.new(shape: CreateUserResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -2498,8 +2791,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/experiences"
         o.input = Shapes::ShapeRef.new(shape: CreateWebExperienceRequest)
         o.output = Shapes::ShapeRef.new(shape: CreateWebExperienceResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -2513,8 +2806,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}"
         o.input = Shapes::ShapeRef.new(shape: DeleteApplicationRequest)
         o.output = Shapes::ShapeRef.new(shape: DeleteApplicationResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -2527,8 +2820,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/conversations/{conversationId}/attachments/{attachmentId}"
         o.input = Shapes::ShapeRef.new(shape: DeleteAttachmentRequest)
         o.output = Shapes::ShapeRef.new(shape: DeleteAttachmentResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: LicenseNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -2541,8 +2834,22 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/chatcontrols"
         o.input = Shapes::ShapeRef.new(shape: DeleteChatControlsConfigurationRequest)
         o.output = Shapes::ShapeRef.new(shape: DeleteChatControlsConfigurationResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+      end)
+
+      api.add_operation(:delete_chat_response_configuration, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DeleteChatResponseConfiguration"
+        o.http_method = "DELETE"
+        o.http_request_uri = "/applications/{applicationId}/chatresponseconfigurations/{chatResponseConfigurationId}"
+        o.input = Shapes::ShapeRef.new(shape: DeleteChatResponseConfigurationRequest)
+        o.output = Shapes::ShapeRef.new(shape: DeleteChatResponseConfigurationResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
@@ -2554,8 +2861,9 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/conversations/{conversationId}"
         o.input = Shapes::ShapeRef.new(shape: DeleteConversationRequest)
         o.output = Shapes::ShapeRef.new(shape: DeleteConversationResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: LicenseNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -2568,8 +2876,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/dataaccessors/{dataAccessorId}"
         o.input = Shapes::ShapeRef.new(shape: DeleteDataAccessorRequest)
         o.output = Shapes::ShapeRef.new(shape: DeleteDataAccessorResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -2582,8 +2890,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/indices/{indexId}/datasources/{dataSourceId}"
         o.input = Shapes::ShapeRef.new(shape: DeleteDataSourceRequest)
         o.output = Shapes::ShapeRef.new(shape: DeleteDataSourceResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -2596,8 +2904,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/indices/{indexId}/groups/{groupName}"
         o.input = Shapes::ShapeRef.new(shape: DeleteGroupRequest)
         o.output = Shapes::ShapeRef.new(shape: DeleteGroupResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -2610,8 +2918,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/indices/{indexId}"
         o.input = Shapes::ShapeRef.new(shape: DeleteIndexRequest)
         o.output = Shapes::ShapeRef.new(shape: DeleteIndexResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -2624,8 +2932,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/plugins/{pluginId}"
         o.input = Shapes::ShapeRef.new(shape: DeletePluginRequest)
         o.output = Shapes::ShapeRef.new(shape: DeletePluginResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -2638,8 +2946,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/retrievers/{retrieverId}"
         o.input = Shapes::ShapeRef.new(shape: DeleteRetrieverRequest)
         o.output = Shapes::ShapeRef.new(shape: DeleteRetrieverResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -2652,8 +2960,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/users/{userId}"
         o.input = Shapes::ShapeRef.new(shape: DeleteUserRequest)
         o.output = Shapes::ShapeRef.new(shape: DeleteUserResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -2666,8 +2974,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/experiences/{webExperienceId}"
         o.input = Shapes::ShapeRef.new(shape: DeleteWebExperienceRequest)
         o.output = Shapes::ShapeRef.new(shape: DeleteWebExperienceResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -2680,8 +2988,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/policy/{statementId}"
         o.input = Shapes::ShapeRef.new(shape: DisassociatePermissionRequest)
         o.output = Shapes::ShapeRef.new(shape: DisassociatePermissionResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -2694,8 +3002,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}"
         o.input = Shapes::ShapeRef.new(shape: GetApplicationRequest)
         o.output = Shapes::ShapeRef.new(shape: GetApplicationResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
@@ -2707,8 +3015,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/chatcontrols"
         o.input = Shapes::ShapeRef.new(shape: GetChatControlsConfigurationRequest)
         o.output = Shapes::ShapeRef.new(shape: GetChatControlsConfigurationResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
@@ -2720,14 +3028,27 @@ module Aws::QBusiness
         )
       end)
 
+      api.add_operation(:get_chat_response_configuration, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "GetChatResponseConfiguration"
+        o.http_method = "GET"
+        o.http_request_uri = "/applications/{applicationId}/chatresponseconfigurations/{chatResponseConfigurationId}"
+        o.input = Shapes::ShapeRef.new(shape: GetChatResponseConfigurationRequest)
+        o.output = Shapes::ShapeRef.new(shape: GetChatResponseConfigurationResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+      end)
+
       api.add_operation(:get_data_accessor, Seahorse::Model::Operation.new.tap do |o|
         o.name = "GetDataAccessor"
         o.http_method = "GET"
         o.http_request_uri = "/applications/{applicationId}/dataaccessors/{dataAccessorId}"
         o.input = Shapes::ShapeRef.new(shape: GetDataAccessorRequest)
         o.output = Shapes::ShapeRef.new(shape: GetDataAccessorResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
@@ -2739,8 +3060,21 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/indices/{indexId}/datasources/{dataSourceId}"
         o.input = Shapes::ShapeRef.new(shape: GetDataSourceRequest)
         o.output = Shapes::ShapeRef.new(shape: GetDataSourceResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+      end)
+
+      api.add_operation(:get_document_content, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "GetDocumentContent"
+        o.http_method = "GET"
+        o.http_request_uri = "/applications/{applicationId}/index/{indexId}/documents/{documentId}/content"
+        o.input = Shapes::ShapeRef.new(shape: GetDocumentContentRequest)
+        o.output = Shapes::ShapeRef.new(shape: GetDocumentContentResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
@@ -2752,8 +3086,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/indices/{indexId}/groups/{groupName}"
         o.input = Shapes::ShapeRef.new(shape: GetGroupRequest)
         o.output = Shapes::ShapeRef.new(shape: GetGroupResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -2766,8 +3100,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/indices/{indexId}"
         o.input = Shapes::ShapeRef.new(shape: GetIndexRequest)
         o.output = Shapes::ShapeRef.new(shape: GetIndexResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
@@ -2779,8 +3113,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/conversations/{conversationId}/messages/{messageId}/media/{mediaId}"
         o.input = Shapes::ShapeRef.new(shape: GetMediaRequest)
         o.output = Shapes::ShapeRef.new(shape: GetMediaResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: LicenseNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: MediaTooLargeException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
@@ -2794,8 +3128,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/plugins/{pluginId}"
         o.input = Shapes::ShapeRef.new(shape: GetPluginRequest)
         o.output = Shapes::ShapeRef.new(shape: GetPluginResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
@@ -2807,8 +3141,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/policy"
         o.input = Shapes::ShapeRef.new(shape: GetPolicyRequest)
         o.output = Shapes::ShapeRef.new(shape: GetPolicyResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
@@ -2820,8 +3154,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/retrievers/{retrieverId}"
         o.input = Shapes::ShapeRef.new(shape: GetRetrieverRequest)
         o.output = Shapes::ShapeRef.new(shape: GetRetrieverResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
@@ -2833,8 +3167,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/users/{userId}"
         o.input = Shapes::ShapeRef.new(shape: GetUserRequest)
         o.output = Shapes::ShapeRef.new(shape: GetUserResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -2847,8 +3181,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/experiences/{webExperienceId}"
         o.input = Shapes::ShapeRef.new(shape: GetWebExperienceRequest)
         o.output = Shapes::ShapeRef.new(shape: GetWebExperienceResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
@@ -2878,9 +3212,28 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/attachments"
         o.input = Shapes::ShapeRef.new(shape: ListAttachmentsRequest)
         o.output = Shapes::ShapeRef.new(shape: ListAttachmentsResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: LicenseNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
+      api.add_operation(:list_chat_response_configurations, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ListChatResponseConfigurations"
+        o.http_method = "GET"
+        o.http_request_uri = "/applications/{applicationId}/chatresponseconfigurations"
+        o.input = Shapes::ShapeRef.new(shape: ListChatResponseConfigurationsRequest)
+        o.output = Shapes::ShapeRef.new(shape: ListChatResponseConfigurationsResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
@@ -2898,8 +3251,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/conversations"
         o.input = Shapes::ShapeRef.new(shape: ListConversationsRequest)
         o.output = Shapes::ShapeRef.new(shape: ListConversationsResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: LicenseNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -2918,8 +3271,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/dataaccessors"
         o.input = Shapes::ShapeRef.new(shape: ListDataAccessorsRequest)
         o.output = Shapes::ShapeRef.new(shape: ListDataAccessorsResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
@@ -2937,8 +3290,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/indices/{indexId}/datasources/{dataSourceId}/syncjobs"
         o.input = Shapes::ShapeRef.new(shape: ListDataSourceSyncJobsRequest)
         o.output = Shapes::ShapeRef.new(shape: ListDataSourceSyncJobsResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -2957,8 +3310,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/indices/{indexId}/datasources"
         o.input = Shapes::ShapeRef.new(shape: ListDataSourcesRequest)
         o.output = Shapes::ShapeRef.new(shape: ListDataSourcesResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
@@ -2976,8 +3329,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/index/{indexId}/documents"
         o.input = Shapes::ShapeRef.new(shape: ListDocumentsRequest)
         o.output = Shapes::ShapeRef.new(shape: ListDocumentsResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
@@ -2995,8 +3348,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/indices/{indexId}/groups"
         o.input = Shapes::ShapeRef.new(shape: ListGroupsRequest)
         o.output = Shapes::ShapeRef.new(shape: ListGroupsResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -3015,8 +3368,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/indices"
         o.input = Shapes::ShapeRef.new(shape: ListIndicesRequest)
         o.output = Shapes::ShapeRef.new(shape: ListIndicesResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
@@ -3034,8 +3387,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/conversations/{conversationId}"
         o.input = Shapes::ShapeRef.new(shape: ListMessagesRequest)
         o.output = Shapes::ShapeRef.new(shape: ListMessagesResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: LicenseNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -3054,8 +3407,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/plugins/{pluginId}/actions"
         o.input = Shapes::ShapeRef.new(shape: ListPluginActionsRequest)
         o.output = Shapes::ShapeRef.new(shape: ListPluginActionsResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
@@ -3109,8 +3462,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/plugins"
         o.input = Shapes::ShapeRef.new(shape: ListPluginsRequest)
         o.output = Shapes::ShapeRef.new(shape: ListPluginsResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
@@ -3128,8 +3481,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/retrievers"
         o.input = Shapes::ShapeRef.new(shape: ListRetrieversRequest)
         o.output = Shapes::ShapeRef.new(shape: ListRetrieversResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
@@ -3147,8 +3500,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/subscriptions"
         o.input = Shapes::ShapeRef.new(shape: ListSubscriptionsRequest)
         o.output = Shapes::ShapeRef.new(shape: ListSubscriptionsResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -3167,8 +3520,8 @@ module Aws::QBusiness
         o.http_request_uri = "/v1/tags/{resourceARN}"
         o.input = Shapes::ShapeRef.new(shape: ListTagsForResourceRequest)
         o.output = Shapes::ShapeRef.new(shape: ListTagsForResourceResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
@@ -3180,8 +3533,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/experiences"
         o.input = Shapes::ShapeRef.new(shape: ListWebExperiencesRequest)
         o.output = Shapes::ShapeRef.new(shape: ListWebExperiencesResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
@@ -3199,8 +3552,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/conversations/{conversationId}/messages/{messageId}/feedback"
         o.input = Shapes::ShapeRef.new(shape: PutFeedbackRequest)
         o.output = Shapes::ShapeRef.new(shape: Shapes::StructureShape.new(struct_class: Aws::EmptyStructure))
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
@@ -3212,8 +3565,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/indices/{indexId}/groups"
         o.input = Shapes::ShapeRef.new(shape: PutGroupRequest)
         o.output = Shapes::ShapeRef.new(shape: PutGroupResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -3227,8 +3580,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/relevant-content"
         o.input = Shapes::ShapeRef.new(shape: SearchRelevantContentRequest)
         o.output = Shapes::ShapeRef.new(shape: SearchRelevantContentResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: LicenseNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -3247,8 +3600,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/indices/{indexId}/datasources/{dataSourceId}/startsync"
         o.input = Shapes::ShapeRef.new(shape: StartDataSourceSyncJobRequest)
         o.output = Shapes::ShapeRef.new(shape: StartDataSourceSyncJobResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -3262,8 +3615,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/indices/{indexId}/datasources/{dataSourceId}/stopsync"
         o.input = Shapes::ShapeRef.new(shape: StopDataSourceSyncJobRequest)
         o.output = Shapes::ShapeRef.new(shape: StopDataSourceSyncJobResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -3276,8 +3629,8 @@ module Aws::QBusiness
         o.http_request_uri = "/v1/tags/{resourceARN}"
         o.input = Shapes::ShapeRef.new(shape: TagResourceRequest)
         o.output = Shapes::ShapeRef.new(shape: TagResourceResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -3290,8 +3643,8 @@ module Aws::QBusiness
         o.http_request_uri = "/v1/tags/{resourceARN}"
         o.input = Shapes::ShapeRef.new(shape: UntagResourceRequest)
         o.output = Shapes::ShapeRef.new(shape: UntagResourceResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
@@ -3303,8 +3656,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}"
         o.input = Shapes::ShapeRef.new(shape: UpdateApplicationRequest)
         o.output = Shapes::ShapeRef.new(shape: UpdateApplicationResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -3317,13 +3670,27 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/chatcontrols"
         o.input = Shapes::ShapeRef.new(shape: UpdateChatControlsConfigurationRequest)
         o.output = Shapes::ShapeRef.new(shape: UpdateChatControlsConfigurationResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
+      end)
+
+      api.add_operation(:update_chat_response_configuration, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "UpdateChatResponseConfiguration"
+        o.http_method = "PUT"
+        o.http_request_uri = "/applications/{applicationId}/chatresponseconfigurations/{chatResponseConfigurationId}"
+        o.input = Shapes::ShapeRef.new(shape: UpdateChatResponseConfigurationRequest)
+        o.output = Shapes::ShapeRef.new(shape: UpdateChatResponseConfigurationResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
       end)
 
       api.add_operation(:update_data_accessor, Seahorse::Model::Operation.new.tap do |o|
@@ -3332,8 +3699,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/dataaccessors/{dataAccessorId}"
         o.input = Shapes::ShapeRef.new(shape: UpdateDataAccessorRequest)
         o.output = Shapes::ShapeRef.new(shape: UpdateDataAccessorResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -3346,8 +3713,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/indices/{indexId}/datasources/{dataSourceId}"
         o.input = Shapes::ShapeRef.new(shape: UpdateDataSourceRequest)
         o.output = Shapes::ShapeRef.new(shape: UpdateDataSourceResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -3360,8 +3727,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/indices/{indexId}"
         o.input = Shapes::ShapeRef.new(shape: UpdateIndexRequest)
         o.output = Shapes::ShapeRef.new(shape: UpdateIndexResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -3375,8 +3742,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/plugins/{pluginId}"
         o.input = Shapes::ShapeRef.new(shape: UpdatePluginRequest)
         o.output = Shapes::ShapeRef.new(shape: UpdatePluginResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -3390,8 +3757,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/retrievers/{retrieverId}"
         o.input = Shapes::ShapeRef.new(shape: UpdateRetrieverRequest)
         o.output = Shapes::ShapeRef.new(shape: UpdateRetrieverResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -3405,8 +3772,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/subscriptions/{subscriptionId}"
         o.input = Shapes::ShapeRef.new(shape: UpdateSubscriptionRequest)
         o.output = Shapes::ShapeRef.new(shape: UpdateSubscriptionResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
@@ -3419,8 +3786,9 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/users/{userId}"
         o.input = Shapes::ShapeRef.new(shape: UpdateUserRequest)
         o.output = Shapes::ShapeRef.new(shape: UpdateUserResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
@@ -3433,8 +3801,8 @@ module Aws::QBusiness
         o.http_request_uri = "/applications/{applicationId}/experiences/{webExperienceId}"
         o.input = Shapes::ShapeRef.new(shape: UpdateWebExperienceRequest)
         o.output = Shapes::ShapeRef.new(shape: UpdateWebExperienceResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)

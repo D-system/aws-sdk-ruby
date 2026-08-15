@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -84,56 +85,7 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Budgets/Client.html#create_budget-instance_method
       def create_budget: (
                            account_id: ::String,
-                           budget: {
-                             budget_name: ::String,
-                             budget_limit: {
-                               amount: ::String,
-                               unit: ::String
-                             }?,
-                             planned_budget_limits: Hash[::String, {
-                                 amount: ::String,
-                                 unit: ::String
-                               }]?,
-                             cost_filters: Hash[::String, Array[::String]]?,
-                             cost_types: {
-                               include_tax: bool?,
-                               include_subscription: bool?,
-                               use_blended: bool?,
-                               include_refund: bool?,
-                               include_credit: bool?,
-                               include_upfront: bool?,
-                               include_recurring: bool?,
-                               include_other_subscription: bool?,
-                               include_support: bool?,
-                               include_discount: bool?,
-                               use_amortized: bool?
-                             }?,
-                             time_unit: ("DAILY" | "MONTHLY" | "QUARTERLY" | "ANNUALLY"),
-                             time_period: {
-                               start: ::Time?,
-                               end: ::Time?
-                             }?,
-                             calculated_spend: {
-                               actual_spend: {
-                                 amount: ::String,
-                                 unit: ::String
-                               },
-                               forecasted_spend: {
-                                 amount: ::String,
-                                 unit: ::String
-                               }?
-                             }?,
-                             budget_type: ("USAGE" | "COST" | "RI_UTILIZATION" | "RI_COVERAGE" | "SAVINGS_PLANS_UTILIZATION" | "SAVINGS_PLANS_COVERAGE"),
-                             last_updated_time: ::Time?,
-                             auto_adjust_data: {
-                               auto_adjust_type: ("HISTORICAL" | "FORECAST"),
-                               historical_options: {
-                                 budget_adjustment_period: ::Integer,
-                                 look_back_available_periods: ::Integer?
-                               }?,
-                               last_auto_adjust_time: ::Time?
-                             }?
-                           },
+                           budget: Params::budget,
                            ?notifications_with_subscribers: Array[
                              {
                                notification: {
@@ -147,15 +99,15 @@ module Aws
                                  {
                                    subscription_type: ("SNS" | "EMAIL"),
                                    address: ::String
-                                 },
+                                 }
                                ]
-                             },
+                             }
                            ],
                            ?resource_tags: Array[
                              {
                                key: ::String,
                                value: ::String
-                             },
+                             }
                            ]
                          ) -> _CreateBudgetResponseSuccess
                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateBudgetResponseSuccess
@@ -176,36 +128,20 @@ module Aws
                                     action_threshold_value: ::Float,
                                     action_threshold_type: ("PERCENTAGE" | "ABSOLUTE_VALUE")
                                   },
-                                  definition: {
-                                    iam_action_definition: {
-                                      policy_arn: ::String,
-                                      roles: Array[::String]?,
-                                      groups: Array[::String]?,
-                                      users: Array[::String]?
-                                    }?,
-                                    scp_action_definition: {
-                                      policy_id: ::String,
-                                      target_ids: Array[::String]
-                                    }?,
-                                    ssm_action_definition: {
-                                      action_sub_type: ("STOP_EC2_INSTANCES" | "STOP_RDS_INSTANCES"),
-                                      region: ::String,
-                                      instance_ids: Array[::String]
-                                    }?
-                                  },
+                                  definition: Params::definition,
                                   execution_role_arn: ::String,
                                   approval_model: ("AUTOMATIC" | "MANUAL"),
                                   subscribers: Array[
                                     {
                                       subscription_type: ("SNS" | "EMAIL"),
                                       address: ::String
-                                    },
+                                    }
                                   ],
                                   ?resource_tags: Array[
                                     {
                                       key: ::String,
                                       value: ::String
-                                    },
+                                    }
                                   ]
                                 ) -> _CreateBudgetActionResponseSuccess
                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateBudgetActionResponseSuccess
@@ -228,7 +164,7 @@ module Aws
                                    {
                                      subscription_type: ("SNS" | "EMAIL"),
                                      address: ::String
-                                   },
+                                   }
                                  ]
                                ) -> _CreateNotificationResponseSuccess
                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateNotificationResponseSuccess
@@ -323,7 +259,8 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Budgets/Client.html#describe_budget-instance_method
       def describe_budget: (
                              account_id: ::String,
-                             budget_name: ::String
+                             budget_name: ::String,
+                             ?show_filter_expression: bool
                            ) -> _DescribeBudgetResponseSuccess
                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeBudgetResponseSuccess
 
@@ -427,7 +364,8 @@ module Aws
       def describe_budgets: (
                               account_id: ::String,
                               ?max_results: ::Integer,
-                              ?next_token: ::String
+                              ?next_token: ::String,
+                              ?show_filter_expression: bool
                             ) -> _DescribeBudgetsResponseSuccess
                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeBudgetsResponseSuccess
 
@@ -502,7 +440,7 @@ module Aws
                             {
                               key: ::String,
                               value: ::String
-                            },
+                            }
                           ]
                         ) -> _TagResourceResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _TagResourceResponseSuccess
@@ -523,56 +461,7 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Budgets/Client.html#update_budget-instance_method
       def update_budget: (
                            account_id: ::String,
-                           new_budget: {
-                             budget_name: ::String,
-                             budget_limit: {
-                               amount: ::String,
-                               unit: ::String
-                             }?,
-                             planned_budget_limits: Hash[::String, {
-                                 amount: ::String,
-                                 unit: ::String
-                               }]?,
-                             cost_filters: Hash[::String, Array[::String]]?,
-                             cost_types: {
-                               include_tax: bool?,
-                               include_subscription: bool?,
-                               use_blended: bool?,
-                               include_refund: bool?,
-                               include_credit: bool?,
-                               include_upfront: bool?,
-                               include_recurring: bool?,
-                               include_other_subscription: bool?,
-                               include_support: bool?,
-                               include_discount: bool?,
-                               use_amortized: bool?
-                             }?,
-                             time_unit: ("DAILY" | "MONTHLY" | "QUARTERLY" | "ANNUALLY"),
-                             time_period: {
-                               start: ::Time?,
-                               end: ::Time?
-                             }?,
-                             calculated_spend: {
-                               actual_spend: {
-                                 amount: ::String,
-                                 unit: ::String
-                               },
-                               forecasted_spend: {
-                                 amount: ::String,
-                                 unit: ::String
-                               }?
-                             }?,
-                             budget_type: ("USAGE" | "COST" | "RI_UTILIZATION" | "RI_COVERAGE" | "SAVINGS_PLANS_UTILIZATION" | "SAVINGS_PLANS_COVERAGE"),
-                             last_updated_time: ::Time?,
-                             auto_adjust_data: {
-                               auto_adjust_type: ("HISTORICAL" | "FORECAST"),
-                               historical_options: {
-                                 budget_adjustment_period: ::Integer,
-                                 look_back_available_periods: ::Integer?
-                               }?,
-                               last_auto_adjust_time: ::Time?
-                             }?
-                           }
+                           new_budget: Params::budget
                          ) -> _UpdateBudgetResponseSuccess
                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateBudgetResponseSuccess
 
@@ -593,30 +482,14 @@ module Aws
                                     action_threshold_value: ::Float,
                                     action_threshold_type: ("PERCENTAGE" | "ABSOLUTE_VALUE")
                                   },
-                                  ?definition: {
-                                    iam_action_definition: {
-                                      policy_arn: ::String,
-                                      roles: Array[::String]?,
-                                      groups: Array[::String]?,
-                                      users: Array[::String]?
-                                    }?,
-                                    scp_action_definition: {
-                                      policy_id: ::String,
-                                      target_ids: Array[::String]
-                                    }?,
-                                    ssm_action_definition: {
-                                      action_sub_type: ("STOP_EC2_INSTANCES" | "STOP_RDS_INSTANCES"),
-                                      region: ::String,
-                                      instance_ids: Array[::String]
-                                    }?
-                                  },
+                                  ?definition: Params::definition,
                                   ?execution_role_arn: ::String,
                                   ?approval_model: ("AUTOMATIC" | "MANUAL"),
                                   ?subscribers: Array[
                                     {
                                       subscription_type: ("SNS" | "EMAIL"),
                                       address: ::String
-                                    },
+                                    }
                                   ]
                                 ) -> _UpdateBudgetActionResponseSuccess
                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateBudgetActionResponseSuccess

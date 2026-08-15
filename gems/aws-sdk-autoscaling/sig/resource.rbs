@@ -18,6 +18,7 @@ module Aws
                         ?account_id: String,
                         ?active_endpoint_cache: bool,
                         ?adaptive_retry_wait_to_fill: bool,
+                        ?auth_scheme_preference: Array[String],
                         ?client_side_monitoring: bool,
                         ?client_side_monitoring_client_id: String,
                         ?client_side_monitoring_host: String,
@@ -113,7 +114,7 @@ module Aws
                                       min: ::Integer,
                                       max: ::Integer?
                                     },
-                                    cpu_manufacturers: Array[("intel" | "amd" | "amazon-web-services")]?,
+                                    cpu_manufacturers: Array[("intel" | "amd" | "amazon-web-services" | "apple")]?,
                                     memory_gi_b_per_v_cpu: {
                                       min: ::Float?,
                                       max: ::Float?
@@ -161,12 +162,13 @@ module Aws
                                         references: Array[
                                           {
                                             instance_family: ::String?
-                                          },
+                                          }
                                         ]?
                                       }?
                                     }?
-                                  }?
-                                },
+                                  }?,
+                                  image_id: ::String?
+                                }
                               ]?
                             }?,
                             instances_distribution: {
@@ -184,6 +186,7 @@ module Aws
                           ?desired_capacity: ::Integer,
                           ?default_cooldown: ::Integer,
                           ?availability_zones: Array[::String],
+                          ?availability_zone_ids: Array[::String],
                           ?load_balancer_names: Array[::String],
                           ?target_group_arns: Array[::String],
                           ?health_check_type: ::String,
@@ -202,8 +205,9 @@ module Aws
                               default_result: ::String?,
                               notification_target_arn: ::String?,
                               role_arn: ::String?
-                            },
+                            }
                           ],
+                          ?deletion_protection: ("none" | "prevent-force-deletion" | "prevent-all-deletion"),
                           ?tags: Array[
                             {
                               resource_id: ::String?,
@@ -211,7 +215,7 @@ module Aws
                               key: ::String,
                               value: ::String?,
                               propagate_at_launch: bool?
-                            },
+                            }
                           ],
                           ?service_linked_role_arn: ::String,
                           ?max_instance_lifetime: ::Integer,
@@ -222,14 +226,14 @@ module Aws
                             {
                               identifier: ::String,
                               type: ::String?
-                            },
+                            }
                           ],
                           ?instance_maintenance_policy: {
                             min_healthy_percentage: ::Integer?,
                             max_healthy_percentage: ::Integer?
                           },
                           ?availability_zone_distribution: {
-                            capacity_distribution_strategy: ("balanced-only" | "balanced-best-effort")?
+                            capacity_distribution_strategy: ("balanced-only" | "balanced-best-effort" | "reservations-then-balanced")?
                           },
                           ?availability_zone_impairment_policy: {
                             zonal_shift_enabled: bool?,
@@ -242,6 +246,14 @@ module Aws
                               capacity_reservation_ids: Array[::String]?,
                               capacity_reservation_resource_group_arns: Array[::String]?
                             }?
+                          },
+                          ?instance_lifecycle_policy: {
+                            retention_triggers: {
+                              terminate_hook_abandon: ("retain" | "terminate")?
+                            }?
+                          },
+                          ?operator: {
+                            principal: ::String
                           }
                         ) -> AutoScalingGroup
                       | (?Hash[Symbol, untyped]) -> AutoScalingGroup
@@ -273,7 +285,7 @@ module Aws
                                                throughput: ::Integer?
                                              }?,
                                              no_device: bool?
-                                           },
+                                           }
                                          ],
                                          ?instance_monitoring: {
                                            enabled: bool?
@@ -296,7 +308,13 @@ module Aws
       def activities: (
                         ?activity_ids: Array[::String],
                         ?auto_scaling_group_name: ::String,
-                        ?include_deleted_groups: bool
+                        ?include_deleted_groups: bool,
+                        ?filters: Array[
+                          {
+                            name: ::String?,
+                            values: Array[::String]?
+                          }
+                        ]
                       ) -> Activity::Collection
                     | (?Hash[Symbol, untyped]) -> Activity::Collection
 
@@ -309,11 +327,12 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/AutoScaling/Resource.html#groups-instance_method
       def groups: (
                     ?auto_scaling_group_names: Array[::String],
+                    ?include_instances: bool,
                     ?filters: Array[
                       {
                         name: ::String?,
                         values: Array[::String]?
-                      },
+                      }
                     ]
                   ) -> AutoScalingGroup::Collection
                 | (?Hash[Symbol, untyped]) -> AutoScalingGroup::Collection
@@ -362,7 +381,7 @@ module Aws
                     {
                       name: ::String?,
                       values: Array[::String]?
-                    },
+                    }
                   ]
                 ) -> Tag::Collection
               | (?Hash[Symbol, untyped]) -> Tag::Collection

@@ -95,8 +95,8 @@ module Aws::MQ
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::MQ
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::MQ
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::MQ
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::MQ
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::MQ
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::MQ
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::MQ
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -560,6 +564,9 @@ module Aws::MQ
     #
     # @option params [Array<String>] :security_groups
     #
+    # @option params [Integer] :storage_size
+    #   The broker's storage size in GB.
+    #
     # @option params [String] :storage_type
     #   The broker's storage type.
     #
@@ -569,7 +576,7 @@ module Aws::MQ
     #
     # @option params [Hash<String,String>] :tags
     #
-    # @option params [required, Array<Types::User>] :users
+    # @option params [Array<Types::User>] :users
     #
     # @option params [String] :data_replication_mode
     #   Specifies whether a broker is a part of a data replication pair.
@@ -584,7 +591,7 @@ module Aws::MQ
     # @example Request syntax with placeholder values
     #
     #   resp = client.create_broker({
-    #     authentication_strategy: "SIMPLE", # accepts SIMPLE, LDAP
+    #     authentication_strategy: "SIMPLE", # accepts SIMPLE, LDAP, CONFIG_MANAGED
     #     auto_minor_version_upgrade: false,
     #     broker_name: "__string", # required
     #     configuration: {
@@ -624,12 +631,13 @@ module Aws::MQ
     #     },
     #     publicly_accessible: false, # required
     #     security_groups: ["__string"],
+    #     storage_size: 1,
     #     storage_type: "EBS", # accepts EBS, EFS
     #     subnet_ids: ["__string"],
     #     tags: {
     #       "__string" => "__string",
     #     },
-    #     users: [ # required
+    #     users: [
     #       {
     #         console_access: false,
     #         groups: ["__string"],
@@ -685,7 +693,7 @@ module Aws::MQ
     # @example Request syntax with placeholder values
     #
     #   resp = client.create_configuration({
-    #     authentication_strategy: "SIMPLE", # accepts SIMPLE, LDAP
+    #     authentication_strategy: "SIMPLE", # accepts SIMPLE, LDAP, CONFIG_MANAGED
     #     engine_type: "ACTIVEMQ", # required, accepts ACTIVEMQ, RABBITMQ
     #     engine_version: "__string",
     #     name: "__string", # required
@@ -697,7 +705,7 @@ module Aws::MQ
     # @example Response structure
     #
     #   resp.arn #=> String
-    #   resp.authentication_strategy #=> String, one of "SIMPLE", "LDAP"
+    #   resp.authentication_strategy #=> String, one of "SIMPLE", "LDAP", "CONFIG_MANAGED"
     #   resp.created #=> Time
     #   resp.id #=> String
     #   resp.latest_revision.created #=> Time
@@ -809,6 +817,33 @@ module Aws::MQ
       req.send_request(options)
     end
 
+    # Deletes the specified configuration.
+    #
+    # @option params [required, String] :configuration_id
+    #
+    # @return [Types::DeleteConfigurationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DeleteConfigurationResponse#configuration_id #configuration_id} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_configuration({
+    #     configuration_id: "__string", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.configuration_id #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mq-2017-11-27/DeleteConfiguration AWS API Documentation
+    #
+    # @overload delete_configuration(params = {})
+    # @param [Hash] params ({})
+    def delete_configuration(params = {}, options = {})
+      req = build_request(:delete_configuration, params)
+      req.send_request(options)
+    end
+
     # Removes a tag from a resource.
     #
     # @option params [required, String] :resource_arn
@@ -886,8 +921,10 @@ module Aws::MQ
     #   * {Types::DescribeBrokerResponse#pending_host_instance_type #pending_host_instance_type} => String
     #   * {Types::DescribeBrokerResponse#pending_ldap_server_metadata #pending_ldap_server_metadata} => Types::LdapServerMetadataOutput
     #   * {Types::DescribeBrokerResponse#pending_security_groups #pending_security_groups} => Array&lt;String&gt;
+    #   * {Types::DescribeBrokerResponse#pending_storage_size #pending_storage_size} => Integer
     #   * {Types::DescribeBrokerResponse#publicly_accessible #publicly_accessible} => Boolean
     #   * {Types::DescribeBrokerResponse#security_groups #security_groups} => Array&lt;String&gt;
+    #   * {Types::DescribeBrokerResponse#storage_size #storage_size} => Integer
     #   * {Types::DescribeBrokerResponse#storage_type #storage_type} => String
     #   * {Types::DescribeBrokerResponse#subnet_ids #subnet_ids} => Array&lt;String&gt;
     #   * {Types::DescribeBrokerResponse#tags #tags} => Hash&lt;String,String&gt;
@@ -908,7 +945,7 @@ module Aws::MQ
     #   resp.actions_required #=> Array
     #   resp.actions_required[0].action_required_code #=> String
     #   resp.actions_required[0].action_required_info #=> String
-    #   resp.authentication_strategy #=> String, one of "SIMPLE", "LDAP"
+    #   resp.authentication_strategy #=> String, one of "SIMPLE", "LDAP", "CONFIG_MANAGED"
     #   resp.auto_minor_version_upgrade #=> Boolean
     #   resp.broker_arn #=> String
     #   resp.broker_id #=> String
@@ -953,7 +990,7 @@ module Aws::MQ
     #   resp.maintenance_window_start_time.day_of_week #=> String, one of "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"
     #   resp.maintenance_window_start_time.time_of_day #=> String
     #   resp.maintenance_window_start_time.time_zone #=> String
-    #   resp.pending_authentication_strategy #=> String, one of "SIMPLE", "LDAP"
+    #   resp.pending_authentication_strategy #=> String, one of "SIMPLE", "LDAP", "CONFIG_MANAGED"
     #   resp.pending_engine_version #=> String
     #   resp.pending_host_instance_type #=> String
     #   resp.pending_ldap_server_metadata.hosts #=> Array
@@ -969,9 +1006,11 @@ module Aws::MQ
     #   resp.pending_ldap_server_metadata.user_search_subtree #=> Boolean
     #   resp.pending_security_groups #=> Array
     #   resp.pending_security_groups[0] #=> String
+    #   resp.pending_storage_size #=> Integer
     #   resp.publicly_accessible #=> Boolean
     #   resp.security_groups #=> Array
     #   resp.security_groups[0] #=> String
+    #   resp.storage_size #=> Integer
     #   resp.storage_type #=> String, one of "EBS", "EFS"
     #   resp.subnet_ids #=> Array
     #   resp.subnet_ids[0] #=> String
@@ -1116,7 +1155,7 @@ module Aws::MQ
     # @example Response structure
     #
     #   resp.arn #=> String
-    #   resp.authentication_strategy #=> String, one of "SIMPLE", "LDAP"
+    #   resp.authentication_strategy #=> String, one of "SIMPLE", "LDAP", "CONFIG_MANAGED"
     #   resp.created #=> Time
     #   resp.description #=> String
     #   resp.engine_type #=> String, one of "ACTIVEMQ", "RABBITMQ"
@@ -1172,6 +1211,52 @@ module Aws::MQ
     # @param [Hash] params ({})
     def describe_configuration_revision(params = {}, options = {})
       req = build_request(:describe_configuration_revision, params)
+      req.send_request(options)
+    end
+
+    # Returns the resources shared to a broker.
+    #
+    # @option params [required, String] :broker_id
+    #
+    # @option params [Integer] :max_results
+    #
+    # @option params [String] :next_token
+    #
+    # @return [Types::DescribeSharedResourcesResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DescribeSharedResourcesResponse#next_token #next_token} => String
+    #   * {Types::DescribeSharedResourcesResponse#shared_resources #shared_resources} => Array&lt;Types::SharedResource&gt;
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.describe_shared_resources({
+    #     broker_id: "__string", # required
+    #     max_results: 1,
+    #     next_token: "__string",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.next_token #=> String
+    #   resp.shared_resources #=> Array
+    #   resp.shared_resources[0].dns_names #=> Array
+    #   resp.shared_resources[0].dns_names[0] #=> String
+    #   resp.shared_resources[0].error.code #=> String, one of "QUOTA_EXCEEDED", "SHARE_NOT_FOUND", "INVITE_FAILED", "SETUP_INCOMPLETE", "INTERNAL_ERROR", "AZ_MISMATCH", "RESOURCE_CONFIGURATION_NOT_FOUND"
+    #   resp.shared_resources[0].error.message #=> String
+    #   resp.shared_resources[0].resource_arn #=> String
+    #   resp.shared_resources[0].resource_share_arns #=> Array
+    #   resp.shared_resources[0].resource_share_arns[0] #=> String
+    #   resp.shared_resources[0].status #=> String, one of "AVAILABLE", "SETUP_IN_PROGRESS", "DELETION_IN_PROGRESS", "PENDING_CREATE", "PENDING_DELETE", "ERROR"
+    #   resp.shared_resources[0].type #=> String, one of "RESOURCE_SHARE", "RESOURCE"
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mq-2017-11-27/DescribeSharedResources AWS API Documentation
+    #
+    # @overload describe_shared_resources(params = {})
+    # @param [Hash] params ({})
+    def describe_shared_resources(params = {}, options = {})
+      req = build_request(:describe_shared_resources, params)
       req.send_request(options)
     end
 
@@ -1326,7 +1411,7 @@ module Aws::MQ
     #
     #   resp.configurations #=> Array
     #   resp.configurations[0].arn #=> String
-    #   resp.configurations[0].authentication_strategy #=> String, one of "SIMPLE", "LDAP"
+    #   resp.configurations[0].authentication_strategy #=> String, one of "SIMPLE", "LDAP", "CONFIG_MANAGED"
     #   resp.configurations[0].created #=> Time
     #   resp.configurations[0].description #=> String
     #   resp.configurations[0].engine_type #=> String, one of "ACTIVEMQ", "RABBITMQ"
@@ -1502,7 +1587,12 @@ module Aws::MQ
     #   The scheduled time period relative to UTC during which Amazon MQ
     #   begins to apply pending updates or patches to the broker.
     #
+    # @option params [Array<String>] :resource_share_arns
+    #
     # @option params [Array<String>] :security_groups
+    #
+    # @option params [Integer] :storage_size
+    #   The broker's storage size in GB.
     #
     # @option params [String] :data_replication_mode
     #   Specifies whether a broker is a part of a data replication pair.
@@ -1518,16 +1608,18 @@ module Aws::MQ
     #   * {Types::UpdateBrokerResponse#ldap_server_metadata #ldap_server_metadata} => Types::LdapServerMetadataOutput
     #   * {Types::UpdateBrokerResponse#logs #logs} => Types::Logs
     #   * {Types::UpdateBrokerResponse#maintenance_window_start_time #maintenance_window_start_time} => Types::WeeklyStartTime
+    #   * {Types::UpdateBrokerResponse#resource_share_arns #resource_share_arns} => Array&lt;String&gt;
     #   * {Types::UpdateBrokerResponse#security_groups #security_groups} => Array&lt;String&gt;
     #   * {Types::UpdateBrokerResponse#data_replication_metadata #data_replication_metadata} => Types::DataReplicationMetadataOutput
     #   * {Types::UpdateBrokerResponse#data_replication_mode #data_replication_mode} => String
     #   * {Types::UpdateBrokerResponse#pending_data_replication_metadata #pending_data_replication_metadata} => Types::DataReplicationMetadataOutput
     #   * {Types::UpdateBrokerResponse#pending_data_replication_mode #pending_data_replication_mode} => String
+    #   * {Types::UpdateBrokerResponse#storage_size #storage_size} => Integer
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_broker({
-    #     authentication_strategy: "SIMPLE", # accepts SIMPLE, LDAP
+    #     authentication_strategy: "SIMPLE", # accepts SIMPLE, LDAP, CONFIG_MANAGED
     #     auto_minor_version_upgrade: false,
     #     broker_id: "__string", # required
     #     configuration: {
@@ -1558,13 +1650,15 @@ module Aws::MQ
     #       time_of_day: "__string", # required
     #       time_zone: "__string",
     #     },
+    #     resource_share_arns: ["__string"],
     #     security_groups: ["__string"],
+    #     storage_size: 1,
     #     data_replication_mode: "NONE", # accepts NONE, CRDR
     #   })
     #
     # @example Response structure
     #
-    #   resp.authentication_strategy #=> String, one of "SIMPLE", "LDAP"
+    #   resp.authentication_strategy #=> String, one of "SIMPLE", "LDAP", "CONFIG_MANAGED"
     #   resp.auto_minor_version_upgrade #=> Boolean
     #   resp.broker_id #=> String
     #   resp.configuration.id #=> String
@@ -1587,6 +1681,8 @@ module Aws::MQ
     #   resp.maintenance_window_start_time.day_of_week #=> String, one of "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"
     #   resp.maintenance_window_start_time.time_of_day #=> String
     #   resp.maintenance_window_start_time.time_zone #=> String
+    #   resp.resource_share_arns #=> Array
+    #   resp.resource_share_arns[0] #=> String
     #   resp.security_groups #=> Array
     #   resp.security_groups[0] #=> String
     #   resp.data_replication_metadata.data_replication_counterpart.broker_id #=> String
@@ -1597,6 +1693,7 @@ module Aws::MQ
     #   resp.pending_data_replication_metadata.data_replication_counterpart.region #=> String
     #   resp.pending_data_replication_metadata.data_replication_role #=> String
     #   resp.pending_data_replication_mode #=> String, one of "NONE", "CRDR"
+    #   resp.storage_size #=> Integer
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mq-2017-11-27/UpdateBroker AWS API Documentation
     #
@@ -1709,7 +1806,7 @@ module Aws::MQ
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-mq'
-      context[:gem_version] = '1.77.0'
+      context[:gem_version] = '1.100.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

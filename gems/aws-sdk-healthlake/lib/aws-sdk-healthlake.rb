@@ -23,7 +23,7 @@ Aws::Plugins::GlobalConfiguration.add_identifier(:healthlake)
 # structure.
 #
 #     health_lake = Aws::HealthLake::Client.new
-#     resp = health_lake.create_fhir_datastore(params)
+#     resp = health_lake.create_data_transformation_profile(params)
 #
 # See {Client} for more information.
 #
@@ -49,12 +49,13 @@ module Aws::HealthLake
   end
   autoload :Client, 'aws-sdk-healthlake/client'
   autoload :Errors, 'aws-sdk-healthlake/errors'
+  autoload :Waiters, 'aws-sdk-healthlake/waiters'
   autoload :Resource, 'aws-sdk-healthlake/resource'
   autoload :EndpointParameters, 'aws-sdk-healthlake/endpoint_parameters'
   autoload :EndpointProvider, 'aws-sdk-healthlake/endpoint_provider'
   autoload :Endpoints, 'aws-sdk-healthlake/endpoints'
 
-  GEM_VERSION = '1.45.0'
+  GEM_VERSION = '1.69.0'
 
 end
 

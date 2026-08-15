@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -195,7 +196,7 @@ module Aws
                                               {
                                                 snapshot_identifier: ::String,
                                                 snapshot_cluster_identifier: ::String?
-                                              },
+                                              }
                                             ]
                                           ) -> _BatchDeleteClusterSnapshotsResponseSuccess
                                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _BatchDeleteClusterSnapshotsResponseSuccess
@@ -296,7 +297,7 @@ module Aws
                               {
                                 key: ::String?,
                                 value: ::String?
-                              },
+                              }
                             ],
                             ?kms_key_id: ::String,
                             ?enhanced_vpc_routing: bool,
@@ -312,7 +313,9 @@ module Aws
                             ?master_password_secret_kms_key_id: ::String,
                             ?ip_address_type: ::String,
                             ?multi_az: bool,
-                            ?redshift_idc_application_arn: ::String
+                            ?redshift_idc_application_arn: ::String,
+                            ?catalog_name: ::String,
+                            ?extra_compute_for_automatic_optimization: bool
                           ) -> _CreateClusterResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateClusterResponseSuccess
 
@@ -329,7 +332,7 @@ module Aws
                                               {
                                                 key: ::String?,
                                                 value: ::String?
-                                              },
+                                              }
                                             ]
                                           ) -> _CreateClusterParameterGroupResponseSuccess
                                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateClusterParameterGroupResponseSuccess
@@ -346,7 +349,7 @@ module Aws
                                              {
                                                key: ::String?,
                                                value: ::String?
-                                             },
+                                             }
                                            ]
                                          ) -> _CreateClusterSecurityGroupResponseSuccess
                                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateClusterSecurityGroupResponseSuccess
@@ -364,7 +367,7 @@ module Aws
                                        {
                                          key: ::String?,
                                          value: ::String?
-                                       },
+                                       }
                                      ]
                                    ) -> _CreateClusterSnapshotResponseSuccess
                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateClusterSnapshotResponseSuccess
@@ -382,7 +385,7 @@ module Aws
                                            {
                                              key: ::String?,
                                              value: ::String?
-                                           },
+                                           }
                                          ]
                                        ) -> _CreateClusterSubnetGroupResponseSuccess
                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateClusterSubnetGroupResponseSuccess
@@ -442,7 +445,7 @@ module Aws
                                          {
                                            key: ::String?,
                                            value: ::String?
-                                         },
+                                         }
                                        ]
                                      ) -> _CreateEventSubscriptionResponseSuccess
                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateEventSubscriptionResponseSuccess
@@ -458,7 +461,7 @@ module Aws
                                              {
                                                key: ::String?,
                                                value: ::String?
-                                             },
+                                             }
                                            ]
                                          ) -> _CreateHsmClientCertificateResponseSuccess
                                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateHsmClientCertificateResponseSuccess
@@ -479,7 +482,7 @@ module Aws
                                         {
                                           key: ::String?,
                                           value: ::String?
-                                        },
+                                        }
                                       ]
                                     ) -> _CreateHsmConfigurationResponseSuccess
                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateHsmConfigurationResponseSuccess
@@ -508,12 +511,30 @@ module Aws
                                   {
                                     key: ::String?,
                                     value: ::String?
-                                  },
+                                  }
                                 ],
                                 ?additional_encryption_context: Hash[::String, ::String],
                                 ?description: ::String
                               ) -> _CreateIntegrationResponseSuccess
                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateIntegrationResponseSuccess
+
+      interface _CreateQev2IdcApplicationResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateQev2IdcApplicationResult]
+        def qev_2_idc_application: () -> Types::Qev2IdcApplication
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Redshift/Client.html#create_qev_2_idc_application-instance_method
+      def create_qev_2_idc_application: (
+                                          idc_instance_arn: ::String,
+                                          qev_2_idc_application_name: ::String,
+                                          idc_display_name: ::String,
+                                          ?tags: Array[
+                                            {
+                                              key: ::String?,
+                                              value: ::String?
+                                            }
+                                          ]
+                                        ) -> _CreateQev2IdcApplicationResponseSuccess
+                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateQev2IdcApplicationResponseSuccess
 
       interface _CreateRedshiftIdcApplicationResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::CreateRedshiftIdcApplicationResult]
@@ -530,26 +551,19 @@ module Aws
                                                {
                                                  trusted_token_issuer_arn: ::String?,
                                                  authorized_audiences_list: Array[::String]?
-                                               },
+                                               }
                                              ],
                                              ?service_integrations: Array[
+                                               Params::service_integrations_union
+                                             ],
+                                             ?application_type: ("None" | "Lakehouse"),
+                                             ?tags: Array[
                                                {
-                                                 lake_formation: Array[
-                                                   {
-                                                     lake_formation_query: {
-                                                       authorization: ("Enabled" | "Disabled")
-                                                     }?
-                                                   },
-                                                 ]?,
-                                                 s3_access_grants: Array[
-                                                   {
-                                                     read_write_access: {
-                                                       authorization: ("Enabled" | "Disabled")
-                                                     }?
-                                                   },
-                                                 ]?
-                                               },
-                                             ]
+                                                 key: ::String?,
+                                                 value: ::String?
+                                               }
+                                             ],
+                                             ?sso_tag_keys: Array[::String]
                                            ) -> _CreateRedshiftIdcApplicationResponseSuccess
                                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateRedshiftIdcApplicationResponseSuccess
 
@@ -568,23 +582,7 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Redshift/Client.html#create_scheduled_action-instance_method
       def create_scheduled_action: (
                                      scheduled_action_name: ::String,
-                                     target_action: {
-                                       resize_cluster: {
-                                         cluster_identifier: ::String,
-                                         cluster_type: ::String?,
-                                         node_type: ::String?,
-                                         number_of_nodes: ::Integer?,
-                                         classic: bool?,
-                                         reserved_node_id: ::String?,
-                                         target_reserved_node_offering_id: ::String?
-                                       }?,
-                                       pause_cluster: {
-                                         cluster_identifier: ::String
-                                       }?,
-                                       resume_cluster: {
-                                         cluster_identifier: ::String
-                                       }?
-                                     },
+                                     target_action: Params::scheduled_action_type,
                                      schedule: ::String,
                                      iam_role: ::String,
                                      ?scheduled_action_description: ::String,
@@ -606,7 +604,7 @@ module Aws
                                           {
                                             key: ::String?,
                                             value: ::String?
-                                          },
+                                          }
                                         ]
                                       ) -> _CreateSnapshotCopyGrantResponseSuccess
                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateSnapshotCopyGrantResponseSuccess
@@ -630,7 +628,7 @@ module Aws
                                         {
                                           key: ::String?,
                                           value: ::String?
-                                        },
+                                        }
                                       ],
                                       ?dry_run: bool,
                                       ?next_invocations: ::Integer
@@ -644,7 +642,7 @@ module Aws
                            {
                              key: ::String?,
                              value: ::String?
-                           },
+                           }
                          ]
                        ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
@@ -653,7 +651,7 @@ module Aws
         include ::Seahorse::Client::_ResponseSuccess[Types::UsageLimit]
         def usage_limit_id: () -> ::String
         def cluster_identifier: () -> ::String
-        def feature_type: () -> ("spectrum" | "concurrency-scaling" | "cross-region-datasharing")
+        def feature_type: () -> ("spectrum" | "concurrency-scaling" | "cross-region-datasharing" | "extra-compute-for-automatic-optimization")
         def limit_type: () -> ("time" | "data-scanned")
         def amount: () -> ::Integer
         def period: () -> ("daily" | "weekly" | "monthly")
@@ -663,7 +661,7 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Redshift/Client.html#create_usage_limit-instance_method
       def create_usage_limit: (
                                 cluster_identifier: ::String,
-                                feature_type: ("spectrum" | "concurrency-scaling" | "cross-region-datasharing"),
+                                feature_type: ("spectrum" | "concurrency-scaling" | "cross-region-datasharing" | "extra-compute-for-automatic-optimization"),
                                 limit_type: ("time" | "data-scanned"),
                                 amount: ::Integer,
                                 ?period: ("daily" | "weekly" | "monthly"),
@@ -672,7 +670,7 @@ module Aws
                                   {
                                     key: ::String?,
                                     value: ::String?
-                                  },
+                                  }
                                 ]
                               ) -> _CreateUsageLimitResponseSuccess
                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateUsageLimitResponseSuccess
@@ -823,6 +821,12 @@ module Aws
                           ) -> _DeletePartnerResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeletePartnerResponseSuccess
 
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Redshift/Client.html#delete_qev_2_idc_application-instance_method
+      def delete_qev_2_idc_application: (
+                                          qev_2_idc_application_arn: ::String
+                                        ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Redshift/Client.html#delete_redshift_idc_application-instance_method
       def delete_redshift_idc_application: (
                                              redshift_idc_application_arn: ::String
@@ -872,15 +876,7 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Redshift/Client.html#deregister_namespace-instance_method
       def deregister_namespace: (
-                                  namespace_identifier: {
-                                    serverless_identifier: {
-                                      namespace_identifier: ::String,
-                                      workgroup_identifier: ::String
-                                    }?,
-                                    provisioned_identifier: {
-                                      cluster_identifier: ::String
-                                    }?
-                                  },
+                                  namespace_identifier: Params::namespace_identifier_union,
                                   consumer_identifiers: Array[::String]
                                 ) -> _DeregisterNamespaceResponseSuccess
                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeregisterNamespaceResponseSuccess
@@ -985,7 +981,7 @@ module Aws
                                           {
                                             attribute: ("SOURCE_TYPE" | "TOTAL_SIZE" | "CREATE_TIME"),
                                             sort_order: ("ASC" | "DESC")?
-                                          },
+                                          }
                                         ]
                                       ) -> _DescribeClusterSnapshotsResponseSuccess
                                     | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeClusterSnapshotsResponseSuccess
@@ -1245,7 +1241,7 @@ module Aws
                                      {
                                        name: ("integration-arn" | "source-arn" | "source-types" | "status"),
                                        values: Array[::String]
-                                     },
+                                     }
                                    ]
                                  ) -> _DescribeIntegrationsResponseSuccess
                                | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeIntegrationsResponseSuccess
@@ -1284,7 +1280,7 @@ module Aws
                                                      name: ("NodeType" | "NumberOfNodes" | "EstimatedDiskUtilizationPercent" | "Mode")?,
                                                      operator: ("eq" | "lt" | "gt" | "le" | "ge" | "in" | "between")?,
                                                      values: Array[::String]?
-                                                   },
+                                                   }
                                                  ],
                                                  ?marker: ::String,
                                                  ?max_records: ::Integer
@@ -1317,6 +1313,19 @@ module Aws
                                ?partner_name: ::String
                              ) -> _DescribePartnersResponseSuccess
                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribePartnersResponseSuccess
+
+      interface _DescribeQev2IdcApplicationsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DescribeQev2IdcApplicationsResult]
+        def qev_2_idc_applications: () -> ::Array[Types::Qev2IdcApplication]
+        def marker: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Redshift/Client.html#describe_qev_2_idc_applications-instance_method
+      def describe_qev_2_idc_applications: (
+                                             ?qev_2_idc_application_arn: ::String,
+                                             ?max_records: ::Integer,
+                                             ?marker: ::String
+                                           ) -> _DescribeQev2IdcApplicationsResponseSuccess
+                                         | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeQev2IdcApplicationsResponseSuccess
 
       interface _DescribeRedshiftIdcApplicationsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DescribeRedshiftIdcApplicationsResult]
@@ -1412,7 +1421,7 @@ module Aws
                                           {
                                             name: ("cluster-identifier" | "iam-role"),
                                             values: Array[::String]
-                                          },
+                                          }
                                         ],
                                         ?marker: ::String,
                                         ?max_records: ::Integer
@@ -1498,7 +1507,7 @@ module Aws
       def describe_usage_limits: (
                                    ?usage_limit_id: ::String,
                                    ?cluster_identifier: ::String,
-                                   ?feature_type: ("spectrum" | "concurrency-scaling" | "cross-region-datasharing"),
+                                   ?feature_type: ("spectrum" | "concurrency-scaling" | "cross-region-datasharing" | "extra-compute-for-automatic-optimization"),
                                    ?max_records: ::Integer,
                                    ?marker: ::String,
                                    ?tag_keys: Array[::String],
@@ -1630,6 +1639,17 @@ module Aws
                                             ) -> _GetClusterCredentialsWithIAMResponseSuccess
                                           | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetClusterCredentialsWithIAMResponseSuccess
 
+      interface _GetIdentityCenterAuthTokenResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetIdentityCenterAuthTokenResponse]
+        def token: () -> ::String
+        def expiration_time: () -> ::Time
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Redshift/Client.html#get_identity_center_auth_token-instance_method
+      def get_identity_center_auth_token: (
+                                            cluster_ids: Array[::String]
+                                          ) -> _GetIdentityCenterAuthTokenResponseSuccess
+                                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetIdentityCenterAuthTokenResponseSuccess
+
       interface _GetReservedNodeExchangeConfigurationOptionsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetReservedNodeExchangeConfigurationOptionsOutputMessage]
         def marker: () -> ::String
@@ -1739,7 +1759,8 @@ module Aws
                             ?manage_master_password: bool,
                             ?master_password_secret_kms_key_id: ::String,
                             ?ip_address_type: ::String,
-                            ?multi_az: bool
+                            ?multi_az: bool,
+                            ?extra_compute_for_automatic_optimization: bool
                           ) -> _ModifyClusterResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ModifyClusterResponseSuccess
 
@@ -1791,17 +1812,7 @@ module Aws
       def modify_cluster_parameter_group: (
                                             parameter_group_name: ::String,
                                             parameters: Array[
-                                              {
-                                                parameter_name: ::String?,
-                                                parameter_value: ::String?,
-                                                description: ::String?,
-                                                source: ::String?,
-                                                data_type: ::String?,
-                                                allowed_values: ::String?,
-                                                apply_type: ("static" | "dynamic")?,
-                                                is_modifiable: bool?,
-                                                minimum_engine_version: ::String?
-                                              },
+                                              Params::parameter
                                             ]
                                           ) -> _ModifyClusterParameterGroupResponseSuccess
                                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ModifyClusterParameterGroupResponseSuccess
@@ -1911,6 +1922,35 @@ module Aws
                               ) -> _ModifyIntegrationResponseSuccess
                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ModifyIntegrationResponseSuccess
 
+      interface _ModifyLakehouseConfigurationResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::LakehouseConfiguration]
+        def cluster_identifier: () -> ::String
+        def lakehouse_idc_application_arn: () -> ::String
+        def lakehouse_registration_status: () -> ::String
+        def catalog_arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Redshift/Client.html#modify_lakehouse_configuration-instance_method
+      def modify_lakehouse_configuration: (
+                                            cluster_identifier: ::String,
+                                            ?lakehouse_registration: ("Register" | "Deregister"),
+                                            ?catalog_name: ::String,
+                                            ?lakehouse_idc_registration: ("Associate" | "Disassociate"),
+                                            ?lakehouse_idc_application_arn: ::String,
+                                            ?dry_run: bool
+                                          ) -> _ModifyLakehouseConfigurationResponseSuccess
+                                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ModifyLakehouseConfigurationResponseSuccess
+
+      interface _ModifyQev2IdcApplicationResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ModifyQev2IdcApplicationResult]
+        def qev_2_idc_application: () -> Types::Qev2IdcApplication
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Redshift/Client.html#modify_qev_2_idc_application-instance_method
+      def modify_qev_2_idc_application: (
+                                          qev_2_idc_application_arn: ::String,
+                                          ?idc_display_name: ::String
+                                        ) -> _ModifyQev2IdcApplicationResponseSuccess
+                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ModifyQev2IdcApplicationResponseSuccess
+
       interface _ModifyRedshiftIdcApplicationResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ModifyRedshiftIdcApplicationResult]
         def redshift_idc_application: () -> Types::RedshiftIdcApplication
@@ -1925,25 +1965,10 @@ module Aws
                                                {
                                                  trusted_token_issuer_arn: ::String?,
                                                  authorized_audiences_list: Array[::String]?
-                                               },
+                                               }
                                              ],
                                              ?service_integrations: Array[
-                                               {
-                                                 lake_formation: Array[
-                                                   {
-                                                     lake_formation_query: {
-                                                       authorization: ("Enabled" | "Disabled")
-                                                     }?
-                                                   },
-                                                 ]?,
-                                                 s3_access_grants: Array[
-                                                   {
-                                                     read_write_access: {
-                                                       authorization: ("Enabled" | "Disabled")
-                                                     }?
-                                                   },
-                                                 ]?
-                                               },
+                                               Params::service_integrations_union
                                              ]
                                            ) -> _ModifyRedshiftIdcApplicationResponseSuccess
                                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ModifyRedshiftIdcApplicationResponseSuccess
@@ -1963,23 +1988,7 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Redshift/Client.html#modify_scheduled_action-instance_method
       def modify_scheduled_action: (
                                      scheduled_action_name: ::String,
-                                     ?target_action: {
-                                       resize_cluster: {
-                                         cluster_identifier: ::String,
-                                         cluster_type: ::String?,
-                                         node_type: ::String?,
-                                         number_of_nodes: ::Integer?,
-                                         classic: bool?,
-                                         reserved_node_id: ::String?,
-                                         target_reserved_node_offering_id: ::String?
-                                       }?,
-                                       pause_cluster: {
-                                         cluster_identifier: ::String
-                                       }?,
-                                       resume_cluster: {
-                                         cluster_identifier: ::String
-                                       }?
-                                     },
+                                     ?target_action: Params::scheduled_action_type,
                                      ?schedule: ::String,
                                      ?iam_role: ::String,
                                      ?scheduled_action_description: ::String,
@@ -2022,7 +2031,7 @@ module Aws
         include ::Seahorse::Client::_ResponseSuccess[Types::UsageLimit]
         def usage_limit_id: () -> ::String
         def cluster_identifier: () -> ::String
-        def feature_type: () -> ("spectrum" | "concurrency-scaling" | "cross-region-datasharing")
+        def feature_type: () -> ("spectrum" | "concurrency-scaling" | "cross-region-datasharing" | "extra-compute-for-automatic-optimization")
         def limit_type: () -> ("time" | "data-scanned")
         def amount: () -> ::Integer
         def period: () -> ("daily" | "weekly" | "monthly")
@@ -2085,15 +2094,7 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Redshift/Client.html#register_namespace-instance_method
       def register_namespace: (
-                                namespace_identifier: {
-                                  serverless_identifier: {
-                                    namespace_identifier: ::String,
-                                    workgroup_identifier: ::String
-                                  }?,
-                                  provisioned_identifier: {
-                                    cluster_identifier: ::String
-                                  }?
-                                },
+                                namespace_identifier: Params::namespace_identifier_union,
                                 consumer_identifiers: Array[::String]
                               ) -> _RegisterNamespaceResponseSuccess
                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _RegisterNamespaceResponseSuccess
@@ -2123,17 +2124,7 @@ module Aws
                                            parameter_group_name: ::String,
                                            ?reset_all_parameters: bool,
                                            ?parameters: Array[
-                                             {
-                                               parameter_name: ::String?,
-                                               parameter_value: ::String?,
-                                               description: ::String?,
-                                               source: ::String?,
-                                               data_type: ::String?,
-                                               allowed_values: ::String?,
-                                               apply_type: ("static" | "dynamic")?,
-                                               is_modifiable: bool?,
-                                               minimum_engine_version: ::String?
-                                             },
+                                             Params::parameter
                                            ]
                                          ) -> _ResetClusterParameterGroupResponseSuccess
                                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ResetClusterParameterGroupResponseSuccess
@@ -2196,7 +2187,9 @@ module Aws
                                            ?manage_master_password: bool,
                                            ?master_password_secret_kms_key_id: ::String,
                                            ?ip_address_type: ::String,
-                                           ?multi_az: bool
+                                           ?multi_az: bool,
+                                           ?catalog_name: ::String,
+                                           ?redshift_idc_application_arn: ::String
                                          ) -> _RestoreFromClusterSnapshotResponseSuccess
                                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _RestoreFromClusterSnapshotResponseSuccess
 
@@ -2343,7 +2336,7 @@ module Aws
                       {
                         attribute: ("SOURCE_TYPE" | "TOTAL_SIZE" | "CREATE_TIME"),
                         sort_order: ("ASC" | "DESC")?
-                      },
+                      }
                     ]
                   ) -> Client::_DescribeClusterSnapshotsResponseSuccess
                     | (:snapshot_available waiter_name, ?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> Client::_DescribeClusterSnapshotsResponseSuccess

@@ -18,15 +18,18 @@ module Aws::MarketplaceMetering
     BatchMeterUsageRequest = Shapes::StructureShape.new(name: 'BatchMeterUsageRequest')
     BatchMeterUsageResult = Shapes::StructureShape.new(name: 'BatchMeterUsageResult')
     Boolean = Shapes::BooleanShape.new(name: 'Boolean')
+    ClientToken = Shapes::StringShape.new(name: 'ClientToken')
     CustomerAWSAccountId = Shapes::StringShape.new(name: 'CustomerAWSAccountId')
     CustomerIdentifier = Shapes::StringShape.new(name: 'CustomerIdentifier')
     CustomerNotEntitledException = Shapes::StructureShape.new(name: 'CustomerNotEntitledException')
     DisabledApiException = Shapes::StructureShape.new(name: 'DisabledApiException')
     DuplicateRequestException = Shapes::StructureShape.new(name: 'DuplicateRequestException')
     ExpiredTokenException = Shapes::StructureShape.new(name: 'ExpiredTokenException')
+    IdempotencyConflictException = Shapes::StructureShape.new(name: 'IdempotencyConflictException')
     InternalServiceErrorException = Shapes::StructureShape.new(name: 'InternalServiceErrorException')
     InvalidCustomerIdentifierException = Shapes::StructureShape.new(name: 'InvalidCustomerIdentifierException')
     InvalidEndpointRegionException = Shapes::StructureShape.new(name: 'InvalidEndpointRegionException')
+    InvalidLicenseException = Shapes::StructureShape.new(name: 'InvalidLicenseException')
     InvalidProductCodeException = Shapes::StructureShape.new(name: 'InvalidProductCodeException')
     InvalidPublicKeyVersionException = Shapes::StructureShape.new(name: 'InvalidPublicKeyVersionException')
     InvalidRegionException = Shapes::StructureShape.new(name: 'InvalidRegionException')
@@ -34,6 +37,7 @@ module Aws::MarketplaceMetering
     InvalidTokenException = Shapes::StructureShape.new(name: 'InvalidTokenException')
     InvalidUsageAllocationsException = Shapes::StructureShape.new(name: 'InvalidUsageAllocationsException')
     InvalidUsageDimensionException = Shapes::StructureShape.new(name: 'InvalidUsageDimensionException')
+    LicenseArn = Shapes::StringShape.new(name: 'LicenseArn')
     MeterUsageRequest = Shapes::StructureShape.new(name: 'MeterUsageRequest')
     MeterUsageResult = Shapes::StructureShape.new(name: 'MeterUsageResult')
     NonEmptyString = Shapes::StringShape.new(name: 'NonEmptyString')
@@ -65,7 +69,7 @@ module Aws::MarketplaceMetering
     errorMessage = Shapes::StringShape.new(name: 'errorMessage')
 
     BatchMeterUsageRequest.add_member(:usage_records, Shapes::ShapeRef.new(shape: UsageRecordList, required: true, location_name: "UsageRecords"))
-    BatchMeterUsageRequest.add_member(:product_code, Shapes::ShapeRef.new(shape: ProductCode, required: true, location_name: "ProductCode"))
+    BatchMeterUsageRequest.add_member(:product_code, Shapes::ShapeRef.new(shape: ProductCode, location_name: "ProductCode"))
     BatchMeterUsageRequest.struct_class = Types::BatchMeterUsageRequest
 
     BatchMeterUsageResult.add_member(:results, Shapes::ShapeRef.new(shape: UsageRecordResultList, location_name: "Results"))
@@ -84,6 +88,9 @@ module Aws::MarketplaceMetering
     ExpiredTokenException.add_member(:message, Shapes::ShapeRef.new(shape: errorMessage, location_name: "message"))
     ExpiredTokenException.struct_class = Types::ExpiredTokenException
 
+    IdempotencyConflictException.add_member(:message, Shapes::ShapeRef.new(shape: errorMessage, location_name: "message"))
+    IdempotencyConflictException.struct_class = Types::IdempotencyConflictException
+
     InternalServiceErrorException.add_member(:message, Shapes::ShapeRef.new(shape: errorMessage, location_name: "message"))
     InternalServiceErrorException.struct_class = Types::InternalServiceErrorException
 
@@ -92,6 +99,9 @@ module Aws::MarketplaceMetering
 
     InvalidEndpointRegionException.add_member(:message, Shapes::ShapeRef.new(shape: errorMessage, location_name: "message"))
     InvalidEndpointRegionException.struct_class = Types::InvalidEndpointRegionException
+
+    InvalidLicenseException.add_member(:message, Shapes::ShapeRef.new(shape: errorMessage, location_name: "message"))
+    InvalidLicenseException.struct_class = Types::InvalidLicenseException
 
     InvalidProductCodeException.add_member(:message, Shapes::ShapeRef.new(shape: errorMessage, location_name: "message"))
     InvalidProductCodeException.struct_class = Types::InvalidProductCodeException
@@ -120,6 +130,7 @@ module Aws::MarketplaceMetering
     MeterUsageRequest.add_member(:usage_quantity, Shapes::ShapeRef.new(shape: UsageQuantity, location_name: "UsageQuantity"))
     MeterUsageRequest.add_member(:dry_run, Shapes::ShapeRef.new(shape: Boolean, location_name: "DryRun"))
     MeterUsageRequest.add_member(:usage_allocations, Shapes::ShapeRef.new(shape: UsageAllocations, location_name: "UsageAllocations"))
+    MeterUsageRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "ClientToken", metadata: {"idempotencyToken" => true}))
     MeterUsageRequest.struct_class = Types::MeterUsageRequest
 
     MeterUsageResult.add_member(:metering_record_id, Shapes::ShapeRef.new(shape: String, location_name: "MeteringRecordId"))
@@ -143,6 +154,7 @@ module Aws::MarketplaceMetering
     ResolveCustomerResult.add_member(:customer_identifier, Shapes::ShapeRef.new(shape: CustomerIdentifier, location_name: "CustomerIdentifier"))
     ResolveCustomerResult.add_member(:product_code, Shapes::ShapeRef.new(shape: ProductCode, location_name: "ProductCode"))
     ResolveCustomerResult.add_member(:customer_aws_account_id, Shapes::ShapeRef.new(shape: CustomerAWSAccountId, location_name: "CustomerAWSAccountId"))
+    ResolveCustomerResult.add_member(:license_arn, Shapes::ShapeRef.new(shape: LicenseArn, location_name: "LicenseArn"))
     ResolveCustomerResult.struct_class = Types::ResolveCustomerResult
 
     Tag.add_member(:key, Shapes::ShapeRef.new(shape: TagKey, required: true, location_name: "Key"))
@@ -164,10 +176,12 @@ module Aws::MarketplaceMetering
     UsageAllocations.member = Shapes::ShapeRef.new(shape: UsageAllocation)
 
     UsageRecord.add_member(:timestamp, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "Timestamp"))
-    UsageRecord.add_member(:customer_identifier, Shapes::ShapeRef.new(shape: CustomerIdentifier, required: true, location_name: "CustomerIdentifier"))
+    UsageRecord.add_member(:customer_identifier, Shapes::ShapeRef.new(shape: CustomerIdentifier, location_name: "CustomerIdentifier"))
     UsageRecord.add_member(:dimension, Shapes::ShapeRef.new(shape: UsageDimension, required: true, location_name: "Dimension"))
     UsageRecord.add_member(:quantity, Shapes::ShapeRef.new(shape: UsageQuantity, location_name: "Quantity"))
     UsageRecord.add_member(:usage_allocations, Shapes::ShapeRef.new(shape: UsageAllocations, location_name: "UsageAllocations"))
+    UsageRecord.add_member(:customer_aws_account_id, Shapes::ShapeRef.new(shape: CustomerAWSAccountId, location_name: "CustomerAWSAccountId"))
+    UsageRecord.add_member(:license_arn, Shapes::ShapeRef.new(shape: LicenseArn, location_name: "LicenseArn"))
     UsageRecord.struct_class = Types::UsageRecord
 
     UsageRecordList.member = Shapes::ShapeRef.new(shape: UsageRecord)
@@ -215,6 +229,7 @@ module Aws::MarketplaceMetering
         o.errors << Shapes::ShapeRef.new(shape: TimestampOutOfBoundsException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: DisabledApiException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidLicenseException)
       end)
 
       api.add_operation(:meter_usage, Seahorse::Model::Operation.new.tap do |o|
@@ -231,6 +246,7 @@ module Aws::MarketplaceMetering
         o.errors << Shapes::ShapeRef.new(shape: InvalidEndpointRegionException)
         o.errors << Shapes::ShapeRef.new(shape: TimestampOutOfBoundsException)
         o.errors << Shapes::ShapeRef.new(shape: DuplicateRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: IdempotencyConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: CustomerNotEntitledException)
       end)

@@ -95,8 +95,8 @@ module Aws::MainframeModernization
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::MainframeModernization
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::MainframeModernization
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::MainframeModernization
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::MainframeModernization
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::MainframeModernization
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::MainframeModernization
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::MainframeModernization
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -575,6 +579,65 @@ module Aws::MainframeModernization
     # @param [Hash] params ({})
     def create_application(params = {}, options = {})
       req = build_request(:create_application, params)
+      req.send_request(options)
+    end
+
+    # Starts a data set export task for a specific application.
+    #
+    # @option params [required, String] :application_id
+    #   The unique identifier of the application for which you want to export
+    #   data sets.
+    #
+    # @option params [String] :client_token
+    #   Unique, case-sensitive identifier you provide to ensure the
+    #   idempotency of the request to create a data set export. The service
+    #   generates the clientToken when the API call is triggered. The token
+    #   expires after one hour, so if you retry the API within this timeframe
+    #   with the same clientToken, you will get the same response. The service
+    #   also handles deleting the clientToken after it expires.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
+    #
+    # @option params [required, Types::DataSetExportConfig] :export_config
+    #   The data set export task configuration.
+    #
+    # @option params [String] :kms_key_id
+    #   The identifier of a customer managed key.
+    #
+    # @return [Types::CreateDataSetExportTaskResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreateDataSetExportTaskResponse#task_id #task_id} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_data_set_export_task({
+    #     application_id: "Identifier", # required
+    #     client_token: "ClientToken",
+    #     export_config: { # required
+    #       data_sets: [
+    #         {
+    #           dataset_name: "String200", # required
+    #           external_location: { # required
+    #             s3_location: "String2000",
+    #           },
+    #         },
+    #       ],
+    #       s3_location: "String",
+    #     },
+    #     kms_key_id: "KMSKeyId",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.task_id #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/m2-2021-04-28/CreateDataSetExportTask AWS API Documentation
+    #
+    # @overload create_data_set_export_task(params = {})
+    # @param [Hash] params ({})
+    def create_data_set_export_task(params = {}, options = {})
+      req = build_request(:create_data_set_export_task, params)
       req.send_request(options)
     end
 
@@ -1082,6 +1145,8 @@ module Aws::MainframeModernization
     #   resp.batch_job_identifier.restart_batch_job_identifier.execution_id #=> String
     #   resp.batch_job_identifier.restart_batch_job_identifier.job_step_restart_marker.from_proc_step #=> String
     #   resp.batch_job_identifier.restart_batch_job_identifier.job_step_restart_marker.from_step #=> String
+    #   resp.batch_job_identifier.restart_batch_job_identifier.job_step_restart_marker.skip #=> Boolean
+    #   resp.batch_job_identifier.restart_batch_job_identifier.job_step_restart_marker.step_checkpoint #=> Integer
     #   resp.batch_job_identifier.restart_batch_job_identifier.job_step_restart_marker.to_proc_step #=> String
     #   resp.batch_job_identifier.restart_batch_job_identifier.job_step_restart_marker.to_step #=> String
     #   resp.batch_job_identifier.s3_batch_job_identifier.bucket #=> String
@@ -1095,6 +1160,8 @@ module Aws::MainframeModernization
     #   resp.job_name #=> String
     #   resp.job_step_restart_marker.from_proc_step #=> String
     #   resp.job_step_restart_marker.from_step #=> String
+    #   resp.job_step_restart_marker.skip #=> Boolean
+    #   resp.job_step_restart_marker.step_checkpoint #=> Integer
     #   resp.job_step_restart_marker.to_proc_step #=> String
     #   resp.job_step_restart_marker.to_step #=> String
     #   resp.job_type #=> String, one of "VSE", "JES2", "JES3"
@@ -1176,6 +1243,51 @@ module Aws::MainframeModernization
     # @param [Hash] params ({})
     def get_data_set_details(params = {}, options = {})
       req = build_request(:get_data_set_details, params)
+      req.send_request(options)
+    end
+
+    # Gets the status of a data set import task initiated with the
+    # CreateDataSetExportTask operation.
+    #
+    # @option params [required, String] :application_id
+    #   The application identifier.
+    #
+    # @option params [required, String] :task_id
+    #   The task identifier returned by the CreateDataSetExportTask operation.
+    #
+    # @return [Types::GetDataSetExportTaskResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetDataSetExportTaskResponse#kms_key_arn #kms_key_arn} => String
+    #   * {Types::GetDataSetExportTaskResponse#status #status} => String
+    #   * {Types::GetDataSetExportTaskResponse#status_reason #status_reason} => String
+    #   * {Types::GetDataSetExportTaskResponse#summary #summary} => Types::DataSetExportSummary
+    #   * {Types::GetDataSetExportTaskResponse#task_id #task_id} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_data_set_export_task({
+    #     application_id: "Identifier", # required
+    #     task_id: "Identifier", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.kms_key_arn #=> String
+    #   resp.status #=> String, one of "Creating", "Running", "Completed", "Failed"
+    #   resp.status_reason #=> String
+    #   resp.summary.failed #=> Integer
+    #   resp.summary.in_progress #=> Integer
+    #   resp.summary.pending #=> Integer
+    #   resp.summary.succeeded #=> Integer
+    #   resp.summary.total #=> Integer
+    #   resp.task_id #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/m2-2021-04-28/GetDataSetExportTask AWS API Documentation
+    #
+    # @overload get_data_set_export_task(params = {})
+    # @param [Hash] params ({})
+    def get_data_set_export_task(params = {}, options = {})
+      req = build_request(:get_data_set_export_task, params)
       req.send_request(options)
     end
 
@@ -1583,6 +1695,8 @@ module Aws::MainframeModernization
     #   resp.batch_job_executions[0].batch_job_identifier.restart_batch_job_identifier.execution_id #=> String
     #   resp.batch_job_executions[0].batch_job_identifier.restart_batch_job_identifier.job_step_restart_marker.from_proc_step #=> String
     #   resp.batch_job_executions[0].batch_job_identifier.restart_batch_job_identifier.job_step_restart_marker.from_step #=> String
+    #   resp.batch_job_executions[0].batch_job_identifier.restart_batch_job_identifier.job_step_restart_marker.skip #=> Boolean
+    #   resp.batch_job_executions[0].batch_job_identifier.restart_batch_job_identifier.job_step_restart_marker.step_checkpoint #=> Integer
     #   resp.batch_job_executions[0].batch_job_identifier.restart_batch_job_identifier.job_step_restart_marker.to_proc_step #=> String
     #   resp.batch_job_executions[0].batch_job_identifier.restart_batch_job_identifier.job_step_restart_marker.to_step #=> String
     #   resp.batch_job_executions[0].batch_job_identifier.s3_batch_job_identifier.bucket #=> String
@@ -1640,6 +1754,9 @@ module Aws::MainframeModernization
     #   resp.batch_job_steps #=> Array
     #   resp.batch_job_steps[0].proc_step_name #=> String
     #   resp.batch_job_steps[0].proc_step_number #=> Integer
+    #   resp.batch_job_steps[0].step_checkpoint #=> Integer
+    #   resp.batch_job_steps[0].step_checkpoint_status #=> String
+    #   resp.batch_job_steps[0].step_checkpoint_time #=> Time
     #   resp.batch_job_steps[0].step_cond_code #=> String
     #   resp.batch_job_steps[0].step_name #=> String
     #   resp.batch_job_steps[0].step_number #=> Integer
@@ -1651,6 +1768,56 @@ module Aws::MainframeModernization
     # @param [Hash] params ({})
     def list_batch_job_restart_points(params = {}, options = {})
       req = build_request(:list_batch_job_restart_points, params)
+      req.send_request(options)
+    end
+
+    # Lists the data set exports for the specified application.
+    #
+    # @option params [required, String] :application_id
+    #   The unique identifier of the application.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of objects to return.
+    #
+    # @option params [String] :next_token
+    #   A pagination token returned from a previous call to this operation.
+    #   This specifies the next item to return. To return to the beginning of
+    #   the list, exclude this parameter.
+    #
+    # @return [Types::ListDataSetExportHistoryResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListDataSetExportHistoryResponse#data_set_export_tasks #data_set_export_tasks} => Array&lt;Types::DataSetExportTask&gt;
+    #   * {Types::ListDataSetExportHistoryResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_data_set_export_history({
+    #     application_id: "Identifier", # required
+    #     max_results: 1,
+    #     next_token: "NextToken",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.data_set_export_tasks #=> Array
+    #   resp.data_set_export_tasks[0].status #=> String, one of "Creating", "Running", "Completed", "Failed"
+    #   resp.data_set_export_tasks[0].status_reason #=> String
+    #   resp.data_set_export_tasks[0].summary.failed #=> Integer
+    #   resp.data_set_export_tasks[0].summary.in_progress #=> Integer
+    #   resp.data_set_export_tasks[0].summary.pending #=> Integer
+    #   resp.data_set_export_tasks[0].summary.succeeded #=> Integer
+    #   resp.data_set_export_tasks[0].summary.total #=> Integer
+    #   resp.data_set_export_tasks[0].task_id #=> String
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/m2-2021-04-28/ListDataSetExportHistory AWS API Documentation
+    #
+    # @overload list_data_set_export_history(params = {})
+    # @param [Hash] params ({})
+    def list_data_set_export_history(params = {}, options = {})
+      req = build_request(:list_data_set_export_history, params)
       req.send_request(options)
     end
 
@@ -2017,6 +2184,8 @@ module Aws::MainframeModernization
     #         job_step_restart_marker: { # required
     #           from_proc_step: "String",
     #           from_step: "String", # required
+    #           skip: false,
+    #           step_checkpoint: 1,
     #           to_proc_step: "String",
     #           to_step: "String",
     #         },
@@ -2271,7 +2440,7 @@ module Aws::MainframeModernization
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-mainframemodernization'
-      context[:gem_version] = '1.34.0'
+      context[:gem_version] = '1.54.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

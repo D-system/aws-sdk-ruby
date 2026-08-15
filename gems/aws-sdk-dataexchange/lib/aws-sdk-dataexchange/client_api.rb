@@ -23,6 +23,7 @@ module Aws::DataExchange
     ApiDescription = Shapes::StringShape.new(name: 'ApiDescription')
     ApiGatewayApiAsset = Shapes::StructureShape.new(name: 'ApiGatewayApiAsset')
     Arn = Shapes::StringShape.new(name: 'Arn')
+    AssetConfiguration = Shapes::StructureShape.new(name: 'AssetConfiguration')
     AssetDestinationEntry = Shapes::StructureShape.new(name: 'AssetDestinationEntry')
     AssetDetails = Shapes::StructureShape.new(name: 'AssetDetails')
     AssetEntry = Shapes::StructureShape.new(name: 'AssetEntry')
@@ -153,6 +154,7 @@ module Aws::DataExchange
     ListOfS3DataAccesses = Shapes::ListShape.new(name: 'ListOfS3DataAccesses')
     ListOfSchemaChangeDetails = Shapes::ListShape.new(name: 'ListOfSchemaChangeDetails')
     ListOfTableTagPolicyLFPermissions = Shapes::ListShape.new(name: 'ListOfTableTagPolicyLFPermissions')
+    ListOfTag = Shapes::ListShape.new(name: 'ListOfTag')
     ListOf__string = Shapes::ListShape.new(name: 'ListOf__string')
     ListReceivedDataGrantsRequest = Shapes::StructureShape.new(name: 'ListReceivedDataGrantsRequest')
     ListReceivedDataGrantsResponse = Shapes::StructureShape.new(name: 'ListReceivedDataGrantsResponse')
@@ -206,6 +208,7 @@ module Aws::DataExchange
     TableLFTagPolicy = Shapes::StructureShape.new(name: 'TableLFTagPolicy')
     TableLFTagPolicyAndPermissions = Shapes::StructureShape.new(name: 'TableLFTagPolicyAndPermissions')
     TableTagPolicyLFPermission = Shapes::StringShape.new(name: 'TableTagPolicyLFPermission')
+    Tag = Shapes::StructureShape.new(name: 'Tag')
     TagResourceRequest = Shapes::StructureShape.new(name: 'TagResourceRequest')
     ThrottlingException = Shapes::StructureShape.new(name: 'ThrottlingException')
     Timestamp = Shapes::TimestampShape.new(name: 'Timestamp', timestampFormat: "iso8601")
@@ -266,6 +269,9 @@ module Aws::DataExchange
     ApiGatewayApiAsset.add_member(:stage, Shapes::ShapeRef.new(shape: __string, location_name: "Stage"))
     ApiGatewayApiAsset.struct_class = Types::ApiGatewayApiAsset
 
+    AssetConfiguration.add_member(:tags, Shapes::ShapeRef.new(shape: ListOfTag, location_name: "Tags"))
+    AssetConfiguration.struct_class = Types::AssetConfiguration
+
     AssetDestinationEntry.add_member(:asset_id, Shapes::ShapeRef.new(shape: Id, required: true, location_name: "AssetId"))
     AssetDestinationEntry.add_member(:bucket, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "Bucket"))
     AssetDestinationEntry.add_member(:key, Shapes::ShapeRef.new(shape: __string, location_name: "Key"))
@@ -302,7 +308,7 @@ module Aws::DataExchange
     AutoExportRevisionToS3RequestDetails.add_member(:revision_destination, Shapes::ShapeRef.new(shape: AutoExportRevisionDestinationEntry, required: true, location_name: "RevisionDestination"))
     AutoExportRevisionToS3RequestDetails.struct_class = Types::AutoExportRevisionToS3RequestDetails
 
-    CancelJobRequest.add_member(:job_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "JobId"))
+    CancelJobRequest.add_member(:job_id, Shapes::ShapeRef.new(shape: Id, required: true, location: "uri", location_name: "JobId"))
     CancelJobRequest.struct_class = Types::CancelJobRequest
 
     ConflictException.add_member(:message, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "Message"))
@@ -357,6 +363,7 @@ module Aws::DataExchange
 
     CreateEventActionRequest.add_member(:action, Shapes::ShapeRef.new(shape: Action, required: true, location_name: "Action"))
     CreateEventActionRequest.add_member(:event, Shapes::ShapeRef.new(shape: Event, required: true, location_name: "Event"))
+    CreateEventActionRequest.add_member(:tags, Shapes::ShapeRef.new(shape: MapOf__string, location_name: "Tags"))
     CreateEventActionRequest.struct_class = Types::CreateEventActionRequest
 
     CreateEventActionResponse.add_member(:action, Shapes::ShapeRef.new(shape: Action, location_name: "Action"))
@@ -364,14 +371,17 @@ module Aws::DataExchange
     CreateEventActionResponse.add_member(:created_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "CreatedAt"))
     CreateEventActionResponse.add_member(:event, Shapes::ShapeRef.new(shape: Event, location_name: "Event"))
     CreateEventActionResponse.add_member(:id, Shapes::ShapeRef.new(shape: Id, location_name: "Id"))
+    CreateEventActionResponse.add_member(:tags, Shapes::ShapeRef.new(shape: MapOf__string, location_name: "Tags"))
     CreateEventActionResponse.add_member(:updated_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "UpdatedAt"))
     CreateEventActionResponse.struct_class = Types::CreateEventActionResponse
 
+    CreateJobRequest.add_member(:asset_configuration, Shapes::ShapeRef.new(shape: AssetConfiguration, location_name: "AssetConfiguration"))
     CreateJobRequest.add_member(:details, Shapes::ShapeRef.new(shape: RequestDetails, required: true, location_name: "Details"))
     CreateJobRequest.add_member(:type, Shapes::ShapeRef.new(shape: Type, required: true, location_name: "Type"))
     CreateJobRequest.struct_class = Types::CreateJobRequest
 
     CreateJobResponse.add_member(:arn, Shapes::ShapeRef.new(shape: Arn, location_name: "Arn"))
+    CreateJobResponse.add_member(:asset_configuration, Shapes::ShapeRef.new(shape: AssetConfiguration, location_name: "AssetConfiguration"))
     CreateJobResponse.add_member(:created_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "CreatedAt"))
     CreateJobResponse.add_member(:details, Shapes::ShapeRef.new(shape: ResponseDetails, location_name: "Details"))
     CreateJobResponse.add_member(:errors, Shapes::ShapeRef.new(shape: ListOfJobError, location_name: "Errors"))
@@ -382,7 +392,7 @@ module Aws::DataExchange
     CreateJobResponse.struct_class = Types::CreateJobResponse
 
     CreateRevisionRequest.add_member(:comment, Shapes::ShapeRef.new(shape: __stringMin0Max16384, location_name: "Comment"))
-    CreateRevisionRequest.add_member(:data_set_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "DataSetId"))
+    CreateRevisionRequest.add_member(:data_set_id, Shapes::ShapeRef.new(shape: Id, required: true, location: "uri", location_name: "DataSetId"))
     CreateRevisionRequest.add_member(:tags, Shapes::ShapeRef.new(shape: MapOf__string, location_name: "Tags"))
     CreateRevisionRequest.struct_class = Types::CreateRevisionRequest
 
@@ -446,22 +456,22 @@ module Aws::DataExchange
     DatabaseLFTagPolicyAndPermissions.add_member(:permissions, Shapes::ShapeRef.new(shape: ListOfDatabaseLFTagPolicyPermissions, required: true, location_name: "Permissions"))
     DatabaseLFTagPolicyAndPermissions.struct_class = Types::DatabaseLFTagPolicyAndPermissions
 
-    DeleteAssetRequest.add_member(:asset_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "AssetId"))
-    DeleteAssetRequest.add_member(:data_set_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "DataSetId"))
-    DeleteAssetRequest.add_member(:revision_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "RevisionId"))
+    DeleteAssetRequest.add_member(:asset_id, Shapes::ShapeRef.new(shape: Id, required: true, location: "uri", location_name: "AssetId"))
+    DeleteAssetRequest.add_member(:data_set_id, Shapes::ShapeRef.new(shape: Id, required: true, location: "uri", location_name: "DataSetId"))
+    DeleteAssetRequest.add_member(:revision_id, Shapes::ShapeRef.new(shape: Id, required: true, location: "uri", location_name: "RevisionId"))
     DeleteAssetRequest.struct_class = Types::DeleteAssetRequest
 
     DeleteDataGrantRequest.add_member(:data_grant_id, Shapes::ShapeRef.new(shape: DataGrantId, required: true, location: "uri", location_name: "DataGrantId"))
     DeleteDataGrantRequest.struct_class = Types::DeleteDataGrantRequest
 
-    DeleteDataSetRequest.add_member(:data_set_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "DataSetId"))
+    DeleteDataSetRequest.add_member(:data_set_id, Shapes::ShapeRef.new(shape: Id, required: true, location: "uri", location_name: "DataSetId"))
     DeleteDataSetRequest.struct_class = Types::DeleteDataSetRequest
 
     DeleteEventActionRequest.add_member(:event_action_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "EventActionId"))
     DeleteEventActionRequest.struct_class = Types::DeleteEventActionRequest
 
-    DeleteRevisionRequest.add_member(:data_set_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "DataSetId"))
-    DeleteRevisionRequest.add_member(:revision_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "RevisionId"))
+    DeleteRevisionRequest.add_member(:data_set_id, Shapes::ShapeRef.new(shape: Id, required: true, location: "uri", location_name: "DataSetId"))
+    DeleteRevisionRequest.add_member(:revision_id, Shapes::ShapeRef.new(shape: Id, required: true, location: "uri", location_name: "RevisionId"))
     DeleteRevisionRequest.struct_class = Types::DeleteRevisionRequest
 
     DeprecationRequestDetails.add_member(:deprecation_at, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "DeprecationAt"))
@@ -521,9 +531,9 @@ module Aws::DataExchange
     ExportServerSideEncryption.add_member(:type, Shapes::ShapeRef.new(shape: ServerSideEncryptionTypes, required: true, location_name: "Type"))
     ExportServerSideEncryption.struct_class = Types::ExportServerSideEncryption
 
-    GetAssetRequest.add_member(:asset_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "AssetId"))
-    GetAssetRequest.add_member(:data_set_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "DataSetId"))
-    GetAssetRequest.add_member(:revision_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "RevisionId"))
+    GetAssetRequest.add_member(:asset_id, Shapes::ShapeRef.new(shape: Id, required: true, location: "uri", location_name: "AssetId"))
+    GetAssetRequest.add_member(:data_set_id, Shapes::ShapeRef.new(shape: Id, required: true, location: "uri", location_name: "DataSetId"))
+    GetAssetRequest.add_member(:revision_id, Shapes::ShapeRef.new(shape: Id, required: true, location: "uri", location_name: "RevisionId"))
     GetAssetRequest.struct_class = Types::GetAssetRequest
 
     GetAssetResponse.add_member(:arn, Shapes::ShapeRef.new(shape: Arn, location_name: "Arn"))
@@ -535,6 +545,7 @@ module Aws::DataExchange
     GetAssetResponse.add_member(:name, Shapes::ShapeRef.new(shape: AssetName, location_name: "Name"))
     GetAssetResponse.add_member(:revision_id, Shapes::ShapeRef.new(shape: Id, location_name: "RevisionId"))
     GetAssetResponse.add_member(:source_id, Shapes::ShapeRef.new(shape: Id, location_name: "SourceId"))
+    GetAssetResponse.add_member(:tags, Shapes::ShapeRef.new(shape: MapOf__string, location_name: "Tags"))
     GetAssetResponse.add_member(:updated_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "UpdatedAt"))
     GetAssetResponse.struct_class = Types::GetAssetResponse
 
@@ -558,7 +569,7 @@ module Aws::DataExchange
     GetDataGrantResponse.add_member(:tags, Shapes::ShapeRef.new(shape: MapOf__string, location_name: "Tags"))
     GetDataGrantResponse.struct_class = Types::GetDataGrantResponse
 
-    GetDataSetRequest.add_member(:data_set_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "DataSetId"))
+    GetDataSetRequest.add_member(:data_set_id, Shapes::ShapeRef.new(shape: Id, required: true, location: "uri", location_name: "DataSetId"))
     GetDataSetRequest.struct_class = Types::GetDataSetRequest
 
     GetDataSetResponse.add_member(:arn, Shapes::ShapeRef.new(shape: Arn, location_name: "Arn"))
@@ -582,13 +593,15 @@ module Aws::DataExchange
     GetEventActionResponse.add_member(:created_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "CreatedAt"))
     GetEventActionResponse.add_member(:event, Shapes::ShapeRef.new(shape: Event, location_name: "Event"))
     GetEventActionResponse.add_member(:id, Shapes::ShapeRef.new(shape: Id, location_name: "Id"))
+    GetEventActionResponse.add_member(:tags, Shapes::ShapeRef.new(shape: MapOf__string, location_name: "Tags"))
     GetEventActionResponse.add_member(:updated_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "UpdatedAt"))
     GetEventActionResponse.struct_class = Types::GetEventActionResponse
 
-    GetJobRequest.add_member(:job_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "JobId"))
+    GetJobRequest.add_member(:job_id, Shapes::ShapeRef.new(shape: Id, required: true, location: "uri", location_name: "JobId"))
     GetJobRequest.struct_class = Types::GetJobRequest
 
     GetJobResponse.add_member(:arn, Shapes::ShapeRef.new(shape: Arn, location_name: "Arn"))
+    GetJobResponse.add_member(:asset_configuration, Shapes::ShapeRef.new(shape: AssetConfiguration, location_name: "AssetConfiguration"))
     GetJobResponse.add_member(:created_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "CreatedAt"))
     GetJobResponse.add_member(:details, Shapes::ShapeRef.new(shape: ResponseDetails, location_name: "Details"))
     GetJobResponse.add_member(:errors, Shapes::ShapeRef.new(shape: ListOfJobError, location_name: "Errors"))
@@ -616,8 +629,8 @@ module Aws::DataExchange
     GetReceivedDataGrantResponse.add_member(:updated_at, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "UpdatedAt"))
     GetReceivedDataGrantResponse.struct_class = Types::GetReceivedDataGrantResponse
 
-    GetRevisionRequest.add_member(:data_set_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "DataSetId"))
-    GetRevisionRequest.add_member(:revision_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "RevisionId"))
+    GetRevisionRequest.add_member(:data_set_id, Shapes::ShapeRef.new(shape: Id, required: true, location: "uri", location_name: "DataSetId"))
+    GetRevisionRequest.add_member(:revision_id, Shapes::ShapeRef.new(shape: Id, required: true, location: "uri", location_name: "RevisionId"))
     GetRevisionRequest.struct_class = Types::GetRevisionRequest
 
     GetRevisionResponse.add_member(:arn, Shapes::ShapeRef.new(shape: Arn, location_name: "Arn"))
@@ -715,6 +728,7 @@ module Aws::DataExchange
     InternalServerException.struct_class = Types::InternalServerException
 
     JobEntry.add_member(:arn, Shapes::ShapeRef.new(shape: Arn, required: true, location_name: "Arn"))
+    JobEntry.add_member(:asset_configuration, Shapes::ShapeRef.new(shape: AssetConfiguration, location_name: "AssetConfiguration"))
     JobEntry.add_member(:created_at, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "CreatedAt"))
     JobEntry.add_member(:details, Shapes::ShapeRef.new(shape: ResponseDetails, required: true, location_name: "Details"))
     JobEntry.add_member(:errors, Shapes::ShapeRef.new(shape: ListOfJobError, location_name: "Errors"))
@@ -762,7 +776,7 @@ module Aws::DataExchange
     LakeFormationTagPolicyDetails.add_member(:table, Shapes::ShapeRef.new(shape: __string, location_name: "Table"))
     LakeFormationTagPolicyDetails.struct_class = Types::LakeFormationTagPolicyDetails
 
-    ListDataGrantsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults", metadata: {"box"=>true}))
+    ListDataGrantsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults", metadata: {"box" => true}))
     ListDataGrantsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: __string, location: "querystring", location_name: "nextToken"))
     ListDataGrantsRequest.struct_class = Types::ListDataGrantsRequest
 
@@ -770,7 +784,7 @@ module Aws::DataExchange
     ListDataGrantsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "NextToken"))
     ListDataGrantsResponse.struct_class = Types::ListDataGrantsResponse
 
-    ListDataSetRevisionsRequest.add_member(:data_set_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "DataSetId"))
+    ListDataSetRevisionsRequest.add_member(:data_set_id, Shapes::ShapeRef.new(shape: Id, required: true, location: "uri", location_name: "DataSetId"))
     ListDataSetRevisionsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
     ListDataSetRevisionsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: __string, location: "querystring", location_name: "nextToken"))
     ListDataSetRevisionsRequest.struct_class = Types::ListDataSetRevisionsRequest
@@ -851,9 +865,11 @@ module Aws::DataExchange
 
     ListOfTableTagPolicyLFPermissions.member = Shapes::ShapeRef.new(shape: TableTagPolicyLFPermission)
 
+    ListOfTag.member = Shapes::ShapeRef.new(shape: Tag)
+
     ListOf__string.member = Shapes::ShapeRef.new(shape: __string)
 
-    ListReceivedDataGrantsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults", metadata: {"box"=>true}))
+    ListReceivedDataGrantsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults", metadata: {"box" => true}))
     ListReceivedDataGrantsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: __string, location: "querystring", location_name: "nextToken"))
     ListReceivedDataGrantsRequest.add_member(:acceptance_state, Shapes::ShapeRef.new(shape: AcceptanceStateFilterValues, location: "querystring", location_name: "acceptanceState"))
     ListReceivedDataGrantsRequest.struct_class = Types::ListReceivedDataGrantsRequest
@@ -862,10 +878,10 @@ module Aws::DataExchange
     ListReceivedDataGrantsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "NextToken"))
     ListReceivedDataGrantsResponse.struct_class = Types::ListReceivedDataGrantsResponse
 
-    ListRevisionAssetsRequest.add_member(:data_set_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "DataSetId"))
+    ListRevisionAssetsRequest.add_member(:data_set_id, Shapes::ShapeRef.new(shape: Id, required: true, location: "uri", location_name: "DataSetId"))
     ListRevisionAssetsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
     ListRevisionAssetsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: __string, location: "querystring", location_name: "nextToken"))
-    ListRevisionAssetsRequest.add_member(:revision_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "RevisionId"))
+    ListRevisionAssetsRequest.add_member(:revision_id, Shapes::ShapeRef.new(shape: Id, required: true, location: "uri", location_name: "RevisionId"))
     ListRevisionAssetsRequest.struct_class = Types::ListRevisionAssetsRequest
 
     ListRevisionAssetsResponse.add_member(:assets, Shapes::ShapeRef.new(shape: ListOfAssetEntry, location_name: "Assets"))
@@ -965,8 +981,8 @@ module Aws::DataExchange
     RevisionPublished.add_member(:data_set_id, Shapes::ShapeRef.new(shape: Id, required: true, location_name: "DataSetId"))
     RevisionPublished.struct_class = Types::RevisionPublished
 
-    RevokeRevisionRequest.add_member(:data_set_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "DataSetId"))
-    RevokeRevisionRequest.add_member(:revision_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "RevisionId"))
+    RevokeRevisionRequest.add_member(:data_set_id, Shapes::ShapeRef.new(shape: Id, required: true, location: "uri", location_name: "DataSetId"))
+    RevokeRevisionRequest.add_member(:revision_id, Shapes::ShapeRef.new(shape: Id, required: true, location: "uri", location_name: "RevisionId"))
     RevokeRevisionRequest.add_member(:revocation_comment, Shapes::ShapeRef.new(shape: __stringMin10Max512, required: true, location_name: "RevocationComment"))
     RevokeRevisionRequest.struct_class = Types::RevokeRevisionRequest
 
@@ -1037,9 +1053,9 @@ module Aws::DataExchange
     SendApiAssetResponse[:payload_member] = SendApiAssetResponse.member(:body)
 
     SendDataSetNotificationRequest.add_member(:scope, Shapes::ShapeRef.new(shape: ScopeDetails, location_name: "Scope"))
-    SendDataSetNotificationRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "ClientToken", metadata: {"idempotencyToken"=>true}))
+    SendDataSetNotificationRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "ClientToken", metadata: {"idempotencyToken" => true}))
     SendDataSetNotificationRequest.add_member(:comment, Shapes::ShapeRef.new(shape: __stringMin0Max4096, location_name: "Comment"))
-    SendDataSetNotificationRequest.add_member(:data_set_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "DataSetId"))
+    SendDataSetNotificationRequest.add_member(:data_set_id, Shapes::ShapeRef.new(shape: Id, required: true, location: "uri", location_name: "DataSetId"))
     SendDataSetNotificationRequest.add_member(:details, Shapes::ShapeRef.new(shape: NotificationDetails, location_name: "Details"))
     SendDataSetNotificationRequest.add_member(:type, Shapes::ShapeRef.new(shape: NotificationType, required: true, location_name: "Type"))
     SendDataSetNotificationRequest.struct_class = Types::SendDataSetNotificationRequest
@@ -1051,7 +1067,7 @@ module Aws::DataExchange
     ServiceLimitExceededException.add_member(:message, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "Message"))
     ServiceLimitExceededException.struct_class = Types::ServiceLimitExceededException
 
-    StartJobRequest.add_member(:job_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "JobId"))
+    StartJobRequest.add_member(:job_id, Shapes::ShapeRef.new(shape: Id, required: true, location: "uri", location_name: "JobId"))
     StartJobRequest.struct_class = Types::StartJobRequest
 
     StartJobResponse.struct_class = Types::StartJobResponse
@@ -1062,6 +1078,10 @@ module Aws::DataExchange
     TableLFTagPolicyAndPermissions.add_member(:expression, Shapes::ShapeRef.new(shape: ListOfLFTags, required: true, location_name: "Expression"))
     TableLFTagPolicyAndPermissions.add_member(:permissions, Shapes::ShapeRef.new(shape: ListOfTableTagPolicyLFPermissions, required: true, location_name: "Permissions"))
     TableLFTagPolicyAndPermissions.struct_class = Types::TableLFTagPolicyAndPermissions
+
+    Tag.add_member(:key, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "Key"))
+    Tag.add_member(:value, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "Value"))
+    Tag.struct_class = Types::Tag
 
     TagResourceRequest.add_member(:resource_arn, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "ResourceArn"))
     TagResourceRequest.add_member(:tags, Shapes::ShapeRef.new(shape: MapOf__string, required: true, location_name: "tags"))
@@ -1074,10 +1094,10 @@ module Aws::DataExchange
     UntagResourceRequest.add_member(:tag_keys, Shapes::ShapeRef.new(shape: ListOf__string, required: true, location: "querystring", location_name: "tagKeys"))
     UntagResourceRequest.struct_class = Types::UntagResourceRequest
 
-    UpdateAssetRequest.add_member(:asset_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "AssetId"))
-    UpdateAssetRequest.add_member(:data_set_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "DataSetId"))
+    UpdateAssetRequest.add_member(:asset_id, Shapes::ShapeRef.new(shape: Id, required: true, location: "uri", location_name: "AssetId"))
+    UpdateAssetRequest.add_member(:data_set_id, Shapes::ShapeRef.new(shape: Id, required: true, location: "uri", location_name: "DataSetId"))
     UpdateAssetRequest.add_member(:name, Shapes::ShapeRef.new(shape: AssetName, required: true, location_name: "Name"))
-    UpdateAssetRequest.add_member(:revision_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "RevisionId"))
+    UpdateAssetRequest.add_member(:revision_id, Shapes::ShapeRef.new(shape: Id, required: true, location: "uri", location_name: "RevisionId"))
     UpdateAssetRequest.struct_class = Types::UpdateAssetRequest
 
     UpdateAssetResponse.add_member(:arn, Shapes::ShapeRef.new(shape: Arn, location_name: "Arn"))
@@ -1092,7 +1112,7 @@ module Aws::DataExchange
     UpdateAssetResponse.add_member(:updated_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "UpdatedAt"))
     UpdateAssetResponse.struct_class = Types::UpdateAssetResponse
 
-    UpdateDataSetRequest.add_member(:data_set_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "DataSetId"))
+    UpdateDataSetRequest.add_member(:data_set_id, Shapes::ShapeRef.new(shape: Id, required: true, location: "uri", location_name: "DataSetId"))
     UpdateDataSetRequest.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "Description"))
     UpdateDataSetRequest.add_member(:name, Shapes::ShapeRef.new(shape: Name, location_name: "Name"))
     UpdateDataSetRequest.struct_class = Types::UpdateDataSetRequest
@@ -1122,9 +1142,9 @@ module Aws::DataExchange
     UpdateEventActionResponse.struct_class = Types::UpdateEventActionResponse
 
     UpdateRevisionRequest.add_member(:comment, Shapes::ShapeRef.new(shape: __stringMin0Max16384, location_name: "Comment"))
-    UpdateRevisionRequest.add_member(:data_set_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "DataSetId"))
+    UpdateRevisionRequest.add_member(:data_set_id, Shapes::ShapeRef.new(shape: Id, required: true, location: "uri", location_name: "DataSetId"))
     UpdateRevisionRequest.add_member(:finalized, Shapes::ShapeRef.new(shape: __boolean, location_name: "Finalized"))
-    UpdateRevisionRequest.add_member(:revision_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "RevisionId"))
+    UpdateRevisionRequest.add_member(:revision_id, Shapes::ShapeRef.new(shape: Id, required: true, location: "uri", location_name: "RevisionId"))
     UpdateRevisionRequest.struct_class = Types::UpdateRevisionRequest
 
     UpdateRevisionResponse.add_member(:arn, Shapes::ShapeRef.new(shape: Arn, location_name: "Arn"))

@@ -10,6 +10,18 @@
 module Aws::IAM
   module Types
 
+    # @!attribute [rw] delegation_request_id
+    #   The unique identifier of the delegation request to accept.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/AcceptDelegationRequestRequest AWS API Documentation
+    #
+    class AcceptDelegationRequestRequest < Struct.new(
+      :delegation_request_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # An object that contains details about when a principal in the reported
     # Organizations entity last attempted to access an Amazon Web Services
     # service. A principal can be an IAM user, an IAM role, or the Amazon
@@ -17,7 +29,11 @@ module Aws::IAM
     # entity.
     #
     # This data type is a response element in the
-    # GetOrganizationsAccessReport operation.
+    # [GetOrganizationsAccessReport][1] operation.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetOrganizationsAccessReport.html
     #
     # @!attribute [rw] service_name
     #   The name of the service in which access was attempted.
@@ -105,15 +121,21 @@ module Aws::IAM
 
     # Contains information about an Amazon Web Services access key.
     #
-    # This data type is used as a response element in the CreateAccessKey
-    # and ListAccessKeys operations.
+    # This data type is used as a response element in the
+    # [CreateAccessKey][1] and [ListAccessKeys][2] operations.
     #
     # <note markdown="1"> The `SecretAccessKey` value is returned only in response to
-    # CreateAccessKey. You can get a secret access key only when you first
-    # create an access key; you cannot recover the secret access key later.
-    # If you lose a secret access key, you must create a new access key.
+    # [CreateAccessKey][1]. You can get a secret access key only when you
+    # first create an access key; you cannot recover the secret access key
+    # later. If you lose a secret access key, you must create a new access
+    # key.
     #
     #  </note>
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateAccessKey.html
+    # [2]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListAccessKeys.html
     #
     # @!attribute [rw] user_name
     #   The name of the IAM user that the access key is associated with.
@@ -153,7 +175,11 @@ module Aws::IAM
     # 2015.
     #
     # This data type is used as a response element in the
-    # GetAccessKeyLastUsed operation.
+    # [GetAccessKeyLastUsed][1] operation.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetAccessKeyLastUsed.html
     #
     # @!attribute [rw] last_used_date
     #   The date and time, in [ISO 8601 date-time format][1], when the
@@ -218,8 +244,12 @@ module Aws::IAM
     # Contains information about an Amazon Web Services access key, without
     # its secret key.
     #
-    # This data type is used as a response element in the ListAccessKeys
-    # operation.
+    # This data type is used as a response element in the
+    # [ListAccessKeys][1] operation.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListAccessKeys.html
     #
     # @!attribute [rw] user_name
     #   The name of the IAM user that the key is associated with.
@@ -261,11 +291,63 @@ module Aws::IAM
     #
     class AccountNotManagementOrDelegatedAdministratorException < Aws::EmptyStructure; end
 
+    # @!attribute [rw] template_arn
+    #   The Amazon Resource Name (ARN) of the role template to create the
+    #   role from.
+    #
+    #   For more information about ARNs, see [Amazon Resource Names
+    #   (ARNs)][1] in the *Amazon Web Services General Reference*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html
+    #   @return [String]
+    #
+    # @!attribute [rw] template_minor_version
+    #   The minor version of the role template to use. If you do not specify
+    #   a minor version, the service uses the template's default minor
+    #   version.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] replacement_values
+    #   A map of values to substitute for the parameters that are defined in
+    #   the role template version. Each key is a parameter name from the
+    #   template, and each value is a structure that contains the
+    #   replacement values for that parameter.
+    #   @return [Hash<String,Types::ReplacementValueEntry>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/AcquireRoleRequest AWS API Documentation
+    #
+    class AcquireRoleRequest < Struct.new(
+      :template_arn,
+      :template_minor_version,
+      :replacement_values)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] role
+    #   A structure that contains details about the IAM role that was
+    #   created.
+    #   @return [Types::Role]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/AcquireRoleResponse AWS API Documentation
+    #
+    class AcquireRoleResponse < Struct.new(
+      :role)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] open_id_connect_provider_arn
     #   The Amazon Resource Name (ARN) of the IAM OpenID Connect (OIDC)
     #   provider resource to add the client ID to. You can get a list of
-    #   OIDC provider ARNs by using the ListOpenIDConnectProviders
+    #   OIDC provider ARNs by using the [ListOpenIDConnectProviders][1]
     #   operation.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListOpenIDConnectProviders.html
     #   @return [String]
     #
     # @!attribute [rw] client_id
@@ -348,6 +430,18 @@ module Aws::IAM
     class AddUserToGroupRequest < Struct.new(
       :group_name,
       :user_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] delegation_request_id
+    #   The unique identifier of the delegation request to associate.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/AssociateDelegationRequestRequest AWS API Documentation
+    #
+    class AssociateDelegationRequestRequest < Struct.new(
+      :delegation_request_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -490,16 +584,20 @@ module Aws::IAM
     #
     # An attached policy is a managed policy that has been attached to a
     # user, group, or role. This data type is used as a response element in
-    # the ListAttachedGroupPolicies, ListAttachedRolePolicies,
-    # ListAttachedUserPolicies, and GetAccountAuthorizationDetails
+    # the [ListAttachedGroupPolicies][1], [ListAttachedRolePolicies][2],
+    # [ListAttachedUserPolicies][3], and [GetAccountAuthorizationDetails][4]
     # operations.
     #
     # For more information about managed policies, refer to [Managed
-    # policies and inline policies][1] in the *IAM User Guide*.
+    # policies and inline policies][5] in the *IAM User Guide*.
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/policies-managed-vs-inline.html
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListAttachedGroupPolicies.html
+    # [2]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListAttachedRolePolicies.html
+    # [3]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListAttachedUserPolicies.html
+    # [4]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetAccountAuthorizationDetails.html
+    # [5]: https://docs.aws.amazon.com/IAM/latest/UserGuide/policies-managed-vs-inline.html
     #
     # @!attribute [rw] policy_name
     #   The friendly name of the attached policy.
@@ -586,8 +684,13 @@ module Aws::IAM
     # is used when evaluating the `Condition` elements of the input
     # policies.
     #
-    # This data type is used as an input parameter to SimulateCustomPolicy
-    # and SimulatePrincipalPolicy.
+    # This data type is used as an input parameter to
+    # [SimulateCustomPolicy][1] and [SimulatePrincipalPolicy][2].
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_SimulateCustomPolicy.html
+    # [2]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_SimulatePrincipalPolicy.html
     #
     # @!attribute [rw] context_key_name
     #   The full name of a condition context key, including the service
@@ -636,7 +739,11 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful CreateAccessKey request.
+    # Contains the response to a successful [CreateAccessKey][1] request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateAccessKey.html
     #
     # @!attribute [rw] access_key
     #   A structure with details about the access key.
@@ -667,6 +774,132 @@ module Aws::IAM
     #
     class CreateAccountAliasRequest < Struct.new(
       :account_alias)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] owner_account_id
+    #   The Amazon Web Services account ID this delegation request is
+    #   targeted to.
+    #
+    #   If the account ID is not known, this parameter can be omitted,
+    #   resulting in a request that can be associated by any account. If the
+    #   account ID passed, then the created delegation request can only be
+    #   associated with an identity of that target account.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   A description of the delegation request.
+    #   @return [String]
+    #
+    # @!attribute [rw] permissions
+    #   The permissions to be delegated in this delegation request.
+    #   @return [Types::DelegationPermission]
+    #
+    # @!attribute [rw] request_message
+    #   A message explaining the reason for the delegation request.
+    #
+    #   Requesters can utilize this field to add a custom note to the
+    #   delegation request. This field is different from the description
+    #   such that this is to be utilized for a custom messaging on a
+    #   case-by-case basis.
+    #
+    #   For example, if the current delegation request is in response to a
+    #   previous request being rejected, this explanation can be added to
+    #   the request via this field.
+    #   @return [String]
+    #
+    # @!attribute [rw] requestor_workflow_id
+    #   The workflow ID associated with the requestor.
+    #
+    #   This is the unique identifier on the partner side that can be used
+    #   to track the progress of the request.
+    #
+    #   IAM maintains a uniqueness check on this workflow id for each
+    #   request - if a workflow id for an existing request is passed, this
+    #   API call will fail.
+    #   @return [String]
+    #
+    # @!attribute [rw] redirect_url
+    #   The URL to redirect to after the delegation request is processed.
+    #
+    #   This URL is used by the IAM console to show a link to the customer
+    #   to re-load the partner workflow.
+    #   @return [String]
+    #
+    # @!attribute [rw] notification_channel
+    #   The notification channel for updates about the delegation request.
+    #
+    #   At this time,only SNS topic ARNs are accepted for notification. This
+    #   topic ARN must have a resource policy granting `SNS:Publish`
+    #   permission to the IAM service principal (`iam.amazonaws.com`). See
+    #   [partner onboarding documentation][1] for more details.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies-temporary-delegation-partner-guide.html
+    #   @return [String]
+    #
+    # @!attribute [rw] session_duration
+    #   The duration for which the delegated session should remain active,
+    #   in seconds.
+    #
+    #   The active time window for the session starts when the customer
+    #   calls the [SendDelegationToken][1] API.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_SendDelegationToken.html
+    #   @return [Integer]
+    #
+    # @!attribute [rw] only_send_by_owner
+    #   Specifies whether the delegation token should only be sent by the
+    #   owner.
+    #
+    #   This flag prevents any party other than the owner from calling
+    #   `SendDelegationToken` API for this delegation request. This behavior
+    #   becomes useful when the delegation request owner needs to be present
+    #   for subsequent partner interactions, but the delegation request was
+    #   sent to a more privileged user for approval due to the owner lacking
+    #   sufficient delegation permissions.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/CreateDelegationRequestRequest AWS API Documentation
+    #
+    class CreateDelegationRequestRequest < Struct.new(
+      :owner_account_id,
+      :description,
+      :permissions,
+      :request_message,
+      :requestor_workflow_id,
+      :redirect_url,
+      :notification_channel,
+      :session_duration,
+      :only_send_by_owner)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] console_deep_link
+    #   A deep link URL to the Amazon Web Services Management Console for
+    #   managing the delegation request.
+    #
+    #   For a console based workflow, partners should redirect the customer
+    #   to this URL. If the customer is not logged in to any Amazon Web
+    #   Services account, the Amazon Web Services workflow will
+    #   automatically direct the customer to log in and then display the
+    #   delegation request approval page.
+    #   @return [String]
+    #
+    # @!attribute [rw] delegation_request_id
+    #   The unique identifier for the created delegation request.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/CreateDelegationRequestResponse AWS API Documentation
+    #
+    class CreateDelegationRequestResponse < Struct.new(
+      :console_deep_link,
+      :delegation_request_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -710,7 +943,11 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful CreateGroup request.
+    # Contains the response to a successful [CreateGroup][1] request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateGroup.html
     #
     # @!attribute [rw] group
     #   A structure containing details about the new group.
@@ -784,7 +1021,12 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful CreateInstanceProfile request.
+    # Contains the response to a successful [CreateInstanceProfile][1]
+    # request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateInstanceProfile.html
     #
     # @!attribute [rw] instance_profile
     #   A structure containing details about the new instance profile.
@@ -855,7 +1097,11 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful CreateLoginProfile request.
+    # Contains the response to a successful [CreateLoginProfile][1] request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateLoginProfile.html
     #
     # @!attribute [rw] login_profile
     #   A structure containing the user name and password create date.
@@ -925,6 +1171,12 @@ module Aws::IAM
     #   see [Obtaining the thumbprint for an OpenID Connect provider][1] in
     #   the *IAM user Guide*.
     #
+    #   <note markdown="1"> If your OIDC provider's discovery endpoint and JWKS endpoint
+    #   (`jwks_uri`) use different certificates or hosts, include the
+    #   thumbprints for both endpoints in this list.
+    #
+    #    </note>
+    #
     #
     #
     #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/identity-providers-oidc-obtain-thumbprint.html
@@ -958,13 +1210,21 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful CreateOpenIDConnectProvider
+    # Contains the response to a successful [CreateOpenIDConnectProvider][1]
     # request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateOpenIDConnectProvider.html
     #
     # @!attribute [rw] open_id_connect_provider_arn
     #   The Amazon Resource Name (ARN) of the new IAM OpenID Connect
     #   provider that is created. For more information, see
-    #   OpenIDConnectProviderListEntry.
+    #   [OpenIDConnectProviderListEntry][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_OpenIDConnectProviderListEntry.html
     #   @return [String]
     #
     # @!attribute [rw] tags
@@ -1098,7 +1358,11 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful CreatePolicy request.
+    # Contains the response to a successful [CreatePolicy][1] request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreatePolicy.html
     #
     # @!attribute [rw] policy
     #   A structure containing details about the new policy.
@@ -1182,7 +1446,12 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful CreatePolicyVersion request.
+    # Contains the response to a successful [CreatePolicyVersion][1]
+    # request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreatePolicyVersion.html
     #
     # @!attribute [rw] policy_version
     #   A structure containing details about the new policy version.
@@ -1341,7 +1610,11 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful CreateRole request.
+    # Contains the response to a successful [CreateRole][1] request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateRole.html
     #
     # @!attribute [rw] role
     #   A structure containing details about the new role.
@@ -1423,7 +1696,11 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful CreateSAMLProvider request.
+    # Contains the response to a successful [CreateSAMLProvider][1] request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateSAMLProvider.html
     #
     # @!attribute [rw] saml_provider_arn
     #   The Amazon Resource Name (ARN) of the new SAML provider resource in
@@ -1495,7 +1772,12 @@ module Aws::IAM
     end
 
     # @!attribute [rw] role
-    #   A Role object that contains details about the newly created role.
+    #   A [Role][1] object that contains details about the newly created
+    #   role.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_Role.html
     #   @return [Types::Role]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/CreateServiceLinkedRoleResponse AWS API Documentation
@@ -1528,11 +1810,26 @@ module Aws::IAM
     #   service that can be accessed using these credentials.
     #   @return [String]
     #
+    # @!attribute [rw] credential_age_days
+    #   The number of days until the service specific credential expires.
+    #   This field is only valid for services that support long-term API
+    #   keys and must be a positive integer. When not specified, the
+    #   credential will not expire.
+    #
+    #   To see which services support long-term API keys, refer to [API keys
+    #   for Amazon Web Services services][1] in the *IAM User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_api_keys_for_aws_services.html
+    #   @return [Integer]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/CreateServiceSpecificCredentialRequest AWS API Documentation
     #
     class CreateServiceSpecificCredentialRequest < Struct.new(
       :user_name,
-      :service_name)
+      :service_name,
+      :credential_age_days)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1543,7 +1840,11 @@ module Aws::IAM
     #
     #   This is the only time that the password for this credential set is
     #   available. It cannot be recovered later. Instead, you must reset the
-    #   password with ResetServiceSpecificCredential.
+    #   password with [ResetServiceSpecificCredential][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ResetServiceSpecificCredential.html
     #   @return [Types::ServiceSpecificCredential]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/CreateServiceSpecificCredentialResponse AWS API Documentation
@@ -1631,7 +1932,11 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful CreateUser request.
+    # Contains the response to a successful [CreateUser][1] request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateUser.html
     #
     # @!attribute [rw] user
     #   A structure with details about the new IAM user.
@@ -1706,7 +2011,12 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful CreateVirtualMFADevice request.
+    # Contains the response to a successful [CreateVirtualMFADevice][1]
+    # request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateVirtualMFADevice.html
     #
     # @!attribute [rw] virtual_mfa_device
     #   A structure containing details about the new virtual MFA device.
@@ -1722,13 +2032,14 @@ module Aws::IAM
 
     # The request was rejected because the most recent credential report has
     # expired. To generate a new credential report, use
-    # GenerateCredentialReport. For more information about credential report
-    # expiration, see [Getting credential reports][1] in the *IAM User
-    # Guide*.
+    # [GenerateCredentialReport][1]. For more information about credential
+    # report expiration, see [Getting credential reports][2] in the *IAM
+    # User Guide*.
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/credential-reports.html
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GenerateCredentialReport.html
+    # [2]: https://docs.aws.amazon.com/IAM/latest/UserGuide/credential-reports.html
     #
     # @!attribute [rw] message
     #   @return [String]
@@ -1742,7 +2053,11 @@ module Aws::IAM
     end
 
     # The request was rejected because the credential report does not exist.
-    # To generate a credential report, use GenerateCredentialReport.
+    # To generate a credential report, use [GenerateCredentialReport][1].
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GenerateCredentialReport.html
     #
     # @!attribute [rw] message
     #   @return [String]
@@ -1807,6 +2122,197 @@ module Aws::IAM
     class DeactivateMFADeviceRequest < Struct.new(
       :user_name,
       :serial_number)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains information about the permissions being delegated in a
+    # delegation request.
+    #
+    # @!attribute [rw] policy_template_arn
+    #   This ARN maps to a pre-registered policy content for this partner.
+    #   See the [partner onboarding documentation]() to understand how to
+    #   create a delegation template.
+    #   @return [String]
+    #
+    # @!attribute [rw] parameters
+    #   A list of policy parameters that define the scope and constraints of
+    #   the delegated permissions.
+    #   @return [Array<Types::PolicyParameter>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/DelegationPermission AWS API Documentation
+    #
+    class DelegationPermission < Struct.new(
+      :policy_template_arn,
+      :parameters)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains information about a delegation request, including its status,
+    # permissions, and associated metadata.
+    #
+    # @!attribute [rw] delegation_request_id
+    #   The unique identifier for the delegation request.
+    #   @return [String]
+    #
+    # @!attribute [rw] owner_account_id
+    #   Amazon Web Services account ID of the owner of the delegation
+    #   request.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   Description of the delegation request. This is a message that is
+    #   provided by the Amazon Web Services partner that filed the
+    #   delegation request.
+    #   @return [String]
+    #
+    # @!attribute [rw] request_message
+    #   A custom message that is added to the delegation request by the
+    #   partner.
+    #
+    #   This element is different from the `Description` element such that
+    #   this is a request specific message injected by the partner. The
+    #   `Description` is typically a generic explanation of what the
+    #   delegation request is targeted to do.
+    #   @return [String]
+    #
+    # @!attribute [rw] permissions
+    #   Contains information about the permissions being delegated in a
+    #   delegation request.
+    #   @return [Types::DelegationPermission]
+    #
+    # @!attribute [rw] permission_policy
+    #   JSON content of the associated permission policy of this delegation
+    #   request.
+    #   @return [String]
+    #
+    # @!attribute [rw] role_permission_restriction_arns
+    #   If the `PermissionPolicy` includes role creation permissions, this
+    #   element will include the list of permissions boundary policies
+    #   associated with the role creation. See [Permissions boundaries for
+    #   IAM entities][1] for more details about IAM permission boundaries.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_boundaries.html
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] owner_id
+    #   ARN of the owner of this delegation request.
+    #   @return [String]
+    #
+    # @!attribute [rw] approver_id
+    #   The Amazon Resource Name (ARN). ARNs are unique identifiers for
+    #   Amazon Web Services resources.
+    #
+    #   For more information about ARNs, go to [Amazon Resource Names
+    #   (ARNs)][1] in the *Amazon Web Services General Reference*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html
+    #   @return [String]
+    #
+    # @!attribute [rw] state
+    #   The state of this delegation request.
+    #
+    #   See the [Understanding the Request Lifecycle][1] for an explanation
+    #   of how these states are transitioned.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/temporary-delegation-building-integration.html#temporary-delegation-request-lifecycle
+    #   @return [String]
+    #
+    # @!attribute [rw] expiration_time
+    #   The expiry time of this delegation request
+    #
+    #   See the [Understanding the Request Lifecycle][1] for details on the
+    #   life time of a delegation request at each state.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/temporary-delegation-building-integration.html#temporary-delegation-request-lifecycle
+    #   @return [Time]
+    #
+    # @!attribute [rw] requestor_id
+    #   Identity of the requestor of this delegation request. This will be
+    #   an Amazon Web Services account ID.
+    #   @return [String]
+    #
+    # @!attribute [rw] requestor_name
+    #   A friendly name of the requestor.
+    #   @return [String]
+    #
+    # @!attribute [rw] create_date
+    #   Creation date (timestamp) of this delegation request.
+    #   @return [Time]
+    #
+    # @!attribute [rw] session_duration
+    #   The life-time of the requested session credential.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] redirect_url
+    #   A URL to be redirected to once the delegation request is approved.
+    #   Partners provide this URL when creating the delegation request.
+    #   @return [String]
+    #
+    # @!attribute [rw] notes
+    #   Notes added to this delegation request, if this request was updated
+    #   via the [UpdateDelegationRequest][1] API.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_UpdateDelegationRequest.html
+    #   @return [String]
+    #
+    # @!attribute [rw] rejection_reason
+    #   Reasons for rejecting this delegation request, if this request was
+    #   rejected. See also [RejectDelegationRequest][1] API documentation.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_RejectDelegationRequest.html
+    #   @return [String]
+    #
+    # @!attribute [rw] only_send_by_owner
+    #   A flag indicating whether the [SendDelegationToken][1] must be
+    #   called by the owner of this delegation request. This is set by the
+    #   requesting partner.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_SendDelegationToken.html
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] updated_time
+    #   Last updated timestamp of the request.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/DelegationRequest AWS API Documentation
+    #
+    class DelegationRequest < Struct.new(
+      :delegation_request_id,
+      :owner_account_id,
+      :description,
+      :request_message,
+      :permissions,
+      :permission_policy,
+      :role_permission_restriction_arns,
+      :owner_id,
+      :approver_id,
+      :state,
+      :expiration_time,
+      :requestor_id,
+      :requestor_name,
+      :create_date,
+      :session_duration,
+      :redirect_url,
+      :notes,
+      :rejection_reason,
+      :only_send_by_owner,
+      :updated_time)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1990,8 +2496,12 @@ module Aws::IAM
     # @!attribute [rw] open_id_connect_provider_arn
     #   The Amazon Resource Name (ARN) of the IAM OpenID Connect provider
     #   resource object to delete. You can get a list of OpenID Connect
-    #   provider resource ARNs by using the ListOpenIDConnectProviders
+    #   provider resource ARNs by using the [ListOpenIDConnectProviders][1]
     #   operation.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListOpenIDConnectProviders.html
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/DeleteOpenIDConnectProviderRequest AWS API Documentation
@@ -2239,15 +2749,16 @@ module Aws::IAM
     #
     # @!attribute [rw] service_specific_credential_id
     #   The unique identifier of the service-specific credential. You can
-    #   get this value by calling ListServiceSpecificCredentials.
+    #   get this value by calling [ListServiceSpecificCredentials][1].
     #
-    #   This parameter allows (through its [regex pattern][1]) a string of
+    #   This parameter allows (through its [regex pattern][2]) a string of
     #   characters that can consist of any upper or lowercased letter or
     #   digit.
     #
     #
     #
-    #   [1]: http://wikipedia.org/wiki/regex
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListServiceSpecificCredentials.html
+    #   [2]: http://wikipedia.org/wiki/regex
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/DeleteServiceSpecificCredentialRequest AWS API Documentation
@@ -2388,7 +2899,11 @@ module Aws::IAM
     # The reason that the service-linked role deletion failed.
     #
     # This data type is used as a response element in the
-    # GetServiceLinkedRoleDeletionStatus operation.
+    # [GetServiceLinkedRoleDeletionStatus][1] operation.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetServiceLinkedRoleDeletionStatus.html
     #
     # @!attribute [rw] reason
     #   A short description of the reason that the service-linked role
@@ -2710,6 +3225,22 @@ module Aws::IAM
       include Aws::Structure
     end
 
+    # @!attribute [rw] issuer_identifier
+    #   A unique issuer URL for your Amazon Web Services account that hosts
+    #   the OpenID Connect (OIDC) discovery endpoints at
+    #   `/.well-known/openid-configuration and /.well-known/jwks.json`. The
+    #   OpenID Connect (OIDC) discovery endpoints contain verification keys
+    #   and metadata necessary for token verification.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/EnableOutboundWebIdentityFederationResponse AWS API Documentation
+    #
+    class EnableOutboundWebIdentityFederationResponse < Struct.new(
+      :issuer_identifier)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The request was rejected because it attempted to create a resource
     # that already exists.
     #
@@ -2729,7 +3260,11 @@ module Aws::IAM
     # Services service.
     #
     # This data type is a response element in the
-    # GetServiceLastAccessedDetailsWithEntities operation.
+    # [GetServiceLastAccessedDetailsWithEntities][1] operation.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetServiceLastAccessedDetailsWithEntities.html
     #
     # @!attribute [rw] entity_info
     #   The `EntityInfo` object that contains details about the entity (user
@@ -2761,7 +3296,11 @@ module Aws::IAM
 
     # Contains details about the specified entity (user or role).
     #
-    # This data type is an element of the EntityDetails object.
+    # This data type is an element of the [EntityDetails][1] object.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_EntityDetails.html
     #
     # @!attribute [rw] arn
     #   The Amazon Resource Name (ARN). ARNs are unique identifiers for
@@ -2828,8 +3367,14 @@ module Aws::IAM
     # Contains information about the reason that the operation failed.
     #
     # This data type is used as a response element in the
-    # GetOrganizationsAccessReport, GetServiceLastAccessedDetails, and
-    # GetServiceLastAccessedDetailsWithEntities operations.
+    # [GetOrganizationsAccessReport][1], [GetServiceLastAccessedDetails][2],
+    # and [GetServiceLastAccessedDetailsWithEntities][3] operations.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetOrganizationsAccessReport.html
+    # [2]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetServiceLastAccessedDetails.html
+    # [3]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetServiceLastAccessedDetailsWithEntities.html
     #
     # @!attribute [rw] message
     #   Detailed information about the reason that the operation failed.
@@ -2853,13 +3398,40 @@ module Aws::IAM
     # This data type is used by the return parameter of `
     # SimulateCustomPolicy ` and ` SimulatePrincipalPolicy `.
     #
+    # The simulator now returns a single `EvaluationResult` per action,
+    # regardless of how many resource ARNs are provided. Previously,
+    # simulating one action against N resources returned N evaluation
+    # results, each containing the same aggregate decision. The top-level
+    # fields (`EvalDecision`, `MatchedStatements`, `MissingContextValues`,
+    # `EvalDecisionDetails`) now represent the *aggregate* decision across
+    # all requested resources. The top-level `EvalDecision` reflects the
+    # most restrictive decision across all resources (for example, if any
+    # resource produces `explicitDeny`, the top-level decision is
+    # `explicitDeny`).
+    #
+    #  To see the decision for each individual resource, use
+    # `ResourceSpecificResults`. If your application parses evaluation
+    # results per resource ARN, update your code to read per-resource
+    # decisions from `ResourceSpecificResults` rather than from the
+    # top-level result.
+    #
     # @!attribute [rw] eval_action_name
     #   The name of the API operation tested on the indicated resource.
     #   @return [String]
     #
     # @!attribute [rw] eval_resource_name
-    #   The ARN of the resource that the indicated API operation was tested
-    #   on.
+    #   The ARN template for the simulated resource type (for example,
+    #   `arn:${Partition}:s3:::${BucketName}/${KeyName}`), or `*` if no ARN
+    #   format is defined for the action. This is not a specific
+    #   customer-provided resource ARN. To find the decision for a specific
+    #   resource, use `ResourceSpecificResults`.
+    #
+    #   <note markdown="1"> If you previously relied on `EvalResourceName` to identify which
+    #   specific resource a result applies to, you must now use the
+    #   `EvalResourceName` field within individual entries in
+    #   `ResourceSpecificResults` instead.
+    #
+    #    </note>
     #   @return [String]
     #
     # @!attribute [rw] eval_decision
@@ -2873,6 +3445,14 @@ module Aws::IAM
     #   that operation, then the explicit deny overrides any allow. In
     #   addition, the deny statement is the only entry included in the
     #   result.
+    #
+    #   In the top-level result, this field contains the union of matched
+    #   statements across all requested resources. Only statements that
+    #   contributed to the reported decision are included. For per-resource
+    #   matched statements, see `ResourceSpecificResults`. This field
+    #   doesn't include statements from service control policies (SCPs).
+    #   Only statements from identity-based and resource-based policies
+    #   appear here.
     #   @return [Array<Types::Statement>]
     #
     # @!attribute [rw] missing_context_values
@@ -2883,13 +3463,29 @@ module Aws::IAM
     #   you include a list of resources, then any missing context values are
     #   instead included under the `ResourceSpecificResults` section. To
     #   discover the context keys used by a set of policies, you can call
-    #   GetContextKeysForCustomPolicy or GetContextKeysForPrincipalPolicy.
+    #   [GetContextKeysForCustomPolicy][1] or
+    #   [GetContextKeysForPrincipalPolicy][2].
+    #
+    #   In the top-level result, this field contains the deduplicated set of
+    #   missing context values across all requested resources. This field
+    #   doesn't include context keys referenced by service control policies
+    #   (SCPs). Only context keys referenced by identity-based and
+    #   resource-based policies appear here.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetContextKeysForCustomPolicy.html
+    #   [2]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetContextKeysForPrincipalPolicy.html
     #   @return [Array<String>]
     #
     # @!attribute [rw] organizations_decision_detail
     #   A structure that details how Organizations and its service control
     #   policies affect the results of the simulation. Only applies if the
     #   simulated user's account is part of an organization.
+    #
+    #   For resources that don't support organization-level evaluation,
+    #   this field is omitted from the top-level result. For per-resource
+    #   details, see `ResourceSpecificResults`.
     #   @return [Types::OrganizationsDecisionDetail]
     #
     # @!attribute [rw] permissions_boundary_decision_detail
@@ -2903,6 +3499,9 @@ module Aws::IAM
     #   decision. This parameter is populated for only cross-account
     #   simulations. It contains a brief summary of how each policy type
     #   contributes to the final evaluation decision.
+    #
+    #   In the top-level result, this map reports the most restrictive
+    #   decision per policy type across all requested resources.
     #
     #   If the simulation evaluates policies within the same account and
     #   includes a resource ARN, then the parameter is present but the
@@ -2946,8 +3545,44 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful GenerateCredentialReport
+    # The request failed because outbound identity federation is already
+    # disabled for your Amazon Web Services account. You cannot disable the
+    # feature multiple times
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/FeatureDisabledException AWS API Documentation
+    #
+    class FeatureDisabledException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The request failed because outbound identity federation is already
+    # enabled for your Amazon Web Services account. You cannot enable the
+    # feature multiple times. To fetch the current configuration (including
+    # the unique issuer URL), use the `GetOutboundWebIdentityFederationInfo`
+    # operation.
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/FeatureEnabledException AWS API Documentation
+    #
+    class FeatureEnabledException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains the response to a successful [GenerateCredentialReport][1]
     # request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GenerateCredentialReport.html
     #
     # @!attribute [rw] state
     #   Information about the state of the credential report.
@@ -2996,7 +3631,11 @@ module Aws::IAM
 
     # @!attribute [rw] job_id
     #   The job identifier that you can use in the
-    #   GetOrganizationsAccessReport operation.
+    #   [GetOrganizationsAccessReport][1] operation.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetOrganizationsAccessReport.html
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/GenerateOrganizationsAccessReportResponse AWS API Documentation
@@ -3033,11 +3672,17 @@ module Aws::IAM
     end
 
     # @!attribute [rw] job_id
-    #   The `JobId` that you can use in the GetServiceLastAccessedDetails or
-    #   GetServiceLastAccessedDetailsWithEntities operations. The `JobId`
-    #   returned by `GenerateServiceLastAccessedDetail` must be used by the
-    #   same role within a session, or by the same user when used to call
-    #   `GetServiceLastAccessedDetail`.
+    #   The `JobId` that you can use in the
+    #   [GetServiceLastAccessedDetails][1] or
+    #   [GetServiceLastAccessedDetailsWithEntities][2] operations. The
+    #   `JobId` returned by `GenerateServiceLastAccessedDetail` must be used
+    #   by the same role within a session, or by the same user when used to
+    #   call `GetServiceLastAccessedDetail`.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetServiceLastAccessedDetails.html
+    #   [2]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetServiceLastAccessedDetailsWithEntities.html
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/GenerateServiceLastAccessedDetailsResponse AWS API Documentation
@@ -3068,9 +3713,15 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful GetAccessKeyLastUsed request. It
-    # is also returned as a member of the AccessKeyMetaData structure
-    # returned by the ListAccessKeys action.
+    # Contains the response to a successful [GetAccessKeyLastUsed][1]
+    # request. It is also returned as a member of the [AccessKeyMetaData][2]
+    # structure returned by the [ListAccessKeys][3] action.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetAccessKeyLastUsed.html
+    # [2]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_AccessKeyMetaData.html
+    # [3]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListAccessKeys.html
     #
     # @!attribute [rw] user_name
     #   The name of the IAM user that owns this access key.
@@ -3129,8 +3780,12 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful GetAccountAuthorizationDetails
-    # request.
+    # Contains the response to a successful
+    # [GetAccountAuthorizationDetails][1] request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetAccountAuthorizationDetails.html
     #
     # @!attribute [rw] user_detail_list
     #   A list containing information about IAM users.
@@ -3177,8 +3832,12 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful GetAccountPasswordPolicy
+    # Contains the response to a successful [GetAccountPasswordPolicy][1]
     # request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetAccountPasswordPolicy.html
     #
     # @!attribute [rw] password_policy
     #   A structure that contains details about the account's password
@@ -3193,7 +3852,30 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful GetAccountSummary request.
+    # @api private
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/GetAccountPropertiesRequest AWS API Documentation
+    #
+    class GetAccountPropertiesRequest < Aws::EmptyStructure; end
+
+    # @!attribute [rw] properties
+    #   A map of account property key-value pairs. Keys are in the format
+    #   `Namespace/PropertyName`.
+    #   @return [Hash<String,String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/GetAccountPropertiesResponse AWS API Documentation
+    #
+    class GetAccountPropertiesResponse < Struct.new(
+      :properties)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains the response to a successful [GetAccountSummary][1] request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetAccountSummary.html
     #
     # @!attribute [rw] summary_map
     #   A set of key–value pairs containing information about IAM entity
@@ -3238,8 +3920,14 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful GetContextKeysForPrincipalPolicy
-    # or GetContextKeysForCustomPolicy request.
+    # Contains the response to a successful
+    # [GetContextKeysForPrincipalPolicy][1] or
+    # [GetContextKeysForCustomPolicy][2] request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetContextKeysForPrincipalPolicy.html
+    # [2]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetContextKeysForCustomPolicy.html
     #
     # @!attribute [rw] context_key_names
     #   The list of context keys that are referenced in the input policies.
@@ -3302,7 +3990,12 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful GetCredentialReport request.
+    # Contains the response to a successful [GetCredentialReport][1]
+    # request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetCredentialReport.html
     #
     # @!attribute [rw] content
     #   Contains the credential report. The report is Base64-encoded.
@@ -3327,6 +4020,80 @@ module Aws::IAM
       :content,
       :report_format,
       :generated_time)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] delegation_request_id
+    #   The unique identifier of the delegation request to retrieve.
+    #   @return [String]
+    #
+    # @!attribute [rw] delegation_permission_check
+    #   Specifies whether to perform a permission check for the delegation
+    #   request.
+    #
+    #   If set to true, the `GetDelegationRequest` API call will start a
+    #   permission check process. This process calculates whether the caller
+    #   has sufficient permissions to cover the asks from this delegation
+    #   request.
+    #
+    #   Setting this parameter to true does not guarantee an answer in the
+    #   response. See the `PermissionCheckStatus` and the
+    #   `PermissionCheckResult` response attributes for further details.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/GetDelegationRequestRequest AWS API Documentation
+    #
+    class GetDelegationRequestRequest < Struct.new(
+      :delegation_request_id,
+      :delegation_permission_check)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] delegation_request
+    #   The delegation request object containing all details about the
+    #   request.
+    #   @return [Types::DelegationRequest]
+    #
+    # @!attribute [rw] permission_check_status
+    #   The status of the permission check for the delegation request.
+    #
+    #   This value indicates the status of the process to check whether the
+    #   caller has sufficient permissions to cover the requested actions in
+    #   the delegation request. Since this is an asynchronous process, there
+    #   are three potential values:
+    #
+    #   * `IN_PROGRESS` : The permission check process has started.
+    #
+    #   * `COMPLETED` : The permission check process has completed. The
+    #     `PermissionCheckResult` will include the result.
+    #
+    #   * `FAILED` : The permission check process has failed.
+    #   @return [String]
+    #
+    # @!attribute [rw] permission_check_result
+    #   The result of the permission check, indicating whether the caller
+    #   has sufficient permissions to cover the requested permissions. This
+    #   is an approximate result.
+    #
+    #   * `ALLOWED` : The caller has sufficient permissions cover all the
+    #     requested permissions.
+    #
+    #   * `DENIED` : The caller does not have sufficient permissions to
+    #     cover all the requested permissions.
+    #
+    #   * `UNSURE` : It is not possible to determine whether the caller has
+    #     all the permissions needed. This output is most likely for cases
+    #     when the caller has permissions with conditions.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/GetDelegationRequestResponse AWS API Documentation
+    #
+    class GetDelegationRequestResponse < Struct.new(
+      :delegation_request,
+      :permission_check_status,
+      :permission_check_result)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3366,7 +4133,11 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful GetGroupPolicy request.
+    # Contains the response to a successful [GetGroupPolicy][1] request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetGroupPolicy.html
     #
     # @!attribute [rw] group_name
     #   The group the policy is associated with.
@@ -3438,7 +4209,11 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful GetGroup request.
+    # Contains the response to a successful [GetGroup][1] request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetGroup.html
     #
     # @!attribute [rw] group
     #   A structure that contains details about the group.
@@ -3475,6 +4250,52 @@ module Aws::IAM
       include Aws::Structure
     end
 
+    # @!attribute [rw] entity_arn
+    #   Arn of the entity to be summarized. At this time, the only supported
+    #   entity type is `delegation-request`
+    #   @return [String]
+    #
+    # @!attribute [rw] locale
+    #   A string representing the locale to use for the summary generation.
+    #   The supported locale strings are based on the [ Supported languages
+    #   of the Amazon Web Services Management Console
+    #   ](/awsconsolehelpdocs/latest/gsg/change-language.html#supported-languages).
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/GetHumanReadableSummaryRequest AWS API Documentation
+    #
+    class GetHumanReadableSummaryRequest < Struct.new(
+      :entity_arn,
+      :locale)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] summary_content
+    #   Summary content in the specified locale. Summary content is
+    #   non-empty only if the `SummaryState` is `AVAILABLE`.
+    #   @return [String]
+    #
+    # @!attribute [rw] locale
+    #   The locale that this response was generated for. This maps to the
+    #   input locale.
+    #   @return [String]
+    #
+    # @!attribute [rw] summary_state
+    #   State of summary generation. This generation process is asynchronous
+    #   and this attribute indicates the state of the generation process.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/GetHumanReadableSummaryResponse AWS API Documentation
+    #
+    class GetHumanReadableSummaryResponse < Struct.new(
+      :summary_content,
+      :locale,
+      :summary_state)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] instance_profile_name
     #   The name of the instance profile to get information about.
     #
@@ -3496,7 +4317,11 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful GetInstanceProfile request.
+    # Contains the response to a successful [GetInstanceProfile][1] request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetInstanceProfile.html
     #
     # @!attribute [rw] instance_profile
     #   A structure containing details about the instance profile.
@@ -3537,7 +4362,11 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful GetLoginProfile request.
+    # Contains the response to a successful [GetLoginProfile][1] request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetLoginProfile.html
     #
     # @!attribute [rw] login_profile
     #   A structure containing the user name and the profile creation date
@@ -3615,14 +4444,16 @@ module Aws::IAM
     # @!attribute [rw] open_id_connect_provider_arn
     #   The Amazon Resource Name (ARN) of the OIDC provider resource object
     #   in IAM to get information for. You can get a list of OIDC provider
-    #   resource ARNs by using the ListOpenIDConnectProviders operation.
+    #   resource ARNs by using the [ListOpenIDConnectProviders][1]
+    #   operation.
     #
     #   For more information about ARNs, see [Amazon Resource Names
-    #   (ARNs)][1] in the *Amazon Web Services General Reference*.
+    #   (ARNs)][2] in the *Amazon Web Services General Reference*.
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListOpenIDConnectProviders.html
+    #   [2]: https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/GetOpenIDConnectProviderRequest AWS API Documentation
@@ -3633,24 +4464,40 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful GetOpenIDConnectProvider
+    # Contains the response to a successful [GetOpenIDConnectProvider][1]
     # request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetOpenIDConnectProvider.html
     #
     # @!attribute [rw] url
     #   The URL that the IAM OIDC provider resource object is associated
-    #   with. For more information, see CreateOpenIDConnectProvider.
+    #   with. For more information, see [CreateOpenIDConnectProvider][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateOpenIDConnectProvider.html
     #   @return [String]
     #
     # @!attribute [rw] client_id_list
     #   A list of client IDs (also known as audiences) that are associated
     #   with the specified IAM OIDC provider resource object. For more
-    #   information, see CreateOpenIDConnectProvider.
+    #   information, see [CreateOpenIDConnectProvider][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateOpenIDConnectProvider.html
     #   @return [Array<String>]
     #
     # @!attribute [rw] thumbprint_list
     #   A list of certificate thumbprints that are associated with the
     #   specified IAM OIDC provider resource object. For more information,
-    #   see CreateOpenIDConnectProvider.
+    #   see [CreateOpenIDConnectProvider][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateOpenIDConnectProvider.html
     #   @return [Array<String>]
     #
     # @!attribute [rw] create_date
@@ -3683,7 +4530,11 @@ module Aws::IAM
 
     # @!attribute [rw] job_id
     #   The identifier of the request generated by the
-    #   GenerateOrganizationsAccessReport operation.
+    #   [GenerateOrganizationsAccessReport][1] operation.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GenerateOrganizationsAccessReport.html
     #   @return [String]
     #
     # @!attribute [rw] max_items
@@ -3729,7 +4580,7 @@ module Aws::IAM
     #   @return [String]
     #
     # @!attribute [rw] job_creation_date
-    #   The date and time, in [ISO 8601 date-time format][1], when the
+    #   The date and time, in [ISO 8601 date-time format][1], when the
     #   report job was created.
     #
     #
@@ -3738,7 +4589,7 @@ module Aws::IAM
     #   @return [Time]
     #
     # @!attribute [rw] job_completion_date
-    #   The date and time, in [ISO 8601 date-time format][1], when the
+    #   The date and time, in [ISO 8601 date-time format][1], when the
     #   generated report job was completed or failed.
     #
     #   This field is null if the job is still in progress, as indicated by
@@ -3760,7 +4611,7 @@ module Aws::IAM
     #   @return [Integer]
     #
     # @!attribute [rw] access_details
-    #   An object that contains details about the most recent attempt to
+    #   An object that contains details about the most recent attempt to
     #   access the service.
     #   @return [Array<Types::AccessDetail>]
     #
@@ -3784,8 +4635,15 @@ module Aws::IAM
     #   Contains information about the reason that the operation failed.
     #
     #   This data type is used as a response element in the
-    #   GetOrganizationsAccessReport, GetServiceLastAccessedDetails, and
-    #   GetServiceLastAccessedDetailsWithEntities operations.
+    #   [GetOrganizationsAccessReport][1],
+    #   [GetServiceLastAccessedDetails][2], and
+    #   [GetServiceLastAccessedDetailsWithEntities][3] operations.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetOrganizationsAccessReport.html
+    #   [2]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetServiceLastAccessedDetails.html
+    #   [3]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetServiceLastAccessedDetailsWithEntities.html
     #   @return [Types::ErrorDetails]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/GetOrganizationsAccessReportResponse AWS API Documentation
@@ -3800,6 +4658,30 @@ module Aws::IAM
       :is_truncated,
       :marker,
       :error_details)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] issuer_identifier
+    #   A unique issuer URL for your Amazon Web Services account that hosts
+    #   the OpenID Connect (OIDC) discovery endpoints at
+    #   `/.well-known/openid-configuration and /.well-known/jwks.json`. The
+    #   OpenID Connect (OIDC) discovery endpoints contain verification keys
+    #   and metadata necessary for token verification.
+    #   @return [String]
+    #
+    # @!attribute [rw] jwt_vending_enabled
+    #   Indicates whether outbound identity federation is currently enabled
+    #   for your Amazon Web Services account. When true, IAM principals in
+    #   the account can call the `GetWebIdentityToken` API to obtain JSON
+    #   Web Tokens (JWTs) for authentication with external services.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/GetOutboundWebIdentityFederationInfoResponse AWS API Documentation
+    #
+    class GetOutboundWebIdentityFederationInfoResponse < Struct.new(
+      :issuer_identifier,
+      :jwt_vending_enabled)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3824,7 +4706,11 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful GetPolicy request.
+    # Contains the response to a successful [GetPolicy][1] request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetPolicy.html
     #
     # @!attribute [rw] policy
     #   A structure containing details about the policy.
@@ -3872,7 +4758,11 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful GetPolicyVersion request.
+    # Contains the response to a successful [GetPolicyVersion][1] request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetPolicyVersion.html
     #
     # @!attribute [rw] policy_version
     #   A structure containing details about the policy version.
@@ -3921,7 +4811,11 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful GetRolePolicy request.
+    # Contains the response to a successful [GetRolePolicy][1] request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetRolePolicy.html
     #
     # @!attribute [rw] role_name
     #   The role the policy is associated with.
@@ -3971,7 +4865,11 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful GetRole request.
+    # Contains the response to a successful [GetRole][1] request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetRole.html
     #
     # @!attribute [rw] role
     #   A structure containing details about the IAM role.
@@ -3981,6 +4879,46 @@ module Aws::IAM
     #
     class GetRoleResponse < Struct.new(
       :role)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] template_arn
+    #   The Amazon Resource Name (ARN) of the role template whose version
+    #   you want to retrieve.
+    #
+    #   For more information about ARNs, see [Amazon Resource Names
+    #   (ARNs)][1] in the *Amazon Web Services General Reference*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html
+    #   @return [String]
+    #
+    # @!attribute [rw] minor_version
+    #   The minor version of the role template to retrieve. If you do not
+    #   specify a minor version, the service returns the template's default
+    #   minor version.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/GetRoleTemplateVersionRequest AWS API Documentation
+    #
+    class GetRoleTemplateVersionRequest < Struct.new(
+      :template_arn,
+      :minor_version)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] role_template_version
+    #   A structure that contains details about the requested role template
+    #   version.
+    #   @return [Types::RoleTemplateVersion]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/GetRoleTemplateVersionResponse AWS API Documentation
+    #
+    class GetRoleTemplateVersionResponse < Struct.new(
+      :role_template_version)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4005,7 +4943,11 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful GetSAMLProvider request.
+    # Contains the response to a successful [GetSAMLProvider][1] request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetSAMLProvider.html
     #
     # @!attribute [rw] saml_provider_uuid
     #   The unique identifier assigned to the SAML provider.
@@ -4098,7 +5040,11 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful GetSSHPublicKey request.
+    # Contains the response to a successful [GetSSHPublicKey][1] request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetSSHPublicKey.html
     #
     # @!attribute [rw] ssh_public_key
     #   A structure containing details about the SSH public key.
@@ -4134,7 +5080,12 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful GetServerCertificate request.
+    # Contains the response to a successful [GetServerCertificate][1]
+    # request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetServerCertificate.html
     #
     # @!attribute [rw] server_certificate
     #   A structure containing details about the server certificate.
@@ -4150,10 +5101,14 @@ module Aws::IAM
 
     # @!attribute [rw] job_id
     #   The ID of the request generated by the
-    #   GenerateServiceLastAccessedDetails operation. The `JobId` returned
-    #   by `GenerateServiceLastAccessedDetail` must be used by the same role
-    #   within a session, or by the same user when used to call
+    #   [GenerateServiceLastAccessedDetails][1] operation. The `JobId`
+    #   returned by `GenerateServiceLastAccessedDetail` must be used by the
+    #   same role within a session, or by the same user when used to call
     #   `GetServiceLastAccessedDetail`.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GenerateServiceLastAccessedDetails.html
     #   @return [String]
     #
     # @!attribute [rw] max_items
@@ -4197,7 +5152,7 @@ module Aws::IAM
     #   @return [String]
     #
     # @!attribute [rw] job_creation_date
-    #   The date and time, in [ISO 8601 date-time format][1], when the
+    #   The date and time, in [ISO 8601 date-time format][1], when the
     #   report job was created.
     #
     #
@@ -4206,12 +5161,12 @@ module Aws::IAM
     #   @return [Time]
     #
     # @!attribute [rw] services_last_accessed
-    #   A `ServiceLastAccessed` object that contains details about the most
+    #   A `ServiceLastAccessed` object that contains details about the most
     #   recent attempt to access the service.
     #   @return [Array<Types::ServiceLastAccessed>]
     #
     # @!attribute [rw] job_completion_date
-    #   The date and time, in [ISO 8601 date-time format][1], when the
+    #   The date and time, in [ISO 8601 date-time format][1], when the
     #   generated report job was completed or failed.
     #
     #   This field is null if the job is still in progress, as indicated by
@@ -4274,7 +5229,7 @@ module Aws::IAM
     #   details for that service. In the first paragraph, find the service
     #   prefix. For example, `(service prefix: a4b)`. For more information
     #   about service namespaces, see [Amazon Web Services service
-    #   namespaces][2] in the *Amazon Web Services General Reference*.
+    #   namespaces][2] in the *Amazon Web Services General Reference*.
     #
     #
     #
@@ -4318,7 +5273,7 @@ module Aws::IAM
     #   @return [String]
     #
     # @!attribute [rw] job_creation_date
-    #   The date and time, in [ISO 8601 date-time format][1], when the
+    #   The date and time, in [ISO 8601 date-time format][1], when the
     #   report job was created.
     #
     #
@@ -4327,7 +5282,7 @@ module Aws::IAM
     #   @return [Time]
     #
     # @!attribute [rw] job_completion_date
-    #   The date and time, in [ISO 8601 date-time format][1], when the
+    #   The date and time, in [ISO 8601 date-time format][1], when the
     #   generated report job was completed or failed.
     #
     #   This field is null if the job is still in progress, as indicated by
@@ -4339,7 +5294,7 @@ module Aws::IAM
     #   @return [Time]
     #
     # @!attribute [rw] entity_details_list
-    #   An `EntityDetailsList` object that contains details about when an
+    #   An `EntityDetailsList` object that contains details about when an
     #   IAM entity (user or role) used group or policy permissions in an
     #   attempt to access the specified Amazon Web Services service.
     #   @return [Array<Types::EntityDetails>]
@@ -4381,8 +5336,12 @@ module Aws::IAM
 
     # @!attribute [rw] deletion_task_id
     #   The deletion task identifier. This identifier is returned by the
-    #   DeleteServiceLinkedRole operation in the format
+    #   [DeleteServiceLinkedRole][1] operation in the format
     #   `task/aws-service-role/<service-principal-name>/<role-name>/<task-uuid>`.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_DeleteServiceLinkedRole.html
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/GetServiceLinkedRoleDeletionStatusRequest AWS API Documentation
@@ -4446,7 +5405,11 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful GetUserPolicy request.
+    # Contains the response to a successful [GetUserPolicy][1] request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetUserPolicy.html
     #
     # @!attribute [rw] user_name
     #   The user the policy is associated with.
@@ -4497,7 +5460,11 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful GetUser request.
+    # Contains the response to a successful [GetUser][1] request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetUser.html
     #
     # @!attribute [rw] user
     #   A structure containing details about the IAM user.
@@ -4540,11 +5507,17 @@ module Aws::IAM
     # This data type is used as a response element in the following
     # operations:
     #
-    # * CreateGroup
+    # * [CreateGroup][1]
     #
-    # * GetGroup
+    # * [GetGroup][2]
     #
-    # * ListGroups
+    # * [ListGroups][3]
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateGroup.html
+    # [2]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetGroup.html
+    # [3]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListGroups.html
     #
     # @!attribute [rw] path
     #   The path to the group. For more information about paths, see [IAM
@@ -4604,7 +5577,11 @@ module Aws::IAM
     # policies.
     #
     # This data type is used as a response element in the
-    # GetAccountAuthorizationDetails operation.
+    # [GetAccountAuthorizationDetails][1] operation.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetAccountAuthorizationDetails.html
     #
     # @!attribute [rw] path
     #   The path to the group. For more information about paths, see [IAM
@@ -4672,18 +5649,77 @@ module Aws::IAM
       include Aws::Structure
     end
 
+    # Contains an inline policy template that the service embeds in roles
+    # that you create from a role template.
+    #
+    # @!attribute [rw] policy_name
+    #   The name of the inline policy.
+    #   @return [String]
+    #
+    # @!attribute [rw] policy_document
+    #   The inline policy document.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/InlinePolicy AWS API Documentation
+    #
+    class InlinePolicy < Struct.new(
+      :policy_name,
+      :policy_document)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Identifies one or more inline policies that are embedded in IAM users,
+    # groups, or roles, by the name of the policy together with the type and
+    # name of the entity that it is attached to. Wildcard characters in the
+    # entity name can match multiple entities, so a single identifier can
+    # select more than one attached inline policy.
+    #
+    # @!attribute [rw] policy_name
+    #   The name of the inline policy.
+    #   @return [String]
+    #
+    # @!attribute [rw] attachment_type
+    #   The type of IAM entity that the inline policy is attached to.
+    #   @return [String]
+    #
+    # @!attribute [rw] attachment_name
+    #   The name of the IAM user, group, or role that the inline policy is
+    #   attached to. Wildcard characters are supported to match multiple
+    #   entities: use at most one `*` (matches any sequence of characters,
+    #   including none), and any number of `?` (each matches exactly one
+    #   character).
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/InlinePolicyIdentifierType AWS API Documentation
+    #
+    class InlinePolicyIdentifierType < Struct.new(
+      :policy_name,
+      :attachment_type,
+      :attachment_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Contains information about an instance profile.
     #
     # This data type is used as a response element in the following
     # operations:
     #
-    # * CreateInstanceProfile
+    # * [CreateInstanceProfile][1]
     #
-    # * GetInstanceProfile
+    # * [GetInstanceProfile][2]
     #
-    # * ListInstanceProfiles
+    # * [ListInstanceProfiles][3]
     #
-    # * ListInstanceProfilesForRole
+    # * [ListInstanceProfilesForRole][4]
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateInstanceProfile.html
+    # [2]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetInstanceProfile.html
+    # [3]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListInstanceProfiles.html
+    # [4]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListInstanceProfilesForRole.html
     #
     # @!attribute [rw] path
     #   The path to the instance profile. For more information about paths,
@@ -4891,7 +5927,11 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful ListAccessKeys request.
+    # Contains the response to a successful [ListAccessKeys][1] request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListAccessKeys.html
     #
     # @!attribute [rw] access_key_metadata
     #   A list of objects containing metadata about the access keys.
@@ -4952,7 +5992,11 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful ListAccountAliases request.
+    # Contains the response to a successful [ListAccountAliases][1] request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListAccountAliases.html
     #
     # @!attribute [rw] account_aliases
     #   A list of aliases associated with the account. Amazon Web Services
@@ -5047,8 +6091,12 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful ListAttachedGroupPolicies
+    # Contains the response to a successful [ListAttachedGroupPolicies][1]
     # request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListAttachedGroupPolicies.html
     #
     # @!attribute [rw] attached_policies
     #   A list of the attached policies.
@@ -5142,8 +6190,12 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful ListAttachedRolePolicies
+    # Contains the response to a successful [ListAttachedRolePolicies][1]
     # request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListAttachedRolePolicies.html
     #
     # @!attribute [rw] attached_policies
     #   A list of the attached policies.
@@ -5237,8 +6289,12 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful ListAttachedUserPolicies
+    # Contains the response to a successful [ListAttachedUserPolicies][1]
     # request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListAttachedUserPolicies.html
     #
     # @!attribute [rw] attached_policies
     #   A list of the attached policies.
@@ -5266,6 +6322,66 @@ module Aws::IAM
       :attached_policies,
       :is_truncated,
       :marker)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] owner_id
+    #   The owner ID to filter delegation requests by.
+    #   @return [String]
+    #
+    # @!attribute [rw] marker
+    #   Use this parameter only when paginating results and only after you
+    #   receive a response indicating that the results are truncated. Set it
+    #   to the value of the `Marker` element in the response that you
+    #   received to indicate where the next call should start.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_items
+    #   Use this only when paginating results to indicate the maximum number
+    #   of items you want in the response. If additional items exist beyond
+    #   the maximum you specify, the `IsTruncated` response element is
+    #   `true`.
+    #
+    #   If you do not include this parameter, the number of items defaults
+    #   to 100. Note that IAM may return fewer results, even when there are
+    #   more results available. In that case, the `IsTruncated` response
+    #   element returns `true`, and `Marker` contains a value to include in
+    #   the subsequent call that tells the service where to continue from.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/ListDelegationRequestsRequest AWS API Documentation
+    #
+    class ListDelegationRequestsRequest < Struct.new(
+      :owner_id,
+      :marker,
+      :max_items)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] delegation_requests
+    #   A list of delegation requests that match the specified criteria.
+    #   @return [Array<Types::DelegationRequest>]
+    #
+    # @!attribute [rw] marker
+    #   When `isTruncated` is `true`, this element is present and contains
+    #   the value to use for the `Marker` parameter in a subsequent
+    #   pagination request.
+    #   @return [String]
+    #
+    # @!attribute [rw] is_truncated
+    #   A flag that indicates whether there are more items to return. If
+    #   your results were truncated, you can make a subsequent pagination
+    #   request using the `Marker` request parameter to retrieve more items.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/ListDelegationRequestsResponse AWS API Documentation
+    #
+    class ListDelegationRequestsResponse < Struct.new(
+      :delegation_requests,
+      :marker,
+      :is_truncated)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5312,10 +6428,9 @@ module Aws::IAM
     # @!attribute [rw] policy_usage_filter
     #   The policy usage method to use for filtering the results.
     #
-    #   To list only permissions policies,
-    #   set `PolicyUsageFilter` to `PermissionsPolicy`. To list only the
-    #   policies used to set permissions boundaries, set the value
-    #   to `PermissionsBoundary`.
+    #   To list only permissions policies, set `PolicyUsageFilter` to
+    #   `PermissionsPolicy`. To list only the policies used to set
+    #   permissions boundaries, set the value to `PermissionsBoundary`.
     #
     #   This parameter is optional. If it is not included, all policies are
     #   returned.
@@ -5354,7 +6469,12 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful ListEntitiesForPolicy request.
+    # Contains the response to a successful [ListEntitiesForPolicy][1]
+    # request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListEntitiesForPolicy.html
     #
     # @!attribute [rw] policy_groups
     #   A list of IAM groups that the policy is attached to.
@@ -5439,7 +6559,11 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful ListGroupPolicies request.
+    # Contains the response to a successful [ListGroupPolicies][1] request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListGroupPolicies.html
     #
     # @!attribute [rw] policy_names
     #   A list of policy names.
@@ -5523,7 +6647,11 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful ListGroupsForUser request.
+    # Contains the response to a successful [ListGroupsForUser][1] request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListGroupsForUser.html
     #
     # @!attribute [rw] groups
     #   A list of groups.
@@ -5604,7 +6732,11 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful ListGroups request.
+    # Contains the response to a successful [ListGroups][1] request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListGroups.html
     #
     # @!attribute [rw] groups
     #   A list of groups.
@@ -5755,8 +6887,12 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful ListInstanceProfilesForRole
+    # Contains the response to a successful [ListInstanceProfilesForRole][1]
     # request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListInstanceProfilesForRole.html
     #
     # @!attribute [rw] instance_profiles
     #   A list of instance profiles.
@@ -5837,7 +6973,12 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful ListInstanceProfiles request.
+    # Contains the response to a successful [ListInstanceProfiles][1]
+    # request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListInstanceProfiles.html
     #
     # @!attribute [rw] instance_profiles
     #   A list of instance profiles.
@@ -5990,7 +7131,11 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful ListMFADevices request.
+    # Contains the response to a successful [ListMFADevices][1] request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListMFADevices.html
     #
     # @!attribute [rw] mfa_devices
     #   A list of MFA devices.
@@ -6105,8 +7250,12 @@ module Aws::IAM
     #
     class ListOpenIDConnectProvidersRequest < Aws::EmptyStructure; end
 
-    # Contains the response to a successful ListOpenIDConnectProviders
+    # Contains the response to a successful [ListOpenIDConnectProviders][1]
     # request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListOpenIDConnectProviders.html
     #
     # @!attribute [rw] open_id_connect_provider_list
     #   The list of IAM OIDC provider resource objects defined in the Amazon
@@ -6149,7 +7298,11 @@ module Aws::IAM
     # the specified identity (user, group, or role).
     #
     # This data type is used as a response element in the
-    # ListPoliciesGrantingServiceAccess operation.
+    # [ListPoliciesGrantingServiceAccess][1] operation.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListPoliciesGrantingServiceAccess.html
     #
     # @!attribute [rw] service_namespace
     #   The namespace of the service that was accessed.
@@ -6205,7 +7358,7 @@ module Aws::IAM
     #   details for that service. In the first paragraph, find the service
     #   prefix. For example, `(service prefix: a4b)`. For more information
     #   about service namespaces, see [Amazon Web Services service
-    #   namespaces][2] in the *Amazon Web Services General Reference*.
+    #   namespaces][2] in the *Amazon Web Services General Reference*.
     #
     #
     #
@@ -6224,7 +7377,7 @@ module Aws::IAM
     end
 
     # @!attribute [rw] policies_granting_service_access
-    #   A `ListPoliciesGrantingServiceAccess` object that contains details
+    #   A `ListPoliciesGrantingServiceAccess` object that contains details
     #   about the permissions policies attached to the specified identity
     #   (user, group, or role).
     #   @return [Array<Types::ListPoliciesGrantingServiceAccessEntry>]
@@ -6291,10 +7444,9 @@ module Aws::IAM
     # @!attribute [rw] policy_usage_filter
     #   The policy usage method to use for filtering the results.
     #
-    #   To list only permissions policies,
-    #   set `PolicyUsageFilter` to `PermissionsPolicy`. To list only the
-    #   policies used to set permissions boundaries, set the value
-    #   to `PermissionsBoundary`.
+    #   To list only permissions policies, set `PolicyUsageFilter` to
+    #   `PermissionsPolicy`. To list only the policies used to set
+    #   permissions boundaries, set the value to `PermissionsBoundary`.
     #
     #   This parameter is optional. If it is not included, all policies are
     #   returned.
@@ -6333,7 +7485,11 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful ListPolicies request.
+    # Contains the response to a successful [ListPolicies][1] request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListPolicies.html
     #
     # @!attribute [rw] policies
     #   A list of policies.
@@ -6484,7 +7640,11 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful ListPolicyVersions request.
+    # Contains the response to a successful [ListPolicyVersions][1] request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListPolicyVersions.html
     #
     # @!attribute [rw] versions
     #   A list of policy versions.
@@ -6566,7 +7726,11 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful ListRolePolicies request.
+    # Contains the response to a successful [ListRolePolicies][1] request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListRolePolicies.html
     #
     # @!attribute [rw] policy_names
     #   A list of policy names.
@@ -6723,7 +7887,11 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful ListRoles request.
+    # Contains the response to a successful [ListRoles][1] request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListRoles.html
     #
     # @!attribute [rw] roles
     #   A list of roles.
@@ -6839,7 +8007,11 @@ module Aws::IAM
     #
     class ListSAMLProvidersRequest < Aws::EmptyStructure; end
 
-    # Contains the response to a successful ListSAMLProviders request.
+    # Contains the response to a successful [ListSAMLProviders][1] request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListSAMLProviders.html
     #
     # @!attribute [rw] saml_provider_list
     #   The list of SAML provider resource objects defined in IAM for this
@@ -6899,7 +8071,11 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful ListSSHPublicKeys request.
+    # Contains the response to a successful [ListSSHPublicKeys][1] request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListSSHPublicKeys.html
     #
     # @!attribute [rw] ssh_public_keys
     #   A list of the SSH public keys assigned to IAM user.
@@ -7056,7 +8232,12 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful ListServerCertificates request.
+    # Contains the response to a successful [ListServerCertificates][1]
+    # request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListServerCertificates.html
     #
     # @!attribute [rw] server_certificate_metadata_list
     #   A list of server certificates.
@@ -7110,11 +8291,34 @@ module Aws::IAM
     #   returns service-specific credentials for all services.
     #   @return [String]
     #
+    # @!attribute [rw] all_users
+    #   A flag indicating whether to list service specific credentials for
+    #   all users. This parameter cannot be specified together with
+    #   UserName. When true, returns all credentials associated with the
+    #   specified service.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] marker
+    #   Use this parameter only when paginating results and only after you
+    #   receive a response indicating that the results are truncated. Set it
+    #   to the value of the Marker from the response that you received to
+    #   indicate where the next call should start.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_items
+    #   Use this only when paginating results to indicate the maximum number
+    #   of items you want in the response. If additional items exist beyond
+    #   the maximum you specify, the IsTruncated response element is true.
+    #   @return [Integer]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/ListServiceSpecificCredentialsRequest AWS API Documentation
     #
     class ListServiceSpecificCredentialsRequest < Struct.new(
       :user_name,
-      :service_name)
+      :service_name,
+      :all_users,
+      :marker,
+      :max_items)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7124,10 +8328,24 @@ module Aws::IAM
     #   service-specific credential.
     #   @return [Array<Types::ServiceSpecificCredentialMetadata>]
     #
+    # @!attribute [rw] marker
+    #   When IsTruncated is true, this element is present and contains the
+    #   value to use for the Marker parameter in a subsequent pagination
+    #   request.
+    #   @return [String]
+    #
+    # @!attribute [rw] is_truncated
+    #   A flag that indicates whether there are more items to return. If
+    #   your results were truncated, you can make a subsequent pagination
+    #   request using the Marker request parameter to retrieve more items.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/ListServiceSpecificCredentialsResponse AWS API Documentation
     #
     class ListServiceSpecificCredentialsResponse < Struct.new(
-      :service_specific_credentials)
+      :service_specific_credentials,
+      :marker,
+      :is_truncated)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7176,7 +8394,12 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful ListSigningCertificates request.
+    # Contains the response to a successful [ListSigningCertificates][1]
+    # request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListSigningCertificates.html
     #
     # @!attribute [rw] certificates
     #   A list of the user's signing certificate information.
@@ -7251,7 +8474,11 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful ListUserPolicies request.
+    # Contains the response to a successful [ListUserPolicies][1] request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListUserPolicies.html
     #
     # @!attribute [rw] policy_names
     #   A list of policy names.
@@ -7408,7 +8635,11 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful ListUsers request.
+    # Contains the response to a successful [ListUsers][1] request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListUsers.html
     #
     # @!attribute [rw] users
     #   A list of users.
@@ -7477,7 +8708,12 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful ListVirtualMFADevices request.
+    # Contains the response to a successful [ListVirtualMFADevices][1]
+    # request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListVirtualMFADevices.html
     #
     # @!attribute [rw] virtual_mfa_devices
     #   The list of virtual MFA devices in the current account that match
@@ -7512,8 +8748,13 @@ module Aws::IAM
 
     # Contains the user name and password create date for a user.
     #
-    # This data type is used as a response element in the CreateLoginProfile
-    # and GetLoginProfile operations.
+    # This data type is used as a response element in the
+    # [CreateLoginProfile][1] and [GetLoginProfile][2] operations.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateLoginProfile.html
+    # [2]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetLoginProfile.html
     #
     # @!attribute [rw] user_name
     #   The name of the user, which can be used for signing in to the Amazon
@@ -7541,8 +8782,12 @@ module Aws::IAM
 
     # Contains information about an MFA device.
     #
-    # This data type is used as a response element in the ListMFADevices
-    # operation.
+    # This data type is used as a response element in the
+    # [ListMFADevices][1] operation.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListMFADevices.html
     #
     # @!attribute [rw] user_name
     #   The user with whom the MFA device is associated.
@@ -7600,14 +8845,15 @@ module Aws::IAM
     # and roles) that the policy is attached to.
     #
     # This data type is used as a response element in the
-    # GetAccountAuthorizationDetails operation.
+    # [GetAccountAuthorizationDetails][1] operation.
     #
     # For more information about managed policies, see [Managed policies and
-    # inline policies][1] in the *IAM User Guide*.
+    # inline policies][2] in the *IAM User Guide*.
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/policies-managed-vs-inline.html
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetAccountAuthorizationDetails.html
+    # [2]: https://docs.aws.amazon.com/IAM/latest/UserGuide/policies-managed-vs-inline.html
     #
     # @!attribute [rw] policy_name
     #   The friendly name (not ARN) identifying the policy.
@@ -7731,6 +8977,20 @@ module Aws::IAM
       include Aws::Structure
     end
 
+    # The request was rejected because the resulting role name conflicts
+    # with an existing role in the account.
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/NameConflictException AWS API Documentation
+    #
+    class NameConflictException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The request was rejected because it referenced a resource entity that
     # does not exist. The error message describes the resource.
     #
@@ -7782,6 +9042,33 @@ module Aws::IAM
       include Aws::Structure
     end
 
+    # Represents one level of an Organizations hierarchy—the organization
+    # root, an organizational unit (OU), or an account—together with the
+    # service control policies (SCPs) that apply at that level. Each element
+    # in the list represents one level of the hierarchy, ordered from the
+    # organization root down to the account.
+    #
+    # For more information about SCPs, see [Service control policies
+    # (SCPs)][1] in the *Organizations User Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html
+    #
+    # @!attribute [rw] service_control_policy_input_list
+    #   A list of SCP documents that apply at this level of the
+    #   Organizations hierarchy. Each document is specified as a string
+    #   containing the complete, valid JSON text of an SCP.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/OrderedOrganizationPolicyType AWS API Documentation
+    #
+    class OrderedOrganizationPolicyType < Struct.new(
+      :service_control_policy_input_list)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The request was rejected because no organization is associated with
     # your account.
     #
@@ -7818,10 +9105,68 @@ module Aws::IAM
       include Aws::Structure
     end
 
+    # Defines a parameter that a role template accepts. You supply values
+    # for these parameters when you create a role with [AcquireRole][1].
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_AcquireRole.html
+    #
+    # @!attribute [rw] name
+    #   The name of the parameter.
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   The data type of the parameter. Valid values are `String`,
+    #   `StringList`, `Number`, `NumberList`, `Arn`, and `ArnList`.
+    #   @return [String]
+    #
+    # @!attribute [rw] sub_type
+    #   An optional subtype that further constrains the values that are
+    #   allowed for the parameter.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   A description of the parameter.
+    #   @return [String]
+    #
+    # @!attribute [rw] is_required
+    #   Specifies whether you must supply a value for the parameter when you
+    #   create a role from the template.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] default_value
+    #   The value that the service uses for the parameter when you do not
+    #   supply one.
+    #   @return [String]
+    #
+    # @!attribute [rw] immutable
+    #   Specifies whether you can change the parameter value after you
+    #   create the role.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/ParameterDefinition AWS API Documentation
+    #
+    class ParameterDefinition < Struct.new(
+      :name,
+      :type,
+      :sub_type,
+      :description,
+      :is_required,
+      :default_value,
+      :immutable)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Contains information about the account password policy.
     #
     # This data type is used as a response element in the
-    # GetAccountPasswordPolicy operation.
+    # [GetAccountPasswordPolicy][1] operation.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetAccountPasswordPolicy.html
     #
     # @!attribute [rw] minimum_password_length
     #   Minimum length to require for IAM user passwords.
@@ -7939,15 +9284,18 @@ module Aws::IAM
 
     # Contains information about a managed policy.
     #
-    # This data type is used as a response element in the CreatePolicy,
-    # GetPolicy, and ListPolicies operations.
+    # This data type is used as a response element in the [CreatePolicy][1],
+    # [GetPolicy][2], and [ListPolicies][3] operations.
     #
     # For more information about managed policies, refer to [Managed
-    # policies and inline policies][1] in the *IAM User Guide*.
+    # policies and inline policies][4] in the *IAM User Guide*.
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/policies-managed-vs-inline.html
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreatePolicy.html
+    # [2]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetPolicy.html
+    # [3]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListPolicies.html
+    # [4]: https://docs.aws.amazon.com/IAM/latest/UserGuide/policies-managed-vs-inline.html
     #
     # @!attribute [rw] policy_name
     #   The friendly name (not ARN) identifying the policy.
@@ -8017,8 +9365,14 @@ module Aws::IAM
     # @!attribute [rw] description
     #   A friendly description of the policy.
     #
-    #   This element is included in the response to the GetPolicy operation.
-    #   It is not included in the response to the ListPolicies operation.
+    #   This element is included in the response to the [GetPolicy][1]
+    #   operation. It is not included in the response to the
+    #   [ListPolicies][2] operation.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetPolicy.html
+    #   [2]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListPolicies.html
     #   @return [String]
     #
     # @!attribute [rw] create_date
@@ -8077,7 +9431,11 @@ module Aws::IAM
     # document.
     #
     # This data type is used as a response element in the
-    # GetAccountAuthorizationDetails operation.
+    # [GetAccountAuthorizationDetails][1] operation.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetAccountAuthorizationDetails.html
     #
     # @!attribute [rw] policy_name
     #   The name of the policy.
@@ -8115,7 +9473,11 @@ module Aws::IAM
     # the specified identity (user, group, or role).
     #
     # This data type is an element of the
-    # ListPoliciesGrantingServiceAccessEntry object.
+    # [ListPoliciesGrantingServiceAccessEntry][1] object.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListPoliciesGrantingServiceAccessEntry.html
     #
     # @!attribute [rw] policy_name
     #   The policy name.
@@ -8184,14 +9546,15 @@ module Aws::IAM
     # to.
     #
     # This data type is used as a response element in the
-    # ListEntitiesForPolicy operation.
+    # [ListEntitiesForPolicy][1] operation.
     #
     # For more information about managed policies, refer to [Managed
-    # policies and inline policies][1] in the *IAM User Guide*.
+    # policies and inline policies][2] in the *IAM User Guide*.
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/policies-managed-vs-inline.html
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListEntitiesForPolicy.html
+    # [2]: https://docs.aws.amazon.com/IAM/latest/UserGuide/policies-managed-vs-inline.html
     #
     # @!attribute [rw] group_name
     #   The name (friendly name, not ARN) identifying the group.
@@ -8216,6 +9579,57 @@ module Aws::IAM
       include Aws::Structure
     end
 
+    # Identifies one or more policies as a union type. Specify exactly one
+    # of `PolicyType`, `PolicyArn`, or `InlinePolicyIdentifier` to identify
+    # policies by their type, by Amazon Resource Name (ARN), or by the name
+    # of an inline policy and the entity it is attached to.
+    #
+    # @note PolicyIdentifier is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @!attribute [rw] policy_type
+    #   The policy type to identify. All policies of the specified type are
+    #   matched.
+    #   @return [String]
+    #
+    # @!attribute [rw] policy_arn
+    #   The Amazon Resource Name (ARN) of an Amazon Web Services managed
+    #   policy or a customer managed policy that is attached to an IAM user,
+    #   group, or role. Wildcard characters are supported in the resource
+    #   name portion of the ARN to match multiple managed policies: use at
+    #   most one `*` (matches any sequence of characters, including none),
+    #   and any number of `?` (each matches exactly one character).
+    #
+    #   For more information about ARNs, see [Amazon Resource Names
+    #   (ARNs)][1] in the *Amazon Web Services General Reference*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html
+    #   @return [String]
+    #
+    # @!attribute [rw] inline_policy_identifier
+    #   An inline policy identifier consisting of a policy name and the
+    #   entity it is attached to. Wildcard characters (`*` and `?`) in the
+    #   entity name can match multiple entities.
+    #   @return [Types::InlinePolicyIdentifierType]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/PolicyIdentifier AWS API Documentation
+    #
+    class PolicyIdentifier < Struct.new(
+      :policy_type,
+      :policy_arn,
+      :inline_policy_identifier,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class PolicyType < PolicyIdentifier; end
+      class PolicyArn < PolicyIdentifier; end
+      class InlinePolicyIdentifier < PolicyIdentifier; end
+      class Unknown < PolicyIdentifier; end
+    end
+
     # The request failed because Amazon Web Services service role policies
     # can only be attached to the service-linked role for that service.
     #
@@ -8230,18 +9644,44 @@ module Aws::IAM
       include Aws::Structure
     end
 
+    # Contains information about a policy parameter used to customize
+    # delegated permissions.
+    #
+    # @!attribute [rw] name
+    #   The name of the policy parameter.
+    #   @return [String]
+    #
+    # @!attribute [rw] values
+    #   The allowed values for the policy parameter.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] type
+    #   The data type of the policy parameter value.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/PolicyParameter AWS API Documentation
+    #
+    class PolicyParameter < Struct.new(
+      :name,
+      :values,
+      :type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Contains information about a role that a managed policy is attached
     # to.
     #
     # This data type is used as a response element in the
-    # ListEntitiesForPolicy operation.
+    # [ListEntitiesForPolicy][1] operation.
     #
     # For more information about managed policies, refer to [Managed
-    # policies and inline policies][1] in the *IAM User Guide*.
+    # policies and inline policies][2] in the *IAM User Guide*.
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/policies-managed-vs-inline.html
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListEntitiesForPolicy.html
+    # [2]: https://docs.aws.amazon.com/IAM/latest/UserGuide/policies-managed-vs-inline.html
     #
     # @!attribute [rw] role_name
     #   The name (friendly name, not ARN) identifying the role.
@@ -8270,14 +9710,15 @@ module Aws::IAM
     # to.
     #
     # This data type is used as a response element in the
-    # ListEntitiesForPolicy operation.
+    # [ListEntitiesForPolicy][1] operation.
     #
     # For more information about managed policies, refer to [Managed
-    # policies and inline policies][1] in the *IAM User Guide*.
+    # policies and inline policies][2] in the *IAM User Guide*.
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/policies-managed-vs-inline.html
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListEntitiesForPolicy.html
+    # [2]: https://docs.aws.amazon.com/IAM/latest/UserGuide/policies-managed-vs-inline.html
     #
     # @!attribute [rw] user_name
     #   The name (friendly name, not ARN) identifying the user.
@@ -8305,26 +9746,31 @@ module Aws::IAM
     # Contains information about a version of a managed policy.
     #
     # This data type is used as a response element in the
-    # CreatePolicyVersion, GetPolicyVersion, ListPolicyVersions, and
-    # GetAccountAuthorizationDetails operations.
+    # [CreatePolicyVersion][1], [GetPolicyVersion][2],
+    # [ListPolicyVersions][3], and [GetAccountAuthorizationDetails][4]
+    # operations.
     #
     # For more information about managed policies, refer to [Managed
-    # policies and inline policies][1] in the *IAM User Guide*.
+    # policies and inline policies][5] in the *IAM User Guide*.
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/policies-managed-vs-inline.html
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreatePolicyVersion.html
+    # [2]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetPolicyVersion.html
+    # [3]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListPolicyVersions.html
+    # [4]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetAccountAuthorizationDetails.html
+    # [5]: https://docs.aws.amazon.com/IAM/latest/UserGuide/policies-managed-vs-inline.html
     #
     # @!attribute [rw] document
     #   The policy document.
     #
     #   The policy document is returned in the response to the
-    #   GetPolicyVersion and GetAccountAuthorizationDetails operations. It
-    #   is not returned in the response to the CreatePolicyVersion or
-    #   ListPolicyVersions operations.
+    #   [GetPolicyVersion][1] and [GetAccountAuthorizationDetails][2]
+    #   operations. It is not returned in the response to the
+    #   [CreatePolicyVersion][3] or [ListPolicyVersions][4] operations.
     #
     #   The policy document returned in this structure is URL-encoded
-    #   compliant with [RFC 3986][1]. You can use a URL decoding method to
+    #   compliant with [RFC 3986][5]. You can use a URL decoding method to
     #   convert the policy back to plain JSON text. For example, if you use
     #   Java, you can use the `decode` method of the `java.net.URLDecoder`
     #   utility class in the Java SDK. Other languages and SDKs provide
@@ -8332,7 +9778,11 @@ module Aws::IAM
     #
     #
     #
-    #   [1]: https://tools.ietf.org/html/rfc3986
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetPolicyVersion.html
+    #   [2]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetAccountAuthorizationDetails.html
+    #   [3]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreatePolicyVersion.html
+    #   [4]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListPolicyVersions.html
+    #   [5]: https://tools.ietf.org/html/rfc3986
     #   @return [String]
     #
     # @!attribute [rw] version_id
@@ -8389,6 +9839,31 @@ module Aws::IAM
       SENSITIVE = []
       include Aws::Structure
     end
+
+    # @!attribute [rw] properties
+    #   A map of property key-value pairs to set. All keys must belong to
+    #   the same namespace.
+    #
+    #   Each key uses the format `Namespace/PropertyName`. The key must
+    #   contain exactly one `/` separating the namespace from the property
+    #   name, and cannot start or end with `/`.
+    #
+    #   The service validates each value based on the property key's
+    #   expected type. For example, boolean properties expect `true` or
+    #   `false`.
+    #   @return [Hash<String,String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/PutAccountPropertiesRequest AWS API Documentation
+    #
+    class PutAccountPropertiesRequest < Struct.new(
+      :properties)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/PutAccountPropertiesResponse AWS API Documentation
+    #
+    class PutAccountPropertiesResponse < Aws::EmptyStructure; end
 
     # @!attribute [rw] group_name
     #   The name of the group to associate the policy with.
@@ -8641,23 +10116,46 @@ module Aws::IAM
       include Aws::Structure
     end
 
+    # @!attribute [rw] delegation_request_id
+    #   The unique identifier of the delegation request to reject.
+    #   @return [String]
+    #
+    # @!attribute [rw] notes
+    #   Optional notes explaining the reason for rejecting the delegation
+    #   request.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/RejectDelegationRequestRequest AWS API Documentation
+    #
+    class RejectDelegationRequestRequest < Struct.new(
+      :delegation_request_id,
+      :notes)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] open_id_connect_provider_arn
     #   The Amazon Resource Name (ARN) of the IAM OIDC provider resource to
     #   remove the client ID from. You can get a list of OIDC provider ARNs
-    #   by using the ListOpenIDConnectProviders operation.
+    #   by using the [ListOpenIDConnectProviders][1] operation.
     #
     #   For more information about ARNs, see [Amazon Resource Names
-    #   (ARNs)][1] in the *Amazon Web Services General Reference*.
+    #   (ARNs)][2] in the *Amazon Web Services General Reference*.
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListOpenIDConnectProviders.html
+    #   [2]: https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html
     #   @return [String]
     #
     # @!attribute [rw] client_id
     #   The client ID (also known as audience) to remove from the IAM OIDC
     #   provider resource. For more information about client IDs, see
-    #   CreateOpenIDConnectProvider.
+    #   [CreateOpenIDConnectProvider][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateOpenIDConnectProvider.html
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/RemoveClientIDFromOpenIDConnectProviderRequest AWS API Documentation
@@ -8739,6 +10237,21 @@ module Aws::IAM
       include Aws::Structure
     end
 
+    # Contains the list of replacement values for a single template
+    # parameter used when creating a role from a role template.
+    #
+    # @!attribute [rw] values
+    #   The list of replacement values for the template parameter.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/ReplacementValueEntry AWS API Documentation
+    #
+    class ReplacementValueEntry < Struct.new(
+      :values)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The request failed because the maximum number of concurrent requests
     # for this account are already running.
     #
@@ -8808,7 +10321,12 @@ module Aws::IAM
     # Contains the result of the simulation of a single API operation call
     # on a single resource.
     #
-    # This data type is used by a member of the EvaluationResult data type.
+    # This data type is used by a member of the [EvaluationResult][1] data
+    # type.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_EvaluationResult.html
     #
     # @!attribute [rw] eval_resource_name
     #   The name of the simulated resource, in Amazon Resource Name (ARN)
@@ -8838,7 +10356,13 @@ module Aws::IAM
     #   including the `ResourceArns` parameter, then any missing context
     #   values are instead included under the `EvaluationResults` section.
     #   To discover the context keys used by a set of policies, you can call
-    #   GetContextKeysForCustomPolicy or GetContextKeysForPrincipalPolicy.
+    #   [GetContextKeysForCustomPolicy][1] or
+    #   [GetContextKeysForPrincipalPolicy][2].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetContextKeysForCustomPolicy.html
+    #   [2]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetContextKeysForPrincipalPolicy.html
     #   @return [Array<String>]
     #
     # @!attribute [rw] eval_decision_details
@@ -9012,6 +10536,16 @@ module Aws::IAM
     #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_access-advisor.html#access-advisor_tracking-period
     #   @return [Types::RoleLastUsed]
     #
+    # @!attribute [rw] source_role_template
+    #   Contains information about the role template that this role was
+    #   created from. This member is present only for roles created with
+    #   [AcquireRole][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_AcquireRole.html
+    #   @return [Types::SourceRoleTemplate]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/Role AWS API Documentation
     #
     class Role < Struct.new(
@@ -9025,7 +10559,8 @@ module Aws::IAM
       :max_session_duration,
       :permissions_boundary,
       :tags,
-      :role_last_used)
+      :role_last_used,
+      :source_role_template)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -9034,7 +10569,11 @@ module Aws::IAM
     # policies.
     #
     # This data type is used as a response element in the
-    # GetAccountAuthorizationDetails operation.
+    # [GetAccountAuthorizationDetails][1] operation.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetAccountAuthorizationDetails.html
     #
     # @!attribute [rw] path
     #   The path to the role. For more information about paths, see [IAM
@@ -9161,12 +10700,14 @@ module Aws::IAM
     # ago. For more information, see [Regions where data is tracked][1] in
     # the *IAM user Guide*.
     #
-    # This data type is returned as a response element in the GetRole and
-    # GetAccountAuthorizationDetails operations.
+    # This data type is returned as a response element in the [GetRole][2]
+    # and [GetAccountAuthorizationDetails][3] operations.
     #
     #
     #
     # [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_access-advisor.html#access-advisor_tracking-period
+    # [2]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetRole.html
+    # [3]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetAccountAuthorizationDetails.html
     #
     # @!attribute [rw] last_used_date
     #   The date and time, in [ISO 8601 date-time format][1] that the role
@@ -9196,11 +10737,228 @@ module Aws::IAM
       include Aws::Structure
     end
 
+    # The request was rejected because someone modified the role template
+    # while the service was creating the role. Wait a few minutes and try
+    # the request again.
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/RoleModifiedException AWS API Documentation
+    #
+    class RoleModifiedException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The request was rejected because the specified role template is
+    # disabled. A disabled role template cannot be used to create new roles.
+    # Contact your administrator to enable the role template, or use a
+    # different role template.
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/RoleTemplateDisabledException AWS API Documentation
+    #
+    class RoleTemplateDisabledException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains information about a version of an IAM role template,
+    # including the configuration that is used to create roles with
+    # [AcquireRole][1]. This structure is returned as a response element by
+    # the [GetRoleTemplateVersion][2] operation.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_AcquireRole.html
+    # [2]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetRoleTemplateVersion.html
+    #
+    # @!attribute [rw] template_arn
+    #   The Amazon Resource Name (ARN) that identifies the role template.
+    #
+    #   For more information about ARNs, see [Amazon Resource Names
+    #   (ARNs)][1] in the *Amazon Web Services General Reference*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html
+    #   @return [String]
+    #
+    # @!attribute [rw] template_name
+    #   The friendly name that identifies the role template.
+    #   @return [String]
+    #
+    # @!attribute [rw] template_version_id
+    #   The identifier of the role template version.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   The description of the role template.
+    #   @return [String]
+    #
+    # @!attribute [rw] major_version
+    #   The major version number of the role template.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] default_minor_version
+    #   The minor version that the service uses by default when you create a
+    #   role from this template without specifying a minor version.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] managed_by_type
+    #   Indicates that the role template is managed by an Amazon Web
+    #   Services service.
+    #   @return [String]
+    #
+    # @!attribute [rw] managed_by_value
+    #   The identifier of the Amazon Web Services service that manages the
+    #   role template.
+    #   @return [String]
+    #
+    # @!attribute [rw] enabled
+    #   Specifies whether the role template is enabled. When a template is
+    #   disabled, you cannot create roles from it.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] minor_version
+    #   The minor version number of this role template version.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] role_name_pattern
+    #   The pattern that is used to generate the name of a role that is
+    #   created from this template. The pattern can include `@{parameter}`
+    #   placeholders that are replaced with the values you supply in the
+    #   `ReplacementValues` parameter of [AcquireRole][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_AcquireRole.html
+    #   @return [String]
+    #
+    # @!attribute [rw] role_path_pattern
+    #   The pattern that is used to generate the path of a role that is
+    #   created from this template.
+    #   @return [String]
+    #
+    # @!attribute [rw] role_description_pattern
+    #   The pattern that is used to generate the description of a role that
+    #   is created from this template.
+    #   @return [String]
+    #
+    # @!attribute [rw] assume_role_policy_document_template
+    #   The trust policy template that grants an entity permission to assume
+    #   roles that you create from this template.
+    #   @return [String]
+    #
+    # @!attribute [rw] inline_policy_templates
+    #   A list of inline policy templates that the service embeds in roles
+    #   that you create from this template.
+    #   @return [Array<Types::InlinePolicy>]
+    #
+    # @!attribute [rw] managed_policy_arns
+    #   A list of the ARNs of the managed policies that the service attaches
+    #   to roles that you create from this template.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] permission_boundary_arn
+    #   The ARN of the policy that sets the permissions boundary for roles
+    #   that you create from this template.
+    #
+    #   For more information about ARNs, see [Amazon Resource Names
+    #   (ARNs)][1] in the *Amazon Web Services General Reference*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html
+    #   @return [String]
+    #
+    # @!attribute [rw] parameters_definition
+    #   A list of the parameters that are defined for this role template
+    #   version. You supply values for these parameters when you create a
+    #   role with [AcquireRole][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_AcquireRole.html
+    #   @return [Array<Types::ParameterDefinition>]
+    #
+    # @!attribute [rw] role_tags_template
+    #   A list of tag templates that are applied to roles that are created
+    #   from this template.
+    #   @return [Array<Types::TagTemplate>]
+    #
+    # @!attribute [rw] max_session_duration
+    #   The maximum session duration (in seconds) for roles that are created
+    #   from this template.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] version_enabled
+    #   Specifies whether this specific minor version of the role template
+    #   is enabled.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] create_timestamp
+    #   The date and time, in [ISO 8601 date-time format][1], when the role
+    #   template version was created.
+    #
+    #
+    #
+    #   [1]: http://www.iso.org/iso/iso8601
+    #   @return [Time]
+    #
+    # @!attribute [rw] update_timestamp
+    #   The date and time, in [ISO 8601 date-time format][1], when the role
+    #   template version was last updated.
+    #
+    #
+    #
+    #   [1]: http://www.iso.org/iso/iso8601
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/RoleTemplateVersion AWS API Documentation
+    #
+    class RoleTemplateVersion < Struct.new(
+      :template_arn,
+      :template_name,
+      :template_version_id,
+      :description,
+      :major_version,
+      :default_minor_version,
+      :managed_by_type,
+      :managed_by_value,
+      :enabled,
+      :minor_version,
+      :role_name_pattern,
+      :role_path_pattern,
+      :role_description_pattern,
+      :assume_role_policy_document_template,
+      :inline_policy_templates,
+      :managed_policy_arns,
+      :permission_boundary_arn,
+      :parameters_definition,
+      :role_tags_template,
+      :max_session_duration,
+      :version_enabled,
+      :create_timestamp,
+      :update_timestamp)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # An object that contains details about how a service-linked role is
     # used, if that information is returned by the service.
     #
     # This data type is used as a response element in the
-    # GetServiceLinkedRoleDeletionStatus operation.
+    # [GetServiceLinkedRoleDeletionStatus][1] operation.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetServiceLinkedRoleDeletionStatus.html
     #
     # @!attribute [rw] region
     #   The name of the Region where the service-linked role is being used.
@@ -9221,8 +10979,12 @@ module Aws::IAM
 
     # Contains the private keys for the SAML provider.
     #
-    # This data type is used as a response element in the GetSAMLProvider
-    # operation.
+    # This data type is used as a response element in the
+    # [GetSAMLProvider][1] operation.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetSAMLProvider.html
     #
     # @!attribute [rw] key_id
     #   The unique identifier for the SAML private key.
@@ -9272,8 +11034,13 @@ module Aws::IAM
 
     # Contains information about an SSH public key.
     #
-    # This data type is used as a response element in the GetSSHPublicKey
-    # and UploadSSHPublicKey operations.
+    # This data type is used as a response element in the
+    # [GetSSHPublicKey][1] and [UploadSSHPublicKey][2] operations.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetSSHPublicKey.html
+    # [2]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_UploadSSHPublicKey.html
     #
     # @!attribute [rw] user_name
     #   The name of the IAM user associated with the SSH public key.
@@ -9322,8 +11089,12 @@ module Aws::IAM
     # Contains information about an SSH public key, without the key's body
     # or fingerprint.
     #
-    # This data type is used as a response element in the ListSSHPublicKeys
-    # operation.
+    # This data type is used as a response element in the
+    # [ListSSHPublicKeys][1] operation.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListSSHPublicKeys.html
     #
     # @!attribute [rw] user_name
     #   The name of the IAM user associated with the SSH public key.
@@ -9359,10 +11130,27 @@ module Aws::IAM
       include Aws::Structure
     end
 
+    # @!attribute [rw] delegation_request_id
+    #   The unique identifier of the delegation request for which to send
+    #   the token.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/SendDelegationTokenRequest AWS API Documentation
+    #
+    class SendDelegationTokenRequest < Struct.new(
+      :delegation_request_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Contains information about a server certificate.
     #
     # This data type is used as a response element in the
-    # GetServerCertificate operation.
+    # [GetServerCertificate][1] operation.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetServerCertificate.html
     #
     # @!attribute [rw] server_certificate_metadata
     #   The meta information of the server certificate, such as its name,
@@ -9402,7 +11190,13 @@ module Aws::IAM
     # certificate body, certificate chain, and private key.
     #
     # This data type is used as a response element in the
-    # UploadServerCertificate and ListServerCertificates operations.
+    # [UploadServerCertificate][1] and [ListServerCertificates][2]
+    # operations.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_UploadServerCertificate.html
+    # [2]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListServerCertificates.html
     #
     # @!attribute [rw] path
     #   The path to the server certificate. For more information about
@@ -9483,7 +11277,11 @@ module Aws::IAM
     # Contains details about the most recent attempt to access the service.
     #
     # This data type is used as a response element in the
-    # GetServiceLastAccessedDetails operation.
+    # [GetServiceLastAccessedDetails][1] operation.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetServiceLastAccessedDetails.html
     #
     # @!attribute [rw] service_name
     #   The name of the service in which access was attempted.
@@ -9567,11 +11365,12 @@ module Aws::IAM
     #   did not use the tracked actions within the [tracking period][1].
     #   This field is also null if the report was generated at the service
     #   level and not the action level. For more information, see the
-    #   `Granularity` field in GenerateServiceLastAccessedDetails.
+    #   `Granularity` field in [GenerateServiceLastAccessedDetails][2].
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_access-advisor.html#service-last-accessed-reporting-period
+    #   [2]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GenerateServiceLastAccessedDetails.html
     #   @return [Array<Types::TrackedActionLastAccessed>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/ServiceLastAccessed AWS API Documentation
@@ -9612,6 +11411,12 @@ module Aws::IAM
     #   [1]: http://www.iso.org/iso/iso8601
     #   @return [Time]
     #
+    # @!attribute [rw] expiration_date
+    #   The date and time when the service specific credential expires. This
+    #   field is only present for Bedrock API keys and CloudWatch Logs API
+    #   keys that were created with an expiration period.
+    #   @return [Time]
+    #
     # @!attribute [rw] service_name
     #   The name of the service associated with the service-specific
     #   credential.
@@ -9627,6 +11432,19 @@ module Aws::IAM
     #
     # @!attribute [rw] service_password
     #   The generated password for the service-specific credential.
+    #   @return [String]
+    #
+    # @!attribute [rw] service_credential_alias
+    #   For Bedrock API keys and CloudWatch Logs API keys, this is the
+    #   public portion of the credential that includes the IAM user name and
+    #   a suffix containing version and creation information.
+    #   @return [String]
+    #
+    # @!attribute [rw] service_credential_secret
+    #   For Bedrock API keys and CloudWatch Logs API keys, this is the
+    #   secret portion of the credential that should be used to authenticate
+    #   API calls. This value is returned only when the credential is
+    #   created.
     #   @return [String]
     #
     # @!attribute [rw] service_specific_credential_id
@@ -9647,13 +11465,16 @@ module Aws::IAM
     #
     class ServiceSpecificCredential < Struct.new(
       :create_date,
+      :expiration_date,
       :service_name,
       :service_user_name,
       :service_password,
+      :service_credential_alias,
+      :service_credential_secret,
       :service_specific_credential_id,
       :user_name,
       :status)
-      SENSITIVE = [:service_password]
+      SENSITIVE = [:service_password, :service_credential_secret]
       include Aws::Structure
     end
 
@@ -9673,6 +11494,12 @@ module Aws::IAM
     #   The generated user name for the service-specific credential.
     #   @return [String]
     #
+    # @!attribute [rw] service_credential_alias
+    #   For Bedrock API keys and CloudWatch Logs API keys, this is the
+    #   public portion of the credential that includes the IAM user name and
+    #   a suffix containing version and creation information.
+    #   @return [String]
+    #
     # @!attribute [rw] create_date
     #   The date and time, in [ISO 8601 date-time format][1], when the
     #   service-specific credential were created.
@@ -9680,6 +11507,12 @@ module Aws::IAM
     #
     #
     #   [1]: http://www.iso.org/iso/iso8601
+    #   @return [Time]
+    #
+    # @!attribute [rw] expiration_date
+    #   The date and time when the service specific credential expires. This
+    #   field is only present for Bedrock API keys and CloudWatch Logs API
+    #   keys that were created with an expiration period.
     #   @return [Time]
     #
     # @!attribute [rw] service_specific_credential_id
@@ -9697,7 +11530,9 @@ module Aws::IAM
       :user_name,
       :status,
       :service_user_name,
+      :service_credential_alias,
       :create_date,
+      :expiration_date,
       :service_specific_credential_id,
       :service_name)
       SENSITIVE = []
@@ -9763,7 +11598,13 @@ module Aws::IAM
     # Contains information about an X.509 signing certificate.
     #
     # This data type is used as a response element in the
-    # UploadSigningCertificate and ListSigningCertificates operations.
+    # [UploadSigningCertificate][1] and [ListSigningCertificates][2]
+    # operations.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_UploadSigningCertificate.html
+    # [2]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListSigningCertificates.html
     #
     # @!attribute [rw] user_name
     #   The name of the user the signing certificate is associated with.
@@ -9868,6 +11709,25 @@ module Aws::IAM
     #   [3]: http://wikipedia.org/wiki/regex
     #   @return [Array<String>]
     #
+    # @!attribute [rw] ordered_organization_policy_input_list
+    #   An ordered list of service control policies (SCPs) to include in the
+    #   simulation. Each element represents one level of an Organizations
+    #   hierarchy, from the organization root to the account.
+    #
+    #   The simulator evaluates SCPs in the order that you provide,
+    #   consistent with how Organizations enforces SCPs. The first element
+    #   must represent the organization root, and the last element must
+    #   represent the account. Any elements between them represent
+    #   organizational units (OUs) in descending order.
+    #
+    #   Use this parameter to simulate the effect of an SCP hierarchy
+    #   without calling [SimulatePrincipalPolicy][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_SimulatePrincipalPolicy.html
+    #   @return [Array<Types::OrderedOrganizationPolicyType>]
+    #
     # @!attribute [rw] action_names
     #   A list of names of API operations to evaluate in the simulation.
     #   Each operation is evaluated against each resource. Each operation
@@ -9960,13 +11820,13 @@ module Aws::IAM
     #   @return [String]
     #
     # @!attribute [rw] caller_arn
-    #   The ARN of the IAM user that you want to use as the simulated caller
-    #   of the API operations. `CallerArn` is required if you include a
-    #   `ResourcePolicy` so that the policy's `Principal` element has a
-    #   value to use in evaluating the policy.
+    #   The ARN of the IAM user, group, or role that you want to use as the
+    #   simulated caller of the API operations. `CallerArn` is required if
+    #   you include a `ResourcePolicy` so that the policy's `Principal`
+    #   element has a value to use in evaluating the policy.
     #
-    #   You can specify only the ARN of an IAM user. You cannot specify the
-    #   ARN of an assumed role, federated user, or a service principal.
+    #   You cannot specify the ARN of an assumed role, federated user, or a
+    #   service principal.
     #   @return [String]
     #
     # @!attribute [rw] context_entries
@@ -10041,6 +11901,7 @@ module Aws::IAM
     class SimulateCustomPolicyRequest < Struct.new(
       :policy_input_list,
       :permissions_boundary_policy_input_list,
+      :ordered_organization_policy_input_list,
       :action_names,
       :resource_arns,
       :resource_policy,
@@ -10054,8 +11915,13 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful SimulatePrincipalPolicy or
-    # SimulateCustomPolicy request.
+    # Contains the response to a successful [SimulatePrincipalPolicy][1] or
+    # [SimulateCustomPolicy][2] request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_SimulatePrincipalPolicy.html
+    # [2]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_SimulateCustomPolicy.html
     #
     # @!attribute [rw] evaluation_results
     #   The results of the simulation.
@@ -10169,6 +12035,28 @@ module Aws::IAM
     #   [3]: http://wikipedia.org/wiki/regex
     #   @return [Array<String>]
     #
+    # @!attribute [rw] policy_exclusion_list
+    #   A list of policies to exclude from the simulation. Use this
+    #   parameter to test what the simulation result would be if a policy
+    #   were removed, without changing which policies are actually attached
+    #   to the principal identified by `PolicySourceArn`.
+    #
+    #   Each entry is a [PolicyIdentifier][1] that identifies one or more
+    #   policies to exclude by policy type, by Amazon Resource Name (ARN),
+    #   or by the name of an inline policy and the entity it is attached to.
+    #
+    #   Syntactically invalid identifiers, such as malformed ARNs or
+    #   wildcards in disallowed positions, cause the request to fail with an
+    #   `InvalidInput` error. Syntactically valid identifiers that don't
+    #   match any attached policy are ignored. Resource control policies
+    #   (RCPs) are not supported in this release; identifiers that target
+    #   RCPs are also ignored.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_PolicyIdentifier.html
+    #   @return [Array<Types::PolicyIdentifier>]
+    #
     # @!attribute [rw] action_names
     #   A list of names of API operations to evaluate in the simulation.
     #   Each operation is evaluated for each resource. Each operation must
@@ -10251,23 +12139,24 @@ module Aws::IAM
     #   @return [String]
     #
     # @!attribute [rw] caller_arn
-    #   The ARN of the IAM user that you want to specify as the simulated
-    #   caller of the API operations. If you do not specify a `CallerArn`,
-    #   it defaults to the ARN of the user that you specify in
-    #   `PolicySourceArn`, if you specified a user. If you include both a
+    #   The ARN of the IAM user, group, or role that you want to specify as
+    #   the simulated caller of the API operations. If you do not specify a
+    #   `CallerArn`, it defaults to the ARN of the user, group, or role that
+    #   you specify in `PolicySourceArn`. If you include both a
     #   `PolicySourceArn` (for example,
     #   `arn:aws:iam::123456789012:user/David`) and a `CallerArn` (for
     #   example, `arn:aws:iam::123456789012:user/Bob`), the result is that
     #   you simulate calling the API operations as Bob, as if Bob had
     #   David's policies.
     #
-    #   You can specify only the ARN of an IAM user. You cannot specify the
-    #   ARN of an assumed role, federated user, or a service principal.
+    #   You can specify the ARN of an IAM user, group, or role. You cannot
+    #   specify the ARN of an assumed role, federated user, or a service
+    #   principal.
     #
     #   `CallerArn` is required if you include a `ResourcePolicy` and the
-    #   `PolicySourceArn` is not the ARN for an IAM user. This is required
-    #   so that the resource-based policy's `Principal` element has a value
-    #   to use in evaluating the policy.
+    #   `PolicySourceArn` is not the ARN for an IAM user, group, or role.
+    #   This is required so that the resource-based policy's `Principal`
+    #   element has a value to use in evaluating the policy.
     #
     #   For more information about ARNs, see [Amazon Resource Names
     #   (ARNs)][1] in the *Amazon Web Services General Reference*.
@@ -10350,6 +12239,7 @@ module Aws::IAM
       :policy_source_arn,
       :policy_input_list,
       :permissions_boundary_policy_input_list,
+      :policy_exclusion_list,
       :action_names,
       :resource_arns,
       :resource_policy,
@@ -10359,6 +12249,28 @@ module Aws::IAM
       :resource_handling_option,
       :max_items,
       :marker)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains information about the role template that a role was created
+    # from.
+    #
+    # @!attribute [rw] template_arn
+    #   The Amazon Resource Name (ARN) of the role template that the role
+    #   was created from.
+    #   @return [String]
+    #
+    # @!attribute [rw] template_minor_version
+    #   The minor version of the role template that was used to create the
+    #   role.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/SourceRoleTemplate AWS API Documentation
+    #
+    class SourceRoleTemplate < Struct.new(
+      :template_arn,
+      :template_minor_version)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -10418,13 +12330,6 @@ module Aws::IAM
     #   might have values that consist of the number associated with the
     #   different cost centers in your company. Typically, many resources
     #   have tags with the same key name but with different values.
-    #
-    #   <note markdown="1"> Amazon Web Services always interprets the tag `Value` as a single
-    #   string. If you need to store an array, you can store comma-separated
-    #   values in the string. However, you must interpret the value in your
-    #   code.
-    #
-    #    </note>
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/Tag AWS API Documentation
@@ -10634,6 +12539,28 @@ module Aws::IAM
       include Aws::Structure
     end
 
+    # Represents a tag that is applied to roles that are created from a role
+    # template. The key and value can include `@{parameter}` placeholders
+    # that are replaced with template parameter values when the role is
+    # created.
+    #
+    # @!attribute [rw] key
+    #   The key name of the tag.
+    #   @return [String]
+    #
+    # @!attribute [rw] value
+    #   The value associated with the tag key.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/TagTemplate AWS API Documentation
+    #
+    class TagTemplate < Struct.new(
+      :key,
+      :value)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] user_name
     #   The name of the IAM user to which you want to add tags.
     #
@@ -10665,7 +12592,11 @@ module Aws::IAM
     # within the service.
     #
     # This data type is used as a response element in the
-    # GetServiceLastAccessedDetails operation.
+    # [GetServiceLastAccessedDetails][1] operation.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetServiceLastAccessedDetails.html
     #
     # @!attribute [rw] action_name
     #   The name of the tracked action to which access was attempted.
@@ -11182,6 +13113,23 @@ module Aws::IAM
       include Aws::Structure
     end
 
+    # @!attribute [rw] delegation_request_id
+    #   The unique identifier of the delegation request to update.
+    #   @return [String]
+    #
+    # @!attribute [rw] notes
+    #   Additional notes or comments to add to the delegation request.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/UpdateDelegationRequestRequest AWS API Documentation
+    #
+    class UpdateDelegationRequestRequest < Struct.new(
+      :delegation_request_id,
+      :notes)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] group_name
     #   Name of the IAM group to update. If you're changing the name of the
     #   group, this is the original name.
@@ -11263,11 +13211,12 @@ module Aws::IAM
     #   However, the format can be further restricted by the account
     #   administrator by setting a password policy on the Amazon Web
     #   Services account. For more information, see
-    #   UpdateAccountPasswordPolicy.
+    #   [UpdateAccountPasswordPolicy][2].
     #
     #
     #
     #   [1]: http://wikipedia.org/wiki/regex
+    #   [2]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_UpdateAccountPasswordPolicy.html
     #   @return [String]
     #
     # @!attribute [rw] password_reset_required
@@ -11288,21 +13237,26 @@ module Aws::IAM
     # @!attribute [rw] open_id_connect_provider_arn
     #   The Amazon Resource Name (ARN) of the IAM OIDC provider resource
     #   object for which you want to update the thumbprint. You can get a
-    #   list of OIDC provider ARNs by using the ListOpenIDConnectProviders
-    #   operation.
+    #   list of OIDC provider ARNs by using the
+    #   [ListOpenIDConnectProviders][1] operation.
     #
     #   For more information about ARNs, see [Amazon Resource Names
-    #   (ARNs)][1] in the *Amazon Web Services General Reference*.
+    #   (ARNs)][2] in the *Amazon Web Services General Reference*.
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListOpenIDConnectProviders.html
+    #   [2]: https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html
     #   @return [String]
     #
     # @!attribute [rw] thumbprint_list
     #   A list of certificate thumbprints that are associated with the
     #   specified IAM OpenID Connect provider. For more information, see
-    #   CreateOpenIDConnectProvider.
+    #   [CreateOpenIDConnectProvider][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateOpenIDConnectProvider.html
     #   @return [Array<String>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/UpdateOpenIDConnectProviderThumbprintRequest AWS API Documentation
@@ -11439,7 +13393,11 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful UpdateSAMLProvider request.
+    # Contains the response to a successful [UpdateSAMLProvider][1] request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_UpdateSAMLProvider.html
     #
     # @!attribute [rw] saml_provider_arn
     #   The Amazon Resource Name (ARN) of the SAML provider that was
@@ -11726,7 +13684,11 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful UploadSSHPublicKey request.
+    # Contains the response to a successful [UploadSSHPublicKey][1] request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_UploadSSHPublicKey.html
     #
     # @!attribute [rw] ssh_public_key
     #   Contains information about the SSH public key.
@@ -11871,7 +13833,12 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful UploadServerCertificate request.
+    # Contains the response to a successful [UploadServerCertificate][1]
+    # request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_UploadServerCertificate.html
     #
     # @!attribute [rw] server_certificate_metadata
     #   The meta information of the uploaded server certificate without its
@@ -11940,8 +13907,12 @@ module Aws::IAM
       include Aws::Structure
     end
 
-    # Contains the response to a successful UploadSigningCertificate
+    # Contains the response to a successful [UploadSigningCertificate][1]
     # request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_UploadSigningCertificate.html
     #
     # @!attribute [rw] certificate
     #   Information about the certificate.
@@ -11960,11 +13931,17 @@ module Aws::IAM
     # This data type is used as a response element in the following
     # operations:
     #
-    # * CreateUser
+    # * [CreateUser][1]
     #
-    # * GetUser
+    # * [GetUser][2]
     #
-    # * ListUsers
+    # * [ListUsers][3]
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateUser.html
+    # [2]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetUser.html
+    # [3]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListUsers.html
     #
     # @!attribute [rw] path
     #   The path to the user. For more information about paths, see [IAM
@@ -12031,12 +14008,15 @@ module Aws::IAM
     #   the past, then this field contains the date and time the most recent
     #   password was used.
     #
-    #   This value is returned only in the GetUser and ListUsers operations.
+    #   This value is returned only in the [GetUser][3] and [ListUsers][4]
+    #   operations.
     #
     #
     #
     #   [1]: http://www.iso.org/iso/iso8601
     #   [2]: https://docs.aws.amazon.com/IAM/latest/UserGuide/credential-reports.html
+    #   [3]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetUser.html
+    #   [4]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListUsers.html
     #   @return [Time]
     #
     # @!attribute [rw] permissions_boundary
@@ -12077,7 +14057,11 @@ module Aws::IAM
     # policies and all the IAM groups the user is in.
     #
     # This data type is used as a response element in the
-    # GetAccountAuthorizationDetails operation.
+    # [GetAccountAuthorizationDetails][1] operation.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetAccountAuthorizationDetails.html
     #
     # @!attribute [rw] path
     #   The path to the user. For more information about paths, see [IAM

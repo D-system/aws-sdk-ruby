@@ -1,6 +1,191 @@
 Unreleased Changes
 ------------------
 
+1.191.0 (2026-08-03)
+------------------
+
+* Feature - Updates Kantar server URL validation to accept Fifty5Blue domain. Adds support for output to S3 Glacier Instant Retrieval.
+
+1.190.0 (2026-07-09)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.189.0 (2026-07-01)
+------------------
+
+* Feature - Adds support for integer-second duration normalization and the option to disable explicit weighted prediction.
+
+1.188.0 (2026-06-05)
+------------------
+
+* Feature - Adds support for configurable number of Clear Lead segments at the beginning of encrypted output. Adds support for multiple trickplay variants.
+
+1.187.0 (2026-06-02)
+------------------
+
+* Feature - Adding new BDD representation of endpoint ruleset
+
+1.186.0 (2026-05-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.185.0 (2026-05-19)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.184.0 (2026-05-13)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.183.0 (2026-04-16)
+------------------
+
+* Feature - Adds support for Elemental Inference powered smart crop feature, enabling video verticalization
+
+1.182.0 (2026-04-10)
+------------------
+
+* Feature - Adds support for MV-HEVC video output and clear lead for AV1 DRM output.
+
+1.181.0 (2026-03-18)
+------------------
+
+* Feature - This update adds additional bitrate options for Dolby AC-4 audio outputs.
+
+1.180.0 (2026-03-13)
+------------------
+
+* Feature - This update adds support for Dolby AC-4 audio output, frame rate conversion between non-Dolby Vision inputs to Dolby Vision outputs, and clear lead CMAF HLS output.
+
+1.179.0 (2026-01-28)
+------------------
+
+* Feature - This release adds a follow source mode for audio output channel count, an AES audio frame wrapping option for MXF outputs, and an option to signal DolbyVision compatibility using the SUPPLEMENTAL-CODECS tag in HLS manifests.
+
+1.178.0 (2026-01-16)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.177.0 (2026-01-08)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.176.0 (2026-01-05)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.175.0 (2025-12-17)
+------------------
+
+* Feature - Adds support for tile encoding in HEVC and audio for video overlays.
+
+1.174.0 (2025-11-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.173.0 (2025-11-13)
+------------------
+
+* Feature - Lowers minimum duration for black video generator. Adds support for embedding and signing C2PA content credentials in DASH and CMAF HLS outputs.
+
+1.172.0 (2025-10-31)
+------------------
+
+* Feature - Adds SlowPalPitchCorrection to audio pitch correction settings. Enables opacity for VideoOverlays. Adds REMUX_ALL option to enable multi-rendition passthrough to VideoSelector for allow listed accounts.
+
+1.171.0 (2025-10-21)
+------------------
+
+* Feature - This release adds the ability to set resolution for the black video generator and also adds the StartJobsQuery and GetJobsQueryResults APIs which allow asynchronous search of job history using new filters.
+
+1.170.0 (2025-08-26)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.169.0 (2025-08-25)
+------------------
+
+* Feature - This release adds support for input rendition selection for HLS input, adds new Share API to enable sharing jobs with AWS Support for support investigations, and adds INCLUDE_AS_TS to iFrameOnlyManifest setting for HLS outputs.
+
+1.168.0 (2025-08-21)
+------------------
+
+* Feature - Remove incorrect endpoint tests
+
+1.167.0 (2025-08-04)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.166.0 (2025-07-31)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.165.0 (2025-07-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.164.0 (2025-07-18)
+------------------
+
+* Feature - This release adds support for TAMS server integration with MediaConvert inputs.
+
+1.163.0 (2025-07-17)
+------------------
+
+* Feature - This release expands the range of supported audio outputs to include xHE, 192khz FLAC and the deprecation of dual mono for AC3.
+
+1.162.0 (2025-06-20)
+------------------
+
+* Feature - This release adds a new SPECIFIED_OPTIMAL option for handling DDS when using DVB-Sub with high resolution video.
+
+1.161.0 (2025-06-04)
+------------------
+
+* Feature - This release includes support for embedding and signing C2PA content credentials in MP4 outputs.
+
+1.160.0 (2025-06-02)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.159.0 (2025-05-14)
+------------------
+
+* Feature - This update enables cropping for video overlays and adds a new STL to Teletext upconversion toggle to preserve styling.
+
+1.158.0 (2025-05-12)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.157.0 (2025-05-05)
+------------------
+
+* Feature - This release adds an optional sidecar per-frame video quality metrics report and an ALL_PCM option for audio selectors. It also changes the data type for Probe API response fields related to video and audio bitrate from integer to double.
+
+1.156.0 (2025-05-01)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.155.0 (2025-03-26)
+------------------
+
+* Feature - This release adds a configurable Quality Level setting for the top rendition of Auto ABR jobs
+
 1.154.0 (2025-03-18)
 ------------------
 

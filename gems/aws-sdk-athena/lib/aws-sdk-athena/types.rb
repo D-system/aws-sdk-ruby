@@ -484,6 +484,56 @@ module Aws::Athena
       include Aws::Structure
     end
 
+    # A classification refers to a set of specific configurations.
+    #
+    # @!attribute [rw] name
+    #   The name of the configuration classification.
+    #   @return [String]
+    #
+    # @!attribute [rw] properties
+    #   A set of properties specified within a configuration classification.
+    #   @return [Hash<String,String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/athena-2017-05-18/Classification AWS API Documentation
+    #
+    class Classification < Struct.new(
+      :name,
+      :properties)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration settings for delivering logs to Amazon CloudWatch log
+    # groups.
+    #
+    # @!attribute [rw] enabled
+    #   Enables CloudWatch logging.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] log_group
+    #   The name of the log group in Amazon CloudWatch Logs where you want
+    #   to publish your logs.
+    #   @return [String]
+    #
+    # @!attribute [rw] log_stream_name_prefix
+    #   Prefix for the CloudWatch log stream name.
+    #   @return [String]
+    #
+    # @!attribute [rw] log_types
+    #   The types of logs that you want to publish to CloudWatch.
+    #   @return [Hash<String,Array<String>>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/athena-2017-05-18/CloudWatchLoggingConfiguration AWS API Documentation
+    #
+    class CloudWatchLoggingConfiguration < Struct.new(
+      :enabled,
+      :log_group,
+      :log_stream_name_prefix,
+      :log_types)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Contains metadata for a column in a table.
     #
     # @!attribute [rw] name
@@ -622,6 +672,8 @@ module Aws::Athena
     #   Apache Hive metastore. `FEDERATED` is a federated catalog for which
     #   Athena creates the connection and the Lambda function for you based
     #   on the parameters that you pass.
+    #
+    #   For `FEDERATED` type, we do not support IAM identity center.
     #   @return [String]
     #
     # @!attribute [rw] description
@@ -1376,8 +1428,16 @@ module Aws::Athena
       include Aws::Structure
     end
 
-    # Contains data processing unit (DPU) configuration settings and
-    # parameter mappings for a notebook engine.
+    # The engine configuration for the workgroup, which includes the
+    # minimum/maximum number of Data Processing Units (DPU) that queries
+    # should use when running in provisioned capacity. If not specified,
+    # Athena uses default values (Default value for min is 4 and for max is
+    # Minimum of 124 and allocated DPUs).
+    #
+    # To specify DPU values for PC queries the WG containing
+    # EngineConfiguration should have the following values: The name of the
+    # Classifications should be `athena-query-engine-properties`, with the
+    # only allowed properties as `max-dpu-count` and `min-dpu-count`.
     #
     # @!attribute [rw] coordinator_dpu_size
     #   The number of DPUs to use for the coordinator. A coordinator is a
@@ -1409,6 +1469,11 @@ module Aws::Athena
     #   cluster encryption, table formats, and general Spark tuning.
     #   @return [Hash<String,String>]
     #
+    # @!attribute [rw] classifications
+    #   The configuration classifications that can be specified for the
+    #   engine.
+    #   @return [Array<Types::Classification>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/athena-2017-05-18/EngineConfiguration AWS API Documentation
     #
     class EngineConfiguration < Struct.new(
@@ -1416,7 +1481,8 @@ module Aws::Athena
       :max_concurrent_dpus,
       :default_executor_dpu_size,
       :additional_configs,
-      :spark_properties)
+      :spark_properties,
+      :classifications)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1891,12 +1957,21 @@ module Aws::Athena
     #   The maximum number of results (rows) to return in this request.
     #   @return [Integer]
     #
+    # @!attribute [rw] query_result_type
+    #   When you set this to `DATA_ROWS` or empty, `GetQueryResults` returns
+    #   the query results in rows. If set to `DATA_MANIFEST`, it returns the
+    #   manifest file in rows. Only the query types `CREATE TABLE AS
+    #   SELECT`, `UNLOAD`, and `INSERT` can generate a manifest file. If you
+    #   use `DATA_MANIFEST` for other query types, the query will fail.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/athena-2017-05-18/GetQueryResultsInput AWS API Documentation
     #
     class GetQueryResultsInput < Struct.new(
       :query_execution_id,
       :next_token,
-      :max_results)
+      :max_results,
+      :query_result_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1951,6 +2026,64 @@ module Aws::Athena
       include Aws::Structure
     end
 
+    # @!attribute [rw] resource_arn
+    #   The The Amazon Resource Name (ARN) for a session.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/athena-2017-05-18/GetResourceDashboardRequest AWS API Documentation
+    #
+    class GetResourceDashboardRequest < Struct.new(
+      :resource_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] url
+    #   The Live UI/Persistence UI url for a session.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/athena-2017-05-18/GetResourceDashboardResponse AWS API Documentation
+    #
+    class GetResourceDashboardResponse < Struct.new(
+      :url)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] session_id
+    #   The session ID.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/athena-2017-05-18/GetSessionEndpointRequest AWS API Documentation
+    #
+    class GetSessionEndpointRequest < Struct.new(
+      :session_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] endpoint_url
+    #   The endpoint for connecting to the session.
+    #   @return [String]
+    #
+    # @!attribute [rw] auth_token
+    #   Authentication token for the connection
+    #   @return [String]
+    #
+    # @!attribute [rw] auth_token_expiration_time
+    #   Expiration time of the auth token.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/athena-2017-05-18/GetSessionEndpointResponse AWS API Documentation
+    #
+    class GetSessionEndpointResponse < Struct.new(
+      :endpoint_url,
+      :auth_token,
+      :auth_token_expiration_time)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] session_id
     #   The session ID.
     #   @return [String]
@@ -1989,6 +2122,12 @@ module Aws::Athena
     #   The notebook version.
     #   @return [String]
     #
+    # @!attribute [rw] monitoring_configuration
+    #   Contains the configuration settings for managed log persistence,
+    #   delivering logs to Amazon S3 buckets, Amazon CloudWatch log groups
+    #   etc.
+    #   @return [Types::MonitoringConfiguration]
+    #
     # @!attribute [rw] session_configuration
     #   Contains the workgroup configuration information used by the
     #   session.
@@ -2011,6 +2150,7 @@ module Aws::Athena
       :engine_version,
       :engine_configuration,
       :notebook_version,
+      :monitoring_configuration,
       :session_configuration,
       :status,
       :statistics)
@@ -3027,6 +3167,100 @@ module Aws::Athena
       include Aws::Structure
     end
 
+    # Configuration settings for delivering logs to Amazon S3 buckets.
+    #
+    # @!attribute [rw] enabled
+    #   Enables mamanged log persistence.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] kms_key
+    #   The KMS key ARN to encrypt the logs stored in managed log
+    #   persistence.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/athena-2017-05-18/ManagedLoggingConfiguration AWS API Documentation
+    #
+    class ManagedLoggingConfiguration < Struct.new(
+      :enabled,
+      :kms_key)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration for storing results in Athena owned storage, which
+    # includes whether this feature is enabled; whether encryption
+    # configuration, if any, is used for encrypting query results.
+    #
+    # @!attribute [rw] enabled
+    #   If set to true, allows you to store query results in Athena owned
+    #   storage. If set to false, workgroup member stores query results in
+    #   location specified under `ResultConfiguration$OutputLocation`. The
+    #   default is false. A workgroup cannot have the
+    #   `ResultConfiguration$OutputLocation` parameter when you set this
+    #   field to true.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] encryption_configuration
+    #   If you encrypt query and calculation results in Athena owned
+    #   storage, this field indicates the encryption option (for example,
+    #   SSE\_KMS or CSE\_KMS) and key information.
+    #   @return [Types::ManagedQueryResultsEncryptionConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/athena-2017-05-18/ManagedQueryResultsConfiguration AWS API Documentation
+    #
+    class ManagedQueryResultsConfiguration < Struct.new(
+      :enabled,
+      :encryption_configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Updates the configuration for managed query results.
+    #
+    # @!attribute [rw] enabled
+    #   If set to true, specifies that Athena manages query results in
+    #   Athena owned storage.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] encryption_configuration
+    #   If you encrypt query and calculation results in Athena owned
+    #   storage, this field indicates the encryption option (for example,
+    #   SSE\_KMS or CSE\_KMS) and key information.
+    #   @return [Types::ManagedQueryResultsEncryptionConfiguration]
+    #
+    # @!attribute [rw] remove_encryption_configuration
+    #   If set to true, it removes workgroup from Athena owned storage. The
+    #   existing query results are cleaned up after 24hrs. You must provide
+    #   query results in location specified under
+    #   `ResultConfiguration$OutputLocation`.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/athena-2017-05-18/ManagedQueryResultsConfigurationUpdates AWS API Documentation
+    #
+    class ManagedQueryResultsConfigurationUpdates < Struct.new(
+      :enabled,
+      :encryption_configuration,
+      :remove_encryption_configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # If you encrypt query and calculation results in Athena owned storage,
+    # this field indicates the encryption option (for example, SSE\_KMS or
+    # CSE\_KMS) and key information.
+    #
+    # @!attribute [rw] kms_key
+    #   The ARN of an KMS key for encrypting managed query results.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/athena-2017-05-18/ManagedQueryResultsEncryptionConfiguration AWS API Documentation
+    #
+    class ManagedQueryResultsEncryptionConfiguration < Struct.new(
+      :kms_key)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # An exception that Athena received when it called a custom metastore.
     # Occurs if the error is not caused by user input
     # (`InvalidRequestException`) or from the Athena platform
@@ -3041,6 +3275,33 @@ module Aws::Athena
     #
     class MetadataException < Struct.new(
       :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains the configuration settings for managed log persistence,
+    # delivering logs to Amazon S3 buckets, Amazon CloudWatch log groups
+    # etc.
+    #
+    # @!attribute [rw] cloud_watch_logging_configuration
+    #   Configuration settings for delivering logs to Amazon CloudWatch log
+    #   groups.
+    #   @return [Types::CloudWatchLoggingConfiguration]
+    #
+    # @!attribute [rw] managed_logging_configuration
+    #   Configuration settings for managed log persistence.
+    #   @return [Types::ManagedLoggingConfiguration]
+    #
+    # @!attribute [rw] s3_logging_configuration
+    #   Configuration settings for delivering logs to Amazon S3 buckets.
+    #   @return [Types::S3LoggingConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/athena-2017-05-18/MonitoringConfiguration AWS API Documentation
+    #
+    class MonitoringConfiguration < Struct.new(
+      :cloud_watch_logging_configuration,
+      :managed_logging_configuration,
+      :s3_logging_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3235,8 +3496,14 @@ module Aws::Athena
     #   statements. `DML` indicates DML (Data Manipulation Language) query
     #   statements, such as `CREATE TABLE AS SELECT`. `UTILITY` indicates
     #   query statements other than DDL and DML, such as `SHOW CREATE
-    #   TABLE`, or `DESCRIBE TABLE`.
+    #   TABLE`, `EXPLAIN`, `DESCRIBE`, or `SHOW TABLES`.
     #   @return [String]
+    #
+    # @!attribute [rw] managed_query_results_configuration
+    #   The configuration for storing results in Athena owned storage, which
+    #   includes whether this feature is enabled; whether encryption
+    #   configuration, if any, is used for encrypting query results.
+    #   @return [Types::ManagedQueryResultsConfiguration]
     #
     # @!attribute [rw] result_configuration
     #   The location in Amazon S3 where query and calculation results are
@@ -3297,6 +3564,7 @@ module Aws::Athena
       :query_execution_id,
       :query,
       :statement_type,
+      :managed_query_results_configuration,
       :result_configuration,
       :result_reuse_configuration,
       :query_execution_context,
@@ -3392,6 +3660,11 @@ module Aws::Athena
     #   reused for the query.
     #   @return [Types::ResultReuseInformation]
     #
+    # @!attribute [rw] dpu_count
+    #   The number of Data Processing Units (DPUs) that Athena used to run
+    #   the query.
+    #   @return [Float]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/athena-2017-05-18/QueryExecutionStatistics AWS API Documentation
     #
     class QueryExecutionStatistics < Struct.new(
@@ -3403,7 +3676,8 @@ module Aws::Athena
       :service_pre_processing_time_in_millis,
       :query_planning_time_in_millis,
       :service_processing_time_in_millis,
-      :result_reuse_information)
+      :result_reuse_information,
+      :dpu_count)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3420,9 +3694,9 @@ module Aws::Athena
     #   experienced an error and did not complete processing. `CANCELLED`
     #   indicates that a user input interrupted query execution.
     #
-    #   <note markdown="1"> Athena automatically retries your queries in cases of certain
-    #   transient errors. As a result, you may see the query state
-    #   transition from `RUNNING` or `FAILED` to `QUEUED`.
+    #   <note markdown="1"> For queries that experience certain transient errors, the state
+    #   transitions from `RUNNING` back to `QUEUED`. The `FAILED` state is
+    #   always terminal with no automatic retry.
     #
     #    </note>
     #   @return [String]
@@ -4006,6 +4280,31 @@ module Aws::Athena
       include Aws::Structure
     end
 
+    # Configuration settings for delivering logs to Amazon S3 buckets.
+    #
+    # @!attribute [rw] enabled
+    #   Enables S3 log delivery.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] kms_key
+    #   The KMS key ARN to encrypt the logs published to the given Amazon S3
+    #   destination.
+    #   @return [String]
+    #
+    # @!attribute [rw] log_location
+    #   The Amazon S3 destination URI for log publishing.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/athena-2017-05-18/S3LoggingConfiguration AWS API Documentation
+    #
+    class S3LoggingConfiguration < Struct.new(
+      :enabled,
+      :kms_key,
+      :log_location)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The specified session already exists.
     #
     # @!attribute [rw] message
@@ -4036,6 +4335,10 @@ module Aws::Athena
     #   The idle timeout in seconds for the session.
     #   @return [Integer]
     #
+    # @!attribute [rw] session_idle_timeout_in_minutes
+    #   The idle timeout in seconds for the session.
+    #   @return [Integer]
+    #
     # @!attribute [rw] encryption_configuration
     #   If query and calculation results are encrypted in Amazon S3,
     #   indicates the encryption option used (for example, `SSE_KMS` or
@@ -4048,6 +4351,7 @@ module Aws::Athena
       :execution_role,
       :working_directory,
       :idle_timeout_seconds,
+      :session_idle_timeout_in_minutes,
       :encryption_configuration)
       SENSITIVE = []
       include Aws::Structure
@@ -4292,6 +4596,20 @@ module Aws::Athena
     #   Specifies the query result reuse behavior for the query.
     #   @return [Types::ResultReuseConfiguration]
     #
+    # @!attribute [rw] engine_configuration
+    #   The engine configuration for the workgroup, which includes the
+    #   minimum/maximum number of Data Processing Units (DPU) that queries
+    #   should use when running in provisioned capacity. If not specified,
+    #   Athena uses default values (Default value for min is 4 and for max
+    #   is Minimum of 124 and allocated DPUs).
+    #
+    #   To specify minimum and maximum DPU values for Capacity Reservations
+    #   queries, the workgroup containing `EngineConfiguration` should have
+    #   the following values: The name of the `Classifications` should be
+    #   `athena-query-engine-properties`, with the only allowed properties
+    #   as `max-dpu-count` and `min-dpu-count`.
+    #   @return [Types::EngineConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/athena-2017-05-18/StartQueryExecutionInput AWS API Documentation
     #
     class StartQueryExecutionInput < Struct.new(
@@ -4301,7 +4619,8 @@ module Aws::Athena
       :result_configuration,
       :work_group,
       :execution_parameters,
-      :result_reuse_configuration)
+      :result_reuse_configuration,
+      :engine_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4331,6 +4650,19 @@ module Aws::Athena
     #   and parameter mappings.
     #   @return [Types::EngineConfiguration]
     #
+    # @!attribute [rw] execution_role
+    #   The ARN of the execution role used to access user resources for
+    #   Spark sessions and Identity Center enabled workgroups. This property
+    #   applies only to Spark enabled workgroups and Identity Center enabled
+    #   workgroups.
+    #   @return [String]
+    #
+    # @!attribute [rw] monitoring_configuration
+    #   Contains the configuration settings for managed log persistence,
+    #   delivering logs to Amazon S3 buckets, Amazon CloudWatch log groups
+    #   etc.
+    #   @return [Types::MonitoringConfiguration]
+    #
     # @!attribute [rw] notebook_version
     #   The notebook version. This value is supplied automatically for
     #   notebook sessions in the Athena console and is not required for
@@ -4358,15 +4690,28 @@ module Aws::Athena
     #   this token or the action will fail.
     #   @return [String]
     #
+    # @!attribute [rw] tags
+    #   A list of comma separated tags to add to the session that is
+    #   created.
+    #   @return [Array<Types::Tag>]
+    #
+    # @!attribute [rw] copy_work_group_tags
+    #   Copies the tags from the Workgroup to the Session when.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/athena-2017-05-18/StartSessionRequest AWS API Documentation
     #
     class StartSessionRequest < Struct.new(
       :description,
       :work_group,
       :engine_configuration,
+      :execution_role,
+      :monitoring_configuration,
       :notebook_version,
       :session_idle_timeout_in_minutes,
-      :client_request_token)
+      :client_request_token,
+      :tags,
+      :copy_work_group_tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5079,10 +5424,17 @@ module Aws::Athena
     #   issues an error that no output location is provided.
     #   @return [Types::ResultConfiguration]
     #
+    # @!attribute [rw] managed_query_results_configuration
+    #   The configuration for storing results in Athena owned storage, which
+    #   includes whether this feature is enabled; whether encryption
+    #   configuration, if any, is used for encrypting query results.
+    #   @return [Types::ManagedQueryResultsConfiguration]
+    #
     # @!attribute [rw] enforce_work_group_configuration
     #   If set to "true", the settings for the workgroup override
     #   client-side settings. If set to "false", client-side settings are
-    #   used. For more information, see [Workgroup Settings Override
+    #   used. This property is not required for Apache Spark enabled
+    #   workgroups. For more information, see [Workgroup Settings Override
     #   Client-Side Settings][1].
     #
     #
@@ -5133,6 +5485,25 @@ module Aws::Athena
     #   Center enabled workgroups.
     #   @return [String]
     #
+    # @!attribute [rw] monitoring_configuration
+    #   Contains the configuration settings for managed log persistence,
+    #   delivering logs to Amazon S3 buckets, Amazon CloudWatch log groups
+    #   etc.
+    #   @return [Types::MonitoringConfiguration]
+    #
+    # @!attribute [rw] engine_configuration
+    #   The engine configuration for the workgroup, which includes the
+    #   minimum/maximum number of Data Processing Units (DPU) that queries
+    #   should use when running in provisioned capacity. If not specified,
+    #   Athena uses default values (Default value for min is 4 and for max
+    #   is Minimum of 124 and allocated DPUs).
+    #
+    #   To specify DPU values for PC queries the WG containing
+    #   EngineConfiguration should have the following values: The name of
+    #   the Classifications should be `athena-query-engine-properties`, with
+    #   the only allowed properties as `max-dpu-count` and `min-dpu-count`.
+    #   @return [Types::EngineConfiguration]
+    #
     # @!attribute [rw] customer_content_encryption_configuration
     #   Specifies the KMS key that is used to encrypt the user's data
     #   stores in Athena. This setting does not apply to Athena SQL
@@ -5165,6 +5536,7 @@ module Aws::Athena
     #
     class WorkGroupConfiguration < Struct.new(
       :result_configuration,
+      :managed_query_results_configuration,
       :enforce_work_group_configuration,
       :publish_cloud_watch_metrics_enabled,
       :bytes_scanned_cutoff_per_query,
@@ -5172,6 +5544,8 @@ module Aws::Athena
       :engine_version,
       :additional_configuration,
       :execution_role,
+      :monitoring_configuration,
+      :engine_configuration,
       :customer_content_encryption_configuration,
       :enable_minimum_encryption_configuration,
       :identity_center_configuration,
@@ -5204,6 +5578,11 @@ module Aws::Athena
     #   workgroup that will be updated. Includes the updated results
     #   location and an updated option for encrypting query results.
     #   @return [Types::ResultConfigurationUpdates]
+    #
+    # @!attribute [rw] managed_query_results_configuration_updates
+    #   Updates configuration information for managed query results in the
+    #   workgroup.
+    #   @return [Types::ManagedQueryResultsConfigurationUpdates]
     #
     # @!attribute [rw] publish_cloud_watch_metrics_enabled
     #   Indicates whether this workgroup enables publishing metrics to
@@ -5285,11 +5664,31 @@ module Aws::Athena
     #   results.
     #   @return [Types::QueryResultsS3AccessGrantsConfiguration]
     #
+    # @!attribute [rw] monitoring_configuration
+    #   Contains the configuration settings for managed log persistence,
+    #   delivering logs to Amazon S3 buckets, Amazon CloudWatch log groups
+    #   etc.
+    #   @return [Types::MonitoringConfiguration]
+    #
+    # @!attribute [rw] engine_configuration
+    #   The engine configuration for the workgroup, which includes the
+    #   minimum/maximum number of Data Processing Units (DPU) that queries
+    #   should use when running in provisioned capacity. If not specified,
+    #   Athena uses default values (Default value for min is 4 and for max
+    #   is Minimum of 124 and allocated DPUs).
+    #
+    #   To specify DPU values for PC queries the WG containing
+    #   EngineConfiguration should have the following values: The name of
+    #   the Classifications should be `athena-query-engine-properties`, with
+    #   the only allowed properties as `max-dpu-count` and `min-dpu-count`.
+    #   @return [Types::EngineConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/athena-2017-05-18/WorkGroupConfigurationUpdates AWS API Documentation
     #
     class WorkGroupConfigurationUpdates < Struct.new(
       :enforce_work_group_configuration,
       :result_configuration_updates,
+      :managed_query_results_configuration_updates,
       :publish_cloud_watch_metrics_enabled,
       :bytes_scanned_cutoff_per_query,
       :remove_bytes_scanned_cutoff_per_query,
@@ -5300,7 +5699,9 @@ module Aws::Athena
       :execution_role,
       :customer_content_encryption_configuration,
       :enable_minimum_encryption_configuration,
-      :query_results_s3_access_grants_configuration)
+      :query_results_s3_access_grants_configuration,
+      :monitoring_configuration,
+      :engine_configuration)
       SENSITIVE = []
       include Aws::Structure
     end

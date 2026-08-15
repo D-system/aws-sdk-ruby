@@ -188,7 +188,24 @@
         {"shape":"DataUnavailableException"},
         {"shape":"InvalidNextTokenException"},
         {"shape":"RequestChangedException"},
-        {"shape":"ResourceNotFoundException"}
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"BillingViewHealthStatusException"}
+      ]
+    },
+    "GetCostAndUsageComparisons":{
+      "name":"GetCostAndUsageComparisons",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"GetCostAndUsageComparisonsRequest"},
+      "output":{"shape":"GetCostAndUsageComparisonsResponse"},
+      "errors":[
+        {"shape":"DataUnavailableException"},
+        {"shape":"InvalidNextTokenException"},
+        {"shape":"LimitExceededException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"BillingViewHealthStatusException"}
       ]
     },
     "GetCostAndUsageWithResources":{
@@ -205,7 +222,8 @@
         {"shape":"BillExpirationException"},
         {"shape":"InvalidNextTokenException"},
         {"shape":"RequestChangedException"},
-        {"shape":"ResourceNotFoundException"}
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"BillingViewHealthStatusException"}
       ]
     },
     "GetCostCategories":{
@@ -222,7 +240,24 @@
         {"shape":"DataUnavailableException"},
         {"shape":"InvalidNextTokenException"},
         {"shape":"RequestChangedException"},
-        {"shape":"ResourceNotFoundException"}
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"BillingViewHealthStatusException"}
+      ]
+    },
+    "GetCostComparisonDrivers":{
+      "name":"GetCostComparisonDrivers",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"GetCostComparisonDriversRequest"},
+      "output":{"shape":"GetCostComparisonDriversResponse"},
+      "errors":[
+        {"shape":"DataUnavailableException"},
+        {"shape":"InvalidNextTokenException"},
+        {"shape":"LimitExceededException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"BillingViewHealthStatusException"}
       ]
     },
     "GetCostForecast":{
@@ -236,7 +271,8 @@
       "errors":[
         {"shape":"LimitExceededException"},
         {"shape":"DataUnavailableException"},
-        {"shape":"ResourceNotFoundException"}
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"BillingViewHealthStatusException"}
       ]
     },
     "GetDimensionValues":{
@@ -253,7 +289,8 @@
         {"shape":"DataUnavailableException"},
         {"shape":"InvalidNextTokenException"},
         {"shape":"RequestChangedException"},
-        {"shape":"ResourceNotFoundException"}
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"BillingViewHealthStatusException"}
       ]
     },
     "GetReservationCoverage":{
@@ -392,7 +429,8 @@
         {"shape":"DataUnavailableException"},
         {"shape":"InvalidNextTokenException"},
         {"shape":"RequestChangedException"},
-        {"shape":"ResourceNotFoundException"}
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"BillingViewHealthStatusException"}
       ]
     },
     "GetUsageForecast":{
@@ -407,7 +445,8 @@
         {"shape":"LimitExceededException"},
         {"shape":"DataUnavailableException"},
         {"shape":"UnresolvableUsageUnitException"},
-        {"shape":"ResourceNotFoundException"}
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"BillingViewHealthStatusException"}
       ]
     },
     "ListCommitmentPurchaseAnalyses":{
@@ -460,6 +499,19 @@
       "output":{"shape":"ListCostCategoryDefinitionsResponse"},
       "errors":[
         {"shape":"LimitExceededException"}
+      ]
+    },
+    "ListCostCategoryResourceAssociations":{
+      "name":"ListCostCategoryResourceAssociations",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"ListCostCategoryResourceAssociationsRequest"},
+      "output":{"shape":"ListCostCategoryResourceAssociationsResponse"},
+      "errors":[
+        {"shape":"LimitExceededException"},
+        {"shape":"ResourceNotFoundException"}
       ]
     },
     "ListSavingsPlansPurchaseRecommendationGeneration":{
@@ -641,6 +693,11 @@
     },
     "AmortizedRecurringFee":{"type":"string"},
     "AmortizedUpfrontFee":{"type":"string"},
+    "AnalysesPageSize":{
+      "type":"integer",
+      "max":600,
+      "min":0
+    },
     "AnalysisDetails":{
       "type":"structure",
       "members":{
@@ -694,7 +751,8 @@
       "type":"string",
       "enum":[
         "MAX_SAVINGS",
-        "CUSTOM_COMMITMENT"
+        "CUSTOM_COMMITMENT",
+        "TARGET_AVERAGE_COVERAGE"
       ]
     },
     "Anomalies":{
@@ -850,11 +908,32 @@
       "min":20,
       "pattern":"^arn:aws[a-z-]*:(billing)::[0-9]{12}:billingview/[-a-zA-Z0-9/:_+=.-@]{1,43}$"
     },
+    "BillingViewHealthStatusException":{
+      "type":"structure",
+      "members":{
+        "Message":{"shape":"ErrorMessage"}
+      },
+      "exception":true
+    },
     "CommitmentPurchaseAnalysisConfiguration":{
       "type":"structure",
       "members":{
         "SavingsPlansPurchaseAnalysisConfiguration":{"shape":"SavingsPlansPurchaseAnalysisConfiguration"}
       }
+    },
+    "ComparisonMetricValue":{
+      "type":"structure",
+      "members":{
+        "BaselineTimePeriodAmount":{"shape":"GenericString"},
+        "ComparisonTimePeriodAmount":{"shape":"GenericString"},
+        "Difference":{"shape":"GenericString"},
+        "Unit":{"shape":"GenericString"}
+      }
+    },
+    "ComparisonMetrics":{
+      "type":"map",
+      "key":{"shape":"MetricName"},
+      "value":{"shape":"ComparisonMetricValue"}
     },
     "Context":{
       "type":"string",
@@ -951,6 +1030,23 @@
       "max":1000,
       "min":1
     },
+    "CostAndUsageComparison":{
+      "type":"structure",
+      "members":{
+        "CostAndUsageSelector":{"shape":"Expression"},
+        "Metrics":{"shape":"ComparisonMetrics"}
+      }
+    },
+    "CostAndUsageComparisons":{
+      "type":"list",
+      "member":{"shape":"CostAndUsageComparison"}
+    },
+    "CostAndUsageComparisonsMaxResults":{
+      "type":"integer",
+      "box":true,
+      "max":2000,
+      "min":1
+    },
     "CostCategory":{
       "type":"structure",
       "required":[
@@ -1022,12 +1118,25 @@
         "NumberOfRules":{"shape":"NonNegativeInteger"},
         "ProcessingStatus":{"shape":"CostCategoryProcessingStatusList"},
         "Values":{"shape":"CostCategoryValuesList"},
-        "DefaultValue":{"shape":"CostCategoryValue"}
+        "DefaultValue":{"shape":"CostCategoryValue"},
+        "SupportedResourceTypes":{"shape":"ResourceTypes"}
       }
     },
     "CostCategoryReferencesList":{
       "type":"list",
       "member":{"shape":"CostCategoryReference"}
+    },
+    "CostCategoryResourceAssociation":{
+      "type":"structure",
+      "members":{
+        "ResourceArn":{"shape":"GenericArn"},
+        "CostCategoryName":{"shape":"CostCategoryName"},
+        "CostCategoryArn":{"shape":"Arn"}
+      }
+    },
+    "CostCategoryResourceAssociations":{
+      "type":"list",
+      "member":{"shape":"CostCategoryResourceAssociation"}
     },
     "CostCategoryRule":{
       "type":"structure",
@@ -1144,6 +1253,36 @@
     "CostCategoryValuesList":{
       "type":"list",
       "member":{"shape":"CostCategoryValue"}
+    },
+    "CostComparisonDriver":{
+      "type":"structure",
+      "members":{
+        "CostSelector":{"shape":"Expression"},
+        "Metrics":{"shape":"ComparisonMetrics"},
+        "CostDrivers":{"shape":"CostDrivers"}
+      }
+    },
+    "CostComparisonDrivers":{
+      "type":"list",
+      "member":{"shape":"CostComparisonDriver"}
+    },
+    "CostComparisonDriversMaxResults":{
+      "type":"integer",
+      "box":true,
+      "max":10,
+      "min":1
+    },
+    "CostDriver":{
+      "type":"structure",
+      "members":{
+        "Type":{"shape":"GenericString"},
+        "Name":{"shape":"GenericString"},
+        "Metrics":{"shape":"ComparisonMetrics"}
+      }
+    },
+    "CostDrivers":{
+      "type":"list",
+      "member":{"shape":"CostDriver"}
     },
     "Coverage":{
       "type":"structure",
@@ -1288,8 +1427,7 @@
     },
     "DeleteAnomalyMonitorResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeleteAnomalySubscriptionRequest":{
       "type":"structure",
@@ -1300,8 +1438,7 @@
     },
     "DeleteAnomalySubscriptionResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeleteCostCategoryDefinitionRequest":{
       "type":"structure",
@@ -1337,6 +1474,7 @@
         "AZ",
         "INSTANCE_TYPE",
         "LINKED_ACCOUNT",
+        "PAYER_ACCOUNT",
         "LINKED_ACCOUNT_NAME",
         "OPERATION",
         "PURCHASE_TYPE",
@@ -1574,6 +1712,12 @@
       "type":"list",
       "member":{"shape":"GenerationSummary"}
     },
+    "GenericArn":{
+      "type":"string",
+      "max":2048,
+      "min":20,
+      "pattern":"arn:aws[-a-z0-9]*:[a-z0-9]+:[-a-z0-9]*:[0-9]{12}:[-a-zA-Z0-9/:_]+"
+    },
     "GenericBoolean":{"type":"boolean"},
     "GenericDouble":{"type":"double"},
     "GenericString":{
@@ -1591,7 +1735,10 @@
         "Feedback":{"shape":"AnomalyFeedbackType"},
         "TotalImpact":{"shape":"TotalImpactFilter"},
         "NextPageToken":{"shape":"NextPageToken"},
-        "MaxResults":{"shape":"PageSize"}
+        "MaxResults":{
+          "shape":"PageSize",
+          "box":true
+        }
       }
     },
     "GetAnomaliesResponse":{
@@ -1607,7 +1754,10 @@
       "members":{
         "MonitorArnList":{"shape":"Values"},
         "NextPageToken":{"shape":"NextPageToken"},
-        "MaxResults":{"shape":"PageSize"}
+        "MaxResults":{
+          "shape":"PageSize",
+          "box":true
+        }
       }
     },
     "GetAnomalyMonitorsResponse":{
@@ -1624,7 +1774,10 @@
         "SubscriptionArnList":{"shape":"Values"},
         "MonitorArn":{"shape":"GenericString"},
         "NextPageToken":{"shape":"NextPageToken"},
-        "MaxResults":{"shape":"PageSize"}
+        "MaxResults":{
+          "shape":"PageSize",
+          "box":true
+        }
       }
     },
     "GetAnomalySubscriptionsResponse":{
@@ -1680,6 +1833,35 @@
         "ErrorCode":{"shape":"ErrorCode"},
         "AnalysisDetails":{"shape":"AnalysisDetails"},
         "CommitmentPurchaseAnalysisConfiguration":{"shape":"CommitmentPurchaseAnalysisConfiguration"}
+      }
+    },
+    "GetCostAndUsageComparisonsRequest":{
+      "type":"structure",
+      "required":[
+        "BaselineTimePeriod",
+        "ComparisonTimePeriod",
+        "MetricForComparison"
+      ],
+      "members":{
+        "BillingViewArn":{"shape":"BillingViewArn"},
+        "BaselineTimePeriod":{"shape":"DateInterval"},
+        "ComparisonTimePeriod":{"shape":"DateInterval"},
+        "MetricForComparison":{"shape":"MetricName"},
+        "Filter":{"shape":"Expression"},
+        "GroupBy":{"shape":"GroupDefinitions"},
+        "MaxResults":{
+          "shape":"CostAndUsageComparisonsMaxResults",
+          "box":true
+        },
+        "NextPageToken":{"shape":"NextPageToken"}
+      }
+    },
+    "GetCostAndUsageComparisonsResponse":{
+      "type":"structure",
+      "members":{
+        "CostAndUsageComparisons":{"shape":"CostAndUsageComparisons"},
+        "TotalCostAndUsage":{"shape":"ComparisonMetrics"},
+        "NextPageToken":{"shape":"NextPageToken"}
       }
     },
     "GetCostAndUsageRequest":{
@@ -1760,6 +1942,34 @@
         "CostCategoryValues":{"shape":"CostCategoryValuesList"},
         "ReturnSize":{"shape":"PageSize"},
         "TotalSize":{"shape":"PageSize"}
+      }
+    },
+    "GetCostComparisonDriversRequest":{
+      "type":"structure",
+      "required":[
+        "BaselineTimePeriod",
+        "ComparisonTimePeriod",
+        "MetricForComparison"
+      ],
+      "members":{
+        "BillingViewArn":{"shape":"BillingViewArn"},
+        "BaselineTimePeriod":{"shape":"DateInterval"},
+        "ComparisonTimePeriod":{"shape":"DateInterval"},
+        "MetricForComparison":{"shape":"MetricName"},
+        "Filter":{"shape":"Expression"},
+        "GroupBy":{"shape":"GroupDefinitions"},
+        "MaxResults":{
+          "shape":"CostComparisonDriversMaxResults",
+          "box":true
+        },
+        "NextPageToken":{"shape":"NextPageToken"}
+      }
+    },
+    "GetCostComparisonDriversResponse":{
+      "type":"structure",
+      "members":{
+        "CostComparisonDrivers":{"shape":"CostComparisonDrivers"},
+        "NextPageToken":{"shape":"NextPageToken"}
       }
     },
     "GetCostForecastRequest":{
@@ -1855,7 +2065,7 @@
         "TermInYears":{"shape":"TermInYears"},
         "PaymentOption":{"shape":"PaymentOption"},
         "ServiceSpecification":{"shape":"ServiceSpecification"},
-        "PageSize":{"shape":"NonNegativeInteger"},
+        "PageSize":{"shape":"RecommendationsPageSize"},
         "NextPageToken":{"shape":"NextPageToken"}
       }
     },
@@ -1899,7 +2109,7 @@
         "Filter":{"shape":"Expression"},
         "Configuration":{"shape":"RightsizingRecommendationConfiguration"},
         "Service":{"shape":"GenericString"},
-        "PageSize":{"shape":"NonNegativeInteger"},
+        "PageSize":{"shape":"RecommendationsPageSize"},
         "NextPageToken":{"shape":"NextPageToken"}
       }
     },
@@ -1966,7 +2176,7 @@
         "PaymentOption":{"shape":"PaymentOption"},
         "AccountScope":{"shape":"AccountScope"},
         "NextPageToken":{"shape":"NextPageToken"},
-        "PageSize":{"shape":"NonNegativeInteger"},
+        "PageSize":{"shape":"RecommendationsPageSize"},
         "LookbackPeriodInDays":{"shape":"LookbackPeriodInDays"},
         "Filter":{"shape":"Expression"}
       }
@@ -2166,7 +2376,7 @@
       "members":{
         "AnalysisStatus":{"shape":"AnalysisStatus"},
         "NextPageToken":{"shape":"NextPageToken"},
-        "PageSize":{"shape":"NonNegativeInteger"},
+        "PageSize":{"shape":"AnalysesPageSize"},
         "AnalysisIds":{"shape":"AnalysisIds"}
       }
     },
@@ -2222,7 +2432,8 @@
         "MaxResults":{
           "shape":"CostCategoryMaxResults",
           "box":true
-        }
+        },
+        "SupportedResourceTypes":{"shape":"ResourceTypesFilterInput"}
       }
     },
     "ListCostCategoryDefinitionsResponse":{
@@ -2232,12 +2443,30 @@
         "NextToken":{"shape":"NextPageToken"}
       }
     },
+    "ListCostCategoryResourceAssociationsRequest":{
+      "type":"structure",
+      "members":{
+        "CostCategoryArn":{"shape":"Arn"},
+        "NextToken":{"shape":"NextPageToken"},
+        "MaxResults":{
+          "shape":"CostCategoryMaxResults",
+          "box":true
+        }
+      }
+    },
+    "ListCostCategoryResourceAssociationsResponse":{
+      "type":"structure",
+      "members":{
+        "CostCategoryResourceAssociations":{"shape":"CostCategoryResourceAssociations"},
+        "NextToken":{"shape":"NextPageToken"}
+      }
+    },
     "ListSavingsPlansPurchaseRecommendationGenerationRequest":{
       "type":"structure",
       "members":{
         "GenerationStatus":{"shape":"GenerationStatus"},
         "RecommendationIds":{"shape":"RecommendationIdList"},
-        "PageSize":{"shape":"NonNegativeInteger"},
+        "PageSize":{"shape":"RecommendationsPageSize"},
         "NextPageToken":{"shape":"NextPageToken"}
       }
     },
@@ -2352,7 +2581,12 @@
     },
     "MonitorDimension":{
       "type":"string",
-      "enum":["SERVICE"]
+      "enum":[
+        "SERVICE",
+        "LINKED_ACCOUNT",
+        "TAG",
+        "COST_CATEGORY"
+      ]
     },
     "MonitorType":{
       "type":"string",
@@ -2473,7 +2707,8 @@
         "DeploymentOption":{"shape":"GenericString"},
         "LicenseModel":{"shape":"GenericString"},
         "CurrentGeneration":{"shape":"GenericBoolean"},
-        "SizeFlexEligible":{"shape":"GenericBoolean"}
+        "SizeFlexEligible":{"shape":"GenericBoolean"},
+        "DeploymentModel":{"shape":"GenericString"}
       }
     },
     "RICostForUnusedHours":{"type":"string"},
@@ -2544,6 +2779,11 @@
         "SAME_INSTANCE_FAMILY",
         "CROSS_INSTANCE_FAMILY"
       ]
+    },
+    "RecommendationsPageSize":{
+      "type":"integer",
+      "max":6000,
+      "min":0
     },
     "RedshiftInstanceDetails":{
       "type":"structure",
@@ -2732,6 +2972,20 @@
       "min":0,
       "pattern":"^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$"
     },
+    "ResourceType":{
+      "type":"string",
+      "pattern":"^[-a-zA-Z0-9/_]+:[-a-zA-Z0-9/_]+"
+    },
+    "ResourceTypes":{
+      "type":"list",
+      "member":{"shape":"ResourceType"}
+    },
+    "ResourceTypesFilterInput":{
+      "type":"list",
+      "member":{"shape":"ResourceType"},
+      "max":5,
+      "min":0
+    },
     "ResourceUtilization":{
       "type":"structure",
       "members":{
@@ -2911,7 +3165,8 @@
         "AnalysisType":{"shape":"AnalysisType"},
         "SavingsPlansToAdd":{"shape":"SavingsPlansToAdd"},
         "SavingsPlansToExclude":{"shape":"SavingsPlansToExclude"},
-        "LookBackTimePeriod":{"shape":"DateInterval"}
+        "LookBackTimePeriod":{"shape":"DateInterval"},
+        "SavingsPlansTargetCoverage":{"shape":"SavingsPlansTargetCoverage"}
       }
     },
     "SavingsPlansPurchaseAnalysisDetails":{
@@ -3009,6 +3264,11 @@
         "NetSavings":{"shape":"GenericString"},
         "OnDemandCostEquivalent":{"shape":"GenericString"}
       }
+    },
+    "SavingsPlansTargetCoverage":{
+      "type":"integer",
+      "max":100,
+      "min":10
     },
     "SavingsPlansToAdd":{
       "type":"list",
@@ -3150,8 +3410,7 @@
     },
     "StartSavingsPlansPurchaseRecommendationGenerationRequest":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "StartSavingsPlansPurchaseRecommendationGenerationResponse":{
       "type":"structure",
@@ -3198,7 +3457,8 @@
       "enum":[
         "COMPUTE_SP",
         "EC2_INSTANCE_SP",
-        "SAGEMAKER_SP"
+        "SAGEMAKER_SP",
+        "DATABASE_SP"
       ]
     },
     "TagKey":{
@@ -3224,8 +3484,7 @@
     },
     "TagResourceResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "TagValues":{
       "type":"structure",
@@ -3330,8 +3589,7 @@
     },
     "UntagResourceResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "UnusedHours":{"type":"string"},
     "UnusedUnits":{"type":"string"},

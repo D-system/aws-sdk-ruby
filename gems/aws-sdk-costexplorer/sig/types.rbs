@@ -55,7 +55,7 @@ module Aws::CostExplorer
       attr_accessor last_updated_date: ::String
       attr_accessor last_evaluated_date: ::String
       attr_accessor monitor_type: ("DIMENSIONAL" | "CUSTOM")
-      attr_accessor monitor_dimension: ("SERVICE")
+      attr_accessor monitor_dimension: ("SERVICE" | "LINKED_ACCOUNT" | "TAG" | "COST_CATEGORY")
       attr_accessor monitor_specification: Types::Expression
       attr_accessor dimensional_value_count: ::Integer
       SENSITIVE: []
@@ -89,8 +89,21 @@ module Aws::CostExplorer
       SENSITIVE: []
     end
 
+    class BillingViewHealthStatusException
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
     class CommitmentPurchaseAnalysisConfiguration
       attr_accessor savings_plans_purchase_analysis_configuration: Types::SavingsPlansPurchaseAnalysisConfiguration
+      SENSITIVE: []
+    end
+
+    class ComparisonMetricValue
+      attr_accessor baseline_time_period_amount: ::String
+      attr_accessor comparison_time_period_amount: ::String
+      attr_accessor difference: ::String
+      attr_accessor unit: ::String
       SENSITIVE: []
     end
 
@@ -115,6 +128,12 @@ module Aws::CostExplorer
     class CostAllocationTagStatusEntry
       attr_accessor tag_key: ::String
       attr_accessor status: ("Active" | "Inactive")
+      SENSITIVE: []
+    end
+
+    class CostAndUsageComparison
+      attr_accessor cost_and_usage_selector: Types::Expression
+      attr_accessor metrics: ::Hash[::String, Types::ComparisonMetricValue]
       SENSITIVE: []
     end
 
@@ -152,6 +171,14 @@ module Aws::CostExplorer
       attr_accessor processing_status: ::Array[Types::CostCategoryProcessingStatus]
       attr_accessor values: ::Array[::String]
       attr_accessor default_value: ::String
+      attr_accessor supported_resource_types: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class CostCategoryResourceAssociation
+      attr_accessor resource_arn: ::String
+      attr_accessor cost_category_name: ::String
+      attr_accessor cost_category_arn: ::String
       SENSITIVE: []
     end
 
@@ -181,6 +208,20 @@ module Aws::CostExplorer
       attr_accessor key: ::String
       attr_accessor values: ::Array[::String]
       attr_accessor match_options: ::Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]
+      SENSITIVE: []
+    end
+
+    class CostComparisonDriver
+      attr_accessor cost_selector: Types::Expression
+      attr_accessor metrics: ::Hash[::String, Types::ComparisonMetricValue]
+      attr_accessor cost_drivers: ::Array[Types::CostDriver]
+      SENSITIVE: []
+    end
+
+    class CostDriver
+      attr_accessor type: ::String
+      attr_accessor name: ::String
+      attr_accessor metrics: ::Hash[::String, Types::ComparisonMetricValue]
       SENSITIVE: []
     end
 
@@ -323,7 +364,7 @@ module Aws::CostExplorer
     end
 
     class DimensionValues
-      attr_accessor key: ("AZ" | "INSTANCE_TYPE" | "LINKED_ACCOUNT" | "LINKED_ACCOUNT_NAME" | "OPERATION" | "PURCHASE_TYPE" | "REGION" | "SERVICE" | "SERVICE_CODE" | "USAGE_TYPE" | "USAGE_TYPE_GROUP" | "RECORD_TYPE" | "OPERATING_SYSTEM" | "TENANCY" | "SCOPE" | "PLATFORM" | "SUBSCRIPTION_ID" | "LEGAL_ENTITY_NAME" | "DEPLOYMENT_OPTION" | "DATABASE_ENGINE" | "CACHE_ENGINE" | "INSTANCE_TYPE_FAMILY" | "BILLING_ENTITY" | "RESERVATION_ID" | "RESOURCE_ID" | "RIGHTSIZING_TYPE" | "SAVINGS_PLANS_TYPE" | "SAVINGS_PLAN_ARN" | "PAYMENT_OPTION" | "AGREEMENT_END_DATE_TIME_AFTER" | "AGREEMENT_END_DATE_TIME_BEFORE" | "INVOICING_ENTITY" | "ANOMALY_TOTAL_IMPACT_ABSOLUTE" | "ANOMALY_TOTAL_IMPACT_PERCENTAGE")
+      attr_accessor key: ("AZ" | "INSTANCE_TYPE" | "LINKED_ACCOUNT" | "PAYER_ACCOUNT" | "LINKED_ACCOUNT_NAME" | "OPERATION" | "PURCHASE_TYPE" | "REGION" | "SERVICE" | "SERVICE_CODE" | "USAGE_TYPE" | "USAGE_TYPE_GROUP" | "RECORD_TYPE" | "OPERATING_SYSTEM" | "TENANCY" | "SCOPE" | "PLATFORM" | "SUBSCRIPTION_ID" | "LEGAL_ENTITY_NAME" | "DEPLOYMENT_OPTION" | "DATABASE_ENGINE" | "CACHE_ENGINE" | "INSTANCE_TYPE_FAMILY" | "BILLING_ENTITY" | "RESERVATION_ID" | "RESOURCE_ID" | "RIGHTSIZING_TYPE" | "SAVINGS_PLANS_TYPE" | "SAVINGS_PLAN_ARN" | "PAYMENT_OPTION" | "AGREEMENT_END_DATE_TIME_AFTER" | "AGREEMENT_END_DATE_TIME_BEFORE" | "INVOICING_ENTITY" | "ANOMALY_TOTAL_IMPACT_ABSOLUTE" | "ANOMALY_TOTAL_IMPACT_PERCENTAGE")
       attr_accessor values: ::Array[::String]
       attr_accessor match_options: ::Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]
       SENSITIVE: []
@@ -522,6 +563,25 @@ module Aws::CostExplorer
       SENSITIVE: []
     end
 
+    class GetCostAndUsageComparisonsRequest
+      attr_accessor billing_view_arn: ::String
+      attr_accessor baseline_time_period: Types::DateInterval
+      attr_accessor comparison_time_period: Types::DateInterval
+      attr_accessor metric_for_comparison: ::String
+      attr_accessor filter: Types::Expression
+      attr_accessor group_by: ::Array[Types::GroupDefinition]
+      attr_accessor max_results: ::Integer
+      attr_accessor next_page_token: ::String
+      SENSITIVE: []
+    end
+
+    class GetCostAndUsageComparisonsResponse
+      attr_accessor cost_and_usage_comparisons: ::Array[Types::CostAndUsageComparison]
+      attr_accessor total_cost_and_usage: ::Hash[::String, Types::ComparisonMetricValue]
+      attr_accessor next_page_token: ::String
+      SENSITIVE: []
+    end
+
     class GetCostAndUsageRequest
       attr_accessor time_period: Types::DateInterval
       attr_accessor granularity: ("DAILY" | "MONTHLY" | "HOURLY")
@@ -581,6 +641,24 @@ module Aws::CostExplorer
       SENSITIVE: []
     end
 
+    class GetCostComparisonDriversRequest
+      attr_accessor billing_view_arn: ::String
+      attr_accessor baseline_time_period: Types::DateInterval
+      attr_accessor comparison_time_period: Types::DateInterval
+      attr_accessor metric_for_comparison: ::String
+      attr_accessor filter: Types::Expression
+      attr_accessor group_by: ::Array[Types::GroupDefinition]
+      attr_accessor max_results: ::Integer
+      attr_accessor next_page_token: ::String
+      SENSITIVE: []
+    end
+
+    class GetCostComparisonDriversResponse
+      attr_accessor cost_comparison_drivers: ::Array[Types::CostComparisonDriver]
+      attr_accessor next_page_token: ::String
+      SENSITIVE: []
+    end
+
     class GetCostForecastRequest
       attr_accessor time_period: Types::DateInterval
       attr_accessor metric: ("BLENDED_COST" | "UNBLENDED_COST" | "AMORTIZED_COST" | "NET_UNBLENDED_COST" | "NET_AMORTIZED_COST" | "USAGE_QUANTITY" | "NORMALIZED_USAGE_AMOUNT")
@@ -600,7 +678,7 @@ module Aws::CostExplorer
     class GetDimensionValuesRequest
       attr_accessor search_string: ::String
       attr_accessor time_period: Types::DateInterval
-      attr_accessor dimension: ("AZ" | "INSTANCE_TYPE" | "LINKED_ACCOUNT" | "LINKED_ACCOUNT_NAME" | "OPERATION" | "PURCHASE_TYPE" | "REGION" | "SERVICE" | "SERVICE_CODE" | "USAGE_TYPE" | "USAGE_TYPE_GROUP" | "RECORD_TYPE" | "OPERATING_SYSTEM" | "TENANCY" | "SCOPE" | "PLATFORM" | "SUBSCRIPTION_ID" | "LEGAL_ENTITY_NAME" | "DEPLOYMENT_OPTION" | "DATABASE_ENGINE" | "CACHE_ENGINE" | "INSTANCE_TYPE_FAMILY" | "BILLING_ENTITY" | "RESERVATION_ID" | "RESOURCE_ID" | "RIGHTSIZING_TYPE" | "SAVINGS_PLANS_TYPE" | "SAVINGS_PLAN_ARN" | "PAYMENT_OPTION" | "AGREEMENT_END_DATE_TIME_AFTER" | "AGREEMENT_END_DATE_TIME_BEFORE" | "INVOICING_ENTITY" | "ANOMALY_TOTAL_IMPACT_ABSOLUTE" | "ANOMALY_TOTAL_IMPACT_PERCENTAGE")
+      attr_accessor dimension: ("AZ" | "INSTANCE_TYPE" | "LINKED_ACCOUNT" | "PAYER_ACCOUNT" | "LINKED_ACCOUNT_NAME" | "OPERATION" | "PURCHASE_TYPE" | "REGION" | "SERVICE" | "SERVICE_CODE" | "USAGE_TYPE" | "USAGE_TYPE_GROUP" | "RECORD_TYPE" | "OPERATING_SYSTEM" | "TENANCY" | "SCOPE" | "PLATFORM" | "SUBSCRIPTION_ID" | "LEGAL_ENTITY_NAME" | "DEPLOYMENT_OPTION" | "DATABASE_ENGINE" | "CACHE_ENGINE" | "INSTANCE_TYPE_FAMILY" | "BILLING_ENTITY" | "RESERVATION_ID" | "RESOURCE_ID" | "RIGHTSIZING_TYPE" | "SAVINGS_PLANS_TYPE" | "SAVINGS_PLAN_ARN" | "PAYMENT_OPTION" | "AGREEMENT_END_DATE_TIME_AFTER" | "AGREEMENT_END_DATE_TIME_BEFORE" | "INVOICING_ENTITY" | "ANOMALY_TOTAL_IMPACT_ABSOLUTE" | "ANOMALY_TOTAL_IMPACT_PERCENTAGE")
       attr_accessor context: ("COST_AND_USAGE" | "RESERVATIONS" | "SAVINGS_PLANS")
       attr_accessor filter: Types::Expression
       attr_accessor sort_by: ::Array[Types::SortDefinition]
@@ -724,7 +802,7 @@ module Aws::CostExplorer
     end
 
     class GetSavingsPlansPurchaseRecommendationRequest
-      attr_accessor savings_plans_type: ("COMPUTE_SP" | "EC2_INSTANCE_SP" | "SAGEMAKER_SP")
+      attr_accessor savings_plans_type: ("COMPUTE_SP" | "EC2_INSTANCE_SP" | "SAGEMAKER_SP" | "DATABASE_SP")
       attr_accessor term_in_years: ("ONE_YEAR" | "THREE_YEARS")
       attr_accessor payment_option: ("NO_UPFRONT" | "PARTIAL_UPFRONT" | "ALL_UPFRONT" | "LIGHT_UTILIZATION" | "MEDIUM_UTILIZATION" | "HEAVY_UTILIZATION")
       attr_accessor account_scope: ("PAYER" | "LINKED")
@@ -896,11 +974,25 @@ module Aws::CostExplorer
       attr_accessor effective_on: ::String
       attr_accessor next_token: ::String
       attr_accessor max_results: ::Integer
+      attr_accessor supported_resource_types: ::Array[::String]
       SENSITIVE: []
     end
 
     class ListCostCategoryDefinitionsResponse
       attr_accessor cost_category_references: ::Array[Types::CostCategoryReference]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListCostCategoryResourceAssociationsRequest
+      attr_accessor cost_category_arn: ::String
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListCostCategoryResourceAssociationsResponse
+      attr_accessor cost_category_resource_associations: ::Array[Types::CostCategoryResourceAssociation]
       attr_accessor next_token: ::String
       SENSITIVE: []
     end
@@ -978,13 +1070,14 @@ module Aws::CostExplorer
       attr_accessor license_model: ::String
       attr_accessor current_generation: bool
       attr_accessor size_flex_eligible: bool
+      attr_accessor deployment_model: ::String
       SENSITIVE: []
     end
 
     class RecommendationDetailData
       attr_accessor account_scope: ("PAYER" | "LINKED")
       attr_accessor lookback_period_in_days: ("SEVEN_DAYS" | "THIRTY_DAYS" | "SIXTY_DAYS")
-      attr_accessor savings_plans_type: ("COMPUTE_SP" | "EC2_INSTANCE_SP" | "SAGEMAKER_SP")
+      attr_accessor savings_plans_type: ("COMPUTE_SP" | "EC2_INSTANCE_SP" | "SAGEMAKER_SP" | "DATABASE_SP")
       attr_accessor term_in_years: ("ONE_YEAR" | "THREE_YEARS")
       attr_accessor payment_option: ("NO_UPFRONT" | "PARTIAL_UPFRONT" | "ALL_UPFRONT" | "LIGHT_UTILIZATION" | "MEDIUM_UTILIZATION" | "HEAVY_UTILIZATION")
       attr_accessor account_id: ::String
@@ -1209,7 +1302,7 @@ module Aws::CostExplorer
 
     class SavingsPlans
       attr_accessor payment_option: ("NO_UPFRONT" | "PARTIAL_UPFRONT" | "ALL_UPFRONT" | "LIGHT_UTILIZATION" | "MEDIUM_UTILIZATION" | "HEAVY_UTILIZATION")
-      attr_accessor savings_plans_type: ("COMPUTE_SP" | "EC2_INSTANCE_SP" | "SAGEMAKER_SP")
+      attr_accessor savings_plans_type: ("COMPUTE_SP" | "EC2_INSTANCE_SP" | "SAGEMAKER_SP" | "DATABASE_SP")
       attr_accessor region: ::String
       attr_accessor instance_family: ::String
       attr_accessor term_in_years: ("ONE_YEAR" | "THREE_YEARS")
@@ -1250,10 +1343,11 @@ module Aws::CostExplorer
     class SavingsPlansPurchaseAnalysisConfiguration
       attr_accessor account_scope: ("PAYER" | "LINKED")
       attr_accessor account_id: ::String
-      attr_accessor analysis_type: ("MAX_SAVINGS" | "CUSTOM_COMMITMENT")
+      attr_accessor analysis_type: ("MAX_SAVINGS" | "CUSTOM_COMMITMENT" | "TARGET_AVERAGE_COVERAGE")
       attr_accessor savings_plans_to_add: ::Array[Types::SavingsPlans]
       attr_accessor savings_plans_to_exclude: ::Array[::String]
       attr_accessor look_back_time_period: Types::DateInterval
+      attr_accessor savings_plans_target_coverage: ::Integer
       SENSITIVE: []
     end
 
@@ -1285,7 +1379,7 @@ module Aws::CostExplorer
 
     class SavingsPlansPurchaseRecommendation
       attr_accessor account_scope: ("PAYER" | "LINKED")
-      attr_accessor savings_plans_type: ("COMPUTE_SP" | "EC2_INSTANCE_SP" | "SAGEMAKER_SP")
+      attr_accessor savings_plans_type: ("COMPUTE_SP" | "EC2_INSTANCE_SP" | "SAGEMAKER_SP" | "DATABASE_SP")
       attr_accessor term_in_years: ("ONE_YEAR" | "THREE_YEARS")
       attr_accessor payment_option: ("NO_UPFRONT" | "PARTIAL_UPFRONT" | "ALL_UPFRONT" | "LIGHT_UTILIZATION" | "MEDIUM_UTILIZATION" | "HEAVY_UTILIZATION")
       attr_accessor lookback_period_in_days: ("SEVEN_DAYS" | "THIRTY_DAYS" | "SIXTY_DAYS")

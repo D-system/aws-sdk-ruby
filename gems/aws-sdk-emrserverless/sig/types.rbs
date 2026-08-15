@@ -29,8 +29,11 @@ module Aws::EMRServerless
       attr_accessor worker_type_specifications: ::Hash[::String, Types::WorkerTypeSpecification]
       attr_accessor runtime_configuration: ::Array[Types::Configuration]
       attr_accessor monitoring_configuration: Types::MonitoringConfiguration
+      attr_accessor disk_encryption_configuration: Types::DiskEncryptionConfiguration
       attr_accessor interactive_configuration: Types::InteractiveConfiguration
       attr_accessor scheduler_configuration: Types::SchedulerConfiguration
+      attr_accessor identity_center_configuration: Types::IdentityCenterConfiguration
+      attr_accessor job_level_cost_allocation_configuration: Types::JobLevelCostAllocationConfiguration
       SENSITIVE: []
     end
 
@@ -62,6 +65,7 @@ module Aws::EMRServerless
     class CancelJobRunRequest
       attr_accessor application_id: ::String
       attr_accessor job_run_id: ::String
+      attr_accessor shutdown_grace_period_in_seconds: ::Integer
       SENSITIVE: []
     end
 
@@ -90,6 +94,7 @@ module Aws::EMRServerless
     class ConfigurationOverrides
       attr_accessor application_configuration: ::Array[Types::Configuration]
       attr_accessor monitoring_configuration: Types::MonitoringConfiguration
+      attr_accessor disk_encryption_configuration: Types::DiskEncryptionConfiguration
       SENSITIVE: []
     end
 
@@ -114,8 +119,11 @@ module Aws::EMRServerless
       attr_accessor worker_type_specifications: ::Hash[::String, Types::WorkerTypeSpecificationInput]
       attr_accessor runtime_configuration: ::Array[Types::Configuration]
       attr_accessor monitoring_configuration: Types::MonitoringConfiguration
+      attr_accessor disk_encryption_configuration: Types::DiskEncryptionConfiguration
       attr_accessor interactive_configuration: Types::InteractiveConfiguration
       attr_accessor scheduler_configuration: Types::SchedulerConfiguration
+      attr_accessor identity_center_configuration: Types::IdentityCenterConfigurationInput
+      attr_accessor job_level_cost_allocation_configuration: Types::JobLevelCostAllocationConfiguration
       SENSITIVE: []
     end
 
@@ -132,6 +140,12 @@ module Aws::EMRServerless
     end
 
     class DeleteApplicationResponse < Aws::EmptyStructure
+    end
+
+    class DiskEncryptionConfiguration
+      attr_accessor encryption_context: ::Hash[::String, ::String]
+      attr_accessor encryption_key_arn: ::String
+      SENSITIVE: []
     end
 
     class GetApplicationRequest
@@ -169,6 +183,44 @@ module Aws::EMRServerless
       SENSITIVE: []
     end
 
+    class GetResourceDashboardRequest
+      attr_accessor application_id: ::String
+      attr_accessor resource_id: ::String
+      attr_accessor resource_type: ("SESSION")
+      SENSITIVE: []
+    end
+
+    class GetResourceDashboardResponse
+      attr_accessor url: ::String
+      SENSITIVE: []
+    end
+
+    class GetSessionEndpointRequest
+      attr_accessor application_id: ::String
+      attr_accessor session_id: ::String
+      SENSITIVE: []
+    end
+
+    class GetSessionEndpointResponse
+      attr_accessor application_id: ::String
+      attr_accessor session_id: ::String
+      attr_accessor endpoint: ::String
+      attr_accessor auth_token: ::String
+      attr_accessor auth_token_expires_at: ::Time
+      SENSITIVE: [:auth_token]
+    end
+
+    class GetSessionRequest
+      attr_accessor application_id: ::String
+      attr_accessor session_id: ::String
+      SENSITIVE: []
+    end
+
+    class GetSessionResponse
+      attr_accessor session: Types::Session
+      SENSITIVE: []
+    end
+
     class Hive
       attr_accessor query: ::String
       attr_accessor init_query_file: ::String
@@ -176,14 +228,29 @@ module Aws::EMRServerless
       SENSITIVE: [:query, :init_query_file, :parameters]
     end
 
+    class IdentityCenterConfiguration
+      attr_accessor identity_center_instance_arn: ::String
+      attr_accessor identity_center_application_arn: ::String
+      attr_accessor user_background_sessions_enabled: bool
+      SENSITIVE: []
+    end
+
+    class IdentityCenterConfigurationInput
+      attr_accessor identity_center_instance_arn: ::String
+      attr_accessor user_background_sessions_enabled: bool
+      SENSITIVE: []
+    end
+
     class ImageConfiguration
       attr_accessor image_uri: ::String
       attr_accessor resolved_image_digest: ::String
+      attr_accessor application_level_digest_resolution: bool
       SENSITIVE: []
     end
 
     class ImageConfigurationInput
       attr_accessor image_uri: ::String
+      attr_accessor application_level_digest_resolution: bool
       SENSITIVE: []
     end
 
@@ -196,6 +263,7 @@ module Aws::EMRServerless
     class InteractiveConfiguration
       attr_accessor studio_enabled: bool
       attr_accessor livy_endpoint_enabled: bool
+      attr_accessor session_enabled: bool
       SENSITIVE: []
     end
 
@@ -218,6 +286,11 @@ module Aws::EMRServerless
       end
     end
 
+    class JobLevelCostAllocationConfiguration
+      attr_accessor enabled: bool
+      SENSITIVE: []
+    end
+
     class JobRun
       attr_accessor application_id: ::String
       attr_accessor job_run_id: ::String
@@ -227,6 +300,7 @@ module Aws::EMRServerless
       attr_accessor created_at: ::Time
       attr_accessor updated_at: ::Time
       attr_accessor execution_role: ::String
+      attr_accessor execution_iam_policy: Types::JobRunExecutionIamPolicy
       attr_accessor state: ("SUBMITTED" | "PENDING" | "SCHEDULED" | "RUNNING" | "SUCCESS" | "FAILED" | "CANCELLING" | "CANCELLED" | "QUEUED")
       attr_accessor state_details: ::String
       attr_accessor release_label: ::String
@@ -246,6 +320,8 @@ module Aws::EMRServerless
       attr_accessor started_at: ::Time
       attr_accessor ended_at: ::Time
       attr_accessor queued_duration_milliseconds: ::Integer
+      attr_accessor image_configuration: Types::ImageConfiguration
+      attr_accessor worker_type_specifications: ::Hash[::String, Types::WorkerTypeSpecification]
       SENSITIVE: []
     end
 
@@ -265,6 +341,12 @@ module Aws::EMRServerless
       attr_accessor release_label: ::String
       attr_accessor type: ::String
       attr_accessor attempt: ::Integer
+      SENSITIVE: []
+    end
+
+    class JobRunExecutionIamPolicy
+      attr_accessor policy: ::String
+      attr_accessor policy_arns: ::Array[::String]
       SENSITIVE: []
     end
 
@@ -328,6 +410,22 @@ module Aws::EMRServerless
 
     class ListJobRunsResponse
       attr_accessor job_runs: ::Array[Types::JobRunSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListSessionsRequest
+      attr_accessor application_id: ::String
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      attr_accessor states: ::Array[("SUBMITTED" | "STARTING" | "STARTED" | "IDLE" | "BUSY" | "FAILED" | "TERMINATING" | "TERMINATED")]
+      attr_accessor created_at_after: ::Time
+      attr_accessor created_at_before: ::Time
+      SENSITIVE: []
+    end
+
+    class ListSessionsResponse
+      attr_accessor sessions: ::Array[Types::SessionSummary]
       attr_accessor next_token: ::String
       SENSITIVE: []
     end
@@ -409,6 +507,51 @@ module Aws::EMRServerless
       SENSITIVE: []
     end
 
+    class Session
+      attr_accessor application_id: ::String
+      attr_accessor session_id: ::String
+      attr_accessor arn: ::String
+      attr_accessor name: ::String
+      attr_accessor state: ("SUBMITTED" | "STARTING" | "STARTED" | "IDLE" | "BUSY" | "FAILED" | "TERMINATING" | "TERMINATED")
+      attr_accessor state_details: ::String
+      attr_accessor release_label: ::String
+      attr_accessor execution_role_arn: ::String
+      attr_accessor created_by: ::String
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      attr_accessor started_at: ::Time
+      attr_accessor ended_at: ::Time
+      attr_accessor idle_since: ::Time
+      attr_accessor configuration_overrides: Types::SessionConfigurationOverrides
+      attr_accessor network_configuration: Types::NetworkConfiguration
+      attr_accessor idle_timeout_minutes: ::Integer
+      attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor total_resource_utilization: Types::TotalResourceUtilization
+      attr_accessor billed_resource_utilization: Types::ResourceUtilization
+      attr_accessor total_execution_duration_seconds: ::Integer
+      SENSITIVE: []
+    end
+
+    class SessionConfigurationOverrides
+      attr_accessor runtime_configuration: ::Array[Types::Configuration]
+      SENSITIVE: []
+    end
+
+    class SessionSummary
+      attr_accessor application_id: ::String
+      attr_accessor session_id: ::String
+      attr_accessor arn: ::String
+      attr_accessor name: ::String
+      attr_accessor state: ("SUBMITTED" | "STARTING" | "STARTED" | "IDLE" | "BUSY" | "FAILED" | "TERMINATING" | "TERMINATED")
+      attr_accessor state_details: ::String
+      attr_accessor release_label: ::String
+      attr_accessor execution_role_arn: ::String
+      attr_accessor created_by: ::String
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
     class SparkSubmit
       attr_accessor entry_point: ::String
       attr_accessor entry_point_arguments: ::Array[::String]
@@ -428,6 +571,7 @@ module Aws::EMRServerless
       attr_accessor application_id: ::String
       attr_accessor client_token: ::String
       attr_accessor execution_role_arn: ::String
+      attr_accessor execution_iam_policy: Types::JobRunExecutionIamPolicy
       attr_accessor job_driver: Types::JobDriver
       attr_accessor configuration_overrides: Types::ConfigurationOverrides
       attr_accessor tags: ::Hash[::String, ::String]
@@ -441,6 +585,24 @@ module Aws::EMRServerless
     class StartJobRunResponse
       attr_accessor application_id: ::String
       attr_accessor job_run_id: ::String
+      attr_accessor arn: ::String
+      SENSITIVE: []
+    end
+
+    class StartSessionRequest
+      attr_accessor application_id: ::String
+      attr_accessor client_token: ::String
+      attr_accessor execution_role_arn: ::String
+      attr_accessor configuration_overrides: Types::SessionConfigurationOverrides
+      attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor idle_timeout_minutes: ::Integer
+      attr_accessor name: ::String
+      SENSITIVE: []
+    end
+
+    class StartSessionResponse
+      attr_accessor application_id: ::String
+      attr_accessor session_id: ::String
       attr_accessor arn: ::String
       SENSITIVE: []
     end
@@ -460,6 +622,18 @@ module Aws::EMRServerless
     end
 
     class TagResourceResponse < Aws::EmptyStructure
+    end
+
+    class TerminateSessionRequest
+      attr_accessor application_id: ::String
+      attr_accessor session_id: ::String
+      SENSITIVE: []
+    end
+
+    class TerminateSessionResponse
+      attr_accessor application_id: ::String
+      attr_accessor session_id: ::String
+      SENSITIVE: []
     end
 
     class TotalResourceUtilization
@@ -493,7 +667,10 @@ module Aws::EMRServerless
       attr_accessor release_label: ::String
       attr_accessor runtime_configuration: ::Array[Types::Configuration]
       attr_accessor monitoring_configuration: Types::MonitoringConfiguration
+      attr_accessor disk_encryption_configuration: Types::DiskEncryptionConfiguration
       attr_accessor scheduler_configuration: Types::SchedulerConfiguration
+      attr_accessor identity_center_configuration: Types::IdentityCenterConfigurationInput
+      attr_accessor job_level_cost_allocation_configuration: Types::JobLevelCostAllocationConfiguration
       SENSITIVE: []
     end
 

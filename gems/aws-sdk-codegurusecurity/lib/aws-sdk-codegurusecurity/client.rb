@@ -95,8 +95,8 @@ module Aws::CodeGuruSecurity
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::CodeGuruSecurity
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::CodeGuruSecurity
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::CodeGuruSecurity
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::CodeGuruSecurity
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::CodeGuruSecurity
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::CodeGuruSecurity
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::CodeGuruSecurity
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -479,62 +483,62 @@ module Aws::CodeGuruSecurity
     #
     # @return [Types::BatchGetFindingsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::BatchGetFindingsResponse#failed_findings #failed_findings} => Array&lt;Types::BatchGetFindingsError&gt;
     #   * {Types::BatchGetFindingsResponse#findings #findings} => Array&lt;Types::Finding&gt;
+    #   * {Types::BatchGetFindingsResponse#failed_findings #failed_findings} => Array&lt;Types::BatchGetFindingsError&gt;
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.batch_get_findings({
     #     finding_identifiers: [ # required
     #       {
-    #         finding_id: "String", # required
     #         scan_name: "String", # required
+    #         finding_id: "String", # required
     #       },
     #     ],
     #   })
     #
     # @example Response structure
     #
-    #   resp.failed_findings #=> Array
-    #   resp.failed_findings[0].error_code #=> String, one of "DUPLICATE_IDENTIFIER", "ITEM_DOES_NOT_EXIST", "INTERNAL_ERROR", "INVALID_FINDING_ID", "INVALID_SCAN_NAME"
-    #   resp.failed_findings[0].finding_id #=> String
-    #   resp.failed_findings[0].message #=> String
-    #   resp.failed_findings[0].scan_name #=> String
     #   resp.findings #=> Array
     #   resp.findings[0].created_at #=> Time
     #   resp.findings[0].description #=> String
-    #   resp.findings[0].detector_id #=> String
-    #   resp.findings[0].detector_name #=> String
-    #   resp.findings[0].detector_tags #=> Array
-    #   resp.findings[0].detector_tags[0] #=> String
     #   resp.findings[0].generator_id #=> String
     #   resp.findings[0].id #=> String
-    #   resp.findings[0].remediation.recommendation.text #=> String
-    #   resp.findings[0].remediation.recommendation.url #=> String
-    #   resp.findings[0].remediation.suggested_fixes #=> Array
-    #   resp.findings[0].remediation.suggested_fixes[0].code #=> String
-    #   resp.findings[0].remediation.suggested_fixes[0].description #=> String
+    #   resp.findings[0].updated_at #=> Time
+    #   resp.findings[0].type #=> String
+    #   resp.findings[0].status #=> String, one of "Closed", "Open", "All"
     #   resp.findings[0].resource.id #=> String
     #   resp.findings[0].resource.sub_resource_id #=> String
-    #   resp.findings[0].rule_id #=> String
-    #   resp.findings[0].severity #=> String, one of "Critical", "High", "Medium", "Low", "Info"
-    #   resp.findings[0].status #=> String, one of "Closed", "Open", "All"
-    #   resp.findings[0].title #=> String
-    #   resp.findings[0].type #=> String
-    #   resp.findings[0].updated_at #=> Time
-    #   resp.findings[0].vulnerability.file_path.code_snippet #=> Array
-    #   resp.findings[0].vulnerability.file_path.code_snippet[0].content #=> String
-    #   resp.findings[0].vulnerability.file_path.code_snippet[0].number #=> Integer
-    #   resp.findings[0].vulnerability.file_path.end_line #=> Integer
-    #   resp.findings[0].vulnerability.file_path.name #=> String
-    #   resp.findings[0].vulnerability.file_path.path #=> String
-    #   resp.findings[0].vulnerability.file_path.start_line #=> Integer
-    #   resp.findings[0].vulnerability.id #=> String
-    #   resp.findings[0].vulnerability.item_count #=> Integer
     #   resp.findings[0].vulnerability.reference_urls #=> Array
     #   resp.findings[0].vulnerability.reference_urls[0] #=> String
     #   resp.findings[0].vulnerability.related_vulnerabilities #=> Array
     #   resp.findings[0].vulnerability.related_vulnerabilities[0] #=> String
+    #   resp.findings[0].vulnerability.id #=> String
+    #   resp.findings[0].vulnerability.file_path.name #=> String
+    #   resp.findings[0].vulnerability.file_path.path #=> String
+    #   resp.findings[0].vulnerability.file_path.start_line #=> Integer
+    #   resp.findings[0].vulnerability.file_path.end_line #=> Integer
+    #   resp.findings[0].vulnerability.file_path.code_snippet #=> Array
+    #   resp.findings[0].vulnerability.file_path.code_snippet[0].number #=> Integer
+    #   resp.findings[0].vulnerability.file_path.code_snippet[0].content #=> String
+    #   resp.findings[0].vulnerability.item_count #=> Integer
+    #   resp.findings[0].severity #=> String, one of "Critical", "High", "Medium", "Low", "Info"
+    #   resp.findings[0].remediation.recommendation.text #=> String
+    #   resp.findings[0].remediation.recommendation.url #=> String
+    #   resp.findings[0].remediation.suggested_fixes #=> Array
+    #   resp.findings[0].remediation.suggested_fixes[0].description #=> String
+    #   resp.findings[0].remediation.suggested_fixes[0].code #=> String
+    #   resp.findings[0].title #=> String
+    #   resp.findings[0].detector_tags #=> Array
+    #   resp.findings[0].detector_tags[0] #=> String
+    #   resp.findings[0].detector_id #=> String
+    #   resp.findings[0].detector_name #=> String
+    #   resp.findings[0].rule_id #=> String
+    #   resp.failed_findings #=> Array
+    #   resp.failed_findings[0].scan_name #=> String
+    #   resp.failed_findings[0].finding_id #=> String
+    #   resp.failed_findings[0].error_code #=> String, one of "DUPLICATE_IDENTIFIER", "ITEM_DOES_NOT_EXIST", "INTERNAL_ERROR", "INVALID_FINDING_ID", "INVALID_SCAN_NAME"
+    #   resp.failed_findings[0].message #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/codeguru-security-2018-05-10/BatchGetFindings AWS API Documentation
     #
@@ -546,12 +550,6 @@ module Aws::CodeGuruSecurity
     end
 
     # Use to create a scan using code uploaded to an Amazon S3 bucket.
-    #
-    # @option params [String] :analysis_type
-    #   The type of analysis you want CodeGuru Security to perform in the
-    #   scan, either `Security` or `All`. The `Security` type only generates
-    #   findings related to security. The `All` type generates both security
-    #   findings and quality findings. Defaults to `Security` type if missing.
     #
     # @option params [String] :client_token
     #   The idempotency token for the request. Amazon CodeGuru Security uses
@@ -578,6 +576,12 @@ module Aws::CodeGuruSecurity
     #   have standard resource limits and use the full set of detectors to
     #   analyze your code.
     #
+    # @option params [String] :analysis_type
+    #   The type of analysis you want CodeGuru Security to perform in the
+    #   scan, either `Security` or `All`. The `Security` type only generates
+    #   findings related to security. The `All` type generates both security
+    #   findings and quality findings. Defaults to `Security` type if missing.
+    #
     # @option params [Hash<String,String>] :tags
     #   An array of key-value pairs used to tag a scan. A tag is a custom
     #   attribute label with two parts:
@@ -591,22 +595,22 @@ module Aws::CodeGuruSecurity
     #
     # @return [Types::CreateScanResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::CreateScanResponse#resource_id #resource_id} => Types::ResourceId
-    #   * {Types::CreateScanResponse#run_id #run_id} => String
     #   * {Types::CreateScanResponse#scan_name #scan_name} => String
-    #   * {Types::CreateScanResponse#scan_name_arn #scan_name_arn} => String
+    #   * {Types::CreateScanResponse#run_id #run_id} => String
+    #   * {Types::CreateScanResponse#resource_id #resource_id} => Types::ResourceId
     #   * {Types::CreateScanResponse#scan_state #scan_state} => String
+    #   * {Types::CreateScanResponse#scan_name_arn #scan_name_arn} => String
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.create_scan({
-    #     analysis_type: "Security", # accepts Security, All
     #     client_token: "ClientToken",
     #     resource_id: { # required
     #       code_artifact_id: "Uuid",
     #     },
     #     scan_name: "ScanName", # required
     #     scan_type: "Standard", # accepts Standard, Express
+    #     analysis_type: "Security", # accepts Security, All
     #     tags: {
     #       "TagKey" => "TagValue",
     #     },
@@ -614,11 +618,11 @@ module Aws::CodeGuruSecurity
     #
     # @example Response structure
     #
-    #   resp.resource_id.code_artifact_id #=> String
-    #   resp.run_id #=> String
     #   resp.scan_name #=> String
-    #   resp.scan_name_arn #=> String
+    #   resp.run_id #=> String
+    #   resp.resource_id.code_artifact_id #=> String
     #   resp.scan_state #=> String, one of "InProgress", "Successful", "Failed"
+    #   resp.scan_name_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/codeguru-security-2018-05-10/CreateScan AWS API Documentation
     #
@@ -643,9 +647,9 @@ module Aws::CodeGuruSecurity
     #
     # @return [Types::CreateUploadUrlResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::CreateUploadUrlResponse#code_artifact_id #code_artifact_id} => String
-    #   * {Types::CreateUploadUrlResponse#request_headers #request_headers} => Hash&lt;String,String&gt;
     #   * {Types::CreateUploadUrlResponse#s3_url #s3_url} => String
+    #   * {Types::CreateUploadUrlResponse#request_headers #request_headers} => Hash&lt;String,String&gt;
+    #   * {Types::CreateUploadUrlResponse#code_artifact_id #code_artifact_id} => String
     #
     # @example Request syntax with placeholder values
     #
@@ -655,10 +659,10 @@ module Aws::CodeGuruSecurity
     #
     # @example Response structure
     #
-    #   resp.code_artifact_id #=> String
+    #   resp.s3_url #=> String
     #   resp.request_headers #=> Hash
     #   resp.request_headers["HeaderKey"] #=> String
-    #   resp.s3_url #=> String
+    #   resp.code_artifact_id #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/codeguru-security-2018-05-10/CreateUploadUrl AWS API Documentation
     #
@@ -690,12 +694,8 @@ module Aws::CodeGuruSecurity
 
     # Returns a list of all findings generated by a particular scan.
     #
-    # @option params [Integer] :max_results
-    #   The maximum number of results to return in the response. Use this
-    #   parameter when paginating results. If additional results exist beyond
-    #   the number you specify, the `nextToken` element is returned in the
-    #   response. Use `nextToken` in a subsequent request to retrieve
-    #   additional results. If not specified, returns 1000 results.
+    # @option params [required, String] :scan_name
+    #   The name of the scan you want to retrieve findings from.
     #
     # @option params [String] :next_token
     #   A token to use for paginating results that are returned in the
@@ -703,8 +703,12 @@ module Aws::CodeGuruSecurity
     #   request. For subsequent calls, use the `nextToken` value returned from
     #   the previous request to continue listing results after the first page.
     #
-    # @option params [required, String] :scan_name
-    #   The name of the scan you want to retrieve findings from.
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return in the response. Use this
+    #   parameter when paginating results. If additional results exist beyond
+    #   the number you specify, the `nextToken` element is returned in the
+    #   response. Use `nextToken` in a subsequent request to retrieve
+    #   additional results. If not specified, returns 1000 results.
     #
     # @option params [String] :status
     #   The status of the findings you want to get. Pass either `Open`,
@@ -720,9 +724,9 @@ module Aws::CodeGuruSecurity
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_findings({
-    #     max_results: 1,
-    #     next_token: "NextToken",
     #     scan_name: "ScanName", # required
+    #     next_token: "NextToken",
+    #     max_results: 1,
     #     status: "Closed", # accepts Closed, Open, All
     #   })
     #
@@ -731,38 +735,38 @@ module Aws::CodeGuruSecurity
     #   resp.findings #=> Array
     #   resp.findings[0].created_at #=> Time
     #   resp.findings[0].description #=> String
-    #   resp.findings[0].detector_id #=> String
-    #   resp.findings[0].detector_name #=> String
-    #   resp.findings[0].detector_tags #=> Array
-    #   resp.findings[0].detector_tags[0] #=> String
     #   resp.findings[0].generator_id #=> String
     #   resp.findings[0].id #=> String
-    #   resp.findings[0].remediation.recommendation.text #=> String
-    #   resp.findings[0].remediation.recommendation.url #=> String
-    #   resp.findings[0].remediation.suggested_fixes #=> Array
-    #   resp.findings[0].remediation.suggested_fixes[0].code #=> String
-    #   resp.findings[0].remediation.suggested_fixes[0].description #=> String
+    #   resp.findings[0].updated_at #=> Time
+    #   resp.findings[0].type #=> String
+    #   resp.findings[0].status #=> String, one of "Closed", "Open", "All"
     #   resp.findings[0].resource.id #=> String
     #   resp.findings[0].resource.sub_resource_id #=> String
-    #   resp.findings[0].rule_id #=> String
-    #   resp.findings[0].severity #=> String, one of "Critical", "High", "Medium", "Low", "Info"
-    #   resp.findings[0].status #=> String, one of "Closed", "Open", "All"
-    #   resp.findings[0].title #=> String
-    #   resp.findings[0].type #=> String
-    #   resp.findings[0].updated_at #=> Time
-    #   resp.findings[0].vulnerability.file_path.code_snippet #=> Array
-    #   resp.findings[0].vulnerability.file_path.code_snippet[0].content #=> String
-    #   resp.findings[0].vulnerability.file_path.code_snippet[0].number #=> Integer
-    #   resp.findings[0].vulnerability.file_path.end_line #=> Integer
-    #   resp.findings[0].vulnerability.file_path.name #=> String
-    #   resp.findings[0].vulnerability.file_path.path #=> String
-    #   resp.findings[0].vulnerability.file_path.start_line #=> Integer
-    #   resp.findings[0].vulnerability.id #=> String
-    #   resp.findings[0].vulnerability.item_count #=> Integer
     #   resp.findings[0].vulnerability.reference_urls #=> Array
     #   resp.findings[0].vulnerability.reference_urls[0] #=> String
     #   resp.findings[0].vulnerability.related_vulnerabilities #=> Array
     #   resp.findings[0].vulnerability.related_vulnerabilities[0] #=> String
+    #   resp.findings[0].vulnerability.id #=> String
+    #   resp.findings[0].vulnerability.file_path.name #=> String
+    #   resp.findings[0].vulnerability.file_path.path #=> String
+    #   resp.findings[0].vulnerability.file_path.start_line #=> Integer
+    #   resp.findings[0].vulnerability.file_path.end_line #=> Integer
+    #   resp.findings[0].vulnerability.file_path.code_snippet #=> Array
+    #   resp.findings[0].vulnerability.file_path.code_snippet[0].number #=> Integer
+    #   resp.findings[0].vulnerability.file_path.code_snippet[0].content #=> String
+    #   resp.findings[0].vulnerability.item_count #=> Integer
+    #   resp.findings[0].severity #=> String, one of "Critical", "High", "Medium", "Low", "Info"
+    #   resp.findings[0].remediation.recommendation.text #=> String
+    #   resp.findings[0].remediation.recommendation.url #=> String
+    #   resp.findings[0].remediation.suggested_fixes #=> Array
+    #   resp.findings[0].remediation.suggested_fixes[0].description #=> String
+    #   resp.findings[0].remediation.suggested_fixes[0].code #=> String
+    #   resp.findings[0].title #=> String
+    #   resp.findings[0].detector_tags #=> Array
+    #   resp.findings[0].detector_tags[0] #=> String
+    #   resp.findings[0].detector_id #=> String
+    #   resp.findings[0].detector_name #=> String
+    #   resp.findings[0].rule_id #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/codeguru-security-2018-05-10/GetFindings AWS API Documentation
@@ -795,21 +799,21 @@ module Aws::CodeGuruSecurity
     #
     # @example Response structure
     #
-    #   resp.metrics_summary.categories_with_most_findings #=> Array
-    #   resp.metrics_summary.categories_with_most_findings[0].category_name #=> String
-    #   resp.metrics_summary.categories_with_most_findings[0].finding_number #=> Integer
     #   resp.metrics_summary.date #=> Time
-    #   resp.metrics_summary.open_findings.critical #=> Float
-    #   resp.metrics_summary.open_findings.high #=> Float
     #   resp.metrics_summary.open_findings.info #=> Float
     #   resp.metrics_summary.open_findings.low #=> Float
     #   resp.metrics_summary.open_findings.medium #=> Float
-    #   resp.metrics_summary.scans_with_most_open_critical_findings #=> Array
-    #   resp.metrics_summary.scans_with_most_open_critical_findings[0].finding_number #=> Integer
-    #   resp.metrics_summary.scans_with_most_open_critical_findings[0].scan_name #=> String
+    #   resp.metrics_summary.open_findings.high #=> Float
+    #   resp.metrics_summary.open_findings.critical #=> Float
+    #   resp.metrics_summary.categories_with_most_findings #=> Array
+    #   resp.metrics_summary.categories_with_most_findings[0].category_name #=> String
+    #   resp.metrics_summary.categories_with_most_findings[0].finding_number #=> Integer
     #   resp.metrics_summary.scans_with_most_open_findings #=> Array
-    #   resp.metrics_summary.scans_with_most_open_findings[0].finding_number #=> Integer
     #   resp.metrics_summary.scans_with_most_open_findings[0].scan_name #=> String
+    #   resp.metrics_summary.scans_with_most_open_findings[0].finding_number #=> Integer
+    #   resp.metrics_summary.scans_with_most_open_critical_findings #=> Array
+    #   resp.metrics_summary.scans_with_most_open_critical_findings[0].scan_name #=> String
+    #   resp.metrics_summary.scans_with_most_open_critical_findings[0].finding_number #=> Integer
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/codeguru-security-2018-05-10/GetMetricsSummary AWS API Documentation
     #
@@ -823,44 +827,44 @@ module Aws::CodeGuruSecurity
     # Returns details about a scan, including whether or not a scan has
     # completed.
     #
+    # @option params [required, String] :scan_name
+    #   The name of the scan you want to view details about.
+    #
     # @option params [String] :run_id
     #   UUID that identifies the individual scan run you want to view details
     #   about. You retrieve this when you call the `CreateScan` operation.
     #   Defaults to the latest scan run if missing.
     #
-    # @option params [required, String] :scan_name
-    #   The name of the scan you want to view details about.
-    #
     # @return [Types::GetScanResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::GetScanResponse#analysis_type #analysis_type} => String
-    #   * {Types::GetScanResponse#created_at #created_at} => Time
-    #   * {Types::GetScanResponse#error_message #error_message} => String
-    #   * {Types::GetScanResponse#number_of_revisions #number_of_revisions} => Integer
-    #   * {Types::GetScanResponse#run_id #run_id} => String
     #   * {Types::GetScanResponse#scan_name #scan_name} => String
-    #   * {Types::GetScanResponse#scan_name_arn #scan_name_arn} => String
+    #   * {Types::GetScanResponse#run_id #run_id} => String
     #   * {Types::GetScanResponse#scan_state #scan_state} => String
+    #   * {Types::GetScanResponse#created_at #created_at} => Time
+    #   * {Types::GetScanResponse#analysis_type #analysis_type} => String
     #   * {Types::GetScanResponse#updated_at #updated_at} => Time
+    #   * {Types::GetScanResponse#number_of_revisions #number_of_revisions} => Integer
+    #   * {Types::GetScanResponse#scan_name_arn #scan_name_arn} => String
+    #   * {Types::GetScanResponse#error_message #error_message} => String
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_scan({
-    #     run_id: "Uuid",
     #     scan_name: "ScanName", # required
+    #     run_id: "Uuid",
     #   })
     #
     # @example Response structure
     #
-    #   resp.analysis_type #=> String, one of "Security", "All"
-    #   resp.created_at #=> Time
-    #   resp.error_message #=> String
-    #   resp.number_of_revisions #=> Integer
-    #   resp.run_id #=> String
     #   resp.scan_name #=> String
-    #   resp.scan_name_arn #=> String
+    #   resp.run_id #=> String
     #   resp.scan_state #=> String, one of "InProgress", "Successful", "Failed"
+    #   resp.created_at #=> Time
+    #   resp.analysis_type #=> String, one of "Security", "All"
     #   resp.updated_at #=> Time
+    #   resp.number_of_revisions #=> Integer
+    #   resp.scan_name_arn #=> String
+    #   resp.error_message #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/codeguru-security-2018-05-10/GetScan AWS API Documentation
     #
@@ -874,9 +878,11 @@ module Aws::CodeGuruSecurity
     # Returns metrics about all findings in an account within a specified
     # time range.
     #
-    # @option params [required, Time,DateTime,Date,Integer,String] :end_date
-    #   The end date of the interval which you want to retrieve metrics from.
-    #   Round to the nearest day.
+    # @option params [String] :next_token
+    #   A token to use for paginating results that are returned in the
+    #   response. Set the value of this parameter to null for the first
+    #   request. For subsequent calls, use the `nextToken` value returned from
+    #   the previous request to continue listing results after the first page.
     #
     # @option params [Integer] :max_results
     #   The maximum number of results to return in the response. Use this
@@ -885,15 +891,13 @@ module Aws::CodeGuruSecurity
     #   response. Use `nextToken` in a subsequent request to retrieve
     #   additional results. If not specified, returns 1000 results.
     #
-    # @option params [String] :next_token
-    #   A token to use for paginating results that are returned in the
-    #   response. Set the value of this parameter to null for the first
-    #   request. For subsequent calls, use the `nextToken` value returned from
-    #   the previous request to continue listing results after the first page.
-    #
     # @option params [required, Time,DateTime,Date,Integer,String] :start_date
     #   The start date of the interval which you want to retrieve metrics
     #   from. Rounds to the nearest day.
+    #
+    # @option params [required, Time,DateTime,Date,Integer,String] :end_date
+    #   The end date of the interval which you want to retrieve metrics from.
+    #   Round to the nearest day.
     #
     # @return [Types::ListFindingsMetricsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -905,36 +909,36 @@ module Aws::CodeGuruSecurity
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_findings_metrics({
-    #     end_date: Time.now, # required
-    #     max_results: 1,
     #     next_token: "NextToken",
+    #     max_results: 1,
     #     start_date: Time.now, # required
+    #     end_date: Time.now, # required
     #   })
     #
     # @example Response structure
     #
     #   resp.findings_metrics #=> Array
-    #   resp.findings_metrics[0].closed_findings.critical #=> Float
-    #   resp.findings_metrics[0].closed_findings.high #=> Float
-    #   resp.findings_metrics[0].closed_findings.info #=> Float
-    #   resp.findings_metrics[0].closed_findings.low #=> Float
-    #   resp.findings_metrics[0].closed_findings.medium #=> Float
     #   resp.findings_metrics[0].date #=> Time
-    #   resp.findings_metrics[0].mean_time_to_close.critical #=> Float
-    #   resp.findings_metrics[0].mean_time_to_close.high #=> Float
-    #   resp.findings_metrics[0].mean_time_to_close.info #=> Float
-    #   resp.findings_metrics[0].mean_time_to_close.low #=> Float
-    #   resp.findings_metrics[0].mean_time_to_close.medium #=> Float
-    #   resp.findings_metrics[0].new_findings.critical #=> Float
-    #   resp.findings_metrics[0].new_findings.high #=> Float
     #   resp.findings_metrics[0].new_findings.info #=> Float
     #   resp.findings_metrics[0].new_findings.low #=> Float
     #   resp.findings_metrics[0].new_findings.medium #=> Float
-    #   resp.findings_metrics[0].open_findings.critical #=> Float
-    #   resp.findings_metrics[0].open_findings.high #=> Float
+    #   resp.findings_metrics[0].new_findings.high #=> Float
+    #   resp.findings_metrics[0].new_findings.critical #=> Float
+    #   resp.findings_metrics[0].closed_findings.info #=> Float
+    #   resp.findings_metrics[0].closed_findings.low #=> Float
+    #   resp.findings_metrics[0].closed_findings.medium #=> Float
+    #   resp.findings_metrics[0].closed_findings.high #=> Float
+    #   resp.findings_metrics[0].closed_findings.critical #=> Float
     #   resp.findings_metrics[0].open_findings.info #=> Float
     #   resp.findings_metrics[0].open_findings.low #=> Float
     #   resp.findings_metrics[0].open_findings.medium #=> Float
+    #   resp.findings_metrics[0].open_findings.high #=> Float
+    #   resp.findings_metrics[0].open_findings.critical #=> Float
+    #   resp.findings_metrics[0].mean_time_to_close.info #=> Float
+    #   resp.findings_metrics[0].mean_time_to_close.low #=> Float
+    #   resp.findings_metrics[0].mean_time_to_close.medium #=> Float
+    #   resp.findings_metrics[0].mean_time_to_close.high #=> Float
+    #   resp.findings_metrics[0].mean_time_to_close.critical #=> Float
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/codeguru-security-2018-05-10/ListFindingsMetrics AWS API Documentation
@@ -949,6 +953,12 @@ module Aws::CodeGuruSecurity
     # Returns a list of all scans in an account. Does not return `EXPRESS`
     # scans.
     #
+    # @option params [String] :next_token
+    #   A token to use for paginating results that are returned in the
+    #   response. Set the value of this parameter to null for the first
+    #   request. For subsequent calls, use the `nextToken` value returned from
+    #   the previous request to continue listing results after the first page.
+    #
     # @option params [Integer] :max_results
     #   The maximum number of results to return in the response. Use this
     #   parameter when paginating results. If additional results exist beyond
@@ -956,36 +966,30 @@ module Aws::CodeGuruSecurity
     #   response. Use `nextToken` in a subsequent request to retrieve
     #   additional results. If not specified, returns 100 results.
     #
-    # @option params [String] :next_token
-    #   A token to use for paginating results that are returned in the
-    #   response. Set the value of this parameter to null for the first
-    #   request. For subsequent calls, use the `nextToken` value returned from
-    #   the previous request to continue listing results after the first page.
-    #
     # @return [Types::ListScansResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::ListScansResponse#next_token #next_token} => String
     #   * {Types::ListScansResponse#summaries #summaries} => Array&lt;Types::ScanSummary&gt;
+    #   * {Types::ListScansResponse#next_token #next_token} => String
     #
     # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_scans({
-    #     max_results: 1,
     #     next_token: "NextToken",
+    #     max_results: 1,
     #   })
     #
     # @example Response structure
     #
-    #   resp.next_token #=> String
     #   resp.summaries #=> Array
-    #   resp.summaries[0].created_at #=> Time
-    #   resp.summaries[0].run_id #=> String
-    #   resp.summaries[0].scan_name #=> String
-    #   resp.summaries[0].scan_name_arn #=> String
     #   resp.summaries[0].scan_state #=> String, one of "InProgress", "Successful", "Failed"
+    #   resp.summaries[0].created_at #=> Time
     #   resp.summaries[0].updated_at #=> Time
+    #   resp.summaries[0].scan_name #=> String
+    #   resp.summaries[0].run_id #=> String
+    #   resp.summaries[0].scan_name_arn #=> String
+    #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/codeguru-security-2018-05-10/ListScans AWS API Documentation
     #
@@ -1142,7 +1146,7 @@ module Aws::CodeGuruSecurity
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-codegurusecurity'
-      context[:gem_version] = '1.27.0'
+      context[:gem_version] = '1.47.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

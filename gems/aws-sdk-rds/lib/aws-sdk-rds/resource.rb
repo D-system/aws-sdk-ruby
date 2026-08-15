@@ -50,7 +50,7 @@ module Aws::RDS
     #     engine_version: "String",
     #     port: 1,
     #     master_username: "String",
-    #     master_user_password: "String",
+    #     master_user_password: "SensitiveString",
     #     option_group_name: "String",
     #     preferred_backup_window: "String",
     #     preferred_maintenance_window: "String",
@@ -63,7 +63,7 @@ module Aws::RDS
     #     ],
     #     storage_encrypted: false,
     #     kms_key_id: "String",
-    #     pre_signed_url: "String",
+    #     pre_signed_url: "SensitiveString",
     #     enable_iam_database_authentication: false,
     #     backtrack_window: 1,
     #     enable_cloudwatch_logs_exports: ["String"],
@@ -81,19 +81,25 @@ module Aws::RDS
     #       transit_gateway_multicast_domain_id: "String",
     #       replica_mode: "open-read-only", # accepts open-read-only, mounted
     #     },
-    #     deletion_protection: false,
-    #     global_cluster_identifier: "String",
-    #     enable_http_endpoint: false,
-    #     copy_tags_to_snapshot: false,
-    #     domain: "String",
-    #     domain_iam_role_name: "String",
-    #     enable_global_write_forwarding: false,
     #     db_cluster_instance_class: "String",
     #     allocated_storage: 1,
     #     storage_type: "String",
     #     iops: 1,
     #     publicly_accessible: false,
     #     auto_minor_version_upgrade: false,
+    #     deletion_protection: false,
+    #     global_cluster_identifier: "GlobalClusterIdentifier",
+    #     enable_http_endpoint: false,
+    #     copy_tags_to_snapshot: false,
+    #     domain: "String",
+    #     domain_iam_role_name: "String",
+    #     enable_global_write_forwarding: false,
+    #     network_type: "String",
+    #     serverless_v2_scaling_configuration: {
+    #       min_capacity: 1.0,
+    #       max_capacity: 1.0,
+    #       seconds_until_auto_pause: 1,
+    #     },
     #     monitoring_interval: 1,
     #     monitoring_role_arn: "String",
     #     database_insights_mode: "standard", # accepts standard, advanced
@@ -101,19 +107,32 @@ module Aws::RDS
     #     performance_insights_kms_key_id: "String",
     #     performance_insights_retention_period: 1,
     #     enable_limitless_database: false,
-    #     serverless_v2_scaling_configuration: {
-    #       min_capacity: 1.0,
-    #       max_capacity: 1.0,
-    #       seconds_until_auto_pause: 1,
-    #     },
-    #     network_type: "String",
     #     cluster_scalability_type: "standard", # accepts standard, limitless
     #     db_system_id: "String",
     #     manage_master_user_password: false,
-    #     master_user_secret_kms_key_id: "String",
     #     enable_local_write_forwarding: false,
+    #     master_user_secret_kms_key_id: "String",
     #     ca_certificate_identifier: "String",
     #     engine_lifecycle_support: "String",
+    #     tag_specifications: [
+    #       {
+    #         resource_type: "String",
+    #         tags: [
+    #           {
+    #             key: "String",
+    #             value: "String",
+    #           },
+    #         ],
+    #       },
+    #     ],
+    #     master_user_authentication_type: "password", # accepts password, iam-db-auth
+    #     with_express_configuration: false,
+    #     associated_roles: [
+    #       {
+    #         role_arn: "IAMRoleArn", # required
+    #         feature_name: "String",
+    #       },
+    #     ],
     #     source_region: "String",
     #   })
     # @param [Hash] options ({})
@@ -121,8 +140,18 @@ module Aws::RDS
     #   A list of Availability Zones (AZs) where you specifically want to
     #   create DB instances in the DB cluster.
     #
-    #   For information on AZs, see [Availability Zones][1] in the *Amazon
-    #   Aurora User Guide*.
+    #   For the first three DB instances that you create, RDS distributes each
+    #   DB instance to a different AZ that you specify. For additional DB
+    #   instances that you create, RDS randomly distributes them to the AZs
+    #   that you specified. For example, if you create a DB cluster with one
+    #   writer instance and three reader instances, RDS might distribute the
+    #   writer instance to AZ 1, the first reader instance to AZ 2, the second
+    #   reader instance to AZ 3, and the third reader instance to either AZ 1,
+    #   AZ 2, or AZ 3.
+    #
+    #   For more information, see [Availability Zones][1] and [High
+    #   availability for Aurora DB instances][2] in the *Amazon Aurora User
+    #   Guide*.
     #
     #   Valid for Cluster Type: Aurora DB clusters only
     #
@@ -135,6 +164,7 @@ module Aws::RDS
     #
     #
     #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Concepts.RegionsAndAvailabilityZones.html#Concepts.RegionsAndAvailabilityZones.AvailabilityZones
+    #   [2]: https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Concepts.AuroraHighAvailability.html#Concepts.AuroraHighAvailability.Instances
     # @option options [Integer] :backup_retention_period
     #   The number of days for which automated backups are retained.
     #
@@ -552,73 +582,6 @@ module Aws::RDS
     #   Valid for Cluster Type: Aurora DB clusters only
     # @option options [Types::RdsCustomClusterConfiguration] :rds_custom_cluster_configuration
     #   Reserved for future use.
-    # @option options [Boolean] :deletion_protection
-    #   Specifies whether the DB cluster has deletion protection enabled. The
-    #   database can't be deleted when deletion protection is enabled. By
-    #   default, deletion protection isn't enabled.
-    #
-    #   Valid for Cluster Type: Aurora DB clusters and Multi-AZ DB clusters
-    # @option options [String] :global_cluster_identifier
-    #   The global cluster ID of an Aurora cluster that becomes the primary
-    #   cluster in the new global database cluster.
-    #
-    #   Valid for Cluster Type: Aurora DB clusters only
-    # @option options [Boolean] :enable_http_endpoint
-    #   Specifies whether to enable the HTTP endpoint for the DB cluster. By
-    #   default, the HTTP endpoint isn't enabled.
-    #
-    #   When enabled, the HTTP endpoint provides a connectionless web service
-    #   API (RDS Data API) for running SQL queries on the DB cluster. You can
-    #   also query your database from inside the RDS console with the RDS
-    #   query editor.
-    #
-    #   For more information, see [Using RDS Data API][1] in the *Amazon
-    #   Aurora User Guide*.
-    #
-    #   Valid for Cluster Type: Aurora DB clusters only
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/data-api.html
-    # @option options [Boolean] :copy_tags_to_snapshot
-    #   Specifies whether to copy all tags from the DB cluster to snapshots of
-    #   the DB cluster. The default is not to copy them.
-    #
-    #   Valid for Cluster Type: Aurora DB clusters and Multi-AZ DB clusters
-    # @option options [String] :domain
-    #   The Active Directory directory ID to create the DB cluster in.
-    #
-    #   For Amazon Aurora DB clusters, Amazon RDS can use Kerberos
-    #   authentication to authenticate users that connect to the DB cluster.
-    #
-    #   For more information, see [Kerberos authentication][1] in the *Amazon
-    #   Aurora User Guide*.
-    #
-    #   Valid for Cluster Type: Aurora DB clusters only
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/kerberos-authentication.html
-    # @option options [String] :domain_iam_role_name
-    #   The name of the IAM role to use when making API calls to the Directory
-    #   Service.
-    #
-    #   Valid for Cluster Type: Aurora DB clusters only
-    # @option options [Boolean] :enable_global_write_forwarding
-    #   Specifies whether to enable this DB cluster to forward write
-    #   operations to the primary cluster of a global cluster (Aurora global
-    #   database). By default, write operations are not allowed on Aurora DB
-    #   clusters that are secondary clusters in an Aurora global database.
-    #
-    #   You can set this value only on Aurora DB clusters that are members of
-    #   an Aurora global database. With this parameter enabled, a secondary
-    #   cluster can forward writes to the current primary cluster, and the
-    #   resulting changes are replicated back to this cluster. For the primary
-    #   DB cluster of an Aurora global database, this value is used
-    #   immediately if the primary is demoted by a global cluster API
-    #   operation, but it does nothing until then.
-    #
-    #   Valid for Cluster Type: Aurora DB clusters only
     # @option options [String] :db_cluster_instance_class
     #   The compute and memory capacity of each DB instance in the Multi-AZ DB
     #   cluster, for example `db.m6gd.xlarge`. Not all DB instance classes are
@@ -704,46 +667,138 @@ module Aws::RDS
     # @option options [Boolean] :publicly_accessible
     #   Specifies whether the DB cluster is publicly accessible.
     #
+    #   Valid for Cluster Type: Multi-AZ DB clusters only
+    #
     #   When the DB cluster is publicly accessible and you connect from
-    #   outside of the DB cluster's virtual private cloud (VPC), its Domain
-    #   Name System (DNS) endpoint resolves to the public IP address. When you
+    #   outside of the DB cluster's virtual private cloud (VPC), its domain
+    #   name system (DNS) endpoint resolves to the public IP address. When you
     #   connect from within the same VPC as the DB cluster, the endpoint
     #   resolves to the private IP address. Access to the DB cluster is
-    #   ultimately controlled by the security group it uses. That public
-    #   access isn't permitted if the security group assigned to the DB
-    #   cluster doesn't permit it.
+    #   controlled by its security group settings.
     #
     #   When the DB cluster isn't publicly accessible, it is an internal DB
     #   cluster with a DNS name that resolves to a private IP address.
     #
-    #   Valid for Cluster Type: Multi-AZ DB clusters only
+    #   The default behavior when `PubliclyAccessible` is not specified
+    #   depends on whether a `DBSubnetGroup` is specified.
     #
-    #   Default: The default behavior varies depending on whether
-    #   `DBSubnetGroupName` is specified.
+    #   If `DBSubnetGroup` isn't specified, `PubliclyAccessible` defaults to
+    #   `true`.
     #
-    #   If `DBSubnetGroupName` isn't specified, and `PubliclyAccessible`
-    #   isn't specified, the following applies:
+    #   If `DBSubnetGroup` is specified, `PubliclyAccessible` defaults to
+    #   `false` unless the value of `DBSubnetGroup` is `default`, in which
+    #   case `PubliclyAccessible` defaults to `true`.
     #
-    #   * If the default VPC in the target Region doesn’t have an internet
-    #     gateway attached to it, the DB cluster is private.
-    #
-    #   * If the default VPC in the target Region has an internet gateway
-    #     attached to it, the DB cluster is public.
-    #
-    #   If `DBSubnetGroupName` is specified, and `PubliclyAccessible` isn't
-    #   specified, the following applies:
-    #
-    #   * If the subnets are part of a VPC that doesn’t have an internet
-    #     gateway attached to it, the DB cluster is private.
-    #
-    #   * If the subnets are part of a VPC that has an internet gateway
-    #     attached to it, the DB cluster is public.
+    #   If `PubliclyAccessible` is true and the VPC that the `DBSubnetGroup`
+    #   is in doesn't have an internet gateway attached to it, Amazon RDS
+    #   returns an error.
     # @option options [Boolean] :auto_minor_version_upgrade
     #   Specifies whether minor engine upgrades are applied automatically to
     #   the DB cluster during the maintenance window. By default, minor engine
     #   upgrades are applied automatically.
     #
-    #   Valid for Cluster Type: Aurora DB clusters and Multi-AZ DB cluster
+    #   Valid for Cluster Type: Aurora DB clusters and Multi-AZ DB cluster.
+    #
+    #   For more information about automatic minor version upgrades, see
+    #   [Automatically upgrading the minor engine version][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_UpgradeDBInstance.Upgrading.html#USER_UpgradeDBInstance.Upgrading.AutoMinorVersionUpgrades
+    # @option options [Boolean] :deletion_protection
+    #   Specifies whether the DB cluster has deletion protection enabled. The
+    #   database can't be deleted when deletion protection is enabled. By
+    #   default, deletion protection isn't enabled.
+    #
+    #   Valid for Cluster Type: Aurora DB clusters and Multi-AZ DB clusters
+    # @option options [String] :global_cluster_identifier
+    #   The global cluster ID of an Aurora cluster that becomes the primary
+    #   cluster in the new global database cluster.
+    #
+    #   Valid for Cluster Type: Aurora DB clusters only
+    # @option options [Boolean] :enable_http_endpoint
+    #   Specifies whether to enable the HTTP endpoint for the DB cluster. By
+    #   default, the HTTP endpoint isn't enabled.
+    #
+    #   When enabled, the HTTP endpoint provides a connectionless web service
+    #   API (RDS Data API) for running SQL queries on the DB cluster. You can
+    #   also query your database from inside the RDS console with the RDS
+    #   query editor.
+    #
+    #   For more information, see [Using RDS Data API][1] in the *Amazon
+    #   Aurora User Guide*.
+    #
+    #   Valid for Cluster Type: Aurora DB clusters only
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/data-api.html
+    # @option options [Boolean] :copy_tags_to_snapshot
+    #   Specifies whether to copy all tags from the DB cluster to snapshots of
+    #   the DB cluster. The default is not to copy them.
+    #
+    #   Valid for Cluster Type: Aurora DB clusters and Multi-AZ DB clusters
+    # @option options [String] :domain
+    #   The Active Directory directory ID to create the DB cluster in.
+    #
+    #   For Amazon Aurora DB clusters, Amazon RDS can use Kerberos
+    #   authentication to authenticate users that connect to the DB cluster.
+    #
+    #   For more information, see [Kerberos authentication][1] in the *Amazon
+    #   Aurora User Guide*.
+    #
+    #   Valid for Cluster Type: Aurora DB clusters only
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/kerberos-authentication.html
+    # @option options [String] :domain_iam_role_name
+    #   The name of the IAM role to use when making API calls to the Directory
+    #   Service.
+    #
+    #   Valid for Cluster Type: Aurora DB clusters only
+    # @option options [Boolean] :enable_global_write_forwarding
+    #   Specifies whether to enable this DB cluster to forward write
+    #   operations to the primary cluster of a global cluster (Aurora global
+    #   database). By default, write operations are not allowed on Aurora DB
+    #   clusters that are secondary clusters in an Aurora global database.
+    #
+    #   You can set this value only on Aurora DB clusters that are members of
+    #   an Aurora global database. With this parameter enabled, a secondary
+    #   cluster can forward writes to the current primary cluster, and the
+    #   resulting changes are replicated back to this cluster. For the primary
+    #   DB cluster of an Aurora global database, this value is used
+    #   immediately if the primary is demoted by a global cluster API
+    #   operation, but it does nothing until then.
+    #
+    #   Valid for Cluster Type: Aurora DB clusters only
+    # @option options [String] :network_type
+    #   The network type of the DB cluster.
+    #
+    #   The network type is determined by the `DBSubnetGroup` specified for
+    #   the DB cluster. A `DBSubnetGroup` can support only the IPv4 protocol
+    #   or the IPv4 and the IPv6 protocols (`DUAL`).
+    #
+    #   For more information, see [ Working with a DB instance in a VPC][1] in
+    #   the *Amazon Aurora User Guide.*
+    #
+    #   Valid for Cluster Type: Aurora DB clusters only
+    #
+    #   Valid Values: `IPV4 | DUAL`
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/USER_VPC.WorkingWithRDSInstanceinaVPC.html
+    # @option options [Types::ServerlessV2ScalingConfiguration] :serverless_v2_scaling_configuration
+    #   Contains the scaling configuration of an Aurora Serverless v2 DB
+    #   cluster.
+    #
+    #   For more information, see [Using Amazon Aurora Serverless v2][1] in
+    #   the *Amazon Aurora User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-serverless-v2.html
     # @option options [Integer] :monitoring_interval
     #   The interval, in seconds, between points when Enhanced Monitoring
     #   metrics are collected for the DB cluster. To turn off collecting
@@ -833,33 +888,6 @@ module Aws::RDS
     #   `ClusterScalabilityType` setting.
     #
     #    </note>
-    # @option options [Types::ServerlessV2ScalingConfiguration] :serverless_v2_scaling_configuration
-    #   Contains the scaling configuration of an Aurora Serverless v2 DB
-    #   cluster.
-    #
-    #   For more information, see [Using Amazon Aurora Serverless v2][1] in
-    #   the *Amazon Aurora User Guide*.
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-serverless-v2.html
-    # @option options [String] :network_type
-    #   The network type of the DB cluster.
-    #
-    #   The network type is determined by the `DBSubnetGroup` specified for
-    #   the DB cluster. A `DBSubnetGroup` can support only the IPv4 protocol
-    #   or the IPv4 and the IPv6 protocols (`DUAL`).
-    #
-    #   For more information, see [ Working with a DB instance in a VPC][1] in
-    #   the *Amazon Aurora User Guide.*
-    #
-    #   Valid for Cluster Type: Aurora DB clusters only
-    #
-    #   Valid Values: `IPV4 | DUAL`
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/USER_VPC.WorkingWithRDSInstanceinaVPC.html
     # @option options [String] :cluster_scalability_type
     #   Specifies the scalability mode of the Aurora DB cluster. When set to
     #   `limitless`, the cluster operates as an Aurora Limitless Database.
@@ -895,6 +923,12 @@ module Aws::RDS
     #
     #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-secrets-manager.html
     #   [2]: https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/rds-secrets-manager.html
+    # @option options [Boolean] :enable_local_write_forwarding
+    #   Specifies whether read replicas can forward write operations to the
+    #   writer DB instance in the DB cluster. By default, write operations
+    #   aren't allowed on reader DB instances.
+    #
+    #   Valid for: Aurora DB clusters only
     # @option options [String] :master_user_secret_kms_key_id
     #   The Amazon Web Services KMS key identifier to encrypt a secret that is
     #   automatically generated and managed in Amazon Web Services Secrets
@@ -919,12 +953,6 @@ module Aws::RDS
     #   Amazon Web Services Region.
     #
     #   Valid for Cluster Type: Aurora DB clusters and Multi-AZ DB clusters
-    # @option options [Boolean] :enable_local_write_forwarding
-    #   Specifies whether read replicas can forward write operations to the
-    #   writer DB instance in the DB cluster. By default, write operations
-    #   aren't allowed on reader DB instances.
-    #
-    #   Valid for: Aurora DB clusters only
     # @option options [String] :ca_certificate_identifier
     #   The CA certificate identifier to use for the DB cluster's server
     #   certificate.
@@ -938,7 +966,7 @@ module Aws::RDS
     #
     #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.SSL.html
     # @option options [String] :engine_lifecycle_support
-    #   The life cycle type for this DB cluster.
+    #   The lifecycle type for this DB cluster.
     #
     #   <note markdown="1"> By default, this value is set to `open-source-rds-extended-support`,
     #   which enrolls your DB cluster into Amazon RDS Extended Support. At the
@@ -955,11 +983,11 @@ module Aws::RDS
     #   support for that engine version. For more information, see the
     #   following sections:
     #
-    #   * Amazon Aurora - [Using Amazon RDS Extended Support][1] in the
-    #     *Amazon Aurora User Guide*
+    #   * Amazon Aurora - [Amazon RDS Extended Support with Amazon Aurora][1]
+    #     in the *Amazon Aurora User Guide*
     #
-    #   * Amazon RDS - [Using Amazon RDS Extended Support][2] in the *Amazon
-    #     RDS User Guide*
+    #   * Amazon RDS - [Amazon RDS Extended Support with Amazon RDS][2] in the
+    #     *Amazon RDS User Guide*
     #
     #   Valid for Cluster Type: Aurora DB clusters and Multi-AZ DB clusters
     #
@@ -972,6 +1000,44 @@ module Aws::RDS
     #
     #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/extended-support.html
     #   [2]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/extended-support.html
+    # @option options [Array<Types::TagSpecification>] :tag_specifications
+    #   Tags to assign to resources associated with the DB cluster.
+    #
+    #   Valid Values:
+    #
+    #   * `cluster-auto-backup` - The DB cluster's automated backup.
+    #
+    #   ^
+    # @option options [String] :master_user_authentication_type
+    #   Specifies the authentication type for the master user. With IAM master
+    #   user authentication, you can configure the master DB user with IAM
+    #   database authentication when you create a DB cluster.
+    #
+    #   You can specify one of the following values:
+    #
+    #   * `password` - Use standard database authentication with a password.
+    #
+    #   * `iam-db-auth` - Use IAM database authentication for the master user.
+    #
+    #   Valid for Cluster Type: Aurora DB clusters and Multi-AZ DB clusters
+    #
+    #   This option is only valid for RDS for PostgreSQL and Aurora PostgreSQL
+    #   engines.
+    # @option options [Boolean] :with_express_configuration
+    #   Specifies to create an Aurora DB Cluster with express configuration in
+    #   seconds. Express configuration provides a cluster with a writer
+    #   instance and feature specific values set to all other input parameters
+    #   of this API.
+    #
+    #   Valid for Cluster Type: Aurora DB clusters
+    # @option options [Array<Types::DBClusterAssociatedRole>] :associated_roles
+    #   A list of Amazon Web Services Identity and Access Management (IAM)
+    #   roles to associate with the DB cluster. Each role grants the DB
+    #   cluster permission to access other Amazon Web Services on your behalf.
+    #   For each role, specify a role ARN and, optionally, the feature name
+    #   (such as `s3Import`, `s3Export`, or `Lambda`).
+    #
+    #   Valid for Cluster Type: Aurora DB clusters only
     # @option options [String] :source_region
     #   The source region of the snapshot. This is only needed when the
     #   shapshot is encrypted and in a different region.
@@ -1087,7 +1153,7 @@ module Aws::RDS
     #     db_instance_class: "String", # required
     #     engine: "String", # required
     #     master_username: "String",
-    #     master_user_password: "String",
+    #     master_user_password: "SensitiveString",
     #     db_security_groups: ["String"],
     #     vpc_security_group_ids: ["String"],
     #     availability_zone: "String",
@@ -1102,6 +1168,7 @@ module Aws::RDS
     #     auto_minor_version_upgrade: false,
     #     license_model: "String",
     #     iops: 1,
+    #     storage_throughput: 1,
     #     option_group_name: "String",
     #     character_set_name: "String",
     #     nchar_character_set_name: "String",
@@ -1115,7 +1182,7 @@ module Aws::RDS
     #     db_cluster_identifier: "String",
     #     storage_type: "String",
     #     tde_credential_arn: "String",
-    #     tde_credential_password: "String",
+    #     tde_credential_password: "SensitiveString",
     #     storage_encrypted: false,
     #     kms_key_id: "String",
     #     domain: "String",
@@ -1144,17 +1211,38 @@ module Aws::RDS
     #     deletion_protection: false,
     #     max_allocated_storage: 1,
     #     enable_customer_owned_ip: false,
-    #     custom_iam_instance_profile: "String",
-    #     backup_target: "String",
     #     network_type: "String",
-    #     storage_throughput: 1,
+    #     backup_target: "String",
+    #     custom_iam_instance_profile: "String",
+    #     db_system_id: "String",
+    #     ca_certificate_identifier: "String",
     #     manage_master_user_password: false,
     #     master_user_secret_kms_key_id: "String",
-    #     ca_certificate_identifier: "String",
-    #     db_system_id: "String",
-    #     dedicated_log_volume: false,
     #     multi_tenant: false,
+    #     dedicated_log_volume: false,
     #     engine_lifecycle_support: "String",
+    #     additional_storage_volumes: [
+    #       {
+    #         volume_name: "String", # required
+    #         allocated_storage: 1,
+    #         iops: 1,
+    #         max_allocated_storage: 1,
+    #         storage_throughput: 1,
+    #         storage_type: "String",
+    #       },
+    #     ],
+    #     tag_specifications: [
+    #       {
+    #         resource_type: "String",
+    #         tags: [
+    #           {
+    #             key: "String",
+    #             value: "String",
+    #           },
+    #         ],
+    #       },
+    #     ],
+    #     master_user_authentication_type: "password", # accepts password, iam-db-auth
     #   })
     # @param [Hash] options ({})
     # @option options [String] :db_name
@@ -1459,6 +1547,8 @@ module Aws::RDS
     #
     #   * `db2-ae`
     #
+    #   * `db2-ce`
+    #
     #   * `db2-se`
     #
     #   * `mariadb`
@@ -1474,6 +1564,8 @@ module Aws::RDS
     #   * `oracle-se2-cdb`
     #
     #   * `postgres`
+    #
+    #   * `sqlserver-dev-ee`
     #
     #   * `sqlserver-ee`
     #
@@ -1689,12 +1781,8 @@ module Aws::RDS
     #   set the `AvailabilityZone` parameter if the DB instance is a Multi-AZ
     #   deployment.
     #
-    #   This setting doesn't apply to the following DB instances:
-    #
-    #   * Amazon Aurora (DB instance Availability Zones (AZs) are managed by
-    #     the DB cluster.)
-    #
-    #   * RDS Custom
+    #   This setting doesn't apply to Amazon Aurora because the DB instance
+    #   Availability Zones (AZs) are managed by the DB cluster.
     # @option options [String] :engine_version
     #   The version number of the database engine to use.
     #
@@ -1770,11 +1858,18 @@ module Aws::RDS
     #
     #   If you create an RDS Custom DB instance, you must set
     #   `AutoMinorVersionUpgrade` to `false`.
+    #
+    #   For more information about automatic minor version upgrades, see
+    #   [Automatically upgrading the minor engine version][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_UpgradeDBInstance.Upgrading.html#USER_UpgradeDBInstance.Upgrading.AutoMinorVersionUpgrades
     # @option options [String] :license_model
     #   The license model information for this DB instance.
     #
     #   <note markdown="1"> License models for RDS for Db2 require additional configuration. The
-    #   Bring Your Own License (BYOL) model requires a custom parameter group
+    #   bring your own license (BYOL) model requires a custom parameter group
     #   and an Amazon Web Services License Manager self-managed license. The
     #   Db2 license through Amazon Web Services Marketplace model requires an
     #   Amazon Web Services Marketplace subscription. For more information,
@@ -1794,7 +1889,8 @@ module Aws::RDS
     #
     #   * RDS for MariaDB - `general-public-license`
     #
-    #   * RDS for Microsoft SQL Server - `license-included`
+    #   * RDS for Microsoft SQL Server - `license-included |
+    #     bring-your-own-media`
     #
     #   * RDS for MySQL - `general-public-license`
     #
@@ -1826,6 +1922,14 @@ module Aws::RDS
     #
     #
     #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_Storage.html
+    # @option options [Integer] :storage_throughput
+    #   The storage throughput value, in mebibyte per second (MiBps), for the
+    #   DB instance.
+    #
+    #   This setting applies only to the `gp3` storage type.
+    #
+    #   This setting doesn't apply to Amazon Aurora or RDS Custom DB
+    #   instances.
     # @option options [String] :option_group_name
     #   The option group to associate the DB instance with.
     #
@@ -1855,37 +1959,28 @@ module Aws::RDS
     #   Specifies whether the DB instance is publicly accessible.
     #
     #   When the DB instance is publicly accessible and you connect from
-    #   outside of the DB instance's virtual private cloud (VPC), its Domain
-    #   Name System (DNS) endpoint resolves to the public IP address. When you
+    #   outside of the DB instance's virtual private cloud (VPC), its domain
+    #   name system (DNS) endpoint resolves to the public IP address. When you
     #   connect from within the same VPC as the DB instance, the endpoint
     #   resolves to the private IP address. Access to the DB instance is
-    #   ultimately controlled by the security group it uses. That public
-    #   access is not permitted if the security group assigned to the DB
-    #   instance doesn't permit it.
+    #   controlled by its security group settings.
     #
     #   When the DB instance isn't publicly accessible, it is an internal DB
     #   instance with a DNS name that resolves to a private IP address.
     #
-    #   Default: The default behavior varies depending on whether
-    #   `DBSubnetGroupName` is specified.
+    #   The default behavior when `PubliclyAccessible` is not specified
+    #   depends on whether a `DBSubnetGroup` is specified.
     #
-    #   If `DBSubnetGroupName` isn't specified, and `PubliclyAccessible`
-    #   isn't specified, the following applies:
+    #   If `DBSubnetGroup` isn't specified, `PubliclyAccessible` defaults to
+    #   `false` for Aurora instances and `true` for non-Aurora instances.
     #
-    #   * If the default VPC in the target Region doesn’t have an internet
-    #     gateway attached to it, the DB instance is private.
+    #   If `DBSubnetGroup` is specified, `PubliclyAccessible` defaults to
+    #   `false` unless the value of `DBSubnetGroup` is `default`, in which
+    #   case `PubliclyAccessible` defaults to `true`.
     #
-    #   * If the default VPC in the target Region has an internet gateway
-    #     attached to it, the DB instance is public.
-    #
-    #   If `DBSubnetGroupName` is specified, and `PubliclyAccessible` isn't
-    #   specified, the following applies:
-    #
-    #   * If the subnets are part of a VPC that doesn’t have an internet
-    #     gateway attached to it, the DB instance is private.
-    #
-    #   * If the subnets are part of a VPC that has an internet gateway
-    #     attached to it, the DB instance is public.
+    #   If `PubliclyAccessible` is true and the VPC that the `DBSubnetGroup`
+    #   is in doesn't have an internet gateway attached to it, Amazon RDS
+    #   returns an error.
     # @option options [Array<Types::Tag>] :tags
     #   Tags to assign to the DB instance.
     # @option options [String] :db_cluster_identifier
@@ -2229,6 +2324,40 @@ module Aws::RDS
     #
     #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-on-outposts.html
     #   [2]: https://docs.aws.amazon.com/outposts/latest/userguide/routing.html#ip-addressing
+    # @option options [String] :network_type
+    #   The network type of the DB instance.
+    #
+    #   The network type is determined by the `DBSubnetGroup` specified for
+    #   the DB instance. A `DBSubnetGroup` can support only the IPv4 protocol
+    #   or the IPv4 and the IPv6 protocols (`DUAL`).
+    #
+    #   For more information, see [ Working with a DB instance in a VPC][1] in
+    #   the *Amazon RDS User Guide.*
+    #
+    #   Valid Values: `IPV4 | DUAL`
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_VPC.WorkingWithRDSInstanceinaVPC.html
+    # @option options [String] :backup_target
+    #   The location for storing automated backups and manual snapshots.
+    #
+    #   Valid Values:
+    #
+    #   * `local` (Dedicated Local Zone)
+    #
+    #   * `outposts` (Amazon Web Services Outposts)
+    #
+    #   * `region` (Amazon Web Services Region)
+    #
+    #   Default: `region`
+    #
+    #   For more information, see [Working with Amazon RDS on Amazon Web
+    #   Services Outposts][1] in the *Amazon RDS User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-on-outposts.html
     # @option options [String] :custom_iam_instance_profile
     #   The instance profile associated with the underlying Amazon EC2
     #   instance of an RDS Custom DB instance.
@@ -2251,46 +2380,28 @@ module Aws::RDS
     #
     #
     #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/custom-setup-orcl.html#custom-setup-orcl.iam-vpc
-    # @option options [String] :backup_target
-    #   The location for storing automated backups and manual snapshots.
+    # @option options [String] :db_system_id
+    #   The Oracle system identifier (SID), which is the name of the Oracle
+    #   database instance that manages your database files. In this context,
+    #   the term "Oracle database instance" refers exclusively to the system
+    #   global area (SGA) and Oracle background processes. If you don't
+    #   specify a SID, the value defaults to `RDSCDB`. The Oracle SID is also
+    #   the name of your CDB.
+    # @option options [String] :ca_certificate_identifier
+    #   The CA certificate identifier to use for the DB instance's server
+    #   certificate.
     #
-    #   Valid Values:
+    #   This setting doesn't apply to RDS Custom DB instances.
     #
-    #   * `outposts` (Amazon Web Services Outposts)
-    #
-    #   * `region` (Amazon Web Services Region)
-    #
-    #   Default: `region`
-    #
-    #   For more information, see [Working with Amazon RDS on Amazon Web
-    #   Services Outposts][1] in the *Amazon RDS User Guide*.
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-on-outposts.html
-    # @option options [String] :network_type
-    #   The network type of the DB instance.
-    #
-    #   The network type is determined by the `DBSubnetGroup` specified for
-    #   the DB instance. A `DBSubnetGroup` can support only the IPv4 protocol
-    #   or the IPv4 and the IPv6 protocols (`DUAL`).
-    #
-    #   For more information, see [ Working with a DB instance in a VPC][1] in
-    #   the *Amazon RDS User Guide.*
-    #
-    #   Valid Values: `IPV4 | DUAL`
+    #   For more information, see [Using SSL/TLS to encrypt a connection to a
+    #   DB instance][1] in the *Amazon RDS User Guide* and [ Using SSL/TLS to
+    #   encrypt a connection to a DB cluster][2] in the *Amazon Aurora User
+    #   Guide*.
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_VPC.WorkingWithRDSInstanceinaVPC.html
-    # @option options [Integer] :storage_throughput
-    #   The storage throughput value, in mebibyte per second (MiBps), for the
-    #   DB instance.
-    #
-    #   This setting applies only to the `gp3` storage type.
-    #
-    #   This setting doesn't apply to Amazon Aurora or RDS Custom DB
-    #   instances.
+    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.SSL.html
+    #   [2]: https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/UsingWithRDS.SSL.html
     # @option options [Boolean] :manage_master_user_password
     #   Specifies whether to manage the master user password with Amazon Web
     #   Services Secrets Manager.
@@ -2330,31 +2441,6 @@ module Aws::RDS
     #   There is a default KMS key for your Amazon Web Services account. Your
     #   Amazon Web Services account has a different default KMS key for each
     #   Amazon Web Services Region.
-    # @option options [String] :ca_certificate_identifier
-    #   The CA certificate identifier to use for the DB instance's server
-    #   certificate.
-    #
-    #   This setting doesn't apply to RDS Custom DB instances.
-    #
-    #   For more information, see [Using SSL/TLS to encrypt a connection to a
-    #   DB instance][1] in the *Amazon RDS User Guide* and [ Using SSL/TLS to
-    #   encrypt a connection to a DB cluster][2] in the *Amazon Aurora User
-    #   Guide*.
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.SSL.html
-    #   [2]: https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/UsingWithRDS.SSL.html
-    # @option options [String] :db_system_id
-    #   The Oracle system identifier (SID), which is the name of the Oracle
-    #   database instance that manages your database files. In this context,
-    #   the term "Oracle database instance" refers exclusively to the system
-    #   global area (SGA) and Oracle background processes. If you don't
-    #   specify a SID, the value defaults to `RDSCDB`. The Oracle SID is also
-    #   the name of your CDB.
-    # @option options [Boolean] :dedicated_log_volume
-    #   Indicates whether the DB instance has a dedicated log volume (DLV)
-    #   enabled.
     # @option options [Boolean] :multi_tenant
     #   Specifies whether to use the multi-tenant configuration or the
     #   single-tenant configuration (default). This parameter only applies to
@@ -2370,8 +2456,11 @@ module Aws::RDS
     #   * If you specify the multi-tenant configuration when you create your
     #     DB instance, you can't later modify this DB instance to use the
     #     single-tenant configuration.
+    # @option options [Boolean] :dedicated_log_volume
+    #   Indicates whether the DB instance has a dedicated log volume (DLV)
+    #   enabled.
     # @option options [String] :engine_lifecycle_support
-    #   The life cycle type for this DB instance.
+    #   The lifecycle type for this DB instance.
     #
     #   <note markdown="1"> By default, this value is set to `open-source-rds-extended-support`,
     #   which enrolls your DB instance into Amazon RDS Extended Support. At
@@ -2384,14 +2473,14 @@ module Aws::RDS
     #    </note>
     #
     #   This setting applies only to RDS for MySQL and RDS for PostgreSQL. For
-    #   Amazon Aurora DB instances, the life cycle type is managed by the DB
-    #   cluster.
+    #   Amazon Aurora DB instances, the engine lifecycle support is managed by
+    #   the DB cluster.
     #
     #   You can use this setting to enroll your DB instance into Amazon RDS
     #   Extended Support. With RDS Extended Support, you can run the selected
     #   major engine version on your DB instance past the end of standard
-    #   support for that engine version. For more information, see [Using
-    #   Amazon RDS Extended Support][1] in the *Amazon RDS User Guide*.
+    #   support for that engine version. For more information, see [Amazon RDS
+    #   Extended Support with Amazon RDS][1] in the *Amazon RDS User Guide*.
     #
     #   Valid Values: `open-source-rds-extended-support |
     #   open-source-rds-extended-support-disabled`
@@ -2401,6 +2490,33 @@ module Aws::RDS
     #
     #
     #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/extended-support.html
+    # @option options [Array<Types::AdditionalStorageVolume>] :additional_storage_volumes
+    #   A list of additional storage volumes to create for the DB instance.
+    #   You can create up to three additional storage volumes using the names
+    #   `rdsdbdata2`, `rdsdbdata3`, and `rdsdbdata4`. Additional storage
+    #   volumes are supported for RDS for Oracle and RDS for SQL Server DB
+    #   instances only.
+    # @option options [Array<Types::TagSpecification>] :tag_specifications
+    #   Tags to assign to resources associated with the DB instance.
+    #
+    #   Valid Values:
+    #
+    #   * `auto-backup` - The DB instance's automated backup.
+    #
+    #   ^
+    # @option options [String] :master_user_authentication_type
+    #   Specifies the authentication type for the master user. With IAM master
+    #   user authentication, you can configure the master DB user with IAM
+    #   database authentication when you create a DB instance.
+    #
+    #   You can specify one of the following values:
+    #
+    #   * `password` - Use standard database authentication with a password.
+    #
+    #   * `iam-db-auth` - Use IAM database authentication for the master user.
+    #
+    #   This option is only valid for RDS for PostgreSQL and Aurora PostgreSQL
+    #   engines.
     # @return [DBInstance]
     def create_db_instance(options = {})
       resp = Aws::Plugins::UserAgent.metric('RESOURCE_MODEL') do
@@ -2470,6 +2586,8 @@ module Aws::RDS
     #   * `aurora-postgresql`
     #
     #   * `db2-ae`
+    #
+    #   * `db2-ce`
     #
     #   * `db2-se`
     #
@@ -2745,6 +2863,8 @@ module Aws::RDS
     #   Valid Values:
     #
     #   * `db2-ae`
+    #
+    #   * `db2-ce`
     #
     #   * `db2-se`
     #
@@ -3058,6 +3178,8 @@ module Aws::RDS
     #
     #   * `db2-ae`
     #
+    #   * `db2-ce`
+    #
     #   * `db2-se`
     #
     #   * `mariadb`
@@ -3081,6 +3203,8 @@ module Aws::RDS
     #   * `sqlserver-ex`
     #
     #   * `sqlserver-web`
+    #
+    #   * `sqlserver-dev-ee`
     # @option options [String] :engine_version
     #   A specific database engine version to return details for.
     #
@@ -3643,7 +3767,7 @@ module Aws::RDS
     #
     #   events = rds.events({
     #     source_identifier: "String",
-    #     source_type: "db-instance", # accepts db-instance, db-parameter-group, db-security-group, db-snapshot, db-cluster, db-cluster-snapshot, custom-engine-version, db-proxy, blue-green-deployment
+    #     source_type: "db-instance", # accepts db-instance, db-parameter-group, db-security-group, db-snapshot, db-cluster, db-cluster-snapshot, custom-engine-version, db-proxy, blue-green-deployment, db-shard-group, zero-etl
     #     start_time: Time.now,
     #     end_time: Time.now,
     #     duration: 1,
@@ -3776,6 +3900,8 @@ module Aws::RDS
     #   Valid Values:
     #
     #   * `db2-ae`
+    #
+    #   * `db2-ce`
     #
     #   * `db2-se`
     #

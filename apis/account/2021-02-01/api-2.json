@@ -2,16 +2,15 @@
   "version":"2.0",
   "metadata":{
     "apiVersion":"2021-02-01",
+    "auth":["aws.auth#sigv4"],
     "endpointPrefix":"account",
-    "jsonVersion":"1.1",
     "protocol":"rest-json",
     "protocols":["rest-json"],
     "serviceFullName":"AWS Account",
     "serviceId":"Account",
     "signatureVersion":"v4",
     "signingName":"account",
-    "uid":"account-2021-02-01",
-    "auth":["aws.auth#sigv4"]
+    "uid":"account-2021-02-01"
   },
   "operations":{
     "AcceptPrimaryEmailUpdate":{
@@ -25,9 +24,9 @@
       "output":{"shape":"AcceptPrimaryEmailUpdateResponse"},
       "errors":[
         {"shape":"ResourceNotFoundException"},
+        {"shape":"AccessDeniedException"},
         {"shape":"ValidationException"},
         {"shape":"ConflictException"},
-        {"shape":"AccessDeniedException"},
         {"shape":"TooManyRequestsException"},
         {"shape":"InternalServerException"}
       ]
@@ -58,9 +57,9 @@
       },
       "input":{"shape":"DisableRegionRequest"},
       "errors":[
+        {"shape":"AccessDeniedException"},
         {"shape":"ValidationException"},
         {"shape":"ConflictException"},
-        {"shape":"AccessDeniedException"},
         {"shape":"TooManyRequestsException"},
         {"shape":"InternalServerException"}
       ]
@@ -74,12 +73,29 @@
       },
       "input":{"shape":"EnableRegionRequest"},
       "errors":[
+        {"shape":"AccessDeniedException"},
         {"shape":"ValidationException"},
         {"shape":"ConflictException"},
-        {"shape":"AccessDeniedException"},
         {"shape":"TooManyRequestsException"},
         {"shape":"InternalServerException"}
       ]
+    },
+    "GetAccountInformation":{
+      "name":"GetAccountInformation",
+      "http":{
+        "method":"POST",
+        "requestUri":"/getAccountInformation",
+        "responseCode":200
+      },
+      "input":{"shape":"GetAccountInformationRequest"},
+      "output":{"shape":"GetAccountInformationResponse"},
+      "errors":[
+        {"shape":"AccessDeniedException"},
+        {"shape":"ValidationException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"InternalServerException"}
+      ],
+      "readonly":true
     },
     "GetAlternateContact":{
       "name":"GetAlternateContact",
@@ -96,7 +112,8 @@
         {"shape":"AccessDeniedException"},
         {"shape":"TooManyRequestsException"},
         {"shape":"InternalServerException"}
-      ]
+      ],
+      "readonly":true
     },
     "GetContactInformation":{
       "name":"GetContactInformation",
@@ -113,7 +130,27 @@
         {"shape":"AccessDeniedException"},
         {"shape":"TooManyRequestsException"},
         {"shape":"InternalServerException"}
-      ]
+      ],
+      "readonly":true
+    },
+    "GetGovCloudAccountInformation":{
+      "name":"GetGovCloudAccountInformation",
+      "http":{
+        "method":"POST",
+        "requestUri":"/getGovCloudAccountInformation",
+        "responseCode":200
+      },
+      "input":{"shape":"GetGovCloudAccountInformationRequest"},
+      "output":{"shape":"GetGovCloudAccountInformationResponse"},
+      "errors":[
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ResourceUnavailableException"},
+        {"shape":"ValidationException"},
+        {"shape":"AccessDeniedException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"InternalServerException"}
+      ],
+      "readonly":true
     },
     "GetPrimaryEmail":{
       "name":"GetPrimaryEmail",
@@ -126,11 +163,30 @@
       "output":{"shape":"GetPrimaryEmailResponse"},
       "errors":[
         {"shape":"ResourceNotFoundException"},
-        {"shape":"ValidationException"},
         {"shape":"AccessDeniedException"},
+        {"shape":"ValidationException"},
         {"shape":"TooManyRequestsException"},
         {"shape":"InternalServerException"}
-      ]
+      ],
+      "readonly":true
+    },
+    "GetPrimaryEmailUpdateStatus":{
+      "name":"GetPrimaryEmailUpdateStatus",
+      "http":{
+        "method":"POST",
+        "requestUri":"/getPrimaryEmailUpdateStatus",
+        "responseCode":200
+      },
+      "input":{"shape":"GetPrimaryEmailUpdateStatusRequest"},
+      "output":{"shape":"GetPrimaryEmailUpdateStatusResponse"},
+      "errors":[
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"AccessDeniedException"},
+        {"shape":"ValidationException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"InternalServerException"}
+      ],
+      "readonly":true
     },
     "GetRegionOptStatus":{
       "name":"GetRegionOptStatus",
@@ -142,11 +198,12 @@
       "input":{"shape":"GetRegionOptStatusRequest"},
       "output":{"shape":"GetRegionOptStatusResponse"},
       "errors":[
-        {"shape":"ValidationException"},
         {"shape":"AccessDeniedException"},
+        {"shape":"ValidationException"},
         {"shape":"TooManyRequestsException"},
         {"shape":"InternalServerException"}
-      ]
+      ],
+      "readonly":true
     },
     "ListRegions":{
       "name":"ListRegions",
@@ -158,11 +215,28 @@
       "input":{"shape":"ListRegionsRequest"},
       "output":{"shape":"ListRegionsResponse"},
       "errors":[
-        {"shape":"ValidationException"},
         {"shape":"AccessDeniedException"},
+        {"shape":"ValidationException"},
         {"shape":"TooManyRequestsException"},
         {"shape":"InternalServerException"}
-      ]
+      ],
+      "readonly":true
+    },
+    "PutAccountName":{
+      "name":"PutAccountName",
+      "http":{
+        "method":"POST",
+        "requestUri":"/putAccountName",
+        "responseCode":200
+      },
+      "input":{"shape":"PutAccountNameRequest"},
+      "errors":[
+        {"shape":"AccessDeniedException"},
+        {"shape":"ValidationException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"InternalServerException"}
+      ],
+      "idempotent":true
     },
     "PutAlternateContact":{
       "name":"PutAlternateContact",
@@ -207,9 +281,9 @@
       "output":{"shape":"StartPrimaryEmailUpdateResponse"},
       "errors":[
         {"shape":"ResourceNotFoundException"},
+        {"shape":"AccessDeniedException"},
         {"shape":"ValidationException"},
         {"shape":"ConflictException"},
-        {"shape":"AccessDeniedException"},
         {"shape":"TooManyRequestsException"},
         {"shape":"InternalServerException"}
       ]
@@ -220,13 +294,13 @@
       "type":"structure",
       "required":[
         "AccountId",
-        "Otp",
-        "PrimaryEmail"
+        "PrimaryEmail",
+        "Otp"
       ],
       "members":{
         "AccountId":{"shape":"AccountId"},
-        "Otp":{"shape":"Otp"},
-        "PrimaryEmail":{"shape":"PrimaryEmailAddress"}
+        "PrimaryEmail":{"shape":"PrimaryEmailAddress"},
+        "Otp":{"shape":"Otp"}
       }
     },
     "AcceptPrimaryEmailUpdateResponse":{
@@ -239,7 +313,12 @@
       "type":"structure",
       "required":["message"],
       "members":{
-        "message":{"shape":"String"}
+        "message":{"shape":"String"},
+        "errorType":{
+          "shape":"String",
+          "location":"header",
+          "locationName":"x-amzn-ErrorType"
+        }
       },
       "error":{
         "httpStatusCode":403,
@@ -247,9 +326,29 @@
       },
       "exception":true
     },
+    "AccountCreatedDate":{
+      "type":"timestamp",
+      "timestampFormat":"iso8601"
+    },
     "AccountId":{
       "type":"string",
-      "pattern":"^\\d{12}$"
+      "pattern":"\\d{12}"
+    },
+    "AccountName":{
+      "type":"string",
+      "max":50,
+      "min":1,
+      "pattern":"[ -;=?-~]+",
+      "sensitive":true
+    },
+    "AccountState":{
+      "type":"string",
+      "enum":[
+        "PENDING_ACTIVATION",
+        "ACTIVE",
+        "SUSPENDED",
+        "CLOSED"
+      ]
     },
     "AddressLine":{
       "type":"string",
@@ -260,11 +359,11 @@
     "AlternateContact":{
       "type":"structure",
       "members":{
-        "AlternateContactType":{"shape":"AlternateContactType"},
-        "EmailAddress":{"shape":"EmailAddress"},
         "Name":{"shape":"Name"},
+        "Title":{"shape":"Title"},
+        "EmailAddress":{"shape":"EmailAddress"},
         "PhoneNumber":{"shape":"PhoneNumber"},
-        "Title":{"shape":"Title"}
+        "AlternateContactType":{"shape":"AlternateContactType"}
       }
     },
     "AlternateContactType":{
@@ -273,6 +372,15 @@
         "BILLING",
         "OPERATIONS",
         "SECURITY"
+      ]
+    },
+    "AwsAccountState":{
+      "type":"string",
+      "enum":[
+        "PENDING_ACTIVATION",
+        "ACTIVE",
+        "SUSPENDED",
+        "CLOSED"
       ]
     },
     "City":{
@@ -291,7 +399,12 @@
       "type":"structure",
       "required":["message"],
       "members":{
-        "message":{"shape":"String"}
+        "message":{"shape":"String"},
+        "errorType":{
+          "shape":"String",
+          "location":"header",
+          "locationName":"x-amzn-ErrorType"
+        }
       },
       "error":{
         "httpStatusCode":409,
@@ -302,25 +415,25 @@
     "ContactInformation":{
       "type":"structure",
       "required":[
+        "FullName",
         "AddressLine1",
         "City",
+        "PostalCode",
         "CountryCode",
-        "FullName",
-        "PhoneNumber",
-        "PostalCode"
+        "PhoneNumber"
       ],
       "members":{
+        "FullName":{"shape":"FullName"},
         "AddressLine1":{"shape":"AddressLine"},
         "AddressLine2":{"shape":"AddressLine"},
         "AddressLine3":{"shape":"AddressLine"},
         "City":{"shape":"City"},
-        "CompanyName":{"shape":"CompanyName"},
-        "CountryCode":{"shape":"CountryCode"},
-        "DistrictOrCounty":{"shape":"DistrictOrCounty"},
-        "FullName":{"shape":"FullName"},
-        "PhoneNumber":{"shape":"ContactInformationPhoneNumber"},
-        "PostalCode":{"shape":"PostalCode"},
         "StateOrRegion":{"shape":"StateOrRegion"},
+        "DistrictOrCounty":{"shape":"DistrictOrCounty"},
+        "PostalCode":{"shape":"PostalCode"},
+        "CountryCode":{"shape":"CountryCode"},
+        "PhoneNumber":{"shape":"ContactInformationPhoneNumber"},
+        "CompanyName":{"shape":"CompanyName"},
         "WebsiteUrl":{"shape":"WebsiteUrl"}
       }
     },
@@ -328,7 +441,7 @@
       "type":"string",
       "max":20,
       "min":1,
-      "pattern":"^[+][\\s0-9()-]+$",
+      "pattern":"[+][\\s0-9()-]+",
       "sensitive":true
     },
     "CountryCode":{
@@ -341,8 +454,8 @@
       "type":"structure",
       "required":["AlternateContactType"],
       "members":{
-        "AccountId":{"shape":"AccountId"},
-        "AlternateContactType":{"shape":"AlternateContactType"}
+        "AlternateContactType":{"shape":"AlternateContactType"},
+        "AccountId":{"shape":"AccountId"}
       }
     },
     "DisableRegionRequest":{
@@ -363,7 +476,7 @@
       "type":"string",
       "max":254,
       "min":1,
-      "pattern":"^[\\s]*[\\w+=.#|!&-]+@[\\w.-]+\\.[\\w]+[\\s]*$",
+      "pattern":"[\\s]*[\\w+=.#|!&-]+@[\\w.-]+\\.[\\w]+[\\s]*",
       "sensitive":true
     },
     "EnableRegionRequest":{
@@ -380,12 +493,27 @@
       "min":1,
       "sensitive":true
     },
+    "GetAccountInformationRequest":{
+      "type":"structure",
+      "members":{
+        "AccountId":{"shape":"AccountId"}
+      }
+    },
+    "GetAccountInformationResponse":{
+      "type":"structure",
+      "members":{
+        "AccountId":{"shape":"AccountId"},
+        "AccountName":{"shape":"AccountName"},
+        "AccountCreatedDate":{"shape":"AccountCreatedDate"},
+        "AccountState":{"shape":"AccountState"}
+      }
+    },
     "GetAlternateContactRequest":{
       "type":"structure",
       "required":["AlternateContactType"],
       "members":{
-        "AccountId":{"shape":"AccountId"},
-        "AlternateContactType":{"shape":"AlternateContactType"}
+        "AlternateContactType":{"shape":"AlternateContactType"},
+        "AccountId":{"shape":"AccountId"}
       }
     },
     "GetAlternateContactResponse":{
@@ -406,6 +534,23 @@
         "ContactInformation":{"shape":"ContactInformation"}
       }
     },
+    "GetGovCloudAccountInformationRequest":{
+      "type":"structure",
+      "members":{
+        "StandardAccountId":{"shape":"AccountId"}
+      }
+    },
+    "GetGovCloudAccountInformationResponse":{
+      "type":"structure",
+      "required":[
+        "GovCloudAccountId",
+        "AccountState"
+      ],
+      "members":{
+        "GovCloudAccountId":{"shape":"AccountId"},
+        "AccountState":{"shape":"AwsAccountState"}
+      }
+    },
     "GetPrimaryEmailRequest":{
       "type":"structure",
       "required":["AccountId"],
@@ -417,6 +562,20 @@
       "type":"structure",
       "members":{
         "PrimaryEmail":{"shape":"PrimaryEmailAddress"}
+      }
+    },
+    "GetPrimaryEmailUpdateStatusRequest":{
+      "type":"structure",
+      "members":{
+        "AccountId":{"shape":"AccountId"}
+      }
+    },
+    "GetPrimaryEmailUpdateStatusResponse":{
+      "type":"structure",
+      "required":["Status"],
+      "members":{
+        "Status":{"shape":"PrimaryEmailUpdateStatus"},
+        "UpdatedAt":{"shape":"Timestamp"}
       }
     },
     "GetRegionOptStatusRequest":{
@@ -438,7 +597,12 @@
       "type":"structure",
       "required":["message"],
       "members":{
-        "message":{"shape":"String"}
+        "message":{"shape":"String"},
+        "errorType":{
+          "shape":"String",
+          "location":"header",
+          "locationName":"x-amzn-ErrorType"
+        }
       },
       "error":{"httpStatusCode":500},
       "exception":true,
@@ -480,14 +644,14 @@
     },
     "Otp":{
       "type":"string",
-      "pattern":"^[a-zA-Z0-9]{6}$",
+      "pattern":"[a-zA-Z0-9]{6}",
       "sensitive":true
     },
     "PhoneNumber":{
       "type":"string",
       "max":25,
       "min":1,
-      "pattern":"^[\\s0-9()+-]+$",
+      "pattern":"[\\s0-9()+-]+",
       "sensitive":true
     },
     "PostalCode":{
@@ -506,33 +670,43 @@
       "type":"string",
       "enum":[
         "PENDING",
-        "ACCEPTED"
+        "ACCEPTED",
+        "COMPLETED",
+        "FAILED"
       ]
+    },
+    "PutAccountNameRequest":{
+      "type":"structure",
+      "required":["AccountName"],
+      "members":{
+        "AccountName":{"shape":"AccountName"},
+        "AccountId":{"shape":"AccountId"}
+      }
     },
     "PutAlternateContactRequest":{
       "type":"structure",
       "required":[
-        "AlternateContactType",
-        "EmailAddress",
         "Name",
+        "Title",
+        "EmailAddress",
         "PhoneNumber",
-        "Title"
+        "AlternateContactType"
       ],
       "members":{
-        "AccountId":{"shape":"AccountId"},
-        "AlternateContactType":{"shape":"AlternateContactType"},
-        "EmailAddress":{"shape":"EmailAddress"},
         "Name":{"shape":"Name"},
+        "Title":{"shape":"Title"},
+        "EmailAddress":{"shape":"EmailAddress"},
         "PhoneNumber":{"shape":"PhoneNumber"},
-        "Title":{"shape":"Title"}
+        "AlternateContactType":{"shape":"AlternateContactType"},
+        "AccountId":{"shape":"AccountId"}
       }
     },
     "PutContactInformationRequest":{
       "type":"structure",
       "required":["ContactInformation"],
       "members":{
-        "AccountId":{"shape":"AccountId"},
-        "ContactInformation":{"shape":"ContactInformation"}
+        "ContactInformation":{"shape":"ContactInformation"},
+        "AccountId":{"shape":"AccountId"}
       }
     },
     "Region":{
@@ -569,10 +743,32 @@
       "type":"structure",
       "required":["message"],
       "members":{
-        "message":{"shape":"String"}
+        "message":{"shape":"String"},
+        "errorType":{
+          "shape":"String",
+          "location":"header",
+          "locationName":"x-amzn-ErrorType"
+        }
       },
       "error":{
         "httpStatusCode":404,
+        "senderFault":true
+      },
+      "exception":true
+    },
+    "ResourceUnavailableException":{
+      "type":"structure",
+      "required":["message"],
+      "members":{
+        "message":{"shape":"String"},
+        "errorType":{
+          "shape":"String",
+          "location":"header",
+          "locationName":"x-amzn-ErrorType"
+        }
+      },
+      "error":{
+        "httpStatusCode":424,
         "senderFault":true
       },
       "exception":true
@@ -605,6 +801,7 @@
       "sensitive":true
     },
     "String":{"type":"string"},
+    "Timestamp":{"type":"timestamp"},
     "Title":{
       "type":"string",
       "max":50,
@@ -615,7 +812,12 @@
       "type":"structure",
       "required":["message"],
       "members":{
-        "message":{"shape":"String"}
+        "message":{"shape":"String"},
+        "errorType":{
+          "shape":"String",
+          "location":"header",
+          "locationName":"x-amzn-ErrorType"
+        }
       },
       "error":{
         "httpStatusCode":429,
@@ -628,9 +830,9 @@
       "type":"structure",
       "required":["message"],
       "members":{
-        "fieldList":{"shape":"ValidationExceptionFieldList"},
         "message":{"shape":"SensitiveString"},
-        "reason":{"shape":"ValidationExceptionReason"}
+        "reason":{"shape":"ValidationExceptionReason"},
+        "fieldList":{"shape":"ValidationExceptionFieldList"}
       },
       "error":{
         "httpStatusCode":400,
@@ -641,12 +843,12 @@
     "ValidationExceptionField":{
       "type":"structure",
       "required":[
-        "message",
-        "name"
+        "name",
+        "message"
       ],
       "members":{
-        "message":{"shape":"SensitiveString"},
-        "name":{"shape":"String"}
+        "name":{"shape":"String"},
+        "message":{"shape":"SensitiveString"}
       }
     },
     "ValidationExceptionFieldList":{

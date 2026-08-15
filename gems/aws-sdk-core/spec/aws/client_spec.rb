@@ -6,8 +6,6 @@ module Aws
   describe 'Client' do
     describe 'response stubbing' do
 
-      ResponseStubbingExample = ApiHelper.sample_service
-
       let(:options) {{
         stub_responses: true,
         region: 'us-east-1',
@@ -15,7 +13,7 @@ module Aws
         secret_access_key: 'secret',
       }}
 
-      let(:client_class) { ResponseStubbingExample.const_get(:Client) }
+      let(:client_class) { ApiHelper.sample_client }
 
       let(:client) { client_class.new(options) }
 
@@ -27,11 +25,8 @@ module Aws
 
       context 'when requests are signed' do
 
-        let(:client_class) do
-          ApiHelper
-            .sample_service(metadata: {'signatureVersion' => 'v4'})
-            .const_get(:Client)
-        end
+        let(:sample_service) { ApiHelper.sample_service(metadata: { 'signatureVersion' => 'v4' }) }
+        let(:client_class) { ApiHelper.sample_client(service: sample_service) }
 
         it 'raises an error when credentials are nil' do
           creds = Credentials.new(nil, nil)
@@ -51,7 +46,9 @@ module Aws
         end
       end
 
+      # TODO: Update retries to 2 and remove stub when new retries become default
       it 'raises a helpful error on possible incorrect regions' do
+        allow(Aws::Plugins::RetryErrors).to receive(:new_retries?).and_return(false)
 
         # simulate an error from connecting to an unknown endpoint
         stub_request(:any, /.*/).
@@ -70,7 +67,7 @@ module Aws
         end
 
         expect(e).to be_kind_of(Errors::NoSuchEndpointError)
-        expect(e.context.retries).to be(3) # updated to retry based on customer request
+        expect(e.context.retries).to be(3)
         expect(e.message).to include('us-east-1')
         expect(e.message).to include('us-west-1')
         expect(e.message).to include('cn-north-1')
@@ -179,26 +176,27 @@ Known AWS regions include (not specific to this service):
       end
 
       context 'api requests' do
-        ApiRequestsStubbingExample = ApiHelper.sample_rest_xml
-        let(:client_class) { ApiRequestsStubbingExample.const_get(:Client) }
-        let(:client) { client_class.new(options) }
-
         it 'allows api requests to be logged when stubbed' do
+          client_class =
+            ApiHelper.sample_client(
+              service: ApiHelper.sample_service(module_name: 'ApiRequestsToBeLogged')
+            )
+          client = client_class.new(options.merge(validate_params: false))
           expect(client.api_requests.empty?).to be(true)
-          client.create_bucket(bucket:'aws-sdk')
+          client.example_operation(foo: 'bar')
           expect(client.api_requests.length).to eq(1)
 
           log_obj = client.api_requests[0]
-          expect(log_obj[:operation_name]).to eq(:create_bucket)
-          expect(log_obj[:params]).to eq({:bucket=>"aws-sdk"})
-          expect(log_obj[:context].metadata).to eq(
+          expect(log_obj[:operation_name]).to eq(:example_operation)
+          expect(log_obj[:params]).to eq(foo: 'bar')
+          expect(log_obj[:context].metadata).to include(
             {
-              :gem_name=>"aws-sdk-sampleapi2",
-              :gem_version=>"1.0.0",
-              :response_target=>nil,
-              :original_params=>{:bucket=>"aws-sdk"},
-              :request_id=>"stubbed-request-id",
-              :http_checksum=>{}
+              gem_name: 'aws-sdk-apirequeststobelogged',
+              gem_version: '1.0.0',
+              response_target: nil,
+              original_params: { foo: 'bar' },
+              request_id: 'stubbed-request-id',
+              http_checksum: {}
             }
           )
         end
@@ -212,6 +210,36 @@ Known AWS regions include (not specific to this service):
 
       end
 
+      describe 'protocol_helper' do
+        it 'returns configured protocol' do
+          service = ApiHelper.sample_service(metadata: { 'protocol' => 'query' })
+          client_class = ApiHelper.sample_client(service: service)
+          client = client_class.new(options)
+
+          helper = client.send(:protocol_helper)
+          expect(helper).to be_a(Aws::Stubbing::Protocols::Query)
+        end
+
+        it 'prioritizes Json over RpcV2 when both protocols are supported' do
+          service = ApiHelper.sample_service(
+            metadata: {
+              'protocol' => 'smithy-rpc-v2-cbor',
+              'protocols' => %w[smithy-rpc-v2-cbor json]
+            }
+          )
+          client_class = ApiHelper.sample_client(service: service)
+          client = client_class.new(options)
+
+          helper = client.send(:protocol_helper)
+          expect(helper).to be_a(Aws::Stubbing::Protocols::Json)
+        end
+
+        it 'raises error for unsupported protocol' do
+          expect do
+            ApiHelper.sample_service(metadata: { 'protocol' => 'unsupported' })
+          end.to raise_error(/unsupported protocol/)
+        end
+      end
     end
   end
 end

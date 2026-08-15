@@ -113,6 +113,18 @@
         {"shape":"ResourceInUseException"}
       ]
     },
+    "DeleteConnector":{
+      "name":"DeleteConnector",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DeleteConnectorRequest"},
+      "errors":[
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ValidationException"}
+      ]
+    },
     "DeleteDeliveryChannel":{
       "name":"DeleteDeliveryChannel",
       "http":{
@@ -780,6 +792,19 @@
         {"shape":"InvalidNextTokenException"}
       ]
     },
+    "GetConnector":{
+      "name":"GetConnector",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"GetConnectorRequest"},
+      "output":{"shape":"GetConnectorResponse"},
+      "errors":[
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ValidationException"}
+      ]
+    },
     "GetCustomRulePolicy":{
       "name":"GetCustomRulePolicy",
       "http":{
@@ -932,6 +957,18 @@
         {"shape":"InvalidNextTokenException"}
       ]
     },
+    "ListConnectors":{
+      "name":"ListConnectors",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"ListConnectorsRequest"},
+      "output":{"shape":"ListConnectorsResponse"},
+      "errors":[
+        {"shape":"ValidationException"}
+      ]
+    },
     "ListDiscoveredResources":{
       "name":"ListDiscoveredResources",
       "http":{
@@ -1063,6 +1100,21 @@
         {"shape":"ResourceInUseException"},
         {"shape":"InvalidParameterValueException"},
         {"shape":"MaxNumberOfConformancePacksExceededException"}
+      ]
+    },
+    "PutConnector":{
+      "name":"PutConnector",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"PutConnectorRequest"},
+      "output":{"shape":"PutConnectorResponse"},
+      "errors":[
+        {"shape":"ConflictException"},
+        {"shape":"InsufficientPermissionsException"},
+        {"shape":"MaxNumberOfConnectorsExceededException"},
+        {"shape":"ValidationException"}
       ]
     },
     "PutDeliveryChannel":{
@@ -1228,6 +1280,20 @@
         {"shape":"ValidationException"},
         {"shape":"TooManyTagsException"},
         {"shape":"ResourceConcurrentModificationException"}
+      ]
+    },
+    "PutThirdPartyServiceLinkedConfigurationRecorder":{
+      "name":"PutThirdPartyServiceLinkedConfigurationRecorder",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"PutThirdPartyServiceLinkedConfigurationRecorderRequest"},
+      "output":{"shape":"PutThirdPartyServiceLinkedConfigurationRecorderResponse"},
+      "errors":[
+        {"shape":"ConflictException"},
+        {"shape":"InsufficientPermissionsException"},
+        {"shape":"ValidationException"}
       ]
     },
     "SelectAggregateResourceConfig":{
@@ -1623,6 +1689,27 @@
       "max":64,
       "min":1
     },
+    "AzureClientIdentifier":{
+      "type":"string",
+      "max":128,
+      "min":1
+    },
+    "AzureConnectorConfiguration":{
+      "type":"structure",
+      "required":[
+        "tenantIdentifier",
+        "clientIdentifier"
+      ],
+      "members":{
+        "tenantIdentifier":{"shape":"AzureTenantIdentifier"},
+        "clientIdentifier":{"shape":"AzureClientIdentifier"}
+      }
+    },
+    "AzureTenantIdentifier":{
+      "type":"string",
+      "max":128,
+      "min":1
+    },
     "BaseConfigurationItem":{
       "type":"structure",
       "members":{
@@ -1806,7 +1893,8 @@
         "MaximumExecutionFrequency":{"shape":"MaximumExecutionFrequency"},
         "ConfigRuleState":{"shape":"ConfigRuleState"},
         "CreatedBy":{"shape":"StringWithCharLimit256"},
-        "EvaluationModes":{"shape":"EvaluationModes"}
+        "EvaluationModes":{"shape":"EvaluationModes"},
+        "RuleEvaluationVisibility":{"shape":"RuleEvaluationVisibility"}
       }
     },
     "ConfigRuleComplianceFilters":{
@@ -1981,7 +2069,9 @@
         "recordingGroup":{"shape":"RecordingGroup"},
         "recordingMode":{"shape":"RecordingMode"},
         "recordingScope":{"shape":"RecordingScope"},
-        "servicePrincipal":{"shape":"ServicePrincipal"}
+        "servicePrincipal":{"shape":"ServicePrincipal"},
+        "connectorArn":{"shape":"AmazonResourceName"},
+        "scopeConfiguration":{"shape":"ScopeConfiguration"}
       }
     },
     "ConfigurationRecorderFilter":{
@@ -2049,14 +2139,14 @@
         "arn":{"shape":"AmazonResourceName"},
         "name":{"shape":"RecorderName"},
         "servicePrincipal":{"shape":"ServicePrincipal"},
-        "recordingScope":{"shape":"RecordingScope"}
+        "recordingScope":{"shape":"RecordingScope"},
+        "provider":{"shape":"Provider"}
       }
     },
     "ConfigurationStateId":{"type":"string"},
     "ConflictException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "ConformancePackArn":{
@@ -2287,9 +2377,74 @@
     },
     "ConformancePackTemplateValidationException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
+    },
+    "Connector":{
+      "type":"structure",
+      "required":[
+        "name",
+        "arn",
+        "connectorConfiguration",
+        "createdTime"
+      ],
+      "members":{
+        "name":{"shape":"ConnectorName"},
+        "arn":{"shape":"AmazonResourceName"},
+        "connectorConfiguration":{"shape":"ConnectorConfiguration"},
+        "createdTime":{"shape":"Date"}
+      }
+    },
+    "ConnectorConfiguration":{
+      "type":"structure",
+      "members":{
+        "azure":{"shape":"AzureConnectorConfiguration"}
+      }
+    },
+    "ConnectorFilter":{
+      "type":"structure",
+      "members":{
+        "filterName":{"shape":"ConnectorFilterName"},
+        "filterValues":{"shape":"FilterValueList"}
+      }
+    },
+    "ConnectorFilterList":{
+      "type":"list",
+      "member":{"shape":"ConnectorFilter"},
+      "max":5,
+      "min":0
+    },
+    "ConnectorFilterName":{
+      "type":"string",
+      "enum":["provider"]
+    },
+    "ConnectorName":{
+      "type":"string",
+      "max":256,
+      "min":1
+    },
+    "ConnectorSummaries":{
+      "type":"list",
+      "member":{"shape":"ConnectorSummary"},
+      "max":100,
+      "min":0
+    },
+    "ConnectorSummary":{
+      "type":"structure",
+      "required":[
+        "arn",
+        "name",
+        "provider",
+        "tenantIdentifier",
+        "createdTime"
+      ],
+      "members":{
+        "arn":{"shape":"AmazonResourceName"},
+        "name":{"shape":"ConnectorName"},
+        "provider":{"shape":"Provider"},
+        "tenantIdentifier":{"shape":"AzureTenantIdentifier"},
+        "createdTime":{"shape":"Date"}
+      }
     },
     "ControlsList":{
       "type":"list",
@@ -2360,6 +2515,13 @@
         "ConformancePackName":{"shape":"ConformancePackName"}
       }
     },
+    "DeleteConnectorRequest":{
+      "type":"structure",
+      "required":["Arn"],
+      "members":{
+        "Arn":{"shape":"AmazonResourceName"}
+      }
+    },
     "DeleteDeliveryChannelRequest":{
       "type":"structure",
       "required":["DeliveryChannelName"],
@@ -2376,8 +2538,7 @@
     },
     "DeleteEvaluationResultsResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeleteOrganizationConfigRuleRequest":{
       "type":"structure",
@@ -2414,8 +2575,7 @@
     },
     "DeleteRemediationConfigurationResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeleteRemediationExceptionsRequest":{
       "type":"structure",
@@ -2454,9 +2614,9 @@
     },
     "DeleteServiceLinkedConfigurationRecorderRequest":{
       "type":"structure",
-      "required":["ServicePrincipal"],
       "members":{
-        "ServicePrincipal":{"shape":"ServicePrincipal"}
+        "ServicePrincipal":{"shape":"ServicePrincipal"},
+        "Arn":{"shape":"AmazonResourceName"}
       }
     },
     "DeleteServiceLinkedConfigurationRecorderResponse":{
@@ -2479,8 +2639,7 @@
     },
     "DeleteStoredQueryResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeliverConfigSnapshotRequest":{
       "type":"structure",
@@ -2643,15 +2802,16 @@
     "DescribeConfigRulesFilters":{
       "type":"structure",
       "members":{
-        "EvaluationMode":{"shape":"EvaluationMode"}
+        "EvaluationMode":{"shape":"EvaluationMode"},
+        "RuleEvaluationVisibility":{"shape":"RuleEvaluationVisibility"}
       }
     },
     "DescribeConfigRulesRequest":{
       "type":"structure",
       "members":{
         "ConfigRuleNames":{"shape":"ConfigRuleNames"},
-        "NextToken":{"shape":"String"},
-        "Filters":{"shape":"DescribeConfigRulesFilters"}
+        "Filters":{"shape":"DescribeConfigRulesFilters"},
+        "NextToken":{"shape":"String"}
       }
     },
     "DescribeConfigRulesResponse":{
@@ -3158,6 +3318,12 @@
       "member":{"shape":"FieldInfo"}
     },
     "FieldName":{"type":"string"},
+    "FilterValueList":{
+      "type":"list",
+      "member":{"shape":"String"},
+      "max":10,
+      "min":0
+    },
     "GetAggregateComplianceDetailsByConfigRuleRequest":{
       "type":"structure",
       "required":[
@@ -3351,6 +3517,20 @@
         "NextToken":{"shape":"NextToken"}
       }
     },
+    "GetConnectorRequest":{
+      "type":"structure",
+      "required":["Arn"],
+      "members":{
+        "Arn":{"shape":"AmazonResourceName"}
+      }
+    },
+    "GetConnectorResponse":{
+      "type":"structure",
+      "required":["Connector"],
+      "members":{
+        "Connector":{"shape":"Connector"}
+      }
+    },
     "GetCustomRulePolicyRequest":{
       "type":"structure",
       "members":{
@@ -3509,101 +3689,91 @@
       "exception":true
     },
     "IncludeGlobalResourceTypes":{"type":"boolean"},
+    "IncludedRegions":{
+      "type":"list",
+      "member":{"shape":"ThirdPartyCloudRegion"},
+      "max":200,
+      "min":0
+    },
     "InsufficientDeliveryPolicyException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "InsufficientPermissionsException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "Integer":{"type":"integer"},
     "InvalidConfigurationRecorderNameException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "InvalidDeliveryChannelNameException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "InvalidExpressionException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "InvalidLimitException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "InvalidNextTokenException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "InvalidParameterValueException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "InvalidRecordingGroupException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "InvalidResultTokenException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "InvalidRoleException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "InvalidS3KeyPrefixException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "InvalidS3KmsKeyArnException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "InvalidSNSTopicARNException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "InvalidTimeRangeException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "LastDeliveryChannelDeleteFailedException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "LastUpdatedTime":{"type":"timestamp"},
@@ -3615,8 +3785,7 @@
     },
     "LimitExceededException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "ListAggregateDiscoveredResourcesRequest":{
@@ -3675,6 +3844,27 @@
       "members":{
         "NextToken":{"shape":"NextToken"},
         "ConformancePackComplianceScores":{"shape":"ConformancePackComplianceScores"}
+      }
+    },
+    "ListConnectorsMaxResults":{
+      "type":"integer",
+      "max":100,
+      "min":0
+    },
+    "ListConnectorsRequest":{
+      "type":"structure",
+      "members":{
+        "MaxResults":{"shape":"ListConnectorsMaxResults"},
+        "NextToken":{"shape":"String"},
+        "Filters":{"shape":"ConnectorFilterList"}
+      }
+    },
+    "ListConnectorsResponse":{
+      "type":"structure",
+      "required":["ConnectorSummaries"],
+      "members":{
+        "ConnectorSummaries":{"shape":"ConnectorSummaries"},
+        "NextToken":{"shape":"String"}
       }
     },
     "ListDiscoveredResourcesRequest":{
@@ -3755,50 +3945,47 @@
     "Long":{"type":"long"},
     "MaxActiveResourcesExceededException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "MaxNumberOfConfigRulesExceededException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "MaxNumberOfConfigurationRecordersExceededException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "MaxNumberOfConformancePacksExceededException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
+      "exception":true
+    },
+    "MaxNumberOfConnectorsExceededException":{
+      "type":"structure",
+      "members":{},
       "exception":true
     },
     "MaxNumberOfDeliveryChannelsExceededException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "MaxNumberOfOrganizationConfigRulesExceededException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "MaxNumberOfOrganizationConformancePacksExceededException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "MaxNumberOfRetentionConfigurationsExceededException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "MaxResults":{
@@ -3859,105 +4046,88 @@
     "NextToken":{"type":"string"},
     "NoAvailableConfigurationRecorderException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "NoAvailableDeliveryChannelException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "NoAvailableOrganizationException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "NoRunningConfigurationRecorderException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "NoSuchBucketException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "NoSuchConfigRuleException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "NoSuchConfigRuleInConformancePackException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "NoSuchConfigurationAggregatorException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "NoSuchConfigurationRecorderException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "NoSuchConformancePackException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "NoSuchDeliveryChannelException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "NoSuchOrganizationConfigRuleException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "NoSuchOrganizationConformancePackException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "NoSuchRemediationConfigurationException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "NoSuchRemediationExceptionException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "NoSuchRetentionConfigurationException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "OrderingTimestamp":{"type":"timestamp"},
     "OrganizationAccessDeniedException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "OrganizationAggregationSource":{
@@ -3971,8 +4141,7 @@
     },
     "OrganizationAllFeaturesNotEnabledException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "OrganizationConfigRule":{
@@ -4121,8 +4290,7 @@
     },
     "OrganizationConformancePackTemplateValidationException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "OrganizationConformancePacks":{
@@ -4138,7 +4306,7 @@
       "members":{
         "Description":{"shape":"StringWithCharLimit256Min0"},
         "OrganizationConfigRuleTriggerTypes":{"shape":"OrganizationConfigRuleTriggerTypeNoSNs"},
-        "InputParameters":{"shape":"StringWithCharLimit2048"},
+        "InputParameters":{"shape":"StringWithCharLimit1024"},
         "MaximumExecutionFrequency":{"shape":"MaximumExecutionFrequency"},
         "ResourceTypesScope":{"shape":"ResourceTypesScope"},
         "ResourceIdScope":{"shape":"StringWithCharLimit768"},
@@ -4154,7 +4322,7 @@
       "members":{
         "Description":{"shape":"StringWithCharLimit256Min0"},
         "OrganizationConfigRuleTriggerTypes":{"shape":"OrganizationConfigRuleTriggerTypeNoSNs"},
-        "InputParameters":{"shape":"StringWithCharLimit2048"},
+        "InputParameters":{"shape":"StringWithCharLimit1024"},
         "MaximumExecutionFrequency":{"shape":"MaximumExecutionFrequency"},
         "ResourceTypesScope":{"shape":"ResourceTypesScope"},
         "ResourceIdScope":{"shape":"StringWithCharLimit768"},
@@ -4174,7 +4342,7 @@
         "Description":{"shape":"StringWithCharLimit256Min0"},
         "LambdaFunctionArn":{"shape":"StringWithCharLimit256"},
         "OrganizationConfigRuleTriggerTypes":{"shape":"OrganizationConfigRuleTriggerTypes"},
-        "InputParameters":{"shape":"StringWithCharLimit2048"},
+        "InputParameters":{"shape":"StringWithCharLimit1024"},
         "MaximumExecutionFrequency":{"shape":"MaximumExecutionFrequency"},
         "ResourceTypesScope":{"shape":"ResourceTypesScope"},
         "ResourceIdScope":{"shape":"StringWithCharLimit768"},
@@ -4188,7 +4356,7 @@
       "members":{
         "Description":{"shape":"StringWithCharLimit256Min0"},
         "RuleIdentifier":{"shape":"StringWithCharLimit256"},
-        "InputParameters":{"shape":"StringWithCharLimit2048"},
+        "InputParameters":{"shape":"StringWithCharLimit1024"},
         "MaximumExecutionFrequency":{"shape":"MaximumExecutionFrequency"},
         "ResourceTypesScope":{"shape":"ResourceTypesScope"},
         "ResourceIdScope":{"shape":"StringWithCharLimit768"},
@@ -4247,8 +4415,7 @@
     },
     "OversizedConfigurationItemException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "Owner":{
@@ -4301,6 +4468,10 @@
       "type":"string",
       "max":10000,
       "min":0
+    },
+    "Provider":{
+      "type":"string",
+      "enum":["AZURE"]
     },
     "PutAggregationAuthorizationRequest":{
       "type":"structure",
@@ -4363,13 +4534,29 @@
         "DeliveryS3Bucket":{"shape":"DeliveryS3Bucket"},
         "DeliveryS3KeyPrefix":{"shape":"DeliveryS3KeyPrefix"},
         "ConformancePackInputParameters":{"shape":"ConformancePackInputParameters"},
-        "TemplateSSMDocumentDetails":{"shape":"TemplateSSMDocumentDetails"}
+        "TemplateSSMDocumentDetails":{"shape":"TemplateSSMDocumentDetails"},
+        "Tags":{"shape":"TagsList"}
       }
     },
     "PutConformancePackResponse":{
       "type":"structure",
       "members":{
         "ConformancePackArn":{"shape":"ConformancePackArn"}
+      }
+    },
+    "PutConnectorRequest":{
+      "type":"structure",
+      "required":["ConnectorConfiguration"],
+      "members":{
+        "ConnectorConfiguration":{"shape":"ConnectorConfiguration"},
+        "Tags":{"shape":"TagsList"}
+      }
+    },
+    "PutConnectorResponse":{
+      "type":"structure",
+      "required":["Arn"],
+      "members":{
+        "Arn":{"shape":"AmazonResourceName"}
       }
     },
     "PutDeliveryChannelRequest":{
@@ -4407,8 +4594,7 @@
     },
     "PutExternalEvaluationResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "PutOrganizationConfigRuleRequest":{
       "type":"structure",
@@ -4418,7 +4604,8 @@
         "OrganizationManagedRuleMetadata":{"shape":"OrganizationManagedRuleMetadata"},
         "OrganizationCustomRuleMetadata":{"shape":"OrganizationCustomRuleMetadata"},
         "ExcludedAccounts":{"shape":"ExcludedAccounts"},
-        "OrganizationCustomPolicyRuleMetadata":{"shape":"OrganizationCustomPolicyRuleMetadata"}
+        "OrganizationCustomPolicyRuleMetadata":{"shape":"OrganizationCustomPolicyRuleMetadata"},
+        "Tags":{"shape":"TagsList"}
       }
     },
     "PutOrganizationConfigRuleResponse":{
@@ -4437,7 +4624,8 @@
         "DeliveryS3Bucket":{"shape":"DeliveryS3Bucket"},
         "DeliveryS3KeyPrefix":{"shape":"DeliveryS3KeyPrefix"},
         "ConformancePackInputParameters":{"shape":"ConformancePackInputParameters"},
-        "ExcludedAccounts":{"shape":"ExcludedAccounts"}
+        "ExcludedAccounts":{"shape":"ExcludedAccounts"},
+        "Tags":{"shape":"TagsList"}
       }
     },
     "PutOrganizationConformancePackResponse":{
@@ -4535,6 +4723,31 @@
       "type":"structure",
       "members":{
         "QueryArn":{"shape":"QueryArn"}
+      }
+    },
+    "PutThirdPartyServiceLinkedConfigurationRecorderRequest":{
+      "type":"structure",
+      "required":[
+        "ServicePrincipal",
+        "ConnectorArn",
+        "ScopeConfiguration"
+      ],
+      "members":{
+        "ServicePrincipal":{"shape":"ServicePrincipal"},
+        "ConnectorArn":{"shape":"AmazonResourceName"},
+        "ScopeConfiguration":{"shape":"ScopeConfiguration"},
+        "Tags":{"shape":"TagsList"}
+      }
+    },
+    "PutThirdPartyServiceLinkedConfigurationRecorderResponse":{
+      "type":"structure",
+      "required":[
+        "Arn",
+        "Name"
+      ],
+      "members":{
+        "Arn":{"shape":"AmazonResourceName"},
+        "Name":{"shape":"RecorderName"}
       }
     },
     "QueryArn":{
@@ -4748,7 +4961,8 @@
         "QUEUED",
         "IN_PROGRESS",
         "SUCCEEDED",
-        "FAILED"
+        "FAILED",
+        "UNKNOWN"
       ]
     },
     "RemediationExecutionStatus":{
@@ -4780,7 +4994,10 @@
       "enum":[
         "SUCCEEDED",
         "PENDING",
-        "FAILED"
+        "FAILED",
+        "IN_PROGRESS",
+        "EXITED",
+        "UNKNOWN"
       ]
     },
     "RemediationExecutionSteps":{
@@ -4789,8 +5006,7 @@
     },
     "RemediationInProgressException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "RemediationParameterValue":{
@@ -4942,8 +5158,7 @@
     },
     "ResourceInUseException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "ResourceKey":{
@@ -4966,14 +5181,12 @@
     "ResourceName":{"type":"string"},
     "ResourceNotDiscoveredException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "ResourceNotFoundException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "ResourceType":{
@@ -5385,7 +5598,133 @@
         "AWS::RDS::OptionGroup",
         "AWS::Redshift::EndpointAccess",
         "AWS::Route53Resolver::FirewallRuleGroup",
-        "AWS::SSM::Document"
+        "AWS::SSM::Document",
+        "AWS::AppConfig::ExtensionAssociation",
+        "AWS::AppIntegrations::Application",
+        "AWS::AppSync::ApiCache",
+        "AWS::Bedrock::Guardrail",
+        "AWS::Bedrock::KnowledgeBase",
+        "AWS::Cognito::IdentityPool",
+        "AWS::Connect::Rule",
+        "AWS::Connect::User",
+        "AWS::EC2::ClientVpnTargetNetworkAssociation",
+        "AWS::EC2::EIPAssociation",
+        "AWS::EC2::IPAMResourceDiscovery",
+        "AWS::EC2::IPAMResourceDiscoveryAssociation",
+        "AWS::EC2::InstanceConnectEndpoint",
+        "AWS::EC2::SnapshotBlockPublicAccess",
+        "AWS::EC2::VPCBlockPublicAccessExclusion",
+        "AWS::EC2::VPCBlockPublicAccessOptions",
+        "AWS::EC2::VPCEndpointConnectionNotification",
+        "AWS::EC2::VPNConnectionRoute",
+        "AWS::Evidently::Segment",
+        "AWS::IAM::OIDCProvider",
+        "AWS::InspectorV2::Activation",
+        "AWS::MSK::ClusterPolicy",
+        "AWS::MSK::VpcConnection",
+        "AWS::MediaConnect::Gateway",
+        "AWS::MemoryDB::SubnetGroup",
+        "AWS::OpenSearchServerless::Collection",
+        "AWS::OpenSearchServerless::VpcEndpoint",
+        "AWS::Redshift::EndpointAuthorization",
+        "AWS::Route53Profiles::Profile",
+        "AWS::S3::StorageLensGroup",
+        "AWS::S3Express::BucketPolicy",
+        "AWS::S3Express::DirectoryBucket",
+        "AWS::SageMaker::InferenceExperiment",
+        "AWS::SecurityHub::Standard",
+        "AWS::Transfer::Profile",
+        "AWS::CloudFormation::StackSet",
+        "AWS::MediaPackageV2::Channel",
+        "AWS::S3::AccessGrantsLocation",
+        "AWS::S3::AccessGrant",
+        "AWS::S3::AccessGrantsInstance",
+        "AWS::EMRServerless::Application",
+        "AWS::Config::AggregationAuthorization",
+        "AWS::Bedrock::ApplicationInferenceProfile",
+        "AWS::ApiGatewayV2::Integration",
+        "AWS::SageMaker::MlflowTrackingServer",
+        "AWS::SageMaker::ModelBiasJobDefinition",
+        "AWS::SecretsManager::RotationSchedule",
+        "AWS::Deadline::QueueFleetAssociation",
+        "AWS::ECR::RepositoryCreationTemplate",
+        "AWS::CloudFormation::LambdaHook",
+        "AWS::EC2::SubnetNetworkAclAssociation",
+        "AWS::ApiGateway::UsagePlan",
+        "AWS::AppConfig::Extension",
+        "AWS::Deadline::Fleet",
+        "AWS::EMR::Studio",
+        "AWS::S3Tables::TableBucket",
+        "AWS::CloudFront::RealtimeLogConfig",
+        "AWS::BackupGateway::Hypervisor",
+        "AWS::BCMDataExports::Export",
+        "AWS::CloudFormation::GuardHook",
+        "AWS::CloudFront::PublicKey",
+        "AWS::CloudTrail::EventDataStore",
+        "AWS::EntityResolution::IdMappingWorkflow",
+        "AWS::EntityResolution::SchemaMapping",
+        "AWS::IoT::DomainConfiguration",
+        "AWS::PCAConnectorAD::DirectoryRegistration",
+        "AWS::RDS::Integration",
+        "AWS::Config::ConformancePack",
+        "AWS::RolesAnywhere::Profile",
+        "AWS::CodeArtifact::Domain",
+        "AWS::Backup::RestoreTestingPlan",
+        "AWS::Config::StoredQuery",
+        "AWS::SageMaker::DataQualityJobDefinition",
+        "AWS::SageMaker::ModelExplainabilityJobDefinition",
+        "AWS::SageMaker::ModelQualityJobDefinition",
+        "AWS::SageMaker::StudioLifecycleConfig",
+        "AWS::SES::DedicatedIpPool",
+        "AWS::SES::MailManagerTrafficPolicy",
+        "AWS::SSM::ResourceDataSync",
+        "AWS::BedrockAgentCore::Runtime",
+        "AWS::BedrockAgentCore::BrowserCustom",
+        "AWS::ElasticLoadBalancingV2::TargetGroup",
+        "AWS::EMRContainers::VirtualCluster",
+        "AWS::EntityResolution::MatchingWorkflow",
+        "AWS::IoTCoreDeviceAdvisor::SuiteDefinition",
+        "AWS::EC2::SecurityGroupVpcAssociation",
+        "AWS::EC2::VerifiedAccessInstance",
+        "AWS::KafkaConnect::CustomPlugin",
+        "AWS::NetworkManager::TransitGatewayPeering",
+        "AWS::OpenSearchServerless::SecurityConfig",
+        "AWS::Redshift::Integration",
+        "AWS::RolesAnywhere::TrustAnchor",
+        "AWS::Route53Profiles::ProfileAssociation",
+        "AWS::SSMIncidents::ResponsePlan",
+        "AWS::Transfer::Server",
+        "AWS::Glue::Database",
+        "AWS::Organizations::OrganizationalUnit",
+        "AWS::EC2::IPAMPoolCidr",
+        "AWS::EC2::VPCGatewayAttachment",
+        "AWS::Bedrock::Prompt",
+        "AWS::Comprehend::Flywheel",
+        "AWS::DataSync::Agent",
+        "AWS::MediaTailor::LiveSource",
+        "AWS::MSK::ServerlessCluster",
+        "AWS::IoTSiteWise::Asset",
+        "AWS::B2BI::Capability",
+        "AWS::CloudFront::KeyValueStore",
+        "AWS::Deadline::Monitor",
+        "AWS::GuardDuty::MalwareProtectionPlan",
+        "AWS::Location::APIKey",
+        "AWS::MediaPackageV2::OriginEndpoint",
+        "AWS::PCAConnectorAD::Connector",
+        "AWS::S3Tables::TableBucketPolicy",
+        "AWS::SecretsManager::ResourcePolicy",
+        "AWS::SSMContacts::Contact",
+        "AWS::IoT::ThingGroup",
+        "AWS::ImageBuilder::LifecyclePolicy",
+        "AWS::GameLift::Build",
+        "AWS::ECR::ReplicationConfiguration",
+        "AWS::EC2::SubnetCidrBlock",
+        "AWS::Connect::SecurityProfile",
+        "AWS::CleanRoomsML::TrainingDataset",
+        "AWS::AppStream::AppBlockBuilder",
+        "AWS::Route53::DNSSEC",
+        "AWS::SageMaker::UserProfile",
+        "AWS::ApiGateway::Method"
       ]
     },
     "ResourceTypeList":{
@@ -5466,6 +5805,13 @@
       "max":2557,
       "min":30
     },
+    "RuleEvaluationVisibility":{
+      "type":"string",
+      "enum":[
+        "EXTERNAL",
+        "INTERNAL"
+      ]
+    },
     "RuleLimit":{
       "type":"integer",
       "max":50,
@@ -5491,8 +5837,36 @@
         "ComplianceResourceTypes":{"shape":"ComplianceResourceTypes"},
         "TagKey":{"shape":"StringWithCharLimit128"},
         "TagValue":{"shape":"StringWithCharLimit256"},
-        "ComplianceResourceId":{"shape":"BaseResourceId"}
+        "ComplianceResourceId":{"shape":"BaseResourceId"},
+        "ServicePrincipals":{"shape":"ServicePrincipals"}
       }
+    },
+    "ScopeConfiguration":{
+      "type":"structure",
+      "required":[
+        "scopeType",
+        "allRegions"
+      ],
+      "members":{
+        "scopeType":{"shape":"ScopeType"},
+        "scopeValues":{"shape":"ScopeValues"},
+        "allRegions":{"shape":"Boolean"},
+        "includedRegions":{"shape":"IncludedRegions"}
+      }
+    },
+    "ScopeType":{
+      "type":"string",
+      "max":256,
+      "min":1
+    },
+    "ScopeValue":{
+      "type":"string",
+      "max":256,
+      "min":1
+    },
+    "ScopeValues":{
+      "type":"list",
+      "member":{"shape":"ScopeValue"}
     },
     "SelectAggregateResourceConfigRequest":{
       "type":"structure",
@@ -5549,6 +5923,12 @@
       "type":"list",
       "member":{"shape":"ServicePrincipalValue"}
     },
+    "ServicePrincipals":{
+      "type":"list",
+      "member":{"shape":"StringWithCharLimit128"},
+      "max":100,
+      "min":0
+    },
     "SortBy":{
       "type":"string",
       "enum":["SCORE"]
@@ -5604,8 +5984,7 @@
     },
     "StartConfigRulesEvaluationResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "StartConfigurationRecorderRequest":{
       "type":"structure",
@@ -5731,11 +6110,6 @@
       "max":128,
       "min":1
     },
-    "StringWithCharLimit2048":{
-      "type":"string",
-      "max":2048,
-      "min":1
-    },
     "StringWithCharLimit256":{
       "type":"string",
       "max":256,
@@ -5833,6 +6207,11 @@
         "DocumentVersion":{"shape":"SSMDocumentVersion"}
       }
     },
+    "ThirdPartyCloudRegion":{
+      "type":"string",
+      "max":128,
+      "min":1
+    },
     "TimeWindow":{
       "type":"structure",
       "members":{
@@ -5842,14 +6221,12 @@
     },
     "TooManyTagsException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "UnmodifiableEntityException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "UnprocessedResourceIdentifierList":{
@@ -5869,8 +6246,7 @@
     },
     "ValidationException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "Value":{"type":"string"},

@@ -16,6 +16,39 @@
     "auth":["aws.auth#sigv4"]
   },
   "operations":{
+    "AcceptNetworkFirewallTransitGatewayAttachment":{
+      "name":"AcceptNetworkFirewallTransitGatewayAttachment",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"AcceptNetworkFirewallTransitGatewayAttachmentRequest"},
+      "output":{"shape":"AcceptNetworkFirewallTransitGatewayAttachmentResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"InternalServerError"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"}
+      ]
+    },
+    "AssociateAvailabilityZones":{
+      "name":"AssociateAvailabilityZones",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"AssociateAvailabilityZonesRequest"},
+      "output":{"shape":"AssociateAvailabilityZonesResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"InternalServerError"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"InvalidTokenException"},
+        {"shape":"InvalidOperationException"},
+        {"shape":"InsufficientCapacityException"}
+      ]
+    },
     "AssociateFirewallPolicy":{
       "name":"AssociateFirewallPolicy",
       "http":{
@@ -48,6 +81,37 @@
         {"shape":"ThrottlingException"},
         {"shape":"InvalidTokenException"},
         {"shape":"InvalidOperationException"},
+        {"shape":"InsufficientCapacityException"}
+      ]
+    },
+    "AttachRuleGroupsToProxyConfiguration":{
+      "name":"AttachRuleGroupsToProxyConfiguration",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"AttachRuleGroupsToProxyConfigurationRequest"},
+      "output":{"shape":"AttachRuleGroupsToProxyConfigurationResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"InternalServerError"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"}
+      ]
+    },
+    "CreateContainerAssociation":{
+      "name":"CreateContainerAssociation",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"CreateContainerAssociationRequest"},
+      "output":{"shape":"CreateContainerAssociationResponse"},
+      "errors":[
+        {"shape":"LimitExceededException"},
+        {"shape":"InvalidRequestException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"InternalServerError"},
         {"shape":"InsufficientCapacityException"}
       ]
     },
@@ -84,6 +148,68 @@
         {"shape":"InsufficientCapacityException"}
       ]
     },
+    "CreateProxy":{
+      "name":"CreateProxy",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"CreateProxyRequest"},
+      "output":{"shape":"CreateProxyResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"InternalServerError"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"UnsupportedOperationException"},
+        {"shape":"LimitExceededException"},
+        {"shape":"ThrottlingException"}
+      ]
+    },
+    "CreateProxyConfiguration":{
+      "name":"CreateProxyConfiguration",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"CreateProxyConfigurationRequest"},
+      "output":{"shape":"CreateProxyConfigurationResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"InternalServerError"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"LimitExceededException"},
+        {"shape":"ThrottlingException"}
+      ]
+    },
+    "CreateProxyRuleGroup":{
+      "name":"CreateProxyRuleGroup",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"CreateProxyRuleGroupRequest"},
+      "output":{"shape":"CreateProxyRuleGroupResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"InternalServerError"},
+        {"shape":"LimitExceededException"},
+        {"shape":"ThrottlingException"}
+      ]
+    },
+    "CreateProxyRules":{
+      "name":"CreateProxyRules",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"CreateProxyRulesRequest"},
+      "output":{"shape":"CreateProxyRulesResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"InternalServerError"},
+        {"shape":"ThrottlingException"}
+      ]
+    },
     "CreateRuleGroup":{
       "name":"CreateRuleGroup",
       "http":{
@@ -114,6 +240,40 @@
         {"shape":"InternalServerError"},
         {"shape":"LimitExceededException"},
         {"shape":"InsufficientCapacityException"}
+      ]
+    },
+    "CreateVpcEndpointAssociation":{
+      "name":"CreateVpcEndpointAssociation",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"CreateVpcEndpointAssociationRequest"},
+      "output":{"shape":"CreateVpcEndpointAssociationResponse"},
+      "errors":[
+        {"shape":"LimitExceededException"},
+        {"shape":"InvalidRequestException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"InternalServerError"},
+        {"shape":"InsufficientCapacityException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"InvalidOperationException"}
+      ]
+    },
+    "DeleteContainerAssociation":{
+      "name":"DeleteContainerAssociation",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DeleteContainerAssociationRequest"},
+      "output":{"shape":"DeleteContainerAssociationResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"InternalServerError"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"InvalidOperationException"}
       ]
     },
     "DeleteFirewall":{
@@ -148,6 +308,82 @@
         {"shape":"InternalServerError"},
         {"shape":"UnsupportedOperationException"},
         {"shape":"InvalidOperationException"}
+      ]
+    },
+    "DeleteNetworkFirewallTransitGatewayAttachment":{
+      "name":"DeleteNetworkFirewallTransitGatewayAttachment",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DeleteNetworkFirewallTransitGatewayAttachmentRequest"},
+      "output":{"shape":"DeleteNetworkFirewallTransitGatewayAttachmentResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"InternalServerError"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"}
+      ]
+    },
+    "DeleteProxy":{
+      "name":"DeleteProxy",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DeleteProxyRequest"},
+      "output":{"shape":"DeleteProxyResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"InternalServerError"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"UnsupportedOperationException"},
+        {"shape":"ThrottlingException"}
+      ]
+    },
+    "DeleteProxyConfiguration":{
+      "name":"DeleteProxyConfiguration",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DeleteProxyConfigurationRequest"},
+      "output":{"shape":"DeleteProxyConfigurationResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"InternalServerError"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"}
+      ]
+    },
+    "DeleteProxyRuleGroup":{
+      "name":"DeleteProxyRuleGroup",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DeleteProxyRuleGroupRequest"},
+      "output":{"shape":"DeleteProxyRuleGroupResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"InternalServerError"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"}
+      ]
+    },
+    "DeleteProxyRules":{
+      "name":"DeleteProxyRules",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DeleteProxyRulesRequest"},
+      "output":{"shape":"DeleteProxyRulesResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"InternalServerError"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"}
       ]
     },
     "DeleteResourcePolicy":{
@@ -199,6 +435,37 @@
         {"shape":"InvalidOperationException"}
       ]
     },
+    "DeleteVpcEndpointAssociation":{
+      "name":"DeleteVpcEndpointAssociation",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DeleteVpcEndpointAssociationRequest"},
+      "output":{"shape":"DeleteVpcEndpointAssociationResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"InternalServerError"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"InvalidOperationException"}
+      ]
+    },
+    "DescribeContainerAssociation":{
+      "name":"DescribeContainerAssociation",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DescribeContainerAssociationRequest"},
+      "output":{"shape":"DescribeContainerAssociationResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"InternalServerError"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"}
+      ]
+    },
     "DescribeFirewall":{
       "name":"DescribeFirewall",
       "http":{
@@ -207,6 +474,21 @@
       },
       "input":{"shape":"DescribeFirewallRequest"},
       "output":{"shape":"DescribeFirewallResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"InternalServerError"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"}
+      ]
+    },
+    "DescribeFirewallMetadata":{
+      "name":"DescribeFirewallMetadata",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DescribeFirewallMetadataRequest"},
+      "output":{"shape":"DescribeFirewallMetadataResponse"},
       "errors":[
         {"shape":"InvalidRequestException"},
         {"shape":"InternalServerError"},
@@ -259,6 +541,66 @@
         {"shape":"ThrottlingException"}
       ]
     },
+    "DescribeProxy":{
+      "name":"DescribeProxy",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DescribeProxyRequest"},
+      "output":{"shape":"DescribeProxyResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"InternalServerError"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"}
+      ]
+    },
+    "DescribeProxyConfiguration":{
+      "name":"DescribeProxyConfiguration",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DescribeProxyConfigurationRequest"},
+      "output":{"shape":"DescribeProxyConfigurationResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"InternalServerError"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"}
+      ]
+    },
+    "DescribeProxyRule":{
+      "name":"DescribeProxyRule",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DescribeProxyRuleRequest"},
+      "output":{"shape":"DescribeProxyRuleResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"InternalServerError"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"}
+      ]
+    },
+    "DescribeProxyRuleGroup":{
+      "name":"DescribeProxyRuleGroup",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DescribeProxyRuleGroupRequest"},
+      "output":{"shape":"DescribeProxyRuleGroupResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"InternalServerError"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"}
+      ]
+    },
     "DescribeResourcePolicy":{
       "name":"DescribeResourcePolicy",
       "http":{
@@ -304,6 +646,21 @@
         {"shape":"InternalServerError"}
       ]
     },
+    "DescribeRuleGroupSummary":{
+      "name":"DescribeRuleGroupSummary",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DescribeRuleGroupSummaryRequest"},
+      "output":{"shape":"DescribeRuleGroupSummaryResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"InternalServerError"}
+      ]
+    },
     "DescribeTLSInspectionConfiguration":{
       "name":"DescribeTLSInspectionConfiguration",
       "http":{
@@ -317,6 +674,53 @@
         {"shape":"InternalServerError"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"ThrottlingException"}
+      ]
+    },
+    "DescribeVpcEndpointAssociation":{
+      "name":"DescribeVpcEndpointAssociation",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DescribeVpcEndpointAssociationRequest"},
+      "output":{"shape":"DescribeVpcEndpointAssociationResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"InternalServerError"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"}
+      ]
+    },
+    "DetachRuleGroupsFromProxyConfiguration":{
+      "name":"DetachRuleGroupsFromProxyConfiguration",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DetachRuleGroupsFromProxyConfigurationRequest"},
+      "output":{"shape":"DetachRuleGroupsFromProxyConfigurationResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"InternalServerError"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"}
+      ]
+    },
+    "DisassociateAvailabilityZones":{
+      "name":"DisassociateAvailabilityZones",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DisassociateAvailabilityZonesRequest"},
+      "output":{"shape":"DisassociateAvailabilityZonesResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"InternalServerError"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"InvalidTokenException"},
+        {"shape":"InvalidOperationException"}
       ]
     },
     "DisassociateSubnets":{
@@ -363,6 +767,20 @@
         {"shape":"InvalidRequestException"},
         {"shape":"InternalServerError"},
         {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"}
+      ]
+    },
+    "ListContainerAssociations":{
+      "name":"ListContainerAssociations",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"ListContainerAssociationsRequest"},
+      "output":{"shape":"ListContainerAssociationsResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"InternalServerError"},
         {"shape":"ThrottlingException"}
       ]
     },
@@ -424,6 +842,50 @@
         {"shape":"ThrottlingException"}
       ]
     },
+    "ListProxies":{
+      "name":"ListProxies",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"ListProxiesRequest"},
+      "output":{"shape":"ListProxiesResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"InternalServerError"},
+        {"shape":"ThrottlingException"}
+      ]
+    },
+    "ListProxyConfigurations":{
+      "name":"ListProxyConfigurations",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"ListProxyConfigurationsRequest"},
+      "output":{"shape":"ListProxyConfigurationsResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"InternalServerError"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"}
+      ]
+    },
+    "ListProxyRuleGroups":{
+      "name":"ListProxyRuleGroups",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"ListProxyRuleGroupsRequest"},
+      "output":{"shape":"ListProxyRuleGroupsResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"InternalServerError"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"}
+      ]
+    },
     "ListRuleGroups":{
       "name":"ListRuleGroups",
       "http":{
@@ -467,6 +929,20 @@
         {"shape":"InvalidRequestException"}
       ]
     },
+    "ListVpcEndpointAssociations":{
+      "name":"ListVpcEndpointAssociations",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"ListVpcEndpointAssociationsRequest"},
+      "output":{"shape":"ListVpcEndpointAssociationsResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"InternalServerError"}
+      ]
+    },
     "PutResourcePolicy":{
       "name":"PutResourcePolicy",
       "http":{
@@ -481,6 +957,21 @@
         {"shape":"ResourceNotFoundException"},
         {"shape":"ThrottlingException"},
         {"shape":"InvalidResourcePolicyException"}
+      ]
+    },
+    "RejectNetworkFirewallTransitGatewayAttachment":{
+      "name":"RejectNetworkFirewallTransitGatewayAttachment",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"RejectNetworkFirewallTransitGatewayAttachmentRequest"},
+      "output":{"shape":"RejectNetworkFirewallTransitGatewayAttachmentResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"InternalServerError"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"}
       ]
     },
     "StartAnalysisReport":{
@@ -558,6 +1049,39 @@
         {"shape":"InvalidRequestException"}
       ]
     },
+    "UpdateAvailabilityZoneChangeProtection":{
+      "name":"UpdateAvailabilityZoneChangeProtection",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"UpdateAvailabilityZoneChangeProtectionRequest"},
+      "output":{"shape":"UpdateAvailabilityZoneChangeProtectionResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"InternalServerError"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"InvalidTokenException"},
+        {"shape":"ResourceOwnerCheckException"}
+      ]
+    },
+    "UpdateContainerAssociation":{
+      "name":"UpdateContainerAssociation",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"UpdateContainerAssociationRequest"},
+      "output":{"shape":"UpdateContainerAssociationResponse"},
+      "errors":[
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"InvalidRequestException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"InternalServerError"},
+        {"shape":"InvalidTokenException"}
+      ]
+    },
     "UpdateFirewallAnalysisSettings":{
       "name":"UpdateFirewallAnalysisSettings",
       "http":{
@@ -570,7 +1094,8 @@
         {"shape":"InvalidRequestException"},
         {"shape":"InternalServerError"},
         {"shape":"ResourceNotFoundException"},
-        {"shape":"ThrottlingException"}
+        {"shape":"ThrottlingException"},
+        {"shape":"InvalidTokenException"}
       ]
     },
     "UpdateFirewallDeleteProtection":{
@@ -673,6 +1198,100 @@
         {"shape":"LogDestinationPermissionException"}
       ]
     },
+    "UpdateProxy":{
+      "name":"UpdateProxy",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"UpdateProxyRequest"},
+      "output":{"shape":"UpdateProxyResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"InternalServerError"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"UnsupportedOperationException"},
+        {"shape":"ThrottlingException"}
+      ]
+    },
+    "UpdateProxyConfiguration":{
+      "name":"UpdateProxyConfiguration",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"UpdateProxyConfigurationRequest"},
+      "output":{"shape":"UpdateProxyConfigurationResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"InternalServerError"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"}
+      ]
+    },
+    "UpdateProxyRule":{
+      "name":"UpdateProxyRule",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"UpdateProxyRuleRequest"},
+      "output":{"shape":"UpdateProxyRuleResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"InternalServerError"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"}
+      ]
+    },
+    "UpdateProxyRuleGroupPriorities":{
+      "name":"UpdateProxyRuleGroupPriorities",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"UpdateProxyRuleGroupPrioritiesRequest"},
+      "output":{"shape":"UpdateProxyRuleGroupPrioritiesResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"InternalServerError"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"}
+      ]
+    },
+    "UpdateProxyRulePriorities":{
+      "name":"UpdateProxyRulePriorities",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"UpdateProxyRulePrioritiesRequest"},
+      "output":{"shape":"UpdateProxyRulePrioritiesResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"InternalServerError"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"}
+      ]
+    },
+    "UpdateProxySettings":{
+      "name":"UpdateProxySettings",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"UpdateProxySettingsRequest"},
+      "output":{"shape":"UpdateProxySettingsResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"InternalServerError"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ResourceOwnerCheckException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"InvalidTokenException"},
+        {"shape":"InvalidOperationException"}
+      ]
+    },
     "UpdateRuleGroup":{
       "name":"UpdateRuleGroup",
       "http":{
@@ -724,6 +1343,36 @@
     }
   },
   "shapes":{
+    "AWSAccountId":{
+      "type":"string",
+      "max":12,
+      "min":12,
+      "pattern":"^\\d{12}$"
+    },
+    "AZSyncState":{
+      "type":"structure",
+      "members":{
+        "Attachment":{"shape":"Attachment"}
+      }
+    },
+    "AcceptNetworkFirewallTransitGatewayAttachmentRequest":{
+      "type":"structure",
+      "required":["TransitGatewayAttachmentId"],
+      "members":{
+        "TransitGatewayAttachmentId":{"shape":"TransitGatewayAttachmentId"}
+      }
+    },
+    "AcceptNetworkFirewallTransitGatewayAttachmentResponse":{
+      "type":"structure",
+      "required":[
+        "TransitGatewayAttachmentId",
+        "TransitGatewayAttachmentStatus"
+      ],
+      "members":{
+        "TransitGatewayAttachmentId":{"shape":"TransitGatewayAttachmentId"},
+        "TransitGatewayAttachmentStatus":{"shape":"TransitGatewayAttachmentStatus"}
+      }
+    },
     "ActionDefinition":{
       "type":"structure",
       "members":{
@@ -805,6 +1454,25 @@
         "UniqueSources":{"shape":"UniqueSources"}
       }
     },
+    "AssociateAvailabilityZonesRequest":{
+      "type":"structure",
+      "required":["AvailabilityZoneMappings"],
+      "members":{
+        "UpdateToken":{"shape":"UpdateToken"},
+        "FirewallArn":{"shape":"ResourceArn"},
+        "FirewallName":{"shape":"ResourceName"},
+        "AvailabilityZoneMappings":{"shape":"AvailabilityZoneMappings"}
+      }
+    },
+    "AssociateAvailabilityZonesResponse":{
+      "type":"structure",
+      "members":{
+        "FirewallArn":{"shape":"ResourceArn"},
+        "FirewallName":{"shape":"ResourceName"},
+        "AvailabilityZoneMappings":{"shape":"AvailabilityZoneMappings"},
+        "UpdateToken":{"shape":"UpdateToken"}
+      }
+    },
     "AssociateFirewallPolicyRequest":{
       "type":"structure",
       "required":["FirewallPolicyArn"],
@@ -843,15 +1511,42 @@
         "UpdateToken":{"shape":"UpdateToken"}
       }
     },
+    "AssociationSyncState":{
+      "type":"map",
+      "key":{"shape":"AvailabilityZone"},
+      "value":{"shape":"AZSyncState"}
+    },
+    "AttachRuleGroupsToProxyConfigurationRequest":{
+      "type":"structure",
+      "required":[
+        "RuleGroups",
+        "UpdateToken"
+      ],
+      "members":{
+        "ProxyConfigurationName":{"shape":"ResourceName"},
+        "ProxyConfigurationArn":{"shape":"ResourceArn"},
+        "RuleGroups":{"shape":"ProxyRuleGroupAttachmentList"},
+        "UpdateToken":{"shape":"UpdateToken"}
+      }
+    },
+    "AttachRuleGroupsToProxyConfigurationResponse":{
+      "type":"structure",
+      "members":{
+        "ProxyConfiguration":{"shape":"ProxyConfiguration"},
+        "UpdateToken":{"shape":"UpdateToken"}
+      }
+    },
     "Attachment":{
       "type":"structure",
       "members":{
         "SubnetId":{"shape":"AzSubnet"},
         "EndpointId":{"shape":"EndpointId"},
         "Status":{"shape":"AttachmentStatus"},
-        "StatusMessage":{"shape":"StatusMessage"}
+        "StatusMessage":{"shape":"StatusMessage"},
+        "DnsName":{"shape":"DnsName"}
       }
     },
+    "AttachmentId":{"type":"string"},
     "AttachmentStatus":{
       "type":"string",
       "enum":[
@@ -864,6 +1559,29 @@
       ]
     },
     "AvailabilityZone":{"type":"string"},
+    "AvailabilityZoneMapping":{
+      "type":"structure",
+      "required":["AvailabilityZone"],
+      "members":{
+        "AvailabilityZone":{"shape":"AvailabilityZoneMappingString"}
+      }
+    },
+    "AvailabilityZoneMappingString":{
+      "type":"string",
+      "max":128,
+      "min":1,
+      "pattern":"\\S+"
+    },
+    "AvailabilityZoneMappings":{
+      "type":"list",
+      "member":{"shape":"AvailabilityZoneMapping"}
+    },
+    "AvailabilityZoneMetadata":{
+      "type":"structure",
+      "members":{
+        "IPAddressType":{"shape":"IPAddressType"}
+      }
+    },
     "AzSubnet":{
       "type":"string",
       "max":128,
@@ -907,6 +1625,8 @@
       }
     },
     "CollectionMember_String":{"type":"string"},
+    "ConditionKey":{"type":"string"},
+    "ConditionOperator":{"type":"string"},
     "ConfigurationSyncState":{
       "type":"string",
       "enum":[
@@ -915,7 +1635,102 @@
         "CAPACITY_CONSTRAINED"
       ]
     },
+    "ContainerAssociationLastUpdatedTime":{"type":"timestamp"},
+    "ContainerAssociationStatus":{
+      "type":"string",
+      "enum":[
+        "ACTIVE",
+        "CREATING",
+        "DELETING",
+        "UPDATING"
+      ]
+    },
+    "ContainerAssociationSummary":{
+      "type":"structure",
+      "members":{
+        "Arn":{"shape":"ResourceArn"},
+        "Name":{"shape":"ResourceName"}
+      }
+    },
+    "ContainerAssociations":{
+      "type":"list",
+      "member":{"shape":"ContainerAssociationSummary"}
+    },
+    "ContainerAttribute":{
+      "type":"structure",
+      "required":[
+        "Key",
+        "Value"
+      ],
+      "members":{
+        "Key":{"shape":"ContainerAttributeKey"},
+        "Value":{"shape":"ContainerAttributeValue"}
+      }
+    },
+    "ContainerAttributeKey":{
+      "type":"string",
+      "max":256,
+      "min":1,
+      "pattern":"\\S+"
+    },
+    "ContainerAttributeValue":{
+      "type":"string",
+      "max":256,
+      "min":1,
+      "pattern":"\\S+"
+    },
+    "ContainerAttributes":{
+      "type":"list",
+      "member":{"shape":"ContainerAttribute"}
+    },
+    "ContainerMonitoringConfiguration":{
+      "type":"structure",
+      "required":["ClusterArn"],
+      "members":{
+        "ClusterArn":{"shape":"ResourceArn"},
+        "AttributeFilters":{"shape":"ContainerAttributes"}
+      }
+    },
+    "ContainerMonitoringConfigurations":{
+      "type":"list",
+      "member":{"shape":"ContainerMonitoringConfiguration"}
+    },
+    "ContainerMonitoringType":{
+      "type":"string",
+      "enum":[
+        "ECS",
+        "EKS"
+      ]
+    },
     "Count":{"type":"integer"},
+    "CreateContainerAssociationRequest":{
+      "type":"structure",
+      "required":[
+        "ContainerAssociationName",
+        "Type",
+        "ContainerMonitoringConfigurations"
+      ],
+      "members":{
+        "ContainerAssociationName":{"shape":"ResourceName"},
+        "Description":{"shape":"Description"},
+        "Type":{"shape":"ContainerMonitoringType"},
+        "ContainerMonitoringConfigurations":{"shape":"ContainerMonitoringConfigurations"},
+        "Tags":{"shape":"TagList"}
+      }
+    },
+    "CreateContainerAssociationResponse":{
+      "type":"structure",
+      "members":{
+        "ContainerAssociationName":{"shape":"ResourceName"},
+        "ContainerAssociationArn":{"shape":"ResourceArn"},
+        "Description":{"shape":"Description"},
+        "Type":{"shape":"ContainerMonitoringType"},
+        "ContainerMonitoringConfigurations":{"shape":"ContainerMonitoringConfigurations"},
+        "Status":{"shape":"ContainerAssociationStatus"},
+        "Tags":{"shape":"TagList"},
+        "UpdateToken":{"shape":"UpdateToken"}
+      }
+    },
     "CreateFirewallPolicyRequest":{
       "type":"structure",
       "required":[
@@ -959,7 +1774,14 @@
         "Description":{"shape":"Description"},
         "Tags":{"shape":"TagList"},
         "EncryptionConfiguration":{"shape":"EncryptionConfiguration"},
-        "EnabledAnalysisTypes":{"shape":"EnabledAnalysisTypes"}
+        "EnabledAnalysisTypes":{"shape":"EnabledAnalysisTypes"},
+        "TransitGatewayId":{"shape":"TransitGatewayId"},
+        "AvailabilityZoneMappings":{"shape":"AvailabilityZoneMappings"},
+        "AvailabilityZoneChangeProtection":{"shape":"Boolean"},
+        "NatGatewayMappings":{"shape":"NatGatewayMappingsList"},
+        "ProxySettings":{"shape":"ProxySettings"},
+        "NoSourcePreservation":{"shape":"Boolean"},
+        "VpcEndpoint":{"shape":"VpcEndpoint"}
       }
     },
     "CreateFirewallResponse":{
@@ -967,6 +1789,109 @@
       "members":{
         "Firewall":{"shape":"Firewall"},
         "FirewallStatus":{"shape":"FirewallStatus"}
+      }
+    },
+    "CreateProxyConfigurationRequest":{
+      "type":"structure",
+      "required":[
+        "ProxyConfigurationName",
+        "DefaultRulePhaseActions"
+      ],
+      "members":{
+        "ProxyConfigurationName":{"shape":"ResourceName"},
+        "Description":{"shape":"Description"},
+        "RuleGroupNames":{"shape":"ResourceNameList"},
+        "RuleGroupArns":{"shape":"ResourceArnList"},
+        "DefaultRulePhaseActions":{"shape":"ProxyConfigDefaultRulePhaseActionsRequest"},
+        "Tags":{"shape":"TagList"}
+      }
+    },
+    "CreateProxyConfigurationResponse":{
+      "type":"structure",
+      "members":{
+        "ProxyConfiguration":{"shape":"ProxyConfiguration"},
+        "UpdateToken":{"shape":"UpdateToken"}
+      }
+    },
+    "CreateProxyRequest":{
+      "type":"structure",
+      "required":[
+        "ProxyName",
+        "NatGatewayId",
+        "TlsInterceptProperties"
+      ],
+      "members":{
+        "ProxyName":{"shape":"ResourceName"},
+        "NatGatewayId":{"shape":"NatGatewayId"},
+        "ProxyConfigurationName":{"shape":"ResourceName"},
+        "ProxyConfigurationArn":{"shape":"ResourceArn"},
+        "ListenerProperties":{"shape":"ListenerPropertiesRequest"},
+        "TlsInterceptProperties":{"shape":"TlsInterceptPropertiesRequest"},
+        "Tags":{"shape":"TagList"}
+      }
+    },
+    "CreateProxyResponse":{
+      "type":"structure",
+      "members":{
+        "Proxy":{"shape":"Proxy"},
+        "UpdateToken":{"shape":"UpdateToken"}
+      }
+    },
+    "CreateProxyRule":{
+      "type":"structure",
+      "members":{
+        "ProxyRuleName":{"shape":"ResourceName"},
+        "Description":{"shape":"Description"},
+        "Action":{"shape":"ProxyRulePhaseAction"},
+        "Conditions":{"shape":"ProxyRuleConditionList"},
+        "InsertPosition":{"shape":"InsertPosition"}
+      }
+    },
+    "CreateProxyRuleGroupRequest":{
+      "type":"structure",
+      "required":["ProxyRuleGroupName"],
+      "members":{
+        "ProxyRuleGroupName":{"shape":"ResourceName"},
+        "Description":{"shape":"Description"},
+        "Rules":{"shape":"ProxyRulesByRequestPhase"},
+        "Tags":{"shape":"TagList"}
+      }
+    },
+    "CreateProxyRuleGroupResponse":{
+      "type":"structure",
+      "members":{
+        "ProxyRuleGroup":{"shape":"ProxyRuleGroup"},
+        "UpdateToken":{"shape":"UpdateToken"}
+      }
+    },
+    "CreateProxyRuleList":{
+      "type":"list",
+      "member":{"shape":"CreateProxyRule"},
+      "max":50,
+      "min":1
+    },
+    "CreateProxyRulesByRequestPhase":{
+      "type":"structure",
+      "members":{
+        "PreDNS":{"shape":"CreateProxyRuleList"},
+        "PreREQUEST":{"shape":"CreateProxyRuleList"},
+        "PostRESPONSE":{"shape":"CreateProxyRuleList"}
+      }
+    },
+    "CreateProxyRulesRequest":{
+      "type":"structure",
+      "required":["Rules"],
+      "members":{
+        "ProxyRuleGroupArn":{"shape":"ResourceArn"},
+        "ProxyRuleGroupName":{"shape":"ResourceName"},
+        "Rules":{"shape":"CreateProxyRulesByRequestPhase"}
+      }
+    },
+    "CreateProxyRulesResponse":{
+      "type":"structure",
+      "members":{
+        "ProxyRuleGroup":{"shape":"ProxyRuleGroup"},
+        "UpdateToken":{"shape":"UpdateToken"}
       }
     },
     "CreateRuleGroupRequest":{
@@ -987,7 +1912,8 @@
         "DryRun":{"shape":"Boolean"},
         "EncryptionConfiguration":{"shape":"EncryptionConfiguration"},
         "SourceMetadata":{"shape":"SourceMetadata"},
-        "AnalyzeRuleGroup":{"shape":"Boolean"}
+        "AnalyzeRuleGroup":{"shape":"Boolean"},
+        "SummaryConfiguration":{"shape":"SummaryConfiguration"}
       }
     },
     "CreateRuleGroupResponse":{
@@ -1026,6 +1952,29 @@
         "TLSInspectionConfigurationResponse":{"shape":"TLSInspectionConfigurationResponse"}
       }
     },
+    "CreateTime":{"type":"timestamp"},
+    "CreateVpcEndpointAssociationRequest":{
+      "type":"structure",
+      "required":[
+        "FirewallArn",
+        "VpcId",
+        "SubnetMapping"
+      ],
+      "members":{
+        "FirewallArn":{"shape":"ResourceArn"},
+        "VpcId":{"shape":"VpcId"},
+        "SubnetMapping":{"shape":"SubnetMapping"},
+        "Description":{"shape":"Description"},
+        "Tags":{"shape":"TagList"}
+      }
+    },
+    "CreateVpcEndpointAssociationResponse":{
+      "type":"structure",
+      "members":{
+        "VpcEndpointAssociation":{"shape":"VpcEndpointAssociation"},
+        "VpcEndpointAssociationStatus":{"shape":"VpcEndpointAssociationStatus"}
+      }
+    },
     "CustomAction":{
       "type":"structure",
       "required":[
@@ -1040,6 +1989,22 @@
     "CustomActions":{
       "type":"list",
       "member":{"shape":"CustomAction"}
+    },
+    "DeepThreatInspection":{"type":"boolean"},
+    "DeleteContainerAssociationRequest":{
+      "type":"structure",
+      "members":{
+        "ContainerAssociationName":{"shape":"ResourceName"},
+        "ContainerAssociationArn":{"shape":"ResourceArn"}
+      }
+    },
+    "DeleteContainerAssociationResponse":{
+      "type":"structure",
+      "members":{
+        "ContainerAssociationName":{"shape":"ResourceName"},
+        "ContainerAssociationArn":{"shape":"ResourceArn"},
+        "Status":{"shape":"ContainerAssociationStatus"}
+      }
     },
     "DeleteFirewallPolicyRequest":{
       "type":"structure",
@@ -1069,6 +2034,84 @@
         "FirewallStatus":{"shape":"FirewallStatus"}
       }
     },
+    "DeleteNetworkFirewallTransitGatewayAttachmentRequest":{
+      "type":"structure",
+      "required":["TransitGatewayAttachmentId"],
+      "members":{
+        "TransitGatewayAttachmentId":{"shape":"TransitGatewayAttachmentId"}
+      }
+    },
+    "DeleteNetworkFirewallTransitGatewayAttachmentResponse":{
+      "type":"structure",
+      "required":[
+        "TransitGatewayAttachmentId",
+        "TransitGatewayAttachmentStatus"
+      ],
+      "members":{
+        "TransitGatewayAttachmentId":{"shape":"TransitGatewayAttachmentId"},
+        "TransitGatewayAttachmentStatus":{"shape":"TransitGatewayAttachmentStatus"}
+      }
+    },
+    "DeleteProxyConfigurationRequest":{
+      "type":"structure",
+      "members":{
+        "ProxyConfigurationName":{"shape":"ResourceName"},
+        "ProxyConfigurationArn":{"shape":"ResourceArn"}
+      }
+    },
+    "DeleteProxyConfigurationResponse":{
+      "type":"structure",
+      "members":{
+        "ProxyConfigurationName":{"shape":"ResourceName"},
+        "ProxyConfigurationArn":{"shape":"ResourceArn"}
+      }
+    },
+    "DeleteProxyRequest":{
+      "type":"structure",
+      "required":["NatGatewayId"],
+      "members":{
+        "NatGatewayId":{"shape":"NatGatewayId"},
+        "ProxyName":{"shape":"ResourceName"},
+        "ProxyArn":{"shape":"ResourceArn"}
+      }
+    },
+    "DeleteProxyResponse":{
+      "type":"structure",
+      "members":{
+        "NatGatewayId":{"shape":"NatGatewayId"},
+        "ProxyName":{"shape":"ResourceName"},
+        "ProxyArn":{"shape":"ResourceArn"}
+      }
+    },
+    "DeleteProxyRuleGroupRequest":{
+      "type":"structure",
+      "members":{
+        "ProxyRuleGroupName":{"shape":"ResourceName"},
+        "ProxyRuleGroupArn":{"shape":"ResourceArn"}
+      }
+    },
+    "DeleteProxyRuleGroupResponse":{
+      "type":"structure",
+      "members":{
+        "ProxyRuleGroupName":{"shape":"ResourceName"},
+        "ProxyRuleGroupArn":{"shape":"ResourceArn"}
+      }
+    },
+    "DeleteProxyRulesRequest":{
+      "type":"structure",
+      "required":["Rules"],
+      "members":{
+        "ProxyRuleGroupArn":{"shape":"ResourceArn"},
+        "ProxyRuleGroupName":{"shape":"ResourceName"},
+        "Rules":{"shape":"ResourceNameList"}
+      }
+    },
+    "DeleteProxyRulesResponse":{
+      "type":"structure",
+      "members":{
+        "ProxyRuleGroup":{"shape":"ProxyRuleGroup"}
+      }
+    },
     "DeleteResourcePolicyRequest":{
       "type":"structure",
       "required":["ResourceArn"],
@@ -1078,8 +2121,7 @@
     },
     "DeleteResourcePolicyResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeleteRuleGroupRequest":{
       "type":"structure",
@@ -1108,6 +2150,60 @@
       "required":["TLSInspectionConfigurationResponse"],
       "members":{
         "TLSInspectionConfigurationResponse":{"shape":"TLSInspectionConfigurationResponse"}
+      }
+    },
+    "DeleteTime":{"type":"timestamp"},
+    "DeleteVpcEndpointAssociationRequest":{
+      "type":"structure",
+      "required":["VpcEndpointAssociationArn"],
+      "members":{
+        "VpcEndpointAssociationArn":{"shape":"ResourceArn"}
+      }
+    },
+    "DeleteVpcEndpointAssociationResponse":{
+      "type":"structure",
+      "members":{
+        "VpcEndpointAssociation":{"shape":"VpcEndpointAssociation"},
+        "VpcEndpointAssociationStatus":{"shape":"VpcEndpointAssociationStatus"}
+      }
+    },
+    "DescribeContainerAssociationRequest":{
+      "type":"structure",
+      "members":{
+        "ContainerAssociationName":{"shape":"ResourceName"},
+        "ContainerAssociationArn":{"shape":"ResourceArn"}
+      }
+    },
+    "DescribeContainerAssociationResponse":{
+      "type":"structure",
+      "members":{
+        "ContainerAssociationName":{"shape":"ResourceName"},
+        "ContainerAssociationArn":{"shape":"ResourceArn"},
+        "Description":{"shape":"Description"},
+        "Type":{"shape":"ContainerMonitoringType"},
+        "ContainerMonitoringConfigurations":{"shape":"ContainerMonitoringConfigurations"},
+        "Status":{"shape":"ContainerAssociationStatus"},
+        "ResolvedCidrCount":{"shape":"CIDRCount"},
+        "LastUpdatedTime":{"shape":"ContainerAssociationLastUpdatedTime"},
+        "Tags":{"shape":"TagList"},
+        "UpdateToken":{"shape":"UpdateToken"}
+      }
+    },
+    "DescribeFirewallMetadataRequest":{
+      "type":"structure",
+      "members":{
+        "FirewallArn":{"shape":"ResourceArn"}
+      }
+    },
+    "DescribeFirewallMetadataResponse":{
+      "type":"structure",
+      "members":{
+        "FirewallArn":{"shape":"ResourceArn"},
+        "FirewallPolicyArn":{"shape":"ResourceArn"},
+        "Description":{"shape":"Description"},
+        "Status":{"shape":"FirewallStatusValue"},
+        "SupportedAvailabilityZones":{"shape":"SupportedAvailabilityZones"},
+        "TransitGatewayAttachmentId":{"shape":"TransitGatewayAttachmentId"}
       }
     },
     "DescribeFirewallPolicyRequest":{
@@ -1153,6 +2249,8 @@
       "members":{
         "FirewallArn":{"shape":"ResourceArn"},
         "AvailabilityZone":{"shape":"AvailabilityZone"},
+        "VpcEndpointAssociationArn":{"shape":"ResourceArn"},
+        "VpcEndpointId":{"shape":"VpcEndpointId"},
         "FlowOperationId":{"shape":"FlowOperationId"}
       }
     },
@@ -1161,6 +2259,8 @@
       "members":{
         "FirewallArn":{"shape":"ResourceArn"},
         "AvailabilityZone":{"shape":"AvailabilityZone"},
+        "VpcEndpointAssociationArn":{"shape":"ResourceArn"},
+        "VpcEndpointId":{"shape":"VpcEndpointId"},
         "FlowOperationId":{"shape":"FlowOperationId"},
         "FlowOperationType":{"shape":"FlowOperationType"},
         "FlowOperationStatus":{"shape":"FlowOperationStatus"},
@@ -1180,7 +2280,88 @@
       "type":"structure",
       "members":{
         "FirewallArn":{"shape":"ResourceArn"},
-        "LoggingConfiguration":{"shape":"LoggingConfiguration"}
+        "LoggingConfiguration":{"shape":"LoggingConfiguration"},
+        "EnableMonitoringDashboard":{"shape":"EnableMonitoringDashboard"}
+      }
+    },
+    "DescribeProxyConfigurationRequest":{
+      "type":"structure",
+      "members":{
+        "ProxyConfigurationName":{"shape":"ResourceName"},
+        "ProxyConfigurationArn":{"shape":"ResourceArn"}
+      }
+    },
+    "DescribeProxyConfigurationResponse":{
+      "type":"structure",
+      "members":{
+        "ProxyConfiguration":{"shape":"ProxyConfiguration"},
+        "UpdateToken":{"shape":"UpdateToken"}
+      }
+    },
+    "DescribeProxyRequest":{
+      "type":"structure",
+      "members":{
+        "ProxyName":{"shape":"ResourceName"},
+        "ProxyArn":{"shape":"ResourceArn"}
+      }
+    },
+    "DescribeProxyResource":{
+      "type":"structure",
+      "members":{
+        "ProxyName":{"shape":"ResourceName"},
+        "ProxyArn":{"shape":"ResourceArn"},
+        "ProxyConfigurationName":{"shape":"ResourceName"},
+        "ProxyConfigurationArn":{"shape":"ResourceArn"},
+        "NatGatewayId":{"shape":"NatGatewayId"},
+        "ProxyState":{"shape":"ProxyState"},
+        "ProxyModifyState":{"shape":"ProxyModifyState"},
+        "ListenerProperties":{"shape":"ListenerProperties"},
+        "TlsInterceptProperties":{"shape":"TlsInterceptProperties"},
+        "VpcEndpointServiceName":{"shape":"VpcEndpointServiceName"},
+        "PrivateDNSName":{"shape":"PrivateDNSName"},
+        "CreateTime":{"shape":"CreateTime"},
+        "DeleteTime":{"shape":"DeleteTime"},
+        "UpdateTime":{"shape":"UpdateTime"},
+        "FailureCode":{"shape":"FailureCode"},
+        "FailureMessage":{"shape":"FailureMessage"},
+        "Tags":{"shape":"TagList"}
+      }
+    },
+    "DescribeProxyResponse":{
+      "type":"structure",
+      "members":{
+        "Proxy":{"shape":"DescribeProxyResource"},
+        "UpdateToken":{"shape":"UpdateToken"}
+      }
+    },
+    "DescribeProxyRuleGroupRequest":{
+      "type":"structure",
+      "members":{
+        "ProxyRuleGroupName":{"shape":"ResourceName"},
+        "ProxyRuleGroupArn":{"shape":"ResourceArn"}
+      }
+    },
+    "DescribeProxyRuleGroupResponse":{
+      "type":"structure",
+      "members":{
+        "ProxyRuleGroup":{"shape":"ProxyRuleGroup"},
+        "UpdateToken":{"shape":"UpdateToken"}
+      }
+    },
+    "DescribeProxyRuleRequest":{
+      "type":"structure",
+      "required":["ProxyRuleName"],
+      "members":{
+        "ProxyRuleName":{"shape":"ResourceName"},
+        "ProxyRuleGroupName":{"shape":"ResourceName"},
+        "ProxyRuleGroupArn":{"shape":"ResourceArn"}
+      }
+    },
+    "DescribeProxyRuleResponse":{
+      "type":"structure",
+      "members":{
+        "ProxyRule":{"shape":"ProxyRule"},
+        "UpdateToken":{"shape":"UpdateToken"}
       }
     },
     "DescribeResourcePolicyRequest":{
@@ -1217,7 +2398,10 @@
         "Type":{"shape":"RuleGroupType"},
         "Capacity":{"shape":"RuleCapacity"},
         "StatefulRuleOptions":{"shape":"StatefulRuleOptions"},
-        "LastModifiedTime":{"shape":"LastUpdateTime"}
+        "LastModifiedTime":{"shape":"LastUpdateTime"},
+        "VendorName":{"shape":"VendorName"},
+        "ProductId":{"shape":"ProductId"},
+        "ListingName":{"shape":"ListingName"}
       }
     },
     "DescribeRuleGroupRequest":{
@@ -1241,6 +2425,23 @@
         "RuleGroupResponse":{"shape":"RuleGroupResponse"}
       }
     },
+    "DescribeRuleGroupSummaryRequest":{
+      "type":"structure",
+      "members":{
+        "RuleGroupName":{"shape":"ResourceName"},
+        "RuleGroupArn":{"shape":"ResourceArn"},
+        "Type":{"shape":"RuleGroupType"}
+      }
+    },
+    "DescribeRuleGroupSummaryResponse":{
+      "type":"structure",
+      "required":["RuleGroupName"],
+      "members":{
+        "RuleGroupName":{"shape":"ResourceName"},
+        "Description":{"shape":"Description"},
+        "Summary":{"shape":"Summary"}
+      }
+    },
     "DescribeTLSInspectionConfigurationRequest":{
       "type":"structure",
       "members":{
@@ -1260,6 +2461,20 @@
         "TLSInspectionConfigurationResponse":{"shape":"TLSInspectionConfigurationResponse"}
       }
     },
+    "DescribeVpcEndpointAssociationRequest":{
+      "type":"structure",
+      "required":["VpcEndpointAssociationArn"],
+      "members":{
+        "VpcEndpointAssociationArn":{"shape":"ResourceArn"}
+      }
+    },
+    "DescribeVpcEndpointAssociationResponse":{
+      "type":"structure",
+      "members":{
+        "VpcEndpointAssociation":{"shape":"VpcEndpointAssociation"},
+        "VpcEndpointAssociationStatus":{"shape":"VpcEndpointAssociationStatus"}
+      }
+    },
     "Description":{
       "type":"string",
       "max":512,
@@ -1270,6 +2485,24 @@
       "max":1024,
       "min":1,
       "pattern":"^.*$"
+    },
+    "DetachRuleGroupsFromProxyConfigurationRequest":{
+      "type":"structure",
+      "required":["UpdateToken"],
+      "members":{
+        "ProxyConfigurationName":{"shape":"ResourceName"},
+        "ProxyConfigurationArn":{"shape":"ResourceArn"},
+        "RuleGroupNames":{"shape":"ResourceNameList"},
+        "RuleGroupArns":{"shape":"ResourceArnList"},
+        "UpdateToken":{"shape":"UpdateToken"}
+      }
+    },
+    "DetachRuleGroupsFromProxyConfigurationResponse":{
+      "type":"structure",
+      "members":{
+        "ProxyConfiguration":{"shape":"ProxyConfiguration"},
+        "UpdateToken":{"shape":"UpdateToken"}
+      }
     },
     "Dimension":{
       "type":"structure",
@@ -1290,6 +2523,25 @@
       "max":1,
       "min":1
     },
+    "DisassociateAvailabilityZonesRequest":{
+      "type":"structure",
+      "required":["AvailabilityZoneMappings"],
+      "members":{
+        "UpdateToken":{"shape":"UpdateToken"},
+        "FirewallArn":{"shape":"ResourceArn"},
+        "FirewallName":{"shape":"ResourceName"},
+        "AvailabilityZoneMappings":{"shape":"AvailabilityZoneMappings"}
+      }
+    },
+    "DisassociateAvailabilityZonesResponse":{
+      "type":"structure",
+      "members":{
+        "FirewallArn":{"shape":"ResourceArn"},
+        "FirewallName":{"shape":"ResourceName"},
+        "AvailabilityZoneMappings":{"shape":"AvailabilityZoneMappings"},
+        "UpdateToken":{"shape":"UpdateToken"}
+      }
+    },
     "DisassociateSubnetsRequest":{
       "type":"structure",
       "required":["SubnetIds"],
@@ -1309,7 +2561,10 @@
         "UpdateToken":{"shape":"UpdateToken"}
       }
     },
+    "DnsName":{"type":"string"},
     "Domain":{"type":"string"},
+    "EnableMonitoringDashboard":{"type":"boolean"},
+    "EnableTLSSessionHolding":{"type":"boolean"},
     "EnabledAnalysisType":{
       "type":"string",
       "enum":[
@@ -1339,6 +2594,8 @@
     "EndTime":{"type":"timestamp"},
     "EndpointId":{"type":"string"},
     "ErrorMessage":{"type":"string"},
+    "FailureCode":{"type":"string"},
+    "FailureMessage":{"type":"string"},
     "Firewall":{
       "type":"structure",
       "required":[
@@ -1360,14 +2617,24 @@
         "FirewallId":{"shape":"ResourceId"},
         "Tags":{"shape":"TagList"},
         "EncryptionConfiguration":{"shape":"EncryptionConfiguration"},
-        "EnabledAnalysisTypes":{"shape":"EnabledAnalysisTypes"}
+        "NumberOfAssociations":{"shape":"NumberOfAssociations"},
+        "EnabledAnalysisTypes":{"shape":"EnabledAnalysisTypes"},
+        "TransitGatewayId":{"shape":"TransitGatewayId"},
+        "TransitGatewayOwnerAccountId":{"shape":"AWSAccountId"},
+        "AvailabilityZoneMappings":{"shape":"AvailabilityZoneMappings"},
+        "AvailabilityZoneChangeProtection":{"shape":"Boolean"},
+        "NatGatewayMappings":{"shape":"NatGatewayMappingsList"},
+        "ProxySettings":{"shape":"ProxySettings"},
+        "NoSourcePreservation":{"shape":"Boolean"},
+        "VpcEndpoint":{"shape":"VpcEndpoint"}
       }
     },
     "FirewallMetadata":{
       "type":"structure",
       "members":{
         "FirewallName":{"shape":"ResourceName"},
-        "FirewallArn":{"shape":"ResourceArn"}
+        "FirewallArn":{"shape":"ResourceArn"},
+        "TransitGatewayAttachmentId":{"shape":"TransitGatewayAttachmentId"}
       }
     },
     "FirewallPolicies":{
@@ -1389,7 +2656,8 @@
         "StatefulDefaultActions":{"shape":"StatefulActions"},
         "StatefulEngineOptions":{"shape":"StatefulEngineOptions"},
         "TLSInspectionConfigurationArn":{"shape":"ResourceArn"},
-        "PolicyVariables":{"shape":"PolicyVariables"}
+        "PolicyVariables":{"shape":"PolicyVariables"},
+        "EnableTLSSessionHolding":{"shape":"EnableTLSSessionHolding"}
       }
     },
     "FirewallPolicyMetadata":{
@@ -1415,6 +2683,7 @@
         "Tags":{"shape":"TagList"},
         "ConsumedStatelessRuleCapacity":{"shape":"RuleCapacity"},
         "ConsumedStatefulRuleCapacity":{"shape":"RuleCapacity"},
+        "ConsumedStatefulDomainCapacity":{"shape":"RuleCapacity"},
         "NumberOfAssociations":{"shape":"NumberOfAssociations"},
         "EncryptionConfiguration":{"shape":"EncryptionConfiguration"},
         "LastModifiedTime":{"shape":"LastUpdateTime"}
@@ -1430,7 +2699,8 @@
         "Status":{"shape":"FirewallStatusValue"},
         "ConfigurationSyncStateSummary":{"shape":"ConfigurationSyncState"},
         "SyncStates":{"shape":"SyncStates"},
-        "CapacityUsageSummary":{"shape":"CapacityUsageSummary"}
+        "CapacityUsageSummary":{"shape":"CapacityUsageSummary"},
+        "TransitGatewayAttachmentSyncState":{"shape":"TransitGatewayAttachmentSyncState"}
       }
     },
     "FirewallStatusValue":{
@@ -1534,7 +2804,9 @@
       "type":"string",
       "enum":[
         "ALLOWLIST",
-        "DENYLIST"
+        "DENYLIST",
+        "REJECTLIST",
+        "ALERTLIST"
       ]
     },
     "GetAnalysisReportResultsRequest":{
@@ -1653,6 +2925,7 @@
         "STATELESS_RULE_CONTAINS_TCP_FLAGS"
       ]
     },
+    "InsertPosition":{"type":"integer"},
     "InsufficientCapacityException":{
       "type":"structure",
       "members":{
@@ -1734,6 +3007,20 @@
         "NextToken":{"shape":"PaginationToken"}
       }
     },
+    "ListContainerAssociationsRequest":{
+      "type":"structure",
+      "members":{
+        "MaxResults":{"shape":"PaginationMaxResults"},
+        "NextToken":{"shape":"PaginationToken"}
+      }
+    },
+    "ListContainerAssociationsResponse":{
+      "type":"structure",
+      "members":{
+        "ContainerAssociations":{"shape":"ContainerAssociations"},
+        "NextToken":{"shape":"PaginationToken"}
+      }
+    },
     "ListFirewallPoliciesRequest":{
       "type":"structure",
       "members":{
@@ -1774,7 +3061,9 @@
         "FlowOperationId":{"shape":"FlowOperationId"},
         "NextToken":{"shape":"PaginationToken"},
         "MaxResults":{"shape":"PaginationMaxResults"},
-        "AvailabilityZone":{"shape":"AvailabilityZone"}
+        "AvailabilityZone":{"shape":"AvailabilityZone"},
+        "VpcEndpointId":{"shape":"VpcEndpointId"},
+        "VpcEndpointAssociationArn":{"shape":"ResourceArn"}
       }
     },
     "ListFlowOperationResultsResponse":{
@@ -1782,6 +3071,8 @@
       "members":{
         "FirewallArn":{"shape":"ResourceArn"},
         "AvailabilityZone":{"shape":"AvailabilityZone"},
+        "VpcEndpointAssociationArn":{"shape":"ResourceArn"},
+        "VpcEndpointId":{"shape":"VpcEndpointId"},
         "FlowOperationId":{"shape":"FlowOperationId"},
         "FlowOperationStatus":{"shape":"FlowOperationStatus"},
         "StatusMessage":{"shape":"StatusReason"},
@@ -1796,6 +3087,8 @@
       "members":{
         "FirewallArn":{"shape":"ResourceArn"},
         "AvailabilityZone":{"shape":"AvailabilityZone"},
+        "VpcEndpointAssociationArn":{"shape":"ResourceArn"},
+        "VpcEndpointId":{"shape":"VpcEndpointId"},
         "FlowOperationType":{"shape":"FlowOperationType"},
         "NextToken":{"shape":"PaginationToken"},
         "MaxResults":{"shape":"PaginationMaxResults"}
@@ -1808,6 +3101,48 @@
         "NextToken":{"shape":"PaginationToken"}
       }
     },
+    "ListProxiesRequest":{
+      "type":"structure",
+      "members":{
+        "NextToken":{"shape":"PaginationToken"},
+        "MaxResults":{"shape":"PaginationMaxResults"}
+      }
+    },
+    "ListProxiesResponse":{
+      "type":"structure",
+      "members":{
+        "Proxies":{"shape":"Proxies"},
+        "NextToken":{"shape":"PaginationToken"}
+      }
+    },
+    "ListProxyConfigurationsRequest":{
+      "type":"structure",
+      "members":{
+        "NextToken":{"shape":"PaginationToken"},
+        "MaxResults":{"shape":"PaginationMaxResults"}
+      }
+    },
+    "ListProxyConfigurationsResponse":{
+      "type":"structure",
+      "members":{
+        "ProxyConfigurations":{"shape":"ProxyConfigurations"},
+        "NextToken":{"shape":"PaginationToken"}
+      }
+    },
+    "ListProxyRuleGroupsRequest":{
+      "type":"structure",
+      "members":{
+        "NextToken":{"shape":"PaginationToken"},
+        "MaxResults":{"shape":"PaginationMaxResults"}
+      }
+    },
+    "ListProxyRuleGroupsResponse":{
+      "type":"structure",
+      "members":{
+        "ProxyRuleGroups":{"shape":"ProxyRuleGroups"},
+        "NextToken":{"shape":"PaginationToken"}
+      }
+    },
     "ListRuleGroupsRequest":{
       "type":"structure",
       "members":{
@@ -1815,6 +3150,7 @@
         "MaxResults":{"shape":"PaginationMaxResults"},
         "Scope":{"shape":"ResourceManagedStatus"},
         "ManagedType":{"shape":"ResourceManagedType"},
+        "SubscriptionStatus":{"shape":"SubscriptionStatus"},
         "Type":{"shape":"RuleGroupType"}
       }
     },
@@ -1855,6 +3191,57 @@
         "Tags":{"shape":"TagList"}
       }
     },
+    "ListVpcEndpointAssociationsRequest":{
+      "type":"structure",
+      "members":{
+        "NextToken":{"shape":"PaginationToken"},
+        "MaxResults":{"shape":"PaginationMaxResults"},
+        "FirewallArn":{"shape":"ResourceArn"}
+      }
+    },
+    "ListVpcEndpointAssociationsResponse":{
+      "type":"structure",
+      "members":{
+        "NextToken":{"shape":"PaginationToken"},
+        "VpcEndpointAssociations":{"shape":"VpcEndpointAssociations"}
+      }
+    },
+    "ListenerProperties":{
+      "type":"list",
+      "member":{"shape":"ListenerProperty"}
+    },
+    "ListenerPropertiesRequest":{
+      "type":"list",
+      "member":{"shape":"ListenerPropertyRequest"},
+      "max":2,
+      "min":0
+    },
+    "ListenerProperty":{
+      "type":"structure",
+      "members":{
+        "Port":{"shape":"NatGatewayPort"},
+        "Type":{"shape":"ListenerPropertyType"}
+      }
+    },
+    "ListenerPropertyRequest":{
+      "type":"structure",
+      "required":[
+        "Port",
+        "Type"
+      ],
+      "members":{
+        "Port":{"shape":"NatGatewayPort"},
+        "Type":{"shape":"ListenerPropertyType"}
+      }
+    },
+    "ListenerPropertyType":{
+      "type":"string",
+      "enum":[
+        "HTTP",
+        "HTTPS"
+      ]
+    },
+    "ListingName":{"type":"string"},
     "LogDestinationConfig":{
       "type":"structure",
       "required":[
@@ -1921,6 +3308,49 @@
         "TCPFlags":{"shape":"TCPFlags"}
       }
     },
+    "NatGatewayAttachment":{
+      "type":"structure",
+      "required":[
+        "NatGatewayId",
+        "Status"
+      ],
+      "members":{
+        "NatGatewayId":{"shape":"NatGatewayId"},
+        "Status":{"shape":"NatGatewayAttachmentStatus"},
+        "StatusMessage":{"shape":"StatusReason"},
+        "DnsName":{"shape":"DnsName"}
+      }
+    },
+    "NatGatewayAttachmentStatus":{
+      "type":"string",
+      "enum":[
+        "CREATING",
+        "READY",
+        "UPDATING",
+        "FAILED",
+        "DELETING"
+      ]
+    },
+    "NatGatewayAttachmentsList":{
+      "type":"list",
+      "member":{"shape":"NatGatewayAttachment"}
+    },
+    "NatGatewayId":{
+      "type":"string",
+      "min":1
+    },
+    "NatGatewayMapping":{
+      "type":"structure",
+      "required":["NatGatewayId"],
+      "members":{
+        "NatGatewayId":{"shape":"NatGatewayId"}
+      }
+    },
+    "NatGatewayMappingsList":{
+      "type":"list",
+      "member":{"shape":"NatGatewayMapping"}
+    },
+    "NatGatewayPort":{"type":"integer"},
     "NumberOfAssociations":{"type":"integer"},
     "OverrideAction":{
       "type":"string",
@@ -1950,7 +3380,9 @@
       "enum":[
         "PENDING",
         "IN_SYNC",
-        "CAPACITY_CONSTRAINED"
+        "CAPACITY_CONSTRAINED",
+        "NOT_SUBSCRIBED",
+        "DEPRECATED"
       ]
     },
     "PolicyString":{
@@ -2007,6 +3439,8 @@
       "max":65535,
       "min":1
     },
+    "PrivateDNSName":{"type":"string"},
+    "ProductId":{"type":"string"},
     "ProtocolNumber":{
       "type":"integer",
       "max":255,
@@ -2025,6 +3459,224 @@
     "ProtocolStrings":{
       "type":"list",
       "member":{"shape":"ProtocolString"}
+    },
+    "Proxies":{
+      "type":"list",
+      "member":{"shape":"ProxyMetadata"}
+    },
+    "Proxy":{
+      "type":"structure",
+      "members":{
+        "CreateTime":{"shape":"CreateTime"},
+        "DeleteTime":{"shape":"DeleteTime"},
+        "UpdateTime":{"shape":"UpdateTime"},
+        "FailureCode":{"shape":"FailureCode"},
+        "FailureMessage":{"shape":"FailureMessage"},
+        "ProxyState":{"shape":"ProxyState"},
+        "ProxyModifyState":{"shape":"ProxyModifyState"},
+        "NatGatewayId":{"shape":"NatGatewayId"},
+        "ProxyConfigurationName":{"shape":"ResourceName"},
+        "ProxyConfigurationArn":{"shape":"ResourceArn"},
+        "ProxyName":{"shape":"ResourceName"},
+        "ProxyArn":{"shape":"ResourceArn"},
+        "ListenerProperties":{"shape":"ListenerProperties"},
+        "TlsInterceptProperties":{"shape":"TlsInterceptProperties"},
+        "Tags":{"shape":"TagList"}
+      }
+    },
+    "ProxyConditionValue":{"type":"string"},
+    "ProxyConditionValueList":{
+      "type":"list",
+      "member":{"shape":"ProxyConditionValue"}
+    },
+    "ProxyConfigDefaultRulePhaseActionsRequest":{
+      "type":"structure",
+      "members":{
+        "PreDNS":{"shape":"ProxyRulePhaseAction"},
+        "PreREQUEST":{"shape":"ProxyRulePhaseAction"},
+        "PostRESPONSE":{"shape":"ProxyRulePhaseAction"}
+      }
+    },
+    "ProxyConfigRuleGroup":{
+      "type":"structure",
+      "members":{
+        "ProxyRuleGroupName":{"shape":"ResourceName"},
+        "ProxyRuleGroupArn":{"shape":"ResourceArn"},
+        "Type":{"shape":"ProxyConfigRuleGroupType"},
+        "Priority":{"shape":"ProxyConfigRuleGroupPriority"}
+      }
+    },
+    "ProxyConfigRuleGroupPriority":{"type":"integer"},
+    "ProxyConfigRuleGroupSet":{
+      "type":"list",
+      "member":{"shape":"ProxyConfigRuleGroup"}
+    },
+    "ProxyConfigRuleGroupType":{"type":"string"},
+    "ProxyConfiguration":{
+      "type":"structure",
+      "members":{
+        "ProxyConfigurationName":{"shape":"ResourceName"},
+        "ProxyConfigurationArn":{"shape":"ResourceArn"},
+        "Description":{"shape":"Description"},
+        "CreateTime":{"shape":"CreateTime"},
+        "DeleteTime":{"shape":"DeleteTime"},
+        "RuleGroups":{"shape":"ProxyConfigRuleGroupSet"},
+        "DefaultRulePhaseActions":{"shape":"ProxyConfigDefaultRulePhaseActionsRequest"},
+        "Tags":{"shape":"TagList"}
+      }
+    },
+    "ProxyConfigurationMetadata":{
+      "type":"structure",
+      "members":{
+        "Name":{"shape":"ResourceName"},
+        "Arn":{"shape":"ResourceArn"}
+      }
+    },
+    "ProxyConfigurations":{
+      "type":"list",
+      "member":{"shape":"ProxyConfigurationMetadata"}
+    },
+    "ProxyMetadata":{
+      "type":"structure",
+      "members":{
+        "Name":{"shape":"ResourceName"},
+        "Arn":{"shape":"ResourceArn"}
+      }
+    },
+    "ProxyModifyState":{
+      "type":"string",
+      "enum":[
+        "MODIFYING",
+        "COMPLETED",
+        "FAILED"
+      ]
+    },
+    "ProxyRule":{
+      "type":"structure",
+      "members":{
+        "ProxyRuleName":{"shape":"ResourceName"},
+        "Description":{"shape":"Description"},
+        "Action":{"shape":"ProxyRulePhaseAction"},
+        "Conditions":{"shape":"ProxyRuleConditionList"}
+      }
+    },
+    "ProxyRuleCondition":{
+      "type":"structure",
+      "members":{
+        "ConditionOperator":{"shape":"ConditionOperator"},
+        "ConditionKey":{"shape":"ConditionKey"},
+        "ConditionValues":{"shape":"ProxyConditionValueList"}
+      }
+    },
+    "ProxyRuleConditionList":{
+      "type":"list",
+      "member":{"shape":"ProxyRuleCondition"}
+    },
+    "ProxyRuleGroup":{
+      "type":"structure",
+      "members":{
+        "ProxyRuleGroupName":{"shape":"ResourceName"},
+        "ProxyRuleGroupArn":{"shape":"ResourceArn"},
+        "CreateTime":{"shape":"CreateTime"},
+        "DeleteTime":{"shape":"DeleteTime"},
+        "Rules":{"shape":"ProxyRulesByRequestPhase"},
+        "Description":{"shape":"Description"},
+        "Tags":{"shape":"TagList"}
+      }
+    },
+    "ProxyRuleGroupAttachment":{
+      "type":"structure",
+      "members":{
+        "ProxyRuleGroupName":{"shape":"ResourceName"},
+        "InsertPosition":{"shape":"InsertPosition"}
+      }
+    },
+    "ProxyRuleGroupAttachmentList":{
+      "type":"list",
+      "member":{"shape":"ProxyRuleGroupAttachment"}
+    },
+    "ProxyRuleGroupMetadata":{
+      "type":"structure",
+      "members":{
+        "Name":{"shape":"ResourceName"},
+        "Arn":{"shape":"ResourceArn"}
+      }
+    },
+    "ProxyRuleGroupPriority":{
+      "type":"structure",
+      "members":{
+        "ProxyRuleGroupName":{"shape":"ResourceName"},
+        "NewPosition":{"shape":"InsertPosition"}
+      }
+    },
+    "ProxyRuleGroupPriorityList":{
+      "type":"list",
+      "member":{"shape":"ProxyRuleGroupPriority"}
+    },
+    "ProxyRuleGroupPriorityResult":{
+      "type":"structure",
+      "members":{
+        "ProxyRuleGroupName":{"shape":"ResourceName"},
+        "Priority":{"shape":"ProxyRuleGroupPriorityResultPriority"}
+      }
+    },
+    "ProxyRuleGroupPriorityResultList":{
+      "type":"list",
+      "member":{"shape":"ProxyRuleGroupPriorityResult"}
+    },
+    "ProxyRuleGroupPriorityResultPriority":{"type":"integer"},
+    "ProxyRuleGroups":{
+      "type":"list",
+      "member":{"shape":"ProxyRuleGroupMetadata"}
+    },
+    "ProxyRuleList":{
+      "type":"list",
+      "member":{"shape":"ProxyRule"}
+    },
+    "ProxyRulePhaseAction":{
+      "type":"string",
+      "enum":[
+        "ALLOW",
+        "DENY",
+        "ALERT"
+      ]
+    },
+    "ProxyRulePriority":{
+      "type":"structure",
+      "members":{
+        "ProxyRuleName":{"shape":"ResourceName"},
+        "NewPosition":{"shape":"InsertPosition"}
+      }
+    },
+    "ProxyRulePriorityList":{
+      "type":"list",
+      "member":{"shape":"ProxyRulePriority"}
+    },
+    "ProxyRulesByRequestPhase":{
+      "type":"structure",
+      "members":{
+        "PreDNS":{"shape":"ProxyRuleList"},
+        "PreREQUEST":{"shape":"ProxyRuleList"},
+        "PostRESPONSE":{"shape":"ProxyRuleList"}
+      }
+    },
+    "ProxySettings":{
+      "type":"structure",
+      "required":["ListenerProperties"],
+      "members":{
+        "ListenerProperties":{"shape":"ListenerProperties"}
+      }
+    },
+    "ProxyState":{
+      "type":"string",
+      "enum":[
+        "ATTACHING",
+        "ATTACHED",
+        "DETACHING",
+        "DETACHED",
+        "ATTACH_FAILED",
+        "DETACH_FAILED"
+      ]
     },
     "PublishMetricAction":{
       "type":"structure",
@@ -2046,13 +3698,30 @@
     },
     "PutResourcePolicyResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "ReferenceSets":{
       "type":"structure",
       "members":{
         "IPSetReferences":{"shape":"IPSetReferenceMap"}
+      }
+    },
+    "RejectNetworkFirewallTransitGatewayAttachmentRequest":{
+      "type":"structure",
+      "required":["TransitGatewayAttachmentId"],
+      "members":{
+        "TransitGatewayAttachmentId":{"shape":"TransitGatewayAttachmentId"}
+      }
+    },
+    "RejectNetworkFirewallTransitGatewayAttachmentResponse":{
+      "type":"structure",
+      "required":[
+        "TransitGatewayAttachmentId",
+        "TransitGatewayAttachmentStatus"
+      ],
+      "members":{
+        "TransitGatewayAttachmentId":{"shape":"TransitGatewayAttachmentId"},
+        "TransitGatewayAttachmentStatus":{"shape":"TransitGatewayAttachmentStatus"}
       }
     },
     "ReportTime":{"type":"timestamp"},
@@ -2061,6 +3730,10 @@
       "max":256,
       "min":1,
       "pattern":"^arn:aws.*"
+    },
+    "ResourceArnList":{
+      "type":"list",
+      "member":{"shape":"ResourceArn"}
     },
     "ResourceId":{
       "type":"string",
@@ -2079,7 +3752,9 @@
       "type":"string",
       "enum":[
         "AWS_MANAGED_THREAT_SIGNATURES",
-        "AWS_MANAGED_DOMAIN_LISTS"
+        "AWS_MANAGED_DOMAIN_LISTS",
+        "ACTIVE_THREAT_DEFENSE",
+        "PARTNER_MANAGED"
       ]
     },
     "ResourceName":{
@@ -2087,6 +3762,10 @@
       "max":128,
       "min":1,
       "pattern":"^[a-zA-Z0-9-]+$"
+    },
+    "ResourceNameList":{
+      "type":"list",
+      "member":{"shape":"ResourceName"}
     },
     "ResourceNotFoundException":{
       "type":"structure",
@@ -2144,8 +3823,17 @@
       "type":"structure",
       "members":{
         "Name":{"shape":"ResourceName"},
-        "Arn":{"shape":"ResourceArn"}
+        "Arn":{"shape":"ResourceArn"},
+        "VendorName":{"shape":"VendorName"}
       }
+    },
+    "RuleGroupRequestPhase":{
+      "type":"string",
+      "enum":[
+        "PRE_DNS",
+        "PRE_REQ",
+        "POST_RES"
+      ]
     },
     "RuleGroupResponse":{
       "type":"structure",
@@ -2169,14 +3857,16 @@
         "SourceMetadata":{"shape":"SourceMetadata"},
         "SnsTopic":{"shape":"ResourceArn"},
         "LastModifiedTime":{"shape":"LastUpdateTime"},
-        "AnalysisResults":{"shape":"AnalysisResultList"}
+        "AnalysisResults":{"shape":"AnalysisResultList"},
+        "SummaryConfiguration":{"shape":"SummaryConfiguration"}
       }
     },
     "RuleGroupType":{
       "type":"string",
       "enum":[
         "STATELESS",
-        "STATEFUL"
+        "STATEFUL",
+        "STATEFUL_DOMAIN"
       ]
     },
     "RuleGroups":{
@@ -2205,6 +3895,18 @@
         "DEFAULT_ACTION_ORDER",
         "STRICT_ORDER"
       ]
+    },
+    "RuleSummaries":{
+      "type":"list",
+      "member":{"shape":"RuleSummary"}
+    },
+    "RuleSummary":{
+      "type":"structure",
+      "members":{
+        "SID":{"shape":"CollectionMember_String"},
+        "Msg":{"shape":"CollectionMember_String"},
+        "Metadata":{"shape":"CollectionMember_String"}
+      }
     },
     "RuleTargets":{
       "type":"list",
@@ -2335,6 +4037,8 @@
       "members":{
         "FirewallArn":{"shape":"ResourceArn"},
         "AvailabilityZone":{"shape":"AvailabilityZone"},
+        "VpcEndpointAssociationArn":{"shape":"ResourceArn"},
+        "VpcEndpointId":{"shape":"VpcEndpointId"},
         "MinimumFlowAgeInSeconds":{"shape":"Age"},
         "FlowFilters":{"shape":"FlowFilters"}
       }
@@ -2356,6 +4060,8 @@
       "members":{
         "FirewallArn":{"shape":"ResourceArn"},
         "AvailabilityZone":{"shape":"AvailabilityZone"},
+        "VpcEndpointAssociationArn":{"shape":"ResourceArn"},
+        "VpcEndpointId":{"shape":"VpcEndpointId"},
         "MinimumFlowAgeInSeconds":{"shape":"Age"},
         "FlowFilters":{"shape":"FlowFilters"}
       }
@@ -2425,7 +4131,8 @@
           "shape":"Priority",
           "box":true
         },
-        "Override":{"shape":"StatefulRuleGroupOverride"}
+        "Override":{"shape":"StatefulRuleGroupOverride"},
+        "DeepThreatInspection":{"shape":"DeepThreatInspection"}
       }
     },
     "StatefulRuleGroupReferences":{
@@ -2459,7 +4166,9 @@
         "IKEV2",
         "TFTP",
         "NTP",
-        "DHCP"
+        "DHCP",
+        "HTTP2",
+        "QUIC"
       ]
     },
     "StatefulRules":{
@@ -2536,11 +4245,48 @@
       "type":"list",
       "member":{"shape":"SubnetMapping"}
     },
+    "SubscriptionStatus":{
+      "type":"string",
+      "enum":[
+        "NOT_SUBSCRIBED",
+        "SUBSCRIBED"
+      ]
+    },
+    "Summary":{
+      "type":"structure",
+      "members":{
+        "RuleSummaries":{"shape":"RuleSummaries"}
+      }
+    },
+    "SummaryConfiguration":{
+      "type":"structure",
+      "members":{
+        "RuleOptions":{"shape":"SummaryRuleOptions"}
+      }
+    },
+    "SummaryRuleOption":{
+      "type":"string",
+      "enum":[
+        "SID",
+        "MSG",
+        "METADATA"
+      ]
+    },
+    "SummaryRuleOptions":{
+      "type":"list",
+      "member":{"shape":"SummaryRuleOption"}
+    },
+    "SupportedAvailabilityZones":{
+      "type":"map",
+      "key":{"shape":"AvailabilityZone"},
+      "value":{"shape":"AvailabilityZoneMetadata"}
+    },
     "SyncState":{
       "type":"structure",
       "members":{
         "Attachment":{"shape":"Attachment"},
-        "Config":{"shape":"SyncStateConfig"}
+        "Config":{"shape":"SyncStateConfig"},
+        "NatGatewayAttachments":{"shape":"NatGatewayAttachmentsList"}
       }
     },
     "SyncStateConfig":{
@@ -2658,8 +4404,7 @@
     },
     "TagResourceResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "TagValue":{
       "type":"string",
@@ -2700,6 +4445,62 @@
         "StatusMessage":{"shape":"StatusReason"}
       }
     },
+    "TlsInterceptMode":{
+      "type":"string",
+      "enum":[
+        "ENABLED",
+        "DISABLED"
+      ]
+    },
+    "TlsInterceptProperties":{
+      "type":"structure",
+      "members":{
+        "PcaArn":{"shape":"ResourceArn"},
+        "TlsInterceptMode":{"shape":"TlsInterceptMode"}
+      }
+    },
+    "TlsInterceptPropertiesRequest":{
+      "type":"structure",
+      "members":{
+        "PcaArn":{"shape":"ResourceArn"},
+        "TlsInterceptMode":{"shape":"TlsInterceptMode"}
+      }
+    },
+    "TransitGatewayAttachmentId":{
+      "type":"string",
+      "max":128,
+      "min":1,
+      "pattern":"^tgw-attach-[0-9a-z]+$"
+    },
+    "TransitGatewayAttachmentStatus":{
+      "type":"string",
+      "enum":[
+        "CREATING",
+        "DELETING",
+        "DELETED",
+        "FAILED",
+        "ERROR",
+        "READY",
+        "PENDING_ACCEPTANCE",
+        "REJECTING",
+        "REJECTED"
+      ]
+    },
+    "TransitGatewayAttachmentSyncState":{
+      "type":"structure",
+      "members":{
+        "AttachmentId":{"shape":"AttachmentId"},
+        "TransitGatewayAttachmentStatus":{"shape":"TransitGatewayAttachmentStatus"},
+        "StatusMessage":{"shape":"TransitGatewayAttachmentSyncStateMessage"}
+      }
+    },
+    "TransitGatewayAttachmentSyncStateMessage":{"type":"string"},
+    "TransitGatewayId":{
+      "type":"string",
+      "max":128,
+      "min":1,
+      "pattern":"^tgw-[0-9a-z]+$"
+    },
     "UniqueSources":{
       "type":"structure",
       "members":{
@@ -2726,7 +4527,55 @@
     },
     "UntagResourceResponse":{
       "type":"structure",
+      "members":{}
+    },
+    "UpdateAvailabilityZoneChangeProtectionRequest":{
+      "type":"structure",
+      "required":["AvailabilityZoneChangeProtection"],
       "members":{
+        "UpdateToken":{"shape":"UpdateToken"},
+        "FirewallArn":{"shape":"ResourceArn"},
+        "FirewallName":{"shape":"ResourceName"},
+        "AvailabilityZoneChangeProtection":{"shape":"Boolean"}
+      }
+    },
+    "UpdateAvailabilityZoneChangeProtectionResponse":{
+      "type":"structure",
+      "members":{
+        "UpdateToken":{"shape":"UpdateToken"},
+        "FirewallArn":{"shape":"ResourceArn"},
+        "FirewallName":{"shape":"ResourceName"},
+        "AvailabilityZoneChangeProtection":{"shape":"Boolean"}
+      }
+    },
+    "UpdateContainerAssociationRequest":{
+      "type":"structure",
+      "required":[
+        "Type",
+        "ContainerMonitoringConfigurations",
+        "UpdateToken"
+      ],
+      "members":{
+        "ContainerAssociationName":{"shape":"ResourceName"},
+        "ContainerAssociationArn":{"shape":"ResourceArn"},
+        "Description":{"shape":"Description"},
+        "Type":{"shape":"ContainerMonitoringType"},
+        "ContainerMonitoringConfigurations":{"shape":"ContainerMonitoringConfigurations"},
+        "Tags":{"shape":"TagList"},
+        "UpdateToken":{"shape":"UpdateToken"}
+      }
+    },
+    "UpdateContainerAssociationResponse":{
+      "type":"structure",
+      "members":{
+        "ContainerAssociationName":{"shape":"ResourceName"},
+        "ContainerAssociationArn":{"shape":"ResourceArn"},
+        "Description":{"shape":"Description"},
+        "Type":{"shape":"ContainerMonitoringType"},
+        "ContainerMonitoringConfigurations":{"shape":"ContainerMonitoringConfigurations"},
+        "Status":{"shape":"ContainerAssociationStatus"},
+        "Tags":{"shape":"TagList"},
+        "UpdateToken":{"shape":"UpdateToken"}
       }
     },
     "UpdateFirewallAnalysisSettingsRequest":{
@@ -2853,7 +4702,8 @@
       "members":{
         "FirewallArn":{"shape":"ResourceArn"},
         "FirewallName":{"shape":"ResourceName"},
-        "LoggingConfiguration":{"shape":"LoggingConfiguration"}
+        "LoggingConfiguration":{"shape":"LoggingConfiguration"},
+        "EnableMonitoringDashboard":{"shape":"EnableMonitoringDashboard"}
       }
     },
     "UpdateLoggingConfigurationResponse":{
@@ -2861,7 +4711,139 @@
       "members":{
         "FirewallArn":{"shape":"ResourceArn"},
         "FirewallName":{"shape":"ResourceName"},
-        "LoggingConfiguration":{"shape":"LoggingConfiguration"}
+        "LoggingConfiguration":{"shape":"LoggingConfiguration"},
+        "EnableMonitoringDashboard":{"shape":"EnableMonitoringDashboard"}
+      }
+    },
+    "UpdateProxyConfigurationRequest":{
+      "type":"structure",
+      "required":[
+        "DefaultRulePhaseActions",
+        "UpdateToken"
+      ],
+      "members":{
+        "ProxyConfigurationName":{"shape":"ResourceName"},
+        "ProxyConfigurationArn":{"shape":"ResourceArn"},
+        "DefaultRulePhaseActions":{"shape":"ProxyConfigDefaultRulePhaseActionsRequest"},
+        "UpdateToken":{"shape":"UpdateToken"}
+      }
+    },
+    "UpdateProxyConfigurationResponse":{
+      "type":"structure",
+      "members":{
+        "ProxyConfiguration":{"shape":"ProxyConfiguration"},
+        "UpdateToken":{"shape":"UpdateToken"}
+      }
+    },
+    "UpdateProxyRequest":{
+      "type":"structure",
+      "required":[
+        "NatGatewayId",
+        "UpdateToken"
+      ],
+      "members":{
+        "NatGatewayId":{"shape":"NatGatewayId"},
+        "ProxyName":{"shape":"ResourceName"},
+        "ProxyArn":{"shape":"ResourceArn"},
+        "ListenerPropertiesToAdd":{"shape":"ListenerPropertiesRequest"},
+        "ListenerPropertiesToRemove":{"shape":"ListenerPropertiesRequest"},
+        "TlsInterceptProperties":{"shape":"TlsInterceptPropertiesRequest"},
+        "UpdateToken":{"shape":"UpdateToken"}
+      }
+    },
+    "UpdateProxyResponse":{
+      "type":"structure",
+      "members":{
+        "Proxy":{"shape":"Proxy"},
+        "UpdateToken":{"shape":"UpdateToken"}
+      }
+    },
+    "UpdateProxyRuleGroupPrioritiesRequest":{
+      "type":"structure",
+      "required":[
+        "RuleGroups",
+        "UpdateToken"
+      ],
+      "members":{
+        "ProxyConfigurationName":{"shape":"ResourceName"},
+        "ProxyConfigurationArn":{"shape":"ResourceArn"},
+        "RuleGroups":{"shape":"ProxyRuleGroupPriorityList"},
+        "UpdateToken":{"shape":"UpdateToken"}
+      }
+    },
+    "UpdateProxyRuleGroupPrioritiesResponse":{
+      "type":"structure",
+      "members":{
+        "ProxyRuleGroups":{"shape":"ProxyRuleGroupPriorityResultList"},
+        "UpdateToken":{"shape":"UpdateToken"}
+      }
+    },
+    "UpdateProxyRulePrioritiesRequest":{
+      "type":"structure",
+      "required":[
+        "RuleGroupRequestPhase",
+        "Rules",
+        "UpdateToken"
+      ],
+      "members":{
+        "ProxyRuleGroupName":{"shape":"ResourceName"},
+        "ProxyRuleGroupArn":{"shape":"ResourceArn"},
+        "RuleGroupRequestPhase":{"shape":"RuleGroupRequestPhase"},
+        "Rules":{"shape":"ProxyRulePriorityList"},
+        "UpdateToken":{"shape":"UpdateToken"}
+      }
+    },
+    "UpdateProxyRulePrioritiesResponse":{
+      "type":"structure",
+      "members":{
+        "ProxyRuleGroupName":{"shape":"ResourceName"},
+        "ProxyRuleGroupArn":{"shape":"ResourceArn"},
+        "RuleGroupRequestPhase":{"shape":"RuleGroupRequestPhase"},
+        "Rules":{"shape":"ProxyRulePriorityList"},
+        "UpdateToken":{"shape":"UpdateToken"}
+      }
+    },
+    "UpdateProxyRuleRequest":{
+      "type":"structure",
+      "required":[
+        "ProxyRuleName",
+        "UpdateToken"
+      ],
+      "members":{
+        "ProxyRuleGroupName":{"shape":"ResourceName"},
+        "ProxyRuleGroupArn":{"shape":"ResourceArn"},
+        "ProxyRuleName":{"shape":"ResourceName"},
+        "Description":{"shape":"Description"},
+        "Action":{"shape":"ProxyRulePhaseAction"},
+        "AddConditions":{"shape":"ProxyRuleConditionList"},
+        "RemoveConditions":{"shape":"ProxyRuleConditionList"},
+        "UpdateToken":{"shape":"UpdateToken"}
+      }
+    },
+    "UpdateProxyRuleResponse":{
+      "type":"structure",
+      "members":{
+        "ProxyRule":{"shape":"ProxyRule"},
+        "RemovedConditions":{"shape":"ProxyRuleConditionList"},
+        "UpdateToken":{"shape":"UpdateToken"}
+      }
+    },
+    "UpdateProxySettingsRequest":{
+      "type":"structure",
+      "members":{
+        "FirewallArn":{"shape":"ResourceArn"},
+        "FirewallName":{"shape":"ResourceName"},
+        "UpdateToken":{"shape":"UpdateToken"},
+        "ProxySettings":{"shape":"ProxySettings"}
+      }
+    },
+    "UpdateProxySettingsResponse":{
+      "type":"structure",
+      "members":{
+        "FirewallArn":{"shape":"ResourceArn"},
+        "FirewallName":{"shape":"ResourceName"},
+        "UpdateToken":{"shape":"UpdateToken"},
+        "ProxySettings":{"shape":"ProxySettings"}
       }
     },
     "UpdateRuleGroupRequest":{
@@ -2878,7 +4860,8 @@
         "DryRun":{"shape":"Boolean"},
         "EncryptionConfiguration":{"shape":"EncryptionConfiguration"},
         "SourceMetadata":{"shape":"SourceMetadata"},
-        "AnalyzeRuleGroup":{"shape":"Boolean"}
+        "AnalyzeRuleGroup":{"shape":"Boolean"},
+        "SummaryConfiguration":{"shape":"SummaryConfiguration"}
       }
     },
     "UpdateRuleGroupResponse":{
@@ -2937,6 +4920,7 @@
         "TLSInspectionConfigurationResponse":{"shape":"TLSInspectionConfigurationResponse"}
       }
     },
+    "UpdateTime":{"type":"timestamp"},
     "UpdateToken":{
       "type":"string",
       "max":1024,
@@ -2952,6 +4936,61 @@
       "type":"list",
       "member":{"shape":"VariableDefinition"}
     },
+    "VendorName":{"type":"string"},
+    "VpcEndpoint":{
+      "type":"structure",
+      "required":[
+        "VpcId",
+        "SubnetMappings"
+      ],
+      "members":{
+        "VpcId":{"shape":"VpcId"},
+        "SubnetMappings":{"shape":"SubnetMappings"}
+      }
+    },
+    "VpcEndpointAssociation":{
+      "type":"structure",
+      "required":[
+        "VpcEndpointAssociationArn",
+        "FirewallArn",
+        "VpcId",
+        "SubnetMapping"
+      ],
+      "members":{
+        "VpcEndpointAssociationId":{"shape":"ResourceId"},
+        "VpcEndpointAssociationArn":{"shape":"ResourceArn"},
+        "FirewallArn":{"shape":"ResourceArn"},
+        "VpcId":{"shape":"VpcId"},
+        "SubnetMapping":{"shape":"SubnetMapping"},
+        "Description":{"shape":"Description"},
+        "Tags":{"shape":"TagList"}
+      }
+    },
+    "VpcEndpointAssociationMetadata":{
+      "type":"structure",
+      "members":{
+        "VpcEndpointAssociationArn":{"shape":"ResourceArn"}
+      }
+    },
+    "VpcEndpointAssociationStatus":{
+      "type":"structure",
+      "required":["Status"],
+      "members":{
+        "Status":{"shape":"FirewallStatusValue"},
+        "AssociationSyncState":{"shape":"AssociationSyncState"}
+      }
+    },
+    "VpcEndpointAssociations":{
+      "type":"list",
+      "member":{"shape":"VpcEndpointAssociationMetadata"}
+    },
+    "VpcEndpointId":{
+      "type":"string",
+      "max":256,
+      "min":5,
+      "pattern":"^vpce-[a-zA-Z0-9]*$"
+    },
+    "VpcEndpointServiceName":{"type":"string"},
     "VpcId":{
       "type":"string",
       "max":128,

@@ -15,7 +15,15 @@ module Aws
         def message: () -> ::String
         def code: () -> ::String
       end
+      class ConflictException < ::Aws::Errors::ServiceError
+        def message: () -> ::String
+        def code: () -> ::String
+      end
       class InternalException < ::Aws::Errors::ServiceError
+        def message: () -> ::String
+        def code: () -> ::String
+      end
+      class InternalServerException < ::Aws::Errors::ServiceError
         def message: () -> ::String
         def code: () -> ::String
       end
@@ -31,6 +39,14 @@ module Aws
         def message: () -> ::String
         def code: () -> ::String
       end
+      class OrganizationNotFoundException < ::Aws::Errors::ServiceError
+        def message: () -> ::String
+        def code: () -> ::String
+      end
+      class OrganizationalUnitNotFoundException < ::Aws::Errors::ServiceError
+        def message: () -> ::String
+        def code: () -> ::String
+      end
       class ResourceConflictException < ::Aws::Errors::ServiceError
         def message: () -> ::String
         def code: () -> ::String
@@ -40,6 +56,18 @@ module Aws
         def code: () -> ::String
       end
       class ResourceNotFoundException < ::Aws::Errors::ServiceError
+        def message: () -> ::String
+        def code: () -> ::String
+      end
+      class ServiceQuotaExceededException < ::Aws::Errors::ServiceError
+        def message: () -> ::String
+        def code: () -> ::String
+      end
+      class ThrottlingException < ::Aws::Errors::ServiceError
+        def message: () -> ::String
+        def code: () -> ::String
+      end
+      class ValidationException < ::Aws::Errors::ServiceError
         def message: () -> ::String
         def code: () -> ::String
       end

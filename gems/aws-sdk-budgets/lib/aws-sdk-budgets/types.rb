@@ -33,6 +33,10 @@ module Aws::Budgets
     # @!attribute [rw] budget_name
     #   A string that represents the budget name. The ":" and "\\"
     #   characters, and the "/action/" substring, aren't allowed.
+    #
+    #   Budget names are validated for content. Names that contain phone
+    #   numbers, URLs, or email addresses combined with certain terms may be
+    #   rejected.
     #   @return [String]
     #
     # @!attribute [rw] notification_type
@@ -172,6 +176,19 @@ module Aws::Budgets
       include Aws::Structure
     end
 
+    # The billing view status must be HEALTHY to perform this action. Try
+    # again when the status is HEALTHY.
+    #
+    # @!attribute [rw] message
+    #   The error message the exception carries.
+    #   @return [String]
+    #
+    class BillingViewHealthStatusException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Represents the output of the `CreateBudget` operation. The content
     # consists of the detailed metadata and data file information, and the
     # current status of the `budget` object.
@@ -184,6 +201,10 @@ module Aws::Budgets
     #   The name of a budget. The name must be unique within an account. The
     #   `:` and `` characters, and the "/action/" substring, aren't
     #   allowed in `BudgetName`.
+    #
+    #   Budget names are validated for content. Names that contain phone
+    #   numbers, URLs, or email addresses combined with certain terms may be
+    #   rejected.
     #   @return [String]
     #
     # @!attribute [rw] budget_limit
@@ -270,15 +291,15 @@ module Aws::Budgets
     #   @return [String]
     #
     # @!attribute [rw] time_period
-    #   The period of time that's covered by a budget. You setthe start
+    #   The period of time that's covered by a budget. You set the start
     #   date and end date. The start date must come before the end date. The
     #   end date must come before `06/15/87 00:00 UTC`.
     #
     #   If you create your budget and don't specify a start date, Amazon
     #   Web Services defaults to the start of your chosen time period
-    #   (DAILY, MONTHLY, QUARTERLY, or ANNUALLY). For example, if you
-    #   created your budget on January 24, 2018, chose `DAILY`, and didn't
-    #   set a start date, Amazon Web Services set your start date to
+    #   (DAILY, MONTHLY, QUARTERLY, ANNUALLY, or CUSTOM). For example, if
+    #   you created your budget on January 24, 2018, chose `DAILY`, and
+    #   didn't set a start date, Amazon Web Services set your start date to
     #   `01/24/18 00:00 UTC`. If you chose `MONTHLY`, Amazon Web Services
     #   set your start date to `01/01/18 00:00 UTC`. If you didn't specify
     #   an end date, Amazon Web Services set your end date to `06/15/87
@@ -309,6 +330,28 @@ module Aws::Budgets
     #   auto-adjusting budget.
     #   @return [Types::AutoAdjustData]
     #
+    # @!attribute [rw] filter_expression
+    #   The filtering dimensions for the budget and their corresponding
+    #   values.
+    #   @return [Types::Expression]
+    #
+    # @!attribute [rw] metrics
+    #   The definition for how the budget data is aggregated.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] billing_view_arn
+    #   The Amazon Resource Name (ARN) that uniquely identifies a specific
+    #   billing view. The ARN is used to specify which particular billing
+    #   view you want to interact with or retrieve information from when
+    #   making API calls related to Amazon Web Services Billing and Cost
+    #   Management features. The BillingViewArn can be retrieved by calling
+    #   the ListBillingViews API.
+    #   @return [String]
+    #
+    # @!attribute [rw] health_status
+    #   The current operational state of a Billing View derived resource.
+    #   @return [Types::HealthStatus]
+    #
     class Budget < Struct.new(
       :budget_name,
       :budget_limit,
@@ -320,7 +363,11 @@ module Aws::Budgets
       :calculated_spend,
       :budget_type,
       :last_updated_time,
-      :auto_adjust_data)
+      :auto_adjust_data,
+      :filter_expression,
+      :metrics,
+      :billing_view_arn,
+      :health_status)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -334,6 +381,10 @@ module Aws::Budgets
     # @!attribute [rw] budget_name
     #   A string that represents the budget name. The ":" and "\\"
     #   characters, and the "/action/" substring, aren't allowed.
+    #
+    #   Budget names are validated for content. Names that contain phone
+    #   numbers, URLs, or email addresses combined with certain terms may be
+    #   rejected.
     #   @return [String]
     #
     class BudgetNotificationsForAccount < Struct.new(
@@ -349,6 +400,10 @@ module Aws::Budgets
     # @!attribute [rw] budget_name
     #   A string that represents the budget name. The ":" and "\\"
     #   characters, and the "/action/" substring, aren't allowed.
+    #
+    #   Budget names are validated for content. Names that contain phone
+    #   numbers, URLs, or email addresses combined with certain terms may be
+    #   rejected.
     #   @return [String]
     #
     # @!attribute [rw] budget_type
@@ -372,10 +427,28 @@ module Aws::Budgets
     #   The time unit of the budget, such as MONTHLY or QUARTERLY.
     #   @return [String]
     #
+    # @!attribute [rw] billing_view_arn
+    #   The Amazon Resource Name (ARN) that uniquely identifies a specific
+    #   billing view. The ARN is used to specify which particular billing
+    #   view you want to interact with or retrieve information from when
+    #   making API calls related to Amazon Web Services Billing and Cost
+    #   Management features. The BillingViewArn can be retrieved by calling
+    #   the ListBillingViews API.
+    #   @return [String]
+    #
     # @!attribute [rw] budgeted_and_actual_amounts_list
     #   A list of amounts of cost or usage that you created budgets for,
     #   which are compared to your actual costs or usage.
     #   @return [Array<Types::BudgetedAndActualAmounts>]
+    #
+    # @!attribute [rw] filter_expression
+    #   The filtering dimensions for the budget and their corresponding
+    #   values.
+    #   @return [Types::Expression]
+    #
+    # @!attribute [rw] metrics
+    #   The definition for how the budget data is aggregated.
+    #   @return [Array<String>]
     #
     class BudgetPerformanceHistory < Struct.new(
       :budget_name,
@@ -383,7 +456,10 @@ module Aws::Budgets
       :cost_filters,
       :cost_types,
       :time_unit,
-      :budgeted_and_actual_amounts_list)
+      :billing_view_arn,
+      :budgeted_and_actual_amounts_list,
+      :filter_expression,
+      :metrics)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -433,6 +509,28 @@ module Aws::Budgets
     class CalculatedSpend < Struct.new(
       :actual_spend,
       :forecasted_spend)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The cost category values used for filtering the costs.
+    #
+    # @!attribute [rw] key
+    #   The unique name of the cost category.
+    #   @return [String]
+    #
+    # @!attribute [rw] values
+    #   The specific value of the cost category.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] match_options
+    #   The match options that you can use to filter your results.
+    #   @return [Array<String>]
+    #
+    class CostCategoryValues < Struct.new(
+      :key,
+      :values,
+      :match_options)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -533,6 +631,10 @@ module Aws::Budgets
     # @!attribute [rw] budget_name
     #   A string that represents the budget name. The ":" and "\\"
     #   characters, and the "/action/" substring, aren't allowed.
+    #
+    #   Budget names are validated for content. Names that contain phone
+    #   numbers, URLs, or email addresses combined with certain terms may be
+    #   rejected.
     #   @return [String]
     #
     # @!attribute [rw] notification_type
@@ -594,6 +696,10 @@ module Aws::Budgets
     # @!attribute [rw] budget_name
     #   A string that represents the budget name. The ":" and "\\"
     #   characters, and the "/action/" substring, aren't allowed.
+    #
+    #   Budget names are validated for content. Names that contain phone
+    #   numbers, URLs, or email addresses combined with certain terms may be
+    #   rejected.
     #   @return [String]
     #
     # @!attribute [rw] action_id
@@ -757,6 +863,10 @@ module Aws::Budgets
     # @!attribute [rw] budget_name
     #   A string that represents the budget name. The ":" and "\\"
     #   characters, and the "/action/" substring, aren't allowed.
+    #
+    #   Budget names are validated for content. Names that contain phone
+    #   numbers, URLs, or email addresses combined with certain terms may be
+    #   rejected.
     #   @return [String]
     #
     # @!attribute [rw] action_id
@@ -779,6 +889,10 @@ module Aws::Budgets
     # @!attribute [rw] budget_name
     #   A string that represents the budget name. The ":" and "\\"
     #   characters, and the "/action/" substring, aren't allowed.
+    #
+    #   Budget names are validated for content. Names that contain phone
+    #   numbers, URLs, or email addresses combined with certain terms may be
+    #   rejected.
     #   @return [String]
     #
     # @!attribute [rw] action
@@ -881,6 +995,10 @@ module Aws::Budgets
     # @!attribute [rw] budget_name
     #   A string that represents the budget name. The ":" and "\\"
     #   characters, and the "/action/" substring, aren't allowed.
+    #
+    #   Budget names are validated for content. Names that contain phone
+    #   numbers, URLs, or email addresses combined with certain terms may be
+    #   rejected.
     #   @return [String]
     #
     # @!attribute [rw] action_id
@@ -936,6 +1054,10 @@ module Aws::Budgets
     # @!attribute [rw] budget_name
     #   A string that represents the budget name. The ":" and "\\"
     #   characters, and the "/action/" substring, aren't allowed.
+    #
+    #   Budget names are validated for content. Names that contain phone
+    #   numbers, URLs, or email addresses combined with certain terms may be
+    #   rejected.
     #   @return [String]
     #
     # @!attribute [rw] action_id
@@ -958,6 +1080,10 @@ module Aws::Budgets
     # @!attribute [rw] budget_name
     #   A string that represents the budget name. The ":" and "\\"
     #   characters, and the "/action/" substring, aren't allowed.
+    #
+    #   Budget names are validated for content. Names that contain phone
+    #   numbers, URLs, or email addresses combined with certain terms may be
+    #   rejected.
     #   @return [String]
     #
     # @!attribute [rw] action
@@ -1015,6 +1141,10 @@ module Aws::Budgets
     # @!attribute [rw] budget_name
     #   A string that represents the budget name. The ":" and "\\"
     #   characters, and the "/action/" substring, aren't allowed.
+    #
+    #   Budget names are validated for content. Names that contain phone
+    #   numbers, URLs, or email addresses combined with certain terms may be
+    #   rejected.
     #   @return [String]
     #
     # @!attribute [rw] max_results
@@ -1093,6 +1223,10 @@ module Aws::Budgets
     # @!attribute [rw] budget_name
     #   A string that represents the budget name. The ":" and "\\"
     #   characters, and the "/action/" substring, aren't allowed.
+    #
+    #   Budget names are validated for content. Names that contain phone
+    #   numbers, URLs, or email addresses combined with certain terms may be
+    #   rejected.
     #   @return [String]
     #
     # @!attribute [rw] time_period
@@ -1151,9 +1285,17 @@ module Aws::Budgets
     #   The name of the budget that you want a description of.
     #   @return [String]
     #
+    # @!attribute [rw] show_filter_expression
+    #   Specifies whether the response includes the filter expression
+    #   associated with the budget. By showing the filter expression, you
+    #   can see detailed filtering logic applied to the budget, such as
+    #   Amazon Web Services services or tags that are being tracked.
+    #   @return [Boolean]
+    #
     class DescribeBudgetRequest < Struct.new(
       :account_id,
-      :budget_name)
+      :budget_name,
+      :show_filter_expression)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1187,10 +1329,18 @@ module Aws::Budgets
     #   the next set of results that you want to retrieve.
     #   @return [String]
     #
+    # @!attribute [rw] show_filter_expression
+    #   Specifies whether the response includes the filter expression
+    #   associated with the budgets. By showing the filter expression, you
+    #   can see detailed filtering logic applied to the budgets, such as
+    #   Amazon Web Services services or tags that are being tracked.
+    #   @return [Boolean]
+    #
     class DescribeBudgetsRequest < Struct.new(
       :account_id,
       :max_results,
-      :next_token)
+      :next_token,
+      :show_filter_expression)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1334,6 +1484,10 @@ module Aws::Budgets
     # @!attribute [rw] budget_name
     #   A string that represents the budget name. The ":" and "\\"
     #   characters, and the "/action/" substring, aren't allowed.
+    #
+    #   Budget names are validated for content. Names that contain phone
+    #   numbers, URLs, or email addresses combined with certain terms may be
+    #   rejected.
     #   @return [String]
     #
     # @!attribute [rw] action_id
@@ -1361,6 +1515,10 @@ module Aws::Budgets
     # @!attribute [rw] budget_name
     #   A string that represents the budget name. The ":" and "\\"
     #   characters, and the "/action/" substring, aren't allowed.
+    #
+    #   Budget names are validated for content. Names that contain phone
+    #   numbers, URLs, or email addresses combined with certain terms may be
+    #   rejected.
     #   @return [String]
     #
     # @!attribute [rw] action_id
@@ -1389,6 +1547,104 @@ module Aws::Budgets
     #
     class ExpiredNextTokenException < Struct.new(
       :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Use Expression to filter in various Budgets APIs.
+    #
+    # @!attribute [rw] or
+    #   Return results that match either Dimension object.
+    #   @return [Array<Types::Expression>]
+    #
+    # @!attribute [rw] and
+    #   Return results that match both Dimension objects.
+    #   @return [Array<Types::Expression>]
+    #
+    # @!attribute [rw] not
+    #   Return results that don't match a Dimension object.
+    #   @return [Types::Expression]
+    #
+    # @!attribute [rw] dimensions
+    #   The specific Dimension to use for Expression.
+    #   @return [Types::ExpressionDimensionValues]
+    #
+    # @!attribute [rw] tags
+    #   The specific Tag to use for Expression.
+    #   @return [Types::TagValues]
+    #
+    # @!attribute [rw] cost_categories
+    #   The filter that's based on CostCategoryValues.
+    #   @return [Types::CostCategoryValues]
+    #
+    class Expression < Struct.new(
+      :or,
+      :and,
+      :not,
+      :dimensions,
+      :tags,
+      :cost_categories)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains the specifications for the filters to use for your request.
+    #
+    # @!attribute [rw] key
+    #   The name of the dimension that you want to filter on.
+    #   @return [String]
+    #
+    # @!attribute [rw] values
+    #   The metadata values you can specify to filter upon, so that the
+    #   results all match at least one of the specified values.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] match_options
+    #   The match options that you can use to filter your results. You can
+    #   specify only one of these values in the array.
+    #   @return [Array<String>]
+    #
+    class ExpressionDimensionValues < Struct.new(
+      :key,
+      :values,
+      :match_options)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Provides information about the current operational state of a billing
+    # view resource, including its ability to access and update based on its
+    # associated billing view.
+    #
+    # @!attribute [rw] status
+    #   The current status of the billing view resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] status_reason
+    #   The reason for the current status.
+    #
+    #   * `BILLING_VIEW_NO_ACCESS`: The billing view resource does not grant
+    #     `billing:GetBillingViewData` permission to this account.
+    #
+    #   * `BILLING_VIEW_UNHEALTHY`: The billing view associated with the
+    #     budget is unhealthy.
+    #
+    #   * `FILTER_INVALID`: The filter contains reference to an account you
+    #     do not have access to.
+    #
+    #   * `MULTI_YEAR_HISTORICAL_DATA_DISABLED`: The budget is not being
+    #     updated. Enable multi-year historical data in your Cost Management
+    #     preferences.
+    #   @return [String]
+    #
+    # @!attribute [rw] last_updated_time
+    #   A generic time stamp. In Java, it's transformed to a `Date` object.
+    #   @return [Time]
+    #
+    class HealthStatus < Struct.new(
+      :status,
+      :status_reason,
+      :last_updated_time)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1660,8 +1916,7 @@ module Aws::Budgets
       include Aws::Structure
     end
 
-    # You've reached the limit on the number of tags you can associate with
-    # a resource.
+    # You've reached a Service Quota limit on this resource.
     #
     # @!attribute [rw] message
     #   The error message the exception carries.
@@ -1775,6 +2030,28 @@ module Aws::Budgets
 
     class TagResourceResponse < Aws::EmptyStructure; end
 
+    # The values that are available for a tag.
+    #
+    # @!attribute [rw] key
+    #   The key for the tag.
+    #   @return [String]
+    #
+    # @!attribute [rw] values
+    #   The specific value of the tag.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] match_options
+    #   The match options that you can use to filter your results.
+    #   @return [Array<String>]
+    #
+    class TagValues < Struct.new(
+      :key,
+      :values,
+      :match_options)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The number of API requests has exceeded the maximum allowed API
     # request throttling limit for the account.
     #
@@ -1795,13 +2072,13 @@ module Aws::Budgets
     # @!attribute [rw] start
     #   The start date for a budget. If you created your budget and didn't
     #   specify a start date, Amazon Web Services defaults to the start of
-    #   your chosen time period (DAILY, MONTHLY, QUARTERLY, or ANNUALLY).
-    #   For example, if you created your budget on January 24, 2018, chose
-    #   `DAILY`, and didn't set a start date, Amazon Web Services set your
-    #   start date to `01/24/18 00:00 UTC`. If you chose `MONTHLY`, Amazon
-    #   Web Services set your start date to `01/01/18 00:00 UTC`. The
-    #   defaults are the same for the Billing and Cost Management console
-    #   and the API.
+    #   your chosen time period (DAILY, MONTHLY, QUARTERLY, ANNUALLY, or
+    #   CUSTOM). For example, if you created your budget on January 24,
+    #   2018, chose `DAILY`, and didn't set a start date, Amazon Web
+    #   Services set your start date to `01/24/18 00:00 UTC`. If you chose
+    #   `MONTHLY`, Amazon Web Services set your start date to `01/01/18
+    #   00:00 UTC`. The defaults are the same for the Billing and Cost
+    #   Management console and the API.
     #
     #   You can change your start date with the `UpdateBudget` operation.
     #   @return [Time]
@@ -1848,6 +2125,10 @@ module Aws::Budgets
     # @!attribute [rw] budget_name
     #   A string that represents the budget name. The ":" and "\\"
     #   characters, and the "/action/" substring, aren't allowed.
+    #
+    #   Budget names are validated for content. Names that contain phone
+    #   numbers, URLs, or email addresses combined with certain terms may be
+    #   rejected.
     #   @return [String]
     #
     # @!attribute [rw] action_id
@@ -1901,6 +2182,10 @@ module Aws::Budgets
     # @!attribute [rw] budget_name
     #   A string that represents the budget name. The ":" and "\\"
     #   characters, and the "/action/" substring, aren't allowed.
+    #
+    #   Budget names are validated for content. Names that contain phone
+    #   numbers, URLs, or email addresses combined with certain terms may be
+    #   rejected.
     #   @return [String]
     #
     # @!attribute [rw] old_action

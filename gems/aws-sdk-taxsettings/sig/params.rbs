@@ -1,0 +1,151 @@
+# WARNING ABOUT GENERATED CODE
+#
+# This file is generated. See the contributing guide for more information:
+# https://github.com/aws/aws-sdk-ruby/blob/version-3/CONTRIBUTING.md
+#
+# WARNING ABOUT GENERATED CODE
+
+module Aws
+  module TaxSettings
+    module Params
+      type address = {
+      address_line_1: ::String?,
+      address_line_2: ::String?,
+      address_line_3: ::String?,
+      district_or_county: ::String?,
+      city: ::String?,
+      state_or_region: ::String?,
+      postal_code: ::String,
+      country_code: ::String
+    }
+
+      type additional_info_request = {
+      malaysia_additional_info: {
+        service_tax_codes: Array[("Consultancy" | "Digital Service And Electronic Medium" | "IT Services" | "Training Or Coaching")]?,
+        tax_information_number: ::String?,
+        business_registration_number: ::String?
+      }?,
+      israel_additional_info: {
+        dealer_type: ("Authorized" | "Non-authorized"),
+        customer_type: ("Business" | "Individual")
+      }?,
+      estonia_additional_info: {
+        registry_commercial_code: ::String
+      }?,
+      canada_additional_info: {
+        provincial_sales_tax_id: ::String?,
+        canada_quebec_sales_tax_number: ::String?,
+        canada_retail_sales_tax_number: ::String?,
+        is_reseller_account: bool?
+      }?,
+      spain_additional_info: {
+        registration_type: ("Intra-EU" | "Local")
+      }?,
+      kenya_additional_info: {
+        person_type: ("Legal Person" | "Physical Person" | "Business")
+      }?,
+      south_korea_additional_info: {
+        business_representative_name: ::String,
+        line_of_business: ::String,
+        item_of_business: ::String
+      }?,
+      turkey_additional_info: {
+        tax_office: ::String?,
+        kep_email_id: ::String?,
+        secondary_tax_id: ::String?,
+        industries: ("CirculatingOrg" | "ProfessionalOrg" | "Banks" | "Insurance" | "PensionAndBenefitFunds" | "DevelopmentAgencies")?
+      }?,
+      georgia_additional_info: {
+        person_type: ("Legal Person" | "Physical Person" | "Business")
+      }?,
+      italy_additional_info: {
+        sdi_account_id: ::String?,
+        cig_number: ::String?,
+        cup_number: ::String?,
+        tax_code: ::String?,
+        customer_type: ("Business" | "Individual")?
+      }?,
+      romania_additional_info: {
+        tax_registration_number_type: ("TaxRegistrationNumber" | "LocalRegistrationNumber")
+      }?,
+      ukraine_additional_info: {
+        ukraine_trn_type: ("Business" | "Individual")
+      }?,
+      poland_additional_info: {
+        individual_registration_number: ::String?,
+        is_group_vat_enabled: bool?,
+        tax_registration_number_type: ("EUTaxRegistrationNumber" | "LocalTaxRegistrationNumber" | "LocalRegistrationNumber")?
+      }?,
+      saudi_arabia_additional_info: {
+        tax_registration_number_type: ("TaxRegistrationNumber" | "TaxIdentificationNumber" | "CommercialRegistrationNumber")?
+      }?,
+      indonesia_additional_info: {
+        tax_registration_number_type: ("NIK" | "PassportNumber" | "NPWP" | "NITKU")?,
+        ppn_exception_designation_code: ::String?,
+        decision_number: ::String?
+      }?,
+      vietnam_additional_info: {
+        enterprise_identification_number: ::String?,
+        electronic_transaction_code_number: ::String?,
+        payment_voucher_number: ::String?,
+        payment_voucher_number_date: ::String?
+      }?,
+      egypt_additional_info: {
+        unique_identification_number: ::String?,
+        unique_identification_number_expiration_date: ::String?
+      }?,
+      greece_additional_info: {
+        contracting_authority_code: ::String?
+      }?,
+      uzbekistan_additional_info: {
+        tax_registration_number_type: ("Business" | "Individual")?,
+        vat_registration_number: ::String?
+      }?,
+      philippines_additional_info: {
+        is_vat_registered: bool?
+      }?,
+      belgium_additional_info: {
+        peppol_id: ::String?,
+        is_mercurius_box_enabled: bool?
+      }?,
+      chile_additional_info: {
+        document_type: ("Invoice" | "Receipt")?,
+        business_activity: ::String?
+      }?,
+      france_additional_info: {
+        siren_number: ::String
+      }?
+    }
+
+      type verification_details = {
+      date_of_birth: ::String?,
+      tax_registration_documents: Array[
+        Params::tax_registration_document
+      ]?
+    }
+
+      type tax_registration_entry = {
+      registration_id: ::String,
+      registration_type: ("VAT" | "GST" | "CPF" | "CNPJ" | "SST" | "TIN" | "NRIC" | "PAN" | "NIP"),
+      legal_name: ::String?,
+      legal_address: Params::address?,
+      sector: ("Business" | "Individual" | "Government")?,
+      additional_tax_information: Params::additional_info_request?,
+      verification_details: Params::verification_details?,
+      certified_email_id: ::String?
+    }
+
+      type tax_registration_document = {
+      s3_location: {
+        bucket: ::String,
+        key: ::String
+      }?,
+      file: {
+        file_name: ::String,
+        file_content: ::String
+      }?
+    }
+
+    end
+  end
+end

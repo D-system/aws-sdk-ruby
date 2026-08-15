@@ -244,14 +244,14 @@ module Aws::CloudWatch
     #     1-hour clock interval. For example, 12:32:34 is rounded down to
     #     12:00:00.
     #
-    #   If you set `Period` to 5, 10, or 30, the start time of your request is
-    #   rounded down to the nearest time that corresponds to even 5-, 10-, or
-    #   30-second divisions of a minute. For example, if you make a query at
-    #   (HH:mm:ss) 01:05:23 for the previous 10-second period, the start time
-    #   of your request is rounded down and you receive data from 01:05:10 to
-    #   01:05:20. If you make a query at 15:07:17 for the previous 5 minutes
-    #   of data, using a period of 5 seconds, you receive data timestamped
-    #   between 15:02:15 and 15:07:15.
+    #   If you set `Period` to 5, 10, 20, or 30, the start time of your
+    #   request is rounded down to the nearest time that corresponds to even
+    #   5-, 10-, 20-, or 30-second divisions of a minute. For example, if you
+    #   make a query at (HH:mm:ss) 01:05:23 for the previous 10-second period,
+    #   the start time of your request is rounded down and you receive data
+    #   from 01:05:10 to 01:05:20. If you make a query at 15:07:17 for the
+    #   previous 5 minutes of data, using a period of 5 seconds, you receive
+    #   data timestamped between 15:02:15 and 15:07:15.
     # @option options [required, Time,DateTime,Date,Integer,String] :end_time
     #   The time stamp that determines the last data point to return.
     #
@@ -263,7 +263,7 @@ module Aws::CloudWatch
     #   with regular resolution, a period can be as short as one minute (60
     #   seconds) and must be a multiple of 60. For high-resolution metrics
     #   that are collected at intervals of less than one minute, the period
-    #   can be 1, 5, 10, 30, 60, or any multiple of 60. High-resolution
+    #   can be 1, 5, 10, 20, 30, 60, or any multiple of 60. High-resolution
     #   metrics are those metrics stored by a `PutMetricData` call that
     #   includes a `StorageResolution` of 1 second.
     #
@@ -329,10 +329,10 @@ module Aws::CloudWatch
     #     ],
     #     period: 1,
     #     unit: "Seconds", # accepts Seconds, Microseconds, Milliseconds, Bytes, Kilobytes, Megabytes, Gigabytes, Terabytes, Bits, Kilobits, Megabits, Gigabits, Terabits, Percent, Count, Bytes/Second, Kilobytes/Second, Megabytes/Second, Gigabytes/Second, Terabytes/Second, Bits/Second, Kilobits/Second, Megabits/Second, Gigabits/Second, Terabits/Second, Count/Second, None
-    #     evaluation_periods: 1, # required
+    #     evaluation_periods: 1,
     #     datapoints_to_alarm: 1,
     #     threshold: 1.0,
-    #     comparison_operator: "GreaterThanOrEqualToThreshold", # required, accepts GreaterThanOrEqualToThreshold, GreaterThanThreshold, LessThanThreshold, LessThanOrEqualToThreshold, LessThanLowerOrGreaterThanUpperThreshold, LessThanLowerThreshold, GreaterThanUpperThreshold
+    #     comparison_operator: "GreaterThanOrEqualToThreshold", # accepts GreaterThanOrEqualToThreshold, GreaterThanThreshold, LessThanThreshold, LessThanOrEqualToThreshold, LessThanLowerOrGreaterThanUpperThreshold, LessThanLowerThreshold, GreaterThanUpperThreshold
     #     treat_missing_data: "TreatMissingData",
     #     evaluate_low_sample_count_percentile: "EvaluateLowSampleCountPercentile",
     #     metrics: [
@@ -367,6 +367,21 @@ module Aws::CloudWatch
     #       },
     #     ],
     #     threshold_metric_id: "MetricId",
+    #     evaluation_window: {
+    #       wall_clock_window: {
+    #         timezone: "Timezone",
+    #       },
+    #       sliding_window: {
+    #       },
+    #     },
+    #     evaluation_criteria: {
+    #       prom_ql_criteria: {
+    #         query: "Query", # required
+    #         pending_period: 1,
+    #         recovery_period: 1,
+    #       },
+    #     },
+    #     evaluation_interval: 1,
     #   })
     # @param [Hash] options ({})
     # @option options [required, String] :alarm_name
@@ -492,7 +507,7 @@ module Aws::CloudWatch
     #
     #   **Start a Amazon Q Developer operational investigation**
     #
-    #   `arn:aws:aiops:region:account-id:investigation-group:ingestigation-group-id
+    #   `arn:aws:aiops:region:account-id:investigation-group:investigation-group-id
     #   `
     # @option options [Array<String>] :insufficient_data_actions
     #   The actions to execute when this alarm transitions to the
@@ -593,27 +608,29 @@ module Aws::CloudWatch
     #   The dimensions for the metric specified in `MetricName`.
     # @option options [Integer] :period
     #   The length, in seconds, used each time the metric specified in
-    #   `MetricName` is evaluated. Valid values are 10, 30, and any multiple
-    #   of 60.
+    #   `MetricName` is evaluated. Valid values are 10, 20, 30, and any
+    #   multiple of 60.
     #
     #   `Period` is required for alarms based on static thresholds. If you are
     #   creating an alarm based on a metric math expression, you specify the
     #   period for each metric within the objects in the `Metrics` array.
     #
-    #   Be sure to specify 10 or 30 only for metrics that are stored by a
+    #   Be sure to specify 10, 20, or 30 only for metrics that are stored by a
     #   `PutMetricData` call with a `StorageResolution` of 1. If you specify a
-    #   period of 10 or 30 for a metric that does not have sub-minute
+    #   period of 10, 20, or 30 for a metric that does not have sub-minute
     #   resolution, the alarm still attempts to gather data at the period rate
     #   that you specify. In this case, it does not receive data for the
     #   attempts that do not correspond to a one-minute data resolution, and
     #   the alarm might often lapse into INSUFFICENT\_DATA status. Specifying
-    #   10 or 30 also sets this alarm as a high-resolution alarm, which has a
-    #   higher charge than other alarms. For more information about pricing,
-    #   see [Amazon CloudWatch Pricing][1].
+    #   10, 20, or 30 also sets this alarm as a high-resolution alarm, which
+    #   has a higher charge than other alarms. For more information about
+    #   pricing, see [Amazon CloudWatch Pricing][1].
     #
-    #   An alarm's total current evaluation period can be no longer than one
-    #   day, so `Period` multiplied by `EvaluationPeriods` cannot be more than
-    #   86,400 seconds.
+    #   An alarm's total current evaluation period can be no longer than
+    #   seven days, so `Period` multiplied by `EvaluationPeriods` can't be
+    #   more than 604,800 seconds. For alarms with a period of less than one
+    #   hour (3,600 seconds), the total evaluation period can't be longer
+    #   than one day (86,400 seconds).
     #
     #
     #
@@ -641,16 +658,12 @@ module Aws::CloudWatch
     #   We recommend omitting `Unit` so that you don't inadvertently specify
     #   an incorrect unit that is not published for this metric. Doing so
     #   causes the alarm to be stuck in the `INSUFFICIENT DATA` state.
-    # @option options [required, Integer] :evaluation_periods
+    # @option options [Integer] :evaluation_periods
     #   The number of periods over which data is compared to the specified
     #   threshold. If you are setting an alarm that requires that a number of
     #   consecutive data points be breaching to trigger the alarm, this value
     #   specifies that number. If you are setting an "M out of N" alarm,
     #   this value is the N.
-    #
-    #   An alarm's total current evaluation period can be no longer than one
-    #   day, so this number multiplied by `Period` cannot be more than 86,400
-    #   seconds.
     # @option options [Integer] :datapoints_to_alarm
     #   The number of data points that must be breaching to trigger the alarm.
     #   This is used only if you are setting an "M out of N" alarm. In that
@@ -665,7 +678,7 @@ module Aws::CloudWatch
     #
     #   This parameter is required for alarms based on static thresholds, but
     #   should not be used for alarms based on anomaly detection models.
-    # @option options [required, String] :comparison_operator
+    # @option options [String] :comparison_operator
     #   The arithmetic operation to use when comparing the specified statistic
     #   and threshold. The specified statistic value is used as the first
     #   operand.
@@ -685,6 +698,10 @@ module Aws::CloudWatch
     #   `ignore` missing data even if you choose a different option for
     #   `TreatMissingData`. When an `AWS/DynamoDB` metric has missing data,
     #   alarms that evaluate that metric remain in their current state.
+    #
+    #    </note>
+    #
+    #   <note markdown="1"> This parameter is not applicable to PromQL alarms.
     #
     #    </note>
     #
@@ -708,8 +725,8 @@ module Aws::CloudWatch
     # @option options [Array<Types::MetricDataQuery>] :metrics
     #   An array of `MetricDataQuery` structures that enable you to create an
     #   alarm based on the result of a metric math expression. For each
-    #   `PutMetricAlarm` operation, you must specify either `MetricName` or a
-    #   `Metrics` array.
+    #   `PutMetricAlarm` operation, you must specify either `MetricName`, a
+    #   `Metrics` array, or an `EvaluationCriteria`.
     #
     #   Each item in the `Metrics` array either retrieves a metric or performs
     #   a math expression.
@@ -759,6 +776,48 @@ module Aws::CloudWatch
     #
     #   If your alarm uses this parameter, it cannot have Auto Scaling
     #   actions.
+    # @option options [Types::EvaluationWindow] :evaluation_window
+    #   The evaluation window that the alarm uses to select the range of
+    #   metric data that it evaluates. Specify either a sliding window or a
+    #   wall clock window. If you omit this parameter, the alarm uses a
+    #   sliding window.
+    #
+    #   A sliding window advances each time the alarm is evaluated, forming a
+    #   rolling time window. A wall clock window aligns the evaluated range to
+    #   fixed clock boundaries, such as the top of the hour or the start of
+    #   the day.
+    #
+    #   You can use `EvaluationWindow` with any type of metric alarm except
+    #   alarms that are based on a PromQL query.
+    #
+    #   For more information, see [Alarm evaluation windows][1] in the
+    #   *CloudWatch User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/alarm-evaluation-window.html
+    # @option options [Types::EvaluationCriteria] :evaluation_criteria
+    #   The evaluation criteria for the alarm. For each `PutMetricAlarm`
+    #   operation, you must specify either `MetricName`, a `Metrics` array, or
+    #   an `EvaluationCriteria`.
+    #
+    #   If you use the `EvaluationCriteria` parameter, you cannot include the
+    #   `Namespace`, `MetricName`, `Dimensions`, `Period`, `Unit`,
+    #   `Statistic`, `ExtendedStatistic`, `Metrics`, `Threshold`,
+    #   `ComparisonOperator`, `ThresholdMetricId`, `EvaluationPeriods`, or
+    #   `DatapointsToAlarm` parameters of `PutMetricAlarm` in the same
+    #   operation. Instead, all evaluation parameters are defined within this
+    #   structure.
+    #
+    #   For an example of how to use this parameter, see the **PromQL alarm**
+    #   example on this page.
+    # @option options [Integer] :evaluation_interval
+    #   The frequency, in seconds, at which the alarm is evaluated. Valid
+    #   values are 10, 20, 30, and any multiple of 60.
+    #
+    #   This parameter is required for alarms that use `EvaluationCriteria`,
+    #   and cannot be specified for alarms configured with `MetricName` or
+    #   `Metrics`.
     # @return [Alarm]
     def put_alarm(options = {})
       options = options.merge(
@@ -893,7 +952,7 @@ module Aws::CloudWatch
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/adding-your-own-related-telemetry.html
+    #   [1]: https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/adding-your-own-related-telemetry.html
     # @return [EmptyStructure]
     def put_data(options = {})
       options = Aws::Util.deep_merge(options,

@@ -95,8 +95,8 @@ module Aws::SecretsManager
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::SecretsManager
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::SecretsManager
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::SecretsManager
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::SecretsManager
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::SecretsManager
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::SecretsManager
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -375,8 +379,8 @@ module Aws::SecretsManager
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -941,6 +945,15 @@ module Aws::SecretsManager
     #   Specifies whether to overwrite a secret with the same name in the
     #   destination Region. By default, secrets aren't overwritten.
     #
+    # @option params [String] :type
+    #   The exact string that identifies the partner that holds the external
+    #   secret. For more information, see [Using Secrets Manager managed
+    #   external secrets][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/secretsmanager/latest/userguide/managed-external-secrets.html
+    #
     # @return [Types::CreateSecretResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateSecretResponse#arn #arn} => String
@@ -990,6 +1003,7 @@ module Aws::SecretsManager
     #       },
     #     ],
     #     force_overwrite_replica_secret: false,
+    #     type: "MedeaTypeType",
     #   })
     #
     # @example Response structure
@@ -1251,11 +1265,14 @@ module Aws::SecretsManager
     #
     #   * {Types::DescribeSecretResponse#arn #arn} => String
     #   * {Types::DescribeSecretResponse#name #name} => String
+    #   * {Types::DescribeSecretResponse#type #type} => String
     #   * {Types::DescribeSecretResponse#description #description} => String
     #   * {Types::DescribeSecretResponse#kms_key_id #kms_key_id} => String
     #   * {Types::DescribeSecretResponse#rotation_enabled #rotation_enabled} => Boolean
     #   * {Types::DescribeSecretResponse#rotation_lambda_arn #rotation_lambda_arn} => String
     #   * {Types::DescribeSecretResponse#rotation_rules #rotation_rules} => Types::RotationRulesType
+    #   * {Types::DescribeSecretResponse#external_secret_rotation_metadata #external_secret_rotation_metadata} => Array&lt;Types::ExternalSecretRotationMetadataItem&gt;
+    #   * {Types::DescribeSecretResponse#external_secret_rotation_role_arn #external_secret_rotation_role_arn} => String
     #   * {Types::DescribeSecretResponse#last_rotated_date #last_rotated_date} => Time
     #   * {Types::DescribeSecretResponse#last_changed_date #last_changed_date} => Time
     #   * {Types::DescribeSecretResponse#last_accessed_date #last_accessed_date} => Time
@@ -1324,6 +1341,7 @@ module Aws::SecretsManager
     #
     #   resp.arn #=> String
     #   resp.name #=> String
+    #   resp.type #=> String
     #   resp.description #=> String
     #   resp.kms_key_id #=> String
     #   resp.rotation_enabled #=> Boolean
@@ -1331,6 +1349,10 @@ module Aws::SecretsManager
     #   resp.rotation_rules.automatically_after_days #=> Integer
     #   resp.rotation_rules.duration #=> String
     #   resp.rotation_rules.schedule_expression #=> String
+    #   resp.external_secret_rotation_metadata #=> Array
+    #   resp.external_secret_rotation_metadata[0].key #=> String
+    #   resp.external_secret_rotation_metadata[0].value #=> String
+    #   resp.external_secret_rotation_role_arn #=> String
     #   resp.last_rotated_date #=> Time
     #   resp.last_changed_date #=> Time
     #   resp.last_accessed_date #=> Time
@@ -1847,6 +1869,9 @@ module Aws::SecretsManager
     # @option params [String] :sort_order
     #   Secrets are listed by `CreatedDate`.
     #
+    # @option params [String] :sort_by
+    #   If not specified, secrets are listed by `CreatedDate`.
+    #
     # @return [Types::ListSecretsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::ListSecretsResponse#secret_list #secret_list} => Array&lt;Types::SecretListEntry&gt;
@@ -1903,6 +1928,7 @@ module Aws::SecretsManager
     #       },
     #     ],
     #     sort_order: "asc", # accepts asc, desc
+    #     sort_by: "created-date", # accepts created-date, last-accessed-date, last-changed-date, name
     #   })
     #
     # @example Response structure
@@ -1910,6 +1936,7 @@ module Aws::SecretsManager
     #   resp.secret_list #=> Array
     #   resp.secret_list[0].arn #=> String
     #   resp.secret_list[0].name #=> String
+    #   resp.secret_list[0].type #=> String
     #   resp.secret_list[0].description #=> String
     #   resp.secret_list[0].kms_key_id #=> String
     #   resp.secret_list[0].rotation_enabled #=> Boolean
@@ -1917,6 +1944,10 @@ module Aws::SecretsManager
     #   resp.secret_list[0].rotation_rules.automatically_after_days #=> Integer
     #   resp.secret_list[0].rotation_rules.duration #=> String
     #   resp.secret_list[0].rotation_rules.schedule_expression #=> String
+    #   resp.secret_list[0].external_secret_rotation_metadata #=> Array
+    #   resp.secret_list[0].external_secret_rotation_metadata[0].key #=> String
+    #   resp.secret_list[0].external_secret_rotation_metadata[0].value #=> String
+    #   resp.secret_list[0].external_secret_rotation_role_arn #=> String
     #   resp.secret_list[0].last_rotated_date #=> Time
     #   resp.secret_list[0].last_changed_date #=> Time
     #   resp.secret_list[0].last_accessed_date #=> Time
@@ -2050,18 +2081,17 @@ module Aws::SecretsManager
       req.send_request(options)
     end
 
-    # Creates a new version with a new encrypted secret value and attaches
-    # it to the secret. The version can contain a new `SecretString` value
-    # or a new `SecretBinary` value.
+    # Creates a new version of your secret by creating a new encrypted value
+    # and attaching it to the secret. version can contain a new
+    # `SecretString` value or a new `SecretBinary` value.
     #
-    # We recommend you avoid calling `PutSecretValue` at a sustained rate of
-    # more than once every 10 minutes. When you update the secret value,
-    # Secrets Manager creates a new version of the secret. Secrets Manager
-    # removes outdated versions when there are more than 100, but it does
-    # not remove versions created less than 24 hours ago. If you call
-    # `PutSecretValue` more than once every 10 minutes, you create more
-    # versions than Secrets Manager removes, and you will reach the quota
-    # for secret versions.
+    # Do not call `PutSecretValue` at a sustained rate of more than once
+    # every 10 minutes. When you update the secret value, Secrets Manager
+    # creates a new version of the secret. Secrets Manager keeps 100 of the
+    # most recent versions, but it keeps *all* secret versions created in
+    # the last 24 hours. If you call `PutSecretValue` more than once every
+    # 10 minutes, you will create more versions than Secrets Manager
+    # removes, and you will reach the quota for secret versions.
     #
     # You can specify the staging labels to attach to the new version in
     # `VersionStages`. If you don't include `VersionStages`, then Secrets
@@ -2201,12 +2231,14 @@ module Aws::SecretsManager
     #   automatically moves the staging label `AWSCURRENT` to this version.
     #
     # @option params [String] :rotation_token
-    #   A unique identifier that indicates the source of the request. For
-    #   cross-account rotation (when you rotate a secret in one account by
-    #   using a Lambda rotation function in another account) and the Lambda
-    #   rotation function assumes an IAM role to call Secrets Manager, Secrets
-    #   Manager validates the identity with the rotation token. For more
-    #   information, see [How rotation works][1].
+    #   A unique identifier that indicates the source of the request. Required
+    #   for secret rotations using an IAM assumed role or cross-account
+    #   rotation, in which you rotate a secret in one account by using a
+    #   Lambda rotation function in another account. In both cases, the
+    #   rotation function assumes an IAM role to call Secrets Manager, and
+    #   then Secrets Manager validates the identity using the token. For more
+    #   information, see [How rotation works][1] and [Rotation by Lambda
+    #   functions][2].
     #
     #   Sensitive: This field contains sensitive information, so the service
     #   does not include it in CloudTrail log entries. If you create your own
@@ -2216,6 +2248,7 @@ module Aws::SecretsManager
     #
     #
     #   [1]: https://docs.aws.amazon.com/secretsmanager/latest/userguide/rotating-secrets.html
+    #   [2]: https://docs.aws.amazon.com/secretsmanager/latest/userguide/rotate-secrets_lambda
     #
     # @return [Types::PutSecretValueResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -2590,22 +2623,62 @@ module Aws::SecretsManager
     # @option params [Types::RotationRulesType] :rotation_rules
     #   A structure that defines the rotation configuration for this secret.
     #
+    #   When changing an existing rotation schedule and setting
+    #   `RotateImmediately` to `false`:
+    #
+    #    * If using `AutomaticallyAfterDays` or a `ScheduleExpression` with
+    #     `rate()`, the previously scheduled rotation might still occur.
+    #
+    #   * To prevent unintended rotations, use a `ScheduleExpression` with
+    #     `cron()` for granular control over rotation windows.
+    #
+    # @option params [Array<Types::ExternalSecretRotationMetadataItem>] :external_secret_rotation_metadata
+    #   The metadata needed to successfully rotate a managed external secret.
+    #   A list of key value pairs in JSON format specified by the partner. For
+    #   more information about the required information, see [Using Secrets
+    #   Manager managed external secrets][1]
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/secretsmanager/latest/userguide/managed-external-secrets.html
+    #
+    # @option params [String] :external_secret_rotation_role_arn
+    #   The Amazon Resource Name (ARN) of the role that allows Secrets Manager
+    #   to rotate a secret held by a third-party partner. For more
+    #   information, see [Security and permissions][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/secretsmanager/latest/userguide/mes-security.html
+    #
     # @option params [Boolean] :rotate_immediately
     #   Specifies whether to rotate the secret immediately or wait until the
     #   next scheduled rotation window. The rotation schedule is defined in
     #   RotateSecretRequest$RotationRules.
     #
-    #   For secrets that use a Lambda rotation function to rotate, if you
-    #   don't immediately rotate the secret, Secrets Manager tests the
+    #   The default for `RotateImmediately` is `true`. If you don't specify
+    #   this value, Secrets Manager rotates the secret immediately.
+    #
+    #   If you set `RotateImmediately` to `false`, Secrets Manager tests the
     #   rotation configuration by running the [ `testSecret` step][1] of the
-    #   Lambda rotation function. The test creates an `AWSPENDING` version of
+    #   Lambda rotation function. This test creates an `AWSPENDING` version of
     #   the secret and then removes it.
     #
-    #   By default, Secrets Manager rotates the secret immediately.
+    #   When changing an existing rotation schedule and setting
+    #   `RotateImmediately` to `false`:
+    #
+    #   * If using `AutomaticallyAfterDays` or a `ScheduleExpression` with
+    #     `rate()`, the previously scheduled rotation might still occur.
+    #
+    #   * To prevent unintended rotations, use a `ScheduleExpression` with
+    #     `cron()` for granular control over rotation windows.
+    #
+    #   Rotation is an asynchronous process. For more information, see [How
+    #   rotation works][1].
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/secretsmanager/latest/userguide/rotate-secrets_lambda-functions.html#rotate-secrets_lambda-functions-code
+    #   [1]: https://docs.aws.amazon.com/secretsmanager/latest/userguide/rotate-secrets_how.html
     #
     # @return [Types::RotateSecretResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -2663,6 +2736,13 @@ module Aws::SecretsManager
     #       duration: "DurationType",
     #       schedule_expression: "ScheduleExpressionType",
     #     },
+    #     external_secret_rotation_metadata: [
+    #       {
+    #         key: "ExternalSecretRotationMetadataItemKeyType",
+    #         value: "ExternalSecretRotationMetadataItemValueType",
+    #       },
+    #     ],
+    #     external_secret_rotation_role_arn: "RoleARNType",
     #     rotate_immediately: false,
     #   })
     #
@@ -2704,7 +2784,9 @@ module Aws::SecretsManager
     # [3]: https://docs.aws.amazon.com/secretsmanager/latest/userguide/auth-and-access.html
     #
     # @option params [required, String] :secret_id
-    #   The ARN of the primary secret.
+    #   The name of the secret or the replica ARN. The replica ARN is the same
+    #   as the original primary secret ARN expect the Region is changed to the
+    #   replica Region.
     #
     # @return [Types::StopReplicationToReplicaResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -3073,6 +3155,15 @@ module Aws::SecretsManager
     #   log entries, you must also avoid logging the information in this
     #   field.
     #
+    # @option params [String] :type
+    #   The exact string that identifies the third-party partner that holds
+    #   the external secret. For more information, see [Managed external
+    #   secret partners][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/secretsmanager/latest/userguide/mes-partners.html
+    #
     # @return [Types::UpdateSecretResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::UpdateSecretResponse#arn #arn} => String
@@ -3138,6 +3229,7 @@ module Aws::SecretsManager
     #     kms_key_id: "KmsKeyIdType",
     #     secret_binary: "data",
     #     secret_string: "SecretStringType",
+    #     type: "MedeaTypeType",
     #   })
     #
     # @example Response structure
@@ -3418,7 +3510,7 @@ module Aws::SecretsManager
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-secretsmanager'
-      context[:gem_version] = '1.113.0'
+      context[:gem_version] = '1.134.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

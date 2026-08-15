@@ -240,10 +240,10 @@ module Aws::RDS
   #    * This error class is not used. `TenantDatabaseQuotaExceeded` is used during parsing instead.
   # * {UnsupportedDBEngineVersionFault}
   #    * This error class is not used. `UnsupportedDBEngineVersion` is used during parsing instead.
+  # * {VpcEncryptionControlViolationException}
   #
   # Additionally, error classes are dynamically generated for service errors based on the error code
   # if they are not defined above.
-  # Some existing error classes may use a different class name than the one documented.
   module Errors
 
     extend Aws::Errors::DynamicErrors
@@ -1829,6 +1829,16 @@ module Aws::RDS
       # @param [Seahorse::Client::RequestContext] context
       # @param [String] message
       # @param [Aws::RDS::Types::UnsupportedDBEngineVersionFault] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+    end
+
+    class VpcEncryptionControlViolationException < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::RDS::Types::VpcEncryptionControlViolationException] data
       def initialize(context, message, data = Aws::EmptyStructure.new)
         super(context, message, data)
       end

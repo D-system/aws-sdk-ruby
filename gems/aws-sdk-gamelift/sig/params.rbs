@@ -1,0 +1,115 @@
+# WARNING ABOUT GENERATED CODE
+#
+# This file is generated. See the contributing guide for more information:
+# https://github.com/aws/aws-sdk-ruby/blob/version-3/CONTRIBUTING.md
+#
+# WARNING ABOUT GENERATED CODE
+
+module Aws
+  module GameLift
+    module Params
+      type game_server_container_definition_input = {
+      container_name: ::String,
+      depends_on: Array[
+        {
+          container_name: ::String,
+          condition: ("START" | "COMPLETE" | "SUCCESS" | "HEALTHY")
+        }
+      ]?,
+      mount_points: Array[
+        {
+          instance_path: ::String,
+          container_path: ::String?,
+          access_level: ("READ_ONLY" | "READ_AND_WRITE")?
+        }
+      ]?,
+      environment_override: Array[
+        {
+          name: ::String,
+          value: ::String
+        }
+      ]?,
+      image_uri: ::String,
+      port_configuration: {
+        container_port_ranges: Array[
+          {
+            from_port: ::Integer,
+            to_port: ::Integer,
+            protocol: ("TCP" | "UDP")
+          }
+        ]
+      },
+      server_sdk_version: ::String,
+      linux_capabilities: {
+        include: Array[("AUDIT_CONTROL" | "AUDIT_WRITE" | "BLOCK_SUSPEND" | "CHOWN" | "DAC_OVERRIDE" | "DAC_READ_SEARCH" | "FOWNER" | "FSETID" | "IPC_LOCK" | "IPC_OWNER" | "KILL" | "LEASE" | "LINUX_IMMUTABLE" | "MAC_ADMIN" | "MAC_OVERRIDE" | "MKNOD" | "NET_ADMIN" | "NET_BIND_SERVICE" | "NET_BROADCAST" | "NET_RAW" | "SETFCAP" | "SETGID" | "SETPCAP" | "SETUID" | "SYS_ADMIN" | "SYS_BOOT" | "SYS_CHROOT" | "SYS_MODULE" | "SYS_NICE" | "SYS_PACCT" | "SYS_PTRACE" | "SYS_RAWIO" | "SYS_RESOURCE" | "SYS_TIME" | "SYS_TTY_CONFIG" | "SYSLOG" | "WAKE_ALARM")]?
+      }?
+    }
+
+      type support_container_definition_input = {
+      container_name: ::String,
+      depends_on: Array[
+        {
+          container_name: ::String,
+          condition: ("START" | "COMPLETE" | "SUCCESS" | "HEALTHY")
+        }
+      ]?,
+      mount_points: Array[
+        {
+          instance_path: ::String,
+          container_path: ::String?,
+          access_level: ("READ_ONLY" | "READ_AND_WRITE")?
+        }
+      ]?,
+      environment_override: Array[
+        {
+          name: ::String,
+          value: ::String
+        }
+      ]?,
+      essential: bool?,
+      health_check: {
+        command: Array[::String],
+        interval: ::Integer?,
+        retries: ::Integer?,
+        start_period: ::Integer?,
+        timeout: ::Integer?
+      }?,
+      image_uri: ::String,
+      memory_hard_limit_mebibytes: ::Integer?,
+      port_configuration: {
+        container_port_ranges: Array[
+          {
+            from_port: ::Integer,
+            to_port: ::Integer,
+            protocol: ("TCP" | "UDP")
+          }
+        ]
+      }?,
+      vcpu: ::Float?,
+      linux_capabilities: {
+        include: Array[("AUDIT_CONTROL" | "AUDIT_WRITE" | "BLOCK_SUSPEND" | "CHOWN" | "DAC_OVERRIDE" | "DAC_READ_SEARCH" | "FOWNER" | "FSETID" | "IPC_LOCK" | "IPC_OWNER" | "KILL" | "LEASE" | "LINUX_IMMUTABLE" | "MAC_ADMIN" | "MAC_OVERRIDE" | "MKNOD" | "NET_ADMIN" | "NET_BIND_SERVICE" | "NET_BROADCAST" | "NET_RAW" | "SETFCAP" | "SETGID" | "SETPCAP" | "SETUID" | "SYS_ADMIN" | "SYS_BOOT" | "SYS_CHROOT" | "SYS_MODULE" | "SYS_NICE" | "SYS_PACCT" | "SYS_PTRACE" | "SYS_RAWIO" | "SYS_RESOURCE" | "SYS_TIME" | "SYS_TTY_CONFIG" | "SYSLOG" | "WAKE_ALARM")]?
+      }?
+    }
+
+      type runtime_configuration = {
+      server_processes: Array[
+        {
+          launch_path: ::String,
+          parameters: ::String?,
+          concurrent_executions: ::Integer
+        }
+      ]?,
+      max_concurrent_game_session_activations: ::Integer?,
+      game_session_activation_timeout_seconds: ::Integer?
+    }
+
+      type player = {
+      player_id: ::String?,
+      player_attributes: Hash[::String, untyped]?,
+      team: ::String?,
+      latency_in_ms: Hash[::String, ::Integer]?
+    }
+
+    end
+  end
+end

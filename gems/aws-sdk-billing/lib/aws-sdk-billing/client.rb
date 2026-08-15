@@ -95,8 +95,8 @@ module Aws::Billing
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::Billing
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::Billing
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::Billing
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::Billing
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::Billing
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::Billing
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -375,8 +379,8 @@ module Aws::Billing
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -477,6 +481,57 @@ module Aws::Billing
 
     # @!group API Operations
 
+    # Associates one or more source billing views with an existing billing
+    # view. This allows creating aggregate billing views that combine data
+    # from multiple sources.
+    #
+    # @option params [required, String] :arn
+    #   The Amazon Resource Name (ARN) of the billing view to associate source
+    #   views with.
+    #
+    # @option params [required, Array<String>] :source_views
+    #   A list of ARNs of the source billing views to associate.
+    #
+    # @return [Types::AssociateSourceViewsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::AssociateSourceViewsResponse#arn #arn} => String
+    #
+    #
+    # @example Example: Invoke AssociateSourceViews
+    #
+    #   resp = client.associate_source_views({
+    #     arn: "arn:aws:billing::123456789012:billingview/custom-46f47cb2-a11d-43f3-983d-470b5708a899", 
+    #     source_views: [
+    #       "arn:aws:billing::123456789012:billingview/primary", 
+    #       "arn:aws:billing::123456789012:billingview/custom-d3f9c7e4-8b2f-4a6e-9d3b-2f7c8a1e5f6d", 
+    #     ], 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     arn: "arn:aws:billing::123456789012:billingview/custom-46f47cb2-a11d-43f3-983d-470b5708a899", 
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.associate_source_views({
+    #     arn: "BillingViewArn", # required
+    #     source_views: ["BillingViewArn"], # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.arn #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/AssociateSourceViews AWS API Documentation
+    #
+    # @overload associate_source_views(params = {})
+    # @param [Hash] params ({})
+    def associate_source_views(params = {}, options = {})
+      req = build_request(:associate_source_views, params)
+      req.send_request(options)
+    end
+
     # Creates a billing view with the specified billing view attributes.
     #
     # @option params [required, String] :name
@@ -490,12 +545,12 @@ module Aws::Billing
     #   view.
     #
     # @option params [Types::Expression] :data_filter_expression
-    #   See [Expression][1]. Billing view only supports `LINKED_ACCOUNT` and
-    #   `Tags`.
+    #   See [Expression][1]. Billing view only supports `LINKED_ACCOUNT`,
+    #   `Tags`, and `CostCategories`.
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_Expression.html
+    #   [1]: https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_billing_Expression.html
     #
     # @option params [String] :client_token
     #   A unique, case-sensitive identifier you specify to ensure idempotency
@@ -556,6 +611,14 @@ module Aws::Billing
     #         key: "TagKey", # required
     #         values: ["Value"], # required
     #       },
+    #       cost_categories: {
+    #         key: "CostCategoryName", # required
+    #         values: ["Value"], # required
+    #       },
+    #       time_range: {
+    #         begin_date_inclusive: Time.now,
+    #         end_date_inclusive: Time.now,
+    #       },
     #     },
     #     client_token: "ClientToken",
     #     resource_tags: [
@@ -586,6 +649,11 @@ module Aws::Billing
     #   The Amazon Resource Name (ARN) that can be used to uniquely identify
     #   the billing view.
     #
+    # @option params [Boolean] :force
+    #   If set to true, forces deletion of the billing view even if it has
+    #   derived resources (e.g. other billing views or budgets). Use with
+    #   caution as this may break dependent resources.
+    #
     # @return [Types::DeleteBillingViewResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::DeleteBillingViewResponse#arn #arn} => String
@@ -606,6 +674,7 @@ module Aws::Billing
     #
     #   resp = client.delete_billing_view({
     #     arn: "BillingViewArn", # required
+    #     force: false,
     #   })
     #
     # @example Response structure
@@ -618,6 +687,121 @@ module Aws::Billing
     # @param [Hash] params ({})
     def delete_billing_view(params = {}, options = {})
       req = build_request(:delete_billing_view, params)
+      req.send_request(options)
+    end
+
+    # Removes the association between one or more source billing views and
+    # an existing billing view. This allows modifying the composition of
+    # aggregate billing views.
+    #
+    # @option params [required, String] :arn
+    #   The Amazon Resource Name (ARN) of the billing view to disassociate
+    #   source views from.
+    #
+    # @option params [required, Array<String>] :source_views
+    #   A list of ARNs of the source billing views to disassociate.
+    #
+    # @return [Types::DisassociateSourceViewsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DisassociateSourceViewsResponse#arn #arn} => String
+    #
+    #
+    # @example Example: Invoke DisassociateSourceViews
+    #
+    #   resp = client.disassociate_source_views({
+    #     arn: "arn:aws:billing::123456789012:billingview/custom-46f47cb2-a11d-43f3-983d-470b5708a899", 
+    #     source_views: [
+    #       "arn:aws:billing::123456789012:billingview/primary", 
+    #       "arn:aws:billing::123456789012:billingview/custom-d3f9c7e4-8b2f-4a6e-9d3b-2f7c8a1e5f6d", 
+    #     ], 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     arn: "arn:aws:billing::123456789012:billingview/custom-46f47cb2-a11d-43f3-983d-470b5708a899", 
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.disassociate_source_views({
+    #     arn: "BillingViewArn", # required
+    #     source_views: ["BillingViewArn"], # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.arn #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/DisassociateSourceViews AWS API Documentation
+    #
+    # @overload disassociate_source_views(params = {})
+    # @param [Hash] params ({})
+    def disassociate_source_views(params = {}, options = {})
+      req = build_request(:disassociate_source_views, params)
+      req.send_request(options)
+    end
+
+    # Retrieves billing preferences for the specified feature. Each feature
+    # controls a distinct billing capability: which accounts can share
+    # Reserved Instances or credits, whether billing alerts are enabled, the
+    # historical record of sharing changes, and per-credit options.
+    #
+    # @option params [String] :next_token
+    #   Pagination token from a previous response. Pass the value returned in
+    #   `nextToken` to retrieve the next page of results.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of records to return per page. Range: 1 to 50.
+    #   Default: 50.
+    #
+    # @option params [required, Array<String>] :features
+    #   The feature to retrieve. Specify exactly one value. Valid values:
+    #   `BILLING_ALERTS`, `RI_SHARING`, `RI_SHARING_HISTORY`,
+    #   `CREDIT_SHARING`, `CREDIT_SHARING_HISTORY`, `CREDIT_LEVEL_SHARING`,
+    #   `CREDIT_PREFERENCE_OPTIONS`.
+    #
+    # @option params [Array<Types::BillingFeatureFilter>] :filters
+    #   Filters to narrow results. Specify exactly one filter when supplied.
+    #   The supported filter name is `PREFERENCE_KEY`, which accepts 1 to 10
+    #   values to match preference keys.
+    #
+    # @return [Types::GetBillingPreferencesResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetBillingPreferencesResponse#billing_preferences #billing_preferences} => Array&lt;Types::BillingPreferenceSummary&gt;
+    #   * {Types::GetBillingPreferencesResponse#next_token #next_token} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_billing_preferences({
+    #     next_token: "PageToken",
+    #     max_results: 1,
+    #     features: ["RI_SHARING"], # required, accepts RI_SHARING, RI_SHARING_HISTORY, CREDIT_SHARING, CREDIT_SHARING_HISTORY, CREDIT_LEVEL_SHARING, BILLING_ALERTS, CREDIT_PREFERENCE_OPTIONS
+    #     filters: [
+    #       {
+    #         name: "PREFERENCE_KEY", # accepts PREFERENCE_KEY
+    #         value: ["BillingFeatureFilterValue"],
+    #       },
+    #     ],
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.billing_preferences #=> Array
+    #   resp.billing_preferences[0].feature #=> String, one of "RI_SHARING", "RI_SHARING_HISTORY", "CREDIT_SHARING", "CREDIT_SHARING_HISTORY", "CREDIT_LEVEL_SHARING", "BILLING_ALERTS", "CREDIT_PREFERENCE_OPTIONS"
+    #   resp.billing_preferences[0].key #=> String
+    #   resp.billing_preferences[0].value #=> String, one of "ENABLED", "DISABLED"
+    #   resp.billing_preferences[0].account_name #=> String
+    #   resp.billing_preferences[0].account_id #=> String
+    #   resp.billing_preferences[0].billing_period.year #=> Integer
+    #   resp.billing_preferences[0].billing_period.month #=> Integer
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/GetBillingPreferences AWS API Documentation
+    #
+    # @overload get_billing_preferences(params = {})
+    # @param [Hash] params ({})
+    def get_billing_preferences(params = {}, options = {})
+      req = build_request(:get_billing_preferences, params)
       req.send_request(options)
     end
 
@@ -668,16 +852,28 @@ module Aws::Billing
     #   resp.billing_view.arn #=> String
     #   resp.billing_view.name #=> String
     #   resp.billing_view.description #=> String
-    #   resp.billing_view.billing_view_type #=> String, one of "PRIMARY", "BILLING_GROUP", "CUSTOM"
+    #   resp.billing_view.billing_view_type #=> String, one of "PRIMARY", "BILLING_GROUP", "CUSTOM", "BILLING_TRANSFER", "BILLING_TRANSFER_SHOWBACK"
     #   resp.billing_view.owner_account_id #=> String
+    #   resp.billing_view.source_account_id #=> String
     #   resp.billing_view.data_filter_expression.dimensions.key #=> String, one of "LINKED_ACCOUNT"
     #   resp.billing_view.data_filter_expression.dimensions.values #=> Array
     #   resp.billing_view.data_filter_expression.dimensions.values[0] #=> String
     #   resp.billing_view.data_filter_expression.tags.key #=> String
     #   resp.billing_view.data_filter_expression.tags.values #=> Array
     #   resp.billing_view.data_filter_expression.tags.values[0] #=> String
+    #   resp.billing_view.data_filter_expression.cost_categories.key #=> String
+    #   resp.billing_view.data_filter_expression.cost_categories.values #=> Array
+    #   resp.billing_view.data_filter_expression.cost_categories.values[0] #=> String
+    #   resp.billing_view.data_filter_expression.time_range.begin_date_inclusive #=> Time
+    #   resp.billing_view.data_filter_expression.time_range.end_date_inclusive #=> Time
     #   resp.billing_view.created_at #=> Time
     #   resp.billing_view.updated_at #=> Time
+    #   resp.billing_view.derived_view_count #=> Integer
+    #   resp.billing_view.source_view_count #=> Integer
+    #   resp.billing_view.view_definition_last_updated_at #=> Time
+    #   resp.billing_view.health_status.status_code #=> String, one of "HEALTHY", "UNHEALTHY", "CREATING", "UPDATING"
+    #   resp.billing_view.health_status.status_reasons #=> Array
+    #   resp.billing_view.health_status.status_reasons[0] #=> String, one of "SOURCE_VIEW_UNHEALTHY", "SOURCE_VIEW_UPDATING", "SOURCE_VIEW_ACCESS_DENIED", "SOURCE_VIEW_NOT_FOUND", "CYCLIC_DEPENDENCY", "SOURCE_VIEW_DEPTH_EXCEEDED", "AGGREGATE_SOURCE", "VIEW_OWNER_NOT_MANAGEMENT_ACCOUNT"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/GetBillingView AWS API Documentation
     #
@@ -685,6 +881,312 @@ module Aws::Billing
     # @param [Hash] params ({})
     def get_billing_view(params = {}, options = {})
       req = build_request(:get_billing_view, params)
+      req.send_request(options)
+    end
+
+    # Returns the per-billing-month allocation history for credits applied
+    # to an Amazon Web Services account's bills. Traverses the consolidated
+    # billing family to capture cross-account credit applications. Supports
+    # pagination and optional filtering to a single credit.
+    #
+    # @option params [required, String] :account_id
+    #   The Amazon Web Services account ID whose allocation history to
+    #   retrieve. Must be a 12-digit numeric string.
+    #
+    # @option params [Integer] :credit_id
+    #   Filters the result to a single credit. When omitted, returns
+    #   allocation entries for all credits.
+    #
+    # @option params [required, Time,DateTime,Date,Integer,String] :start_date
+    #   Inclusive start date as Unix epoch seconds. Must be on or before
+    #   `endDate`. The range from `startDate` to `endDate` cannot exceed 24
+    #   billing months.
+    #
+    # @option params [required, Time,DateTime,Date,Integer,String] :end_date
+    #   Inclusive end date as Unix epoch seconds.
+    #
+    # @option params [String] :next_token
+    #   Pagination token from a previous response. Pass the value returned in
+    #   `nextToken` to retrieve the next page of results.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of records to return per page. Range: 1 to 1000.
+    #   Default: 100.
+    #
+    # @return [Types::GetCreditAllocationHistoryResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetCreditAllocationHistoryResponse#credit_allocation_history_list #credit_allocation_history_list} => Array&lt;Types::CreditAllocationHistoryEntry&gt;
+    #   * {Types::GetCreditAllocationHistoryResponse#partial_results #partial_results} => Boolean
+    #   * {Types::GetCreditAllocationHistoryResponse#failed_months #failed_months} => Array&lt;String&gt;
+    #   * {Types::GetCreditAllocationHistoryResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_credit_allocation_history({
+    #     account_id: "AccountId", # required
+    #     credit_id: 1,
+    #     start_date: Time.now, # required
+    #     end_date: Time.now, # required
+    #     next_token: "PageToken",
+    #     max_results: 1,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.credit_allocation_history_list #=> Array
+    #   resp.credit_allocation_history_list[0].credit_id #=> String
+    #   resp.credit_allocation_history_list[0].credit_amount.currency_code #=> String
+    #   resp.credit_allocation_history_list[0].credit_amount.currency_amount #=> String
+    #   resp.credit_allocation_history_list[0].description #=> String
+    #   resp.credit_allocation_history_list[0].account_id #=> String
+    #   resp.credit_allocation_history_list[0].applied_service_name #=> String
+    #   resp.credit_allocation_history_list[0].billing_month #=> String
+    #   resp.credit_allocation_history_list[0].is_estimated_bill #=> Boolean
+    #   resp.partial_results #=> Boolean
+    #   resp.failed_months #=> Array
+    #   resp.failed_months[0] #=> String
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/GetCreditAllocationHistory AWS API Documentation
+    #
+    # @overload get_credit_allocation_history(params = {})
+    # @param [Hash] params ({})
+    def get_credit_allocation_history(params = {}, options = {})
+      req = build_request(:get_credit_allocation_history, params)
+      req.send_request(options)
+    end
+
+    # Returns the list of Amazon Web Services account credits for the
+    # specified account. Each credit includes its identifier, type, monetary
+    # amounts, applicable products, expiration, sharing configuration, and
+    # current enabled status.
+    #
+    # When the caller is the management account of a consolidated billing
+    # family and `payerAccountFlag` is `true`, the response aggregates
+    # credits across the entire family. Otherwise, the response includes
+    # only credits owned by the account specified in `accountId`.
+    #
+    # @option params [required, String] :account_id
+    #   The Amazon Web Services account ID. Must be a 12-digit numeric string.
+    #
+    # @option params [required, Time,DateTime,Date,Integer,String] :start_date
+    #   The start date for the credit period as Unix epoch seconds. Must be a
+    #   past date that is not more than one year before the current date.
+    #
+    # @option params [Time,DateTime,Date,Integer,String] :end_date
+    #   The end date for the credit period as Unix epoch seconds. Must not be
+    #   a future date and must be on or after `startDate`. Defaults to the
+    #   current date when omitted.
+    #
+    # @option params [Boolean] :payer_account_flag
+    #   When `true` and the caller is the management account, the response
+    #   aggregates credits across the entire consolidated billing family. When
+    #   `false` or omitted, returns only credits for the specified
+    #   `accountId`.
+    #
+    # @return [Types::GetCreditsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetCreditsResponse#credits #credits} => Array&lt;Types::CreditData&gt;
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_credits({
+    #     account_id: "String", # required
+    #     start_date: Time.now, # required
+    #     end_date: Time.now,
+    #     payer_account_flag: false,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.credits #=> Array
+    #   resp.credits[0].credit_id #=> String
+    #   resp.credits[0].account_id #=> String
+    #   resp.credits[0].credit_type #=> String
+    #   resp.credits[0].initial_amount.currency_code #=> String
+    #   resp.credits[0].initial_amount.currency_amount #=> String
+    #   resp.credits[0].remaining_amount.currency_code #=> String
+    #   resp.credits[0].remaining_amount.currency_amount #=> String
+    #   resp.credits[0].estimated_amount.currency_code #=> String
+    #   resp.credits[0].estimated_amount.currency_amount #=> String
+    #   resp.credits[0].applicable_product_names #=> Array
+    #   resp.credits[0].applicable_product_names[0] #=> String
+    #   resp.credits[0].description #=> String
+    #   resp.credits[0].start_date #=> Time
+    #   resp.credits[0].end_date #=> Time
+    #   resp.credits[0].exhaust_date #=> Time
+    #   resp.credits[0].application_type #=> String, one of "BEFORE_CROSS_SERVICE_DISCOUNTS", "AFTER_DISCOUNTS"
+    #   resp.credits[0].shareable_accounts #=> Array
+    #   resp.credits[0].shareable_accounts[0] #=> String
+    #   resp.credits[0].account_has_credit_sharing_enabled #=> Boolean
+    #   resp.credits[0].credit_console_visibility #=> String
+    #   resp.credits[0].credit_sharing_type #=> String, one of "DEFAULT", "DISABLED", "CUSTOM", "COST_CATEGORY_RULE"
+    #   resp.credits[0].cost_category_arn #=> String
+    #   resp.credits[0].rule_name #=> String
+    #   resp.credits[0].credit_status #=> String, one of "ENABLED", "DISABLED"
+    #   resp.credits[0].purchase_type_applications #=> Array
+    #   resp.credits[0].purchase_type_applications[0] #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/GetCredits AWS API Documentation
+    #
+    # @overload get_credits(params = {})
+    # @param [Hash] params ({})
+    def get_credits(params = {}, options = {})
+      req = build_request(:get_credits, params)
+      req.send_request(options)
+    end
+
+    # Returns a summary of Enterprise Support data aggregated across all
+    # accounts in the Enterprise Support profile.
+    #
+    # @option params [required, String] :billing_month
+    #   The billing month in YYYY-MM format. This must be a month in the past.
+    #
+    # @return [Types::GetEnterpriseSupportChargeSummaryResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetEnterpriseSupportChargeSummaryResponse#payer_account_id #payer_account_id} => String
+    #   * {Types::GetEnterpriseSupportChargeSummaryResponse#billing_month #billing_month} => String
+    #   * {Types::GetEnterpriseSupportChargeSummaryResponse#billing_period_start_date #billing_period_start_date} => Time
+    #   * {Types::GetEnterpriseSupportChargeSummaryResponse#billing_period_end_date #billing_period_end_date} => Time
+    #   * {Types::GetEnterpriseSupportChargeSummaryResponse#is_estimated #is_estimated} => Boolean
+    #   * {Types::GetEnterpriseSupportChargeSummaryResponse#bill_date #bill_date} => Time
+    #   * {Types::GetEnterpriseSupportChargeSummaryResponse#support_charge #support_charge} => String
+    #   * {Types::GetEnterpriseSupportChargeSummaryResponse#total_support_charge #total_support_charge} => String
+    #   * {Types::GetEnterpriseSupportChargeSummaryResponse#support_discount #support_discount} => String
+    #   * {Types::GetEnterpriseSupportChargeSummaryResponse#total_support_eligible_spend #total_support_eligible_spend} => String
+    #   * {Types::GetEnterpriseSupportChargeSummaryResponse#total_support_eligible_usage_spend #total_support_eligible_usage_spend} => String
+    #   * {Types::GetEnterpriseSupportChargeSummaryResponse#total_support_eligible_reserved_instance_spend #total_support_eligible_reserved_instance_spend} => String
+    #   * {Types::GetEnterpriseSupportChargeSummaryResponse#total_support_eligible_savings_plan_spend #total_support_eligible_savings_plan_spend} => String
+    #   * {Types::GetEnterpriseSupportChargeSummaryResponse#support_charge_percentage #support_charge_percentage} => String
+    #   * {Types::GetEnterpriseSupportChargeSummaryResponse#support_effective_pricing_plan #support_effective_pricing_plan} => Types::PricingPlan
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_enterprise_support_charge_summary({
+    #     billing_month: "EnterpriseSupportBillingMonth", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.payer_account_id #=> String
+    #   resp.billing_month #=> String
+    #   resp.billing_period_start_date #=> Time
+    #   resp.billing_period_end_date #=> Time
+    #   resp.is_estimated #=> Boolean
+    #   resp.bill_date #=> Time
+    #   resp.support_charge #=> String
+    #   resp.total_support_charge #=> String
+    #   resp.support_discount #=> String
+    #   resp.total_support_eligible_spend #=> String
+    #   resp.total_support_eligible_usage_spend #=> String
+    #   resp.total_support_eligible_reserved_instance_spend #=> String
+    #   resp.total_support_eligible_savings_plan_spend #=> String
+    #   resp.support_charge_percentage #=> String
+    #   resp.support_effective_pricing_plan.pricing_plan_id #=> String
+    #   resp.support_effective_pricing_plan.name #=> String
+    #   resp.support_effective_pricing_plan.description #=> String
+    #   resp.support_effective_pricing_plan.start_date #=> Time
+    #   resp.support_effective_pricing_plan.end_date #=> Time
+    #   resp.support_effective_pricing_plan.plan_discount_percent #=> String
+    #   resp.support_effective_pricing_plan.discount_applies_to_minimum_charge #=> Boolean
+    #   resp.support_effective_pricing_plan.minimum_charge #=> String
+    #   resp.support_effective_pricing_plan.tiered #=> String
+    #   resp.support_effective_pricing_plan.tiers #=> Array
+    #   resp.support_effective_pricing_plan.tiers[0].tier_minimum #=> String
+    #   resp.support_effective_pricing_plan.tiers[0].tier_maximum #=> String
+    #   resp.support_effective_pricing_plan.tiers[0].base_charge #=> String
+    #   resp.support_effective_pricing_plan.tiers[0].additional_percentage_of_aggregate_charges #=> String
+    #   resp.support_effective_pricing_plan.tiers[0].aggregate_charges_adjustment #=> String
+    #   resp.support_effective_pricing_plan.tiers[0].incremental #=> Boolean
+    #   resp.support_effective_pricing_plan.tiers[0].increment #=> String
+    #   resp.support_effective_pricing_plan.tiers[0].increment_charge #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/GetEnterpriseSupportChargeSummary AWS API Documentation
+    #
+    # @overload get_enterprise_support_charge_summary(params = {})
+    # @param [Hash] params ({})
+    def get_enterprise_support_charge_summary(params = {}, options = {})
+      req = build_request(:get_enterprise_support_charge_summary, params)
+      req.send_request(options)
+    end
+
+    # Returns Enterprise Support contract details.
+    #
+    # @option params [required, String] :billing_month
+    #   The billing month in YYYY-MM format. This must be a month in the past.
+    #
+    # @return [Types::GetEnterpriseSupportContractDetailsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetEnterpriseSupportContractDetailsResponse#is_contract_active #is_contract_active} => Boolean
+    #   * {Types::GetEnterpriseSupportContractDetailsResponse#support_allocation_method #support_allocation_method} => String
+    #   * {Types::GetEnterpriseSupportContractDetailsResponse#support_reserved_instance_amortization_start_date #support_reserved_instance_amortization_start_date} => Time
+    #   * {Types::GetEnterpriseSupportContractDetailsResponse#support_reserved_instance_treatment_method #support_reserved_instance_treatment_method} => String
+    #   * {Types::GetEnterpriseSupportContractDetailsResponse#support_savings_plans_amortization_start_date #support_savings_plans_amortization_start_date} => Time
+    #   * {Types::GetEnterpriseSupportContractDetailsResponse#support_savings_plans_treatment_method #support_savings_plans_treatment_method} => String
+    #   * {Types::GetEnterpriseSupportContractDetailsResponse#support_prorate_start_date #support_prorate_start_date} => Time
+    #   * {Types::GetEnterpriseSupportContractDetailsResponse#contract_payer_account_ids #contract_payer_account_ids} => Array&lt;Types::ContractAccount&gt;
+    #   * {Types::GetEnterpriseSupportContractDetailsResponse#charged_payer_account_ids #charged_payer_account_ids} => Array&lt;Types::ChargeAccount&gt;
+    #   * {Types::GetEnterpriseSupportContractDetailsResponse#additional_support_charge #additional_support_charge} => Array&lt;Types::AdditionalCharge&gt;
+    #   * {Types::GetEnterpriseSupportContractDetailsResponse#additional_support_eligible_usage_spend #additional_support_eligible_usage_spend} => Array&lt;Types::AdditionalCharge&gt;
+    #   * {Types::GetEnterpriseSupportContractDetailsResponse#pricing_plans #pricing_plans} => Array&lt;Types::PricingPlan&gt;
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_enterprise_support_contract_details({
+    #     billing_month: "EnterpriseSupportBillingMonth", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.is_contract_active #=> Boolean
+    #   resp.support_allocation_method #=> String
+    #   resp.support_reserved_instance_amortization_start_date #=> Time
+    #   resp.support_reserved_instance_treatment_method #=> String
+    #   resp.support_savings_plans_amortization_start_date #=> Time
+    #   resp.support_savings_plans_treatment_method #=> String
+    #   resp.support_prorate_start_date #=> Time
+    #   resp.contract_payer_account_ids #=> Array
+    #   resp.contract_payer_account_ids[0].account_id #=> String
+    #   resp.contract_payer_account_ids[0].is_gdn #=> Boolean
+    #   resp.charged_payer_account_ids #=> Array
+    #   resp.charged_payer_account_ids[0].account_id #=> String
+    #   resp.charged_payer_account_ids[0].charge_percentage #=> String
+    #   resp.additional_support_charge #=> Array
+    #   resp.additional_support_charge[0].description #=> String
+    #   resp.additional_support_charge[0].amount #=> String
+    #   resp.additional_support_charge[0].charge_type #=> String
+    #   resp.additional_support_eligible_usage_spend #=> Array
+    #   resp.additional_support_eligible_usage_spend[0].description #=> String
+    #   resp.additional_support_eligible_usage_spend[0].amount #=> String
+    #   resp.additional_support_eligible_usage_spend[0].charge_type #=> String
+    #   resp.pricing_plans #=> Array
+    #   resp.pricing_plans[0].pricing_plan_id #=> String
+    #   resp.pricing_plans[0].name #=> String
+    #   resp.pricing_plans[0].description #=> String
+    #   resp.pricing_plans[0].start_date #=> Time
+    #   resp.pricing_plans[0].end_date #=> Time
+    #   resp.pricing_plans[0].plan_discount_percent #=> String
+    #   resp.pricing_plans[0].discount_applies_to_minimum_charge #=> Boolean
+    #   resp.pricing_plans[0].minimum_charge #=> String
+    #   resp.pricing_plans[0].tiered #=> String
+    #   resp.pricing_plans[0].tiers #=> Array
+    #   resp.pricing_plans[0].tiers[0].tier_minimum #=> String
+    #   resp.pricing_plans[0].tiers[0].tier_maximum #=> String
+    #   resp.pricing_plans[0].tiers[0].base_charge #=> String
+    #   resp.pricing_plans[0].tiers[0].additional_percentage_of_aggregate_charges #=> String
+    #   resp.pricing_plans[0].tiers[0].aggregate_charges_adjustment #=> String
+    #   resp.pricing_plans[0].tiers[0].incremental #=> Boolean
+    #   resp.pricing_plans[0].tiers[0].increment #=> String
+    #   resp.pricing_plans[0].tiers[0].increment_charge #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/GetEnterpriseSupportContractDetails AWS API Documentation
+    #
+    # @overload get_enterprise_support_contract_details(params = {})
+    # @param [Hash] params ({})
+    def get_enterprise_support_contract_details(params = {}, options = {})
+      req = build_request(:get_enterprise_support_contract_details, params)
       req.send_request(options)
     end
 
@@ -754,8 +1256,17 @@ module Aws::Billing
     # @option params [Array<String>] :billing_view_types
     #   The type of billing view.
     #
+    # @option params [Array<Types::StringSearch>] :names
+    #   Filters the list of billing views by name. You can specify search
+    #   criteria to match billing view names based on the search option
+    #   provided.
+    #
     # @option params [String] :owner_account_id
     #   The list of owners of the billing view.
+    #
+    # @option params [String] :source_account_id
+    #   Filters the results to include only billing views that use the
+    #   specified account as a source.
     #
     # @option params [Integer] :max_results
     #   The maximum number of billing views to retrieve. Default is 100.
@@ -810,8 +1321,15 @@ module Aws::Billing
     #       active_before_inclusive: Time.now, # required
     #     },
     #     arns: ["BillingViewArn"],
-    #     billing_view_types: ["PRIMARY"], # accepts PRIMARY, BILLING_GROUP, CUSTOM
+    #     billing_view_types: ["PRIMARY"], # accepts PRIMARY, BILLING_GROUP, CUSTOM, BILLING_TRANSFER, BILLING_TRANSFER_SHOWBACK
+    #     names: [
+    #       {
+    #         search_option: "STARTS_WITH", # required, accepts STARTS_WITH
+    #         search_value: "SearchValue", # required
+    #       },
+    #     ],
     #     owner_account_id: "AccountId",
+    #     source_account_id: "AccountId",
     #     max_results: 1,
     #     next_token: "PageToken",
     #   })
@@ -823,7 +1341,11 @@ module Aws::Billing
     #   resp.billing_views[0].name #=> String
     #   resp.billing_views[0].description #=> String
     #   resp.billing_views[0].owner_account_id #=> String
-    #   resp.billing_views[0].billing_view_type #=> String, one of "PRIMARY", "BILLING_GROUP", "CUSTOM"
+    #   resp.billing_views[0].source_account_id #=> String
+    #   resp.billing_views[0].billing_view_type #=> String, one of "PRIMARY", "BILLING_GROUP", "CUSTOM", "BILLING_TRANSFER", "BILLING_TRANSFER_SHOWBACK"
+    #   resp.billing_views[0].health_status.status_code #=> String, one of "HEALTHY", "UNHEALTHY", "CREATING", "UPDATING"
+    #   resp.billing_views[0].health_status.status_reasons #=> Array
+    #   resp.billing_views[0].health_status.status_reasons[0] #=> String, one of "SOURCE_VIEW_UNHEALTHY", "SOURCE_VIEW_UPDATING", "SOURCE_VIEW_ACCESS_DENIED", "SOURCE_VIEW_NOT_FOUND", "CYCLIC_DEPENDENCY", "SOURCE_VIEW_DEPTH_EXCEEDED", "AGGREGATE_SOURCE", "VIEW_OWNER_NOT_MANAGEMENT_ACCOUNT"
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/ListBillingViews AWS API Documentation
@@ -832,6 +1354,68 @@ module Aws::Billing
     # @param [Hash] params ({})
     def list_billing_views(params = {}, options = {})
       req = build_request(:list_billing_views, params)
+      req.send_request(options)
+    end
+
+    # Returns Support-eligible spend broken down at linked account level.
+    #
+    # @option params [required, String] :billing_month
+    #   The billing month in YYYY-MM format. This must be a month in the past.
+    #
+    # @option params [String] :account_id
+    #   An optional linked account ID to filter results to a specific account.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return per page.
+    #
+    # @option params [String] :next_token
+    #   The pagination token for the next page of results.
+    #
+    # @return [Types::ListEnterpriseSupportLinkedAccountChargesResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListEnterpriseSupportLinkedAccountChargesResponse#linked_account #linked_account} => Array&lt;Types::LinkedAccountCharge&gt;
+    #   * {Types::ListEnterpriseSupportLinkedAccountChargesResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_enterprise_support_linked_account_charges({
+    #     billing_month: "EnterpriseSupportBillingMonth", # required
+    #     account_id: "AccountId",
+    #     max_results: 1,
+    #     next_token: "PageToken",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.linked_account #=> Array
+    #   resp.linked_account[0].account_id #=> String
+    #   resp.linked_account[0].payer_account_id #=> String
+    #   resp.linked_account[0].account_type #=> String
+    #   resp.linked_account[0].billable_seconds #=> Integer
+    #   resp.linked_account[0].total_seconds #=> Integer
+    #   resp.linked_account[0].total_support_eligible_spend #=> String
+    #   resp.linked_account[0].prorated_total_support_eligible_spend #=> String
+    #   resp.linked_account[0].linked_time_periods #=> Array
+    #   resp.linked_account[0].linked_time_periods[0].begin_date #=> Time
+    #   resp.linked_account[0].linked_time_periods[0].end_date #=> Time
+    #   resp.linked_account[0].subscription_time_periods #=> Array
+    #   resp.linked_account[0].subscription_time_periods[0].begin_date #=> Time
+    #   resp.linked_account[0].subscription_time_periods[0].end_date #=> Time
+    #   resp.linked_account[0].total_support_eligible_reserved_instance_spend #=> String
+    #   resp.linked_account[0].total_support_eligible_savings_plan_spend #=> String
+    #   resp.linked_account[0].support_eligible_spend_by_service #=> Array
+    #   resp.linked_account[0].support_eligible_spend_by_service[0].service_code #=> String
+    #   resp.linked_account[0].support_eligible_spend_by_service[0].total_support_eligible_spend #=> String
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/ListEnterpriseSupportLinkedAccountCharges AWS API Documentation
+    #
+    # @overload list_enterprise_support_linked_account_charges(params = {})
+    # @param [Hash] params ({})
+    def list_enterprise_support_linked_account_charges(params = {}, options = {})
+      req = build_request(:list_enterprise_support_linked_account_charges, params)
       req.send_request(options)
     end
 
@@ -940,6 +1524,33 @@ module Aws::Billing
       req.send_request(options)
     end
 
+    # Redeems an Amazon Web Services promotional credit code on behalf of
+    # the calling account. On success, a new credit is added to the
+    # account's credit ledger with the amount, validity period, and
+    # applicable products defined by the promotion. The credit is then
+    # automatically applied to subsequent bills according to the standard
+    # credit application order.
+    #
+    # @option params [required, String] :promo_code
+    #   The promotional credit code to redeem.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.redeem_credits({
+    #     promo_code: "PromoCode", # required
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/RedeemCredits AWS API Documentation
+    #
+    # @overload redeem_credits(params = {})
+    # @param [Hash] params ({})
+    def redeem_credits(params = {}, options = {})
+      req = build_request(:redeem_credits, params)
+      req.send_request(options)
+    end
+
     # An API operation for adding one or more tags (key-value pairs) to a
     # resource.
     #
@@ -1030,6 +1641,53 @@ module Aws::Billing
       req.send_request(options)
     end
 
+    # Updates billing preferences for the specified feature. Each feature
+    # targets a distinct billing capability and has its own set of supported
+    # keys. The action sets the value for each provided key; keys not
+    # present in the request are unchanged.
+    #
+    # Sharing keys (`RI_SHARING`, `CREDIT_SHARING`, `CREDIT_LEVEL_SHARING`,
+    # and sharing keys under `CREDIT_PREFERENCE_OPTIONS`) may only be set by
+    # the management account of a consolidated billing family. The
+    # `credit/{creditId}/status` key may be set by member accounts for
+    # credits they own, or by the management account for any credit in the
+    # family.
+    #
+    # @option params [required, String] :feature
+    #   The feature to update. Valid values: `BILLING_ALERTS`, `RI_SHARING`,
+    #   `CREDIT_SHARING`, `CREDIT_LEVEL_SHARING`, `CREDIT_PREFERENCE_OPTIONS`.
+    #   The history features (`RI_SHARING_HISTORY` and
+    #   `CREDIT_SHARING_HISTORY`) are read-only and cannot be updated.
+    #
+    # @option params [required, Array<Types::BillingPreferenceForKey>] :billing_preferences_per_key
+    #   Key/value pairs to apply. All keys in a single request must be valid
+    #   for the specified `feature` and must not be duplicated. For
+    #   `CREDIT_PREFERENCE_OPTIONS`, all keys must reference the same
+    #   `creditId`.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_billing_preferences({
+    #     feature: "RI_SHARING", # required, accepts RI_SHARING, RI_SHARING_HISTORY, CREDIT_SHARING, CREDIT_SHARING_HISTORY, CREDIT_LEVEL_SHARING, BILLING_ALERTS, CREDIT_PREFERENCE_OPTIONS
+    #     billing_preferences_per_key: [ # required
+    #       {
+    #         key: "PreferenceKey", # required
+    #         value: "ENABLED", # required, accepts ENABLED, DISABLED
+    #       },
+    #     ],
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/UpdateBillingPreferences AWS API Documentation
+    #
+    # @overload update_billing_preferences(params = {})
+    # @param [Hash] params ({})
+    def update_billing_preferences(params = {}, options = {})
+      req = build_request(:update_billing_preferences, params)
+      req.send_request(options)
+    end
+
     # An API to update the attributes of the billing view.
     #
     # @option params [required, String] :arn
@@ -1043,12 +1701,12 @@ module Aws::Billing
     #   The description of the billing view.
     #
     # @option params [Types::Expression] :data_filter_expression
-    #   See [Expression][1]. Billing view only supports `LINKED_ACCOUNT` and
-    #   `Tags`.
+    #   See [Expression][1]. Billing view only supports `LINKED_ACCOUNT`,
+    #   `Tags`, and `CostCategories`.
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_Expression.html
+    #   [1]: https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_billing_Expression.html
     #
     # @return [Types::UpdateBillingViewResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1093,6 +1751,14 @@ module Aws::Billing
     #         key: "TagKey", # required
     #         values: ["Value"], # required
     #       },
+    #       cost_categories: {
+    #         key: "CostCategoryName", # required
+    #         values: ["Value"], # required
+    #       },
+    #       time_range: {
+    #         begin_date_inclusive: Time.now,
+    #         end_date_inclusive: Time.now,
+    #       },
     #     },
     #   })
     #
@@ -1128,7 +1794,7 @@ module Aws::Billing
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-billing'
-      context[:gem_version] = '1.4.0'
+      context[:gem_version] = '1.30.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

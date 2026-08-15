@@ -95,8 +95,8 @@ module Aws::TaxSettings
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::TaxSettings
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::TaxSettings
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::TaxSettings
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::TaxSettings
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::TaxSettings
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::TaxSettings
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::TaxSettings
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -500,8 +504,8 @@ module Aws::TaxSettings
     #
     #   resp.errors #=> Array
     #   resp.errors[0].account_id #=> String
-    #   resp.errors[0].code #=> String
     #   resp.errors[0].message #=> String
+    #   resp.errors[0].code #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/taxsettings-2018-05-10/BatchDeleteTaxRegistration AWS API Documentation
     #
@@ -520,8 +524,8 @@ module Aws::TaxSettings
     #
     # @return [Types::BatchGetTaxExemptionsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::BatchGetTaxExemptionsResponse#failed_accounts #failed_accounts} => Array&lt;String&gt;
     #   * {Types::BatchGetTaxExemptionsResponse#tax_exemption_details_map #tax_exemption_details_map} => Hash&lt;String,Types::TaxExemptionDetails&gt;
+    #   * {Types::BatchGetTaxExemptionsResponse#failed_accounts #failed_accounts} => Array&lt;String&gt;
     #
     # @example Request syntax with placeholder values
     #
@@ -531,24 +535,24 @@ module Aws::TaxSettings
     #
     # @example Response structure
     #
-    #   resp.failed_accounts #=> Array
-    #   resp.failed_accounts[0] #=> String
     #   resp.tax_exemption_details_map #=> Hash
-    #   resp.tax_exemption_details_map["AccountId"].heritage_obtained_details #=> Boolean
-    #   resp.tax_exemption_details_map["AccountId"].heritage_obtained_parent_entity #=> String
-    #   resp.tax_exemption_details_map["AccountId"].heritage_obtained_reason #=> String
     #   resp.tax_exemption_details_map["AccountId"].tax_exemptions #=> Array
     #   resp.tax_exemption_details_map["AccountId"].tax_exemptions[0].authority.country #=> String
     #   resp.tax_exemption_details_map["AccountId"].tax_exemptions[0].authority.state #=> String
-    #   resp.tax_exemption_details_map["AccountId"].tax_exemptions[0].effective_date #=> Time
-    #   resp.tax_exemption_details_map["AccountId"].tax_exemptions[0].expiration_date #=> Time
-    #   resp.tax_exemption_details_map["AccountId"].tax_exemptions[0].status #=> String, one of "None", "Valid", "Expired", "Pending"
-    #   resp.tax_exemption_details_map["AccountId"].tax_exemptions[0].system_effective_date #=> Time
+    #   resp.tax_exemption_details_map["AccountId"].tax_exemptions[0].tax_exemption_type.display_name #=> String
+    #   resp.tax_exemption_details_map["AccountId"].tax_exemptions[0].tax_exemption_type.description #=> String
     #   resp.tax_exemption_details_map["AccountId"].tax_exemptions[0].tax_exemption_type.applicable_jurisdictions #=> Array
     #   resp.tax_exemption_details_map["AccountId"].tax_exemptions[0].tax_exemption_type.applicable_jurisdictions[0].country #=> String
     #   resp.tax_exemption_details_map["AccountId"].tax_exemptions[0].tax_exemption_type.applicable_jurisdictions[0].state #=> String
-    #   resp.tax_exemption_details_map["AccountId"].tax_exemptions[0].tax_exemption_type.description #=> String
-    #   resp.tax_exemption_details_map["AccountId"].tax_exemptions[0].tax_exemption_type.display_name #=> String
+    #   resp.tax_exemption_details_map["AccountId"].tax_exemptions[0].effective_date #=> Time
+    #   resp.tax_exemption_details_map["AccountId"].tax_exemptions[0].expiration_date #=> Time
+    #   resp.tax_exemption_details_map["AccountId"].tax_exemptions[0].system_effective_date #=> Time
+    #   resp.tax_exemption_details_map["AccountId"].tax_exemptions[0].status #=> String, one of "None", "Valid", "Expired", "Pending"
+    #   resp.tax_exemption_details_map["AccountId"].heritage_obtained_details #=> Boolean
+    #   resp.tax_exemption_details_map["AccountId"].heritage_obtained_parent_entity #=> String
+    #   resp.tax_exemption_details_map["AccountId"].heritage_obtained_reason #=> String
+    #   resp.failed_accounts #=> Array
+    #   resp.failed_accounts[0] #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/taxsettings-2018-05-10/BatchGetTaxExemptions AWS API Documentation
     #
@@ -590,6 +594,42 @@ module Aws::TaxSettings
     # * The valid `personType` values are `Physical Person` and `Business`.
     #
     # ^
+    #
+    # **Indonesia**
+    #
+    # * `PutTaxRegistration`: The use of this operation to submit tax
+    #   information is subject to the [Amazon Web Services service
+    #   terms][2]. By submitting, you’re providing consent for Amazon Web
+    #   Services to validate NIK, NPWP, and NITKU data, provided by you with
+    #   the Directorate General of Taxes of Indonesia in accordance with the
+    #   Minister of Finance Regulation (PMK) Number 112/PMK.03/2022.
+    #
+    # * `BatchPutTaxRegistration`: The use of this operation to submit tax
+    #   information is subject to the [Amazon Web Services service
+    #   terms][2]. By submitting, you’re providing consent for Amazon Web
+    #   Services to validate NIK, NPWP, and NITKU data, provided by you with
+    #   the Directorate General of Taxes of Indonesia in accordance with the
+    #   Minister of Finance Regulation (PMK) Number 112/PMK.03/2022, through
+    #   our third-party partner PT Achilles Advanced Management
+    #   (OnlinePajak).
+    #
+    # * You must specify the `taxRegistrationNumberType` in the
+    #   `indonesiaAdditionalInfo` field of the `additionalTaxInformation`
+    #   object.
+    #
+    # * If you specify `decisionNumber`, you must specify the
+    #   `ppnExceptionDesignationCode` in the `indonesiaAdditionalInfo` field
+    #   of the `additionalTaxInformation` object. If the
+    #   `taxRegistrationNumberType` is set to NPWP or NITKU, valid values
+    #   for `ppnExceptionDesignationCode` are either `01`, `02`, `03`, `07`,
+    #   or `08`.
+    #
+    #   For other `taxRegistrationNumberType` values,
+    #   `ppnExceptionDesignationCode` must be either `01`, `07`, or `08`.
+    #
+    # * If `ppnExceptionDesignationCode` is `07` or `08`, you must specify
+    #   the `decisionNumber` in the `indonesiaAdditionalInfo` field of the
+    #   `additionalTaxInformation` object.
     #
     # **Kenya**
     #
@@ -646,6 +686,14 @@ module Aws::TaxSettings
     #   IT service - 9907101676
     #
     #   Digital services and electronic medium - 9907121690
+    #
+    # **Mexico**
+    #
+    # * You must provide a Constancia de Situación fiscal (CSF) document in
+    #   the **verificationDetails** field.
+    #
+    # * You do not need to provide address and legal name. These will be
+    #   populated based on your tax registration number.
     #
     # **Nepal**
     #
@@ -711,9 +759,51 @@ module Aws::TaxSettings
     #
     # ^
     #
+    # **Philippines**
+    #
+    # * You can optionally specify the `isVatRegistered` in the
+    #   `philippinesAdditionalInfo` field of the `additionalTaxInformation`
+    #   object to indicate your VAT registration status with the Bureau of
+    #   Internal Revenue (BIR).
+    #
+    # ^
+    #
+    # **Belgium**
+    #
+    # * You can optionally specify the `peppolId` in the
+    #   `belgiumAdditionalInfo` field of the `additionalTaxInformation`
+    #   object.
+    #
+    # ^
+    #
+    # **Chile**
+    #
+    # * You can optionally specify the `documentType` and `businessActivity`
+    #   in the `chileAdditionalInfo` field of the `additionalTaxInformation`
+    #   object.
+    #
+    # ^
+    #
+    # **France**
+    #
+    # * You must specify the `sirenNumber` in the `franceAdditionalInfo`
+    #   field of the `additionalTaxInformation` object.
+    #
+    # ^
+    #
+    # **Poland**
+    #
+    # * You can optionally specify the `taxRegistrationNumberType` in the
+    #   `polandAdditionalInfo` field of the `additionalTaxInformation`
+    #   object. Valid values are `EUTaxRegistrationNumber`,
+    #   `LocalTaxRegistrationNumber`, or `LocalRegistrationNumber`.
+    #
+    # ^
+    #
     #
     #
     # [1]: https://console.aws.amazon.com/billing/home#/paymentpreferences/paymentmethods
+    # [2]: http://aws.amazon.com/service-terms/
     #
     # @option params [required, Array<String>] :account_ids
     #   List of unique account identifiers.
@@ -724,126 +814,151 @@ module Aws::TaxSettings
     #
     # @return [Types::BatchPutTaxRegistrationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::BatchPutTaxRegistrationResponse#errors #errors} => Array&lt;Types::BatchPutTaxRegistrationError&gt;
     #   * {Types::BatchPutTaxRegistrationResponse#status #status} => String
+    #   * {Types::BatchPutTaxRegistrationResponse#errors #errors} => Array&lt;Types::BatchPutTaxRegistrationError&gt;
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.batch_put_tax_registration({
     #     account_ids: ["AccountId"], # required
     #     tax_registration_entry: { # required
+    #       registration_id: "RegistrationId", # required
+    #       registration_type: "VAT", # required, accepts VAT, GST, CPF, CNPJ, SST, TIN, NRIC, PAN, NIP
+    #       legal_name: "LegalName",
+    #       legal_address: {
+    #         address_line_1: "AddressLine1",
+    #         address_line_2: "AddressLine2",
+    #         address_line_3: "AddressLine3",
+    #         district_or_county: "District",
+    #         city: "City",
+    #         state_or_region: "State",
+    #         postal_code: "PostalCode", # required
+    #         country_code: "CountryCode", # required
+    #       },
+    #       sector: "Business", # accepts Business, Individual, Government
     #       additional_tax_information: {
+    #         malaysia_additional_info: {
+    #           service_tax_codes: ["Consultancy"], # accepts Consultancy, Digital Service And Electronic Medium, IT Services, Training Or Coaching
+    #           tax_information_number: "TaxInformationNumber",
+    #           business_registration_number: "BusinessRegistrationNumber",
+    #         },
+    #         israel_additional_info: {
+    #           dealer_type: "Authorized", # required, accepts Authorized, Non-authorized
+    #           customer_type: "Business", # required, accepts Business, Individual
+    #         },
+    #         estonia_additional_info: {
+    #           registry_commercial_code: "RegistryCommercialCode", # required
+    #         },
     #         canada_additional_info: {
+    #           provincial_sales_tax_id: "CanadaProvincialSalesTaxIdString",
     #           canada_quebec_sales_tax_number: "CanadaQuebecSalesTaxNumberString",
     #           canada_retail_sales_tax_number: "CanadaRetailSalesTaxNumberString",
     #           is_reseller_account: false,
-    #           provincial_sales_tax_id: "CanadaProvincialSalesTaxIdString",
+    #         },
+    #         spain_additional_info: {
+    #           registration_type: "Intra-EU", # required, accepts Intra-EU, Local
+    #         },
+    #         kenya_additional_info: {
+    #           person_type: "Legal Person", # required, accepts Legal Person, Physical Person, Business
+    #         },
+    #         south_korea_additional_info: {
+    #           business_representative_name: "BusinessRepresentativeName", # required
+    #           line_of_business: "LineOfBusiness", # required
+    #           item_of_business: "ItemOfBusiness", # required
+    #         },
+    #         turkey_additional_info: {
+    #           tax_office: "TaxOffice",
+    #           kep_email_id: "KepEmailId",
+    #           secondary_tax_id: "SecondaryTaxId",
+    #           industries: "CirculatingOrg", # accepts CirculatingOrg, ProfessionalOrg, Banks, Insurance, PensionAndBenefitFunds, DevelopmentAgencies
+    #         },
+    #         georgia_additional_info: {
+    #           person_type: "Legal Person", # required, accepts Legal Person, Physical Person, Business
+    #         },
+    #         italy_additional_info: {
+    #           sdi_account_id: "SdiAccountId",
+    #           cig_number: "CigNumber",
+    #           cup_number: "CupNumber",
+    #           tax_code: "TaxCode",
+    #           customer_type: "Business", # accepts Business, Individual
+    #         },
+    #         romania_additional_info: {
+    #           tax_registration_number_type: "TaxRegistrationNumber", # required, accepts TaxRegistrationNumber, LocalRegistrationNumber
+    #         },
+    #         ukraine_additional_info: {
+    #           ukraine_trn_type: "Business", # required, accepts Business, Individual
+    #         },
+    #         poland_additional_info: {
+    #           individual_registration_number: "IndividualRegistrationNumber",
+    #           is_group_vat_enabled: false,
+    #           tax_registration_number_type: "EUTaxRegistrationNumber", # accepts EUTaxRegistrationNumber, LocalTaxRegistrationNumber, LocalRegistrationNumber
+    #         },
+    #         saudi_arabia_additional_info: {
+    #           tax_registration_number_type: "TaxRegistrationNumber", # accepts TaxRegistrationNumber, TaxIdentificationNumber, CommercialRegistrationNumber
+    #         },
+    #         indonesia_additional_info: {
+    #           tax_registration_number_type: "NIK", # accepts NIK, PassportNumber, NPWP, NITKU
+    #           ppn_exception_designation_code: "PpnExceptionDesignationCode",
+    #           decision_number: "DecisionNumber",
+    #         },
+    #         vietnam_additional_info: {
+    #           enterprise_identification_number: "EnterpriseIdentificationNumber",
+    #           electronic_transaction_code_number: "ElectronicTransactionCodeNumber",
+    #           payment_voucher_number: "PaymentVoucherNumber",
+    #           payment_voucher_number_date: "DateString",
     #         },
     #         egypt_additional_info: {
     #           unique_identification_number: "UniqueIdentificationNumber",
     #           unique_identification_number_expiration_date: "DateString",
     #         },
-    #         estonia_additional_info: {
-    #           registry_commercial_code: "RegistryCommercialCode", # required
-    #         },
-    #         georgia_additional_info: {
-    #           person_type: "Legal Person", # required, accepts Legal Person, Physical Person, Business
-    #         },
     #         greece_additional_info: {
     #           contracting_authority_code: "ContractingAuthorityCode",
     #         },
-    #         israel_additional_info: {
-    #           customer_type: "Business", # required, accepts Business, Individual
-    #           dealer_type: "Authorized", # required, accepts Authorized, Non-authorized
+    #         uzbekistan_additional_info: {
+    #           tax_registration_number_type: "Business", # accepts Business, Individual
+    #           vat_registration_number: "VatRegistrationNumber",
     #         },
-    #         italy_additional_info: {
-    #           cig_number: "CigNumber",
-    #           cup_number: "CupNumber",
-    #           sdi_account_id: "SdiAccountId",
-    #           tax_code: "TaxCode",
+    #         philippines_additional_info: {
+    #           is_vat_registered: false,
     #         },
-    #         kenya_additional_info: {
-    #           person_type: "Legal Person", # required, accepts Legal Person, Physical Person, Business
+    #         belgium_additional_info: {
+    #           peppol_id: "PeppolId",
+    #           is_mercurius_box_enabled: false,
     #         },
-    #         malaysia_additional_info: {
-    #           business_registration_number: "BusinessRegistrationNumber",
-    #           service_tax_codes: ["Consultancy"], # accepts Consultancy, Digital Service And Electronic Medium, IT Services, Training Or Coaching
-    #           tax_information_number: "TaxInformationNumber",
+    #         chile_additional_info: {
+    #           document_type: "Invoice", # accepts Invoice, Receipt
+    #           business_activity: "GenericString",
     #         },
-    #         poland_additional_info: {
-    #           individual_registration_number: "IndividualRegistrationNumber",
-    #           is_group_vat_enabled: false,
-    #         },
-    #         romania_additional_info: {
-    #           tax_registration_number_type: "TaxRegistrationNumber", # required, accepts TaxRegistrationNumber, LocalRegistrationNumber
-    #         },
-    #         saudi_arabia_additional_info: {
-    #           tax_registration_number_type: "TaxRegistrationNumber", # accepts TaxRegistrationNumber, TaxIdentificationNumber, CommercialRegistrationNumber
-    #         },
-    #         south_korea_additional_info: {
-    #           business_representative_name: "BusinessRepresentativeName", # required
-    #           item_of_business: "ItemOfBusiness", # required
-    #           line_of_business: "LineOfBusiness", # required
-    #         },
-    #         spain_additional_info: {
-    #           registration_type: "Intra-EU", # required, accepts Intra-EU, Local
-    #         },
-    #         turkey_additional_info: {
-    #           industries: "CirculatingOrg", # accepts CirculatingOrg, ProfessionalOrg, Banks, Insurance, PensionAndBenefitFunds, DevelopmentAgencies
-    #           kep_email_id: "KepEmailId",
-    #           secondary_tax_id: "SecondaryTaxId",
-    #           tax_office: "TaxOffice",
-    #         },
-    #         ukraine_additional_info: {
-    #           ukraine_trn_type: "Business", # required, accepts Business, Individual
-    #         },
-    #         vietnam_additional_info: {
-    #           electronic_transaction_code_number: "ElectronicTransactionCodeNumber",
-    #           enterprise_identification_number: "EnterpriseIdentificationNumber",
-    #           payment_voucher_number: "PaymentVoucherNumber",
-    #           payment_voucher_number_date: "DateString",
+    #         france_additional_info: {
+    #           siren_number: "SirenNumber", # required
     #         },
     #       },
-    #       certified_email_id: "CertifiedEmailId",
-    #       legal_address: {
-    #         address_line_1: "AddressLine1", # required
-    #         address_line_2: "AddressLine2",
-    #         address_line_3: "AddressLine3",
-    #         city: "City", # required
-    #         country_code: "CountryCode", # required
-    #         district_or_county: "District",
-    #         postal_code: "PostalCode", # required
-    #         state_or_region: "State",
-    #       },
-    #       legal_name: "LegalName",
-    #       registration_id: "RegistrationId", # required
-    #       registration_type: "VAT", # required, accepts VAT, GST, CPF, CNPJ, SST, TIN, NRIC
-    #       sector: "Business", # accepts Business, Individual, Government
     #       verification_details: {
     #         date_of_birth: "DateOfBirth",
     #         tax_registration_documents: [
     #           {
-    #             file: {
-    #               file_content: "data", # required
-    #               file_name: "TaxDocumentName", # required
-    #             },
     #             s3_location: {
     #               bucket: "S3BucketName", # required
     #               key: "S3Key", # required
     #             },
+    #             file: {
+    #               file_name: "TaxDocumentName", # required
+    #               file_content: "data", # required
+    #             },
     #           },
     #         ],
     #       },
+    #       certified_email_id: "CertifiedEmailId",
     #     },
     #   })
     #
     # @example Response structure
     #
+    #   resp.status #=> String, one of "Verified", "Pending", "Deleted", "Rejected"
     #   resp.errors #=> Array
     #   resp.errors[0].account_id #=> String
-    #   resp.errors[0].code #=> String
     #   resp.errors[0].message #=> String
-    #   resp.status #=> String, one of "Verified", "Pending", "Deleted", "Rejected"
+    #   resp.errors[0].code #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/taxsettings-2018-05-10/BatchPutTaxRegistration AWS API Documentation
     #
@@ -921,11 +1036,11 @@ module Aws::TaxSettings
     # @example Response structure
     #
     #   resp.tax_exemption_types #=> Array
+    #   resp.tax_exemption_types[0].display_name #=> String
+    #   resp.tax_exemption_types[0].description #=> String
     #   resp.tax_exemption_types[0].applicable_jurisdictions #=> Array
     #   resp.tax_exemption_types[0].applicable_jurisdictions[0].country #=> String
     #   resp.tax_exemption_types[0].applicable_jurisdictions[0].state #=> String
-    #   resp.tax_exemption_types[0].description #=> String
-    #   resp.tax_exemption_types[0].display_name #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/taxsettings-2018-05-10/GetTaxExemptionTypes AWS API Documentation
     #
@@ -972,63 +1087,76 @@ module Aws::TaxSettings
     #
     # @example Response structure
     #
-    #   resp.tax_registration.additional_tax_information.brazil_additional_info.ccm_code #=> String
-    #   resp.tax_registration.additional_tax_information.brazil_additional_info.legal_nature_code #=> String
-    #   resp.tax_registration.additional_tax_information.canada_additional_info.canada_quebec_sales_tax_number #=> String
-    #   resp.tax_registration.additional_tax_information.canada_additional_info.canada_retail_sales_tax_number #=> String
-    #   resp.tax_registration.additional_tax_information.canada_additional_info.is_reseller_account #=> Boolean
-    #   resp.tax_registration.additional_tax_information.canada_additional_info.provincial_sales_tax_id #=> String
-    #   resp.tax_registration.additional_tax_information.egypt_additional_info.unique_identification_number #=> String
-    #   resp.tax_registration.additional_tax_information.egypt_additional_info.unique_identification_number_expiration_date #=> String
-    #   resp.tax_registration.additional_tax_information.estonia_additional_info.registry_commercial_code #=> String
-    #   resp.tax_registration.additional_tax_information.georgia_additional_info.person_type #=> String, one of "Legal Person", "Physical Person", "Business"
-    #   resp.tax_registration.additional_tax_information.greece_additional_info.contracting_authority_code #=> String
-    #   resp.tax_registration.additional_tax_information.india_additional_info.pan #=> String
-    #   resp.tax_registration.additional_tax_information.israel_additional_info.customer_type #=> String, one of "Business", "Individual"
-    #   resp.tax_registration.additional_tax_information.israel_additional_info.dealer_type #=> String, one of "Authorized", "Non-authorized"
-    #   resp.tax_registration.additional_tax_information.italy_additional_info.cig_number #=> String
-    #   resp.tax_registration.additional_tax_information.italy_additional_info.cup_number #=> String
-    #   resp.tax_registration.additional_tax_information.italy_additional_info.sdi_account_id #=> String
-    #   resp.tax_registration.additional_tax_information.italy_additional_info.tax_code #=> String
-    #   resp.tax_registration.additional_tax_information.kenya_additional_info.person_type #=> String, one of "Legal Person", "Physical Person", "Business"
-    #   resp.tax_registration.additional_tax_information.malaysia_additional_info.business_registration_number #=> String
-    #   resp.tax_registration.additional_tax_information.malaysia_additional_info.service_tax_codes #=> Array
-    #   resp.tax_registration.additional_tax_information.malaysia_additional_info.service_tax_codes[0] #=> String, one of "Consultancy", "Digital Service And Electronic Medium", "IT Services", "Training Or Coaching"
-    #   resp.tax_registration.additional_tax_information.malaysia_additional_info.tax_information_number #=> String
-    #   resp.tax_registration.additional_tax_information.poland_additional_info.individual_registration_number #=> String
-    #   resp.tax_registration.additional_tax_information.poland_additional_info.is_group_vat_enabled #=> Boolean
-    #   resp.tax_registration.additional_tax_information.romania_additional_info.tax_registration_number_type #=> String, one of "TaxRegistrationNumber", "LocalRegistrationNumber"
-    #   resp.tax_registration.additional_tax_information.saudi_arabia_additional_info.tax_registration_number_type #=> String, one of "TaxRegistrationNumber", "TaxIdentificationNumber", "CommercialRegistrationNumber"
-    #   resp.tax_registration.additional_tax_information.south_korea_additional_info.business_representative_name #=> String
-    #   resp.tax_registration.additional_tax_information.south_korea_additional_info.item_of_business #=> String
-    #   resp.tax_registration.additional_tax_information.south_korea_additional_info.line_of_business #=> String
-    #   resp.tax_registration.additional_tax_information.spain_additional_info.registration_type #=> String, one of "Intra-EU", "Local"
-    #   resp.tax_registration.additional_tax_information.turkey_additional_info.industries #=> String, one of "CirculatingOrg", "ProfessionalOrg", "Banks", "Insurance", "PensionAndBenefitFunds", "DevelopmentAgencies"
-    #   resp.tax_registration.additional_tax_information.turkey_additional_info.kep_email_id #=> String
-    #   resp.tax_registration.additional_tax_information.turkey_additional_info.secondary_tax_id #=> String
-    #   resp.tax_registration.additional_tax_information.turkey_additional_info.tax_office #=> String
-    #   resp.tax_registration.additional_tax_information.ukraine_additional_info.ukraine_trn_type #=> String, one of "Business", "Individual"
-    #   resp.tax_registration.additional_tax_information.vietnam_additional_info.electronic_transaction_code_number #=> String
-    #   resp.tax_registration.additional_tax_information.vietnam_additional_info.enterprise_identification_number #=> String
-    #   resp.tax_registration.additional_tax_information.vietnam_additional_info.payment_voucher_number #=> String
-    #   resp.tax_registration.additional_tax_information.vietnam_additional_info.payment_voucher_number_date #=> String
-    #   resp.tax_registration.certified_email_id #=> String
-    #   resp.tax_registration.legal_address.address_line_1 #=> String
-    #   resp.tax_registration.legal_address.address_line_2 #=> String
-    #   resp.tax_registration.legal_address.address_line_3 #=> String
-    #   resp.tax_registration.legal_address.city #=> String
-    #   resp.tax_registration.legal_address.country_code #=> String
-    #   resp.tax_registration.legal_address.district_or_county #=> String
-    #   resp.tax_registration.legal_address.postal_code #=> String
-    #   resp.tax_registration.legal_address.state_or_region #=> String
-    #   resp.tax_registration.legal_name #=> String
     #   resp.tax_registration.registration_id #=> String
-    #   resp.tax_registration.registration_type #=> String, one of "VAT", "GST", "CPF", "CNPJ", "SST", "TIN", "NRIC"
-    #   resp.tax_registration.sector #=> String, one of "Business", "Individual", "Government"
+    #   resp.tax_registration.registration_type #=> String, one of "VAT", "GST", "CPF", "CNPJ", "SST", "TIN", "NRIC", "PAN", "NIP"
+    #   resp.tax_registration.legal_name #=> String
     #   resp.tax_registration.status #=> String, one of "Verified", "Pending", "Deleted", "Rejected"
+    #   resp.tax_registration.sector #=> String, one of "Business", "Individual", "Government"
     #   resp.tax_registration.tax_document_metadatas #=> Array
     #   resp.tax_registration.tax_document_metadatas[0].tax_document_access_token #=> String
     #   resp.tax_registration.tax_document_metadatas[0].tax_document_name #=> String
+    #   resp.tax_registration.certified_email_id #=> String
+    #   resp.tax_registration.additional_tax_information.malaysia_additional_info.service_tax_codes #=> Array
+    #   resp.tax_registration.additional_tax_information.malaysia_additional_info.service_tax_codes[0] #=> String, one of "Consultancy", "Digital Service And Electronic Medium", "IT Services", "Training Or Coaching"
+    #   resp.tax_registration.additional_tax_information.malaysia_additional_info.tax_information_number #=> String
+    #   resp.tax_registration.additional_tax_information.malaysia_additional_info.business_registration_number #=> String
+    #   resp.tax_registration.additional_tax_information.israel_additional_info.dealer_type #=> String, one of "Authorized", "Non-authorized"
+    #   resp.tax_registration.additional_tax_information.israel_additional_info.customer_type #=> String, one of "Business", "Individual"
+    #   resp.tax_registration.additional_tax_information.estonia_additional_info.registry_commercial_code #=> String
+    #   resp.tax_registration.additional_tax_information.canada_additional_info.provincial_sales_tax_id #=> String
+    #   resp.tax_registration.additional_tax_information.canada_additional_info.canada_quebec_sales_tax_number #=> String
+    #   resp.tax_registration.additional_tax_information.canada_additional_info.canada_retail_sales_tax_number #=> String
+    #   resp.tax_registration.additional_tax_information.canada_additional_info.is_reseller_account #=> Boolean
+    #   resp.tax_registration.additional_tax_information.brazil_additional_info.ccm_code #=> String
+    #   resp.tax_registration.additional_tax_information.brazil_additional_info.legal_nature_code #=> String
+    #   resp.tax_registration.additional_tax_information.spain_additional_info.registration_type #=> String, one of "Intra-EU", "Local"
+    #   resp.tax_registration.additional_tax_information.kenya_additional_info.person_type #=> String, one of "Legal Person", "Physical Person", "Business"
+    #   resp.tax_registration.additional_tax_information.south_korea_additional_info.business_representative_name #=> String
+    #   resp.tax_registration.additional_tax_information.south_korea_additional_info.line_of_business #=> String
+    #   resp.tax_registration.additional_tax_information.south_korea_additional_info.item_of_business #=> String
+    #   resp.tax_registration.additional_tax_information.turkey_additional_info.tax_office #=> String
+    #   resp.tax_registration.additional_tax_information.turkey_additional_info.kep_email_id #=> String
+    #   resp.tax_registration.additional_tax_information.turkey_additional_info.secondary_tax_id #=> String
+    #   resp.tax_registration.additional_tax_information.turkey_additional_info.industries #=> String, one of "CirculatingOrg", "ProfessionalOrg", "Banks", "Insurance", "PensionAndBenefitFunds", "DevelopmentAgencies"
+    #   resp.tax_registration.additional_tax_information.georgia_additional_info.person_type #=> String, one of "Legal Person", "Physical Person", "Business"
+    #   resp.tax_registration.additional_tax_information.italy_additional_info.sdi_account_id #=> String
+    #   resp.tax_registration.additional_tax_information.italy_additional_info.cig_number #=> String
+    #   resp.tax_registration.additional_tax_information.italy_additional_info.cup_number #=> String
+    #   resp.tax_registration.additional_tax_information.italy_additional_info.tax_code #=> String
+    #   resp.tax_registration.additional_tax_information.italy_additional_info.customer_type #=> String, one of "Business", "Individual"
+    #   resp.tax_registration.additional_tax_information.romania_additional_info.tax_registration_number_type #=> String, one of "TaxRegistrationNumber", "LocalRegistrationNumber"
+    #   resp.tax_registration.additional_tax_information.ukraine_additional_info.ukraine_trn_type #=> String, one of "Business", "Individual"
+    #   resp.tax_registration.additional_tax_information.poland_additional_info.individual_registration_number #=> String
+    #   resp.tax_registration.additional_tax_information.poland_additional_info.is_group_vat_enabled #=> Boolean
+    #   resp.tax_registration.additional_tax_information.poland_additional_info.tax_registration_number_type #=> String, one of "EUTaxRegistrationNumber", "LocalTaxRegistrationNumber", "LocalRegistrationNumber"
+    #   resp.tax_registration.additional_tax_information.saudi_arabia_additional_info.tax_registration_number_type #=> String, one of "TaxRegistrationNumber", "TaxIdentificationNumber", "CommercialRegistrationNumber"
+    #   resp.tax_registration.additional_tax_information.india_additional_info.pan #=> String
+    #   resp.tax_registration.additional_tax_information.indonesia_additional_info.tax_registration_number_type #=> String, one of "NIK", "PassportNumber", "NPWP", "NITKU"
+    #   resp.tax_registration.additional_tax_information.indonesia_additional_info.ppn_exception_designation_code #=> String
+    #   resp.tax_registration.additional_tax_information.indonesia_additional_info.decision_number #=> String
+    #   resp.tax_registration.additional_tax_information.vietnam_additional_info.enterprise_identification_number #=> String
+    #   resp.tax_registration.additional_tax_information.vietnam_additional_info.electronic_transaction_code_number #=> String
+    #   resp.tax_registration.additional_tax_information.vietnam_additional_info.payment_voucher_number #=> String
+    #   resp.tax_registration.additional_tax_information.vietnam_additional_info.payment_voucher_number_date #=> String
+    #   resp.tax_registration.additional_tax_information.egypt_additional_info.unique_identification_number #=> String
+    #   resp.tax_registration.additional_tax_information.egypt_additional_info.unique_identification_number_expiration_date #=> String
+    #   resp.tax_registration.additional_tax_information.greece_additional_info.contracting_authority_code #=> String
+    #   resp.tax_registration.additional_tax_information.uzbekistan_additional_info.tax_registration_number_type #=> String, one of "Business", "Individual"
+    #   resp.tax_registration.additional_tax_information.uzbekistan_additional_info.vat_registration_number #=> String
+    #   resp.tax_registration.additional_tax_information.philippines_additional_info.is_vat_registered #=> Boolean
+    #   resp.tax_registration.additional_tax_information.belgium_additional_info.peppol_id #=> String
+    #   resp.tax_registration.additional_tax_information.belgium_additional_info.is_mercurius_box_enabled #=> Boolean
+    #   resp.tax_registration.additional_tax_information.chile_additional_info.document_type #=> String, one of "Invoice", "Receipt"
+    #   resp.tax_registration.additional_tax_information.chile_additional_info.business_activity #=> String
+    #   resp.tax_registration.additional_tax_information.france_additional_info.siren_number #=> String
+    #   resp.tax_registration.legal_address.address_line_1 #=> String
+    #   resp.tax_registration.legal_address.address_line_2 #=> String
+    #   resp.tax_registration.legal_address.address_line_3 #=> String
+    #   resp.tax_registration.legal_address.district_or_county #=> String
+    #   resp.tax_registration.legal_address.city #=> String
+    #   resp.tax_registration.legal_address.state_or_region #=> String
+    #   resp.tax_registration.legal_address.postal_code #=> String
+    #   resp.tax_registration.legal_address.country_code #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/taxsettings-2018-05-10/GetTaxRegistration AWS API Documentation
     #
@@ -1091,8 +1219,8 @@ module Aws::TaxSettings
     #
     # @return [Types::ListSupplementalTaxRegistrationsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::ListSupplementalTaxRegistrationsResponse#next_token #next_token} => String
     #   * {Types::ListSupplementalTaxRegistrationsResponse#tax_registrations #tax_registrations} => Array&lt;Types::SupplementalTaxRegistration&gt;
+    #   * {Types::ListSupplementalTaxRegistrationsResponse#next_token #next_token} => String
     #
     # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
     #
@@ -1105,21 +1233,21 @@ module Aws::TaxSettings
     #
     # @example Response structure
     #
-    #   resp.next_token #=> String
     #   resp.tax_registrations #=> Array
+    #   resp.tax_registrations[0].registration_id #=> String
+    #   resp.tax_registrations[0].registration_type #=> String, one of "VAT"
+    #   resp.tax_registrations[0].legal_name #=> String
     #   resp.tax_registrations[0].address.address_line_1 #=> String
     #   resp.tax_registrations[0].address.address_line_2 #=> String
     #   resp.tax_registrations[0].address.address_line_3 #=> String
-    #   resp.tax_registrations[0].address.city #=> String
-    #   resp.tax_registrations[0].address.country_code #=> String
     #   resp.tax_registrations[0].address.district_or_county #=> String
-    #   resp.tax_registrations[0].address.postal_code #=> String
+    #   resp.tax_registrations[0].address.city #=> String
     #   resp.tax_registrations[0].address.state_or_region #=> String
+    #   resp.tax_registrations[0].address.postal_code #=> String
+    #   resp.tax_registrations[0].address.country_code #=> String
     #   resp.tax_registrations[0].authority_id #=> String
-    #   resp.tax_registrations[0].legal_name #=> String
-    #   resp.tax_registrations[0].registration_id #=> String
-    #   resp.tax_registrations[0].registration_type #=> String, one of "VAT"
     #   resp.tax_registrations[0].status #=> String, one of "Verified", "Pending", "Deleted", "Rejected"
+    #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/taxsettings-2018-05-10/ListSupplementalTaxRegistrations AWS API Documentation
     #
@@ -1157,21 +1285,21 @@ module Aws::TaxSettings
     #
     #   resp.next_token #=> String
     #   resp.tax_exemption_details_map #=> Hash
-    #   resp.tax_exemption_details_map["AccountId"].heritage_obtained_details #=> Boolean
-    #   resp.tax_exemption_details_map["AccountId"].heritage_obtained_parent_entity #=> String
-    #   resp.tax_exemption_details_map["AccountId"].heritage_obtained_reason #=> String
     #   resp.tax_exemption_details_map["AccountId"].tax_exemptions #=> Array
     #   resp.tax_exemption_details_map["AccountId"].tax_exemptions[0].authority.country #=> String
     #   resp.tax_exemption_details_map["AccountId"].tax_exemptions[0].authority.state #=> String
-    #   resp.tax_exemption_details_map["AccountId"].tax_exemptions[0].effective_date #=> Time
-    #   resp.tax_exemption_details_map["AccountId"].tax_exemptions[0].expiration_date #=> Time
-    #   resp.tax_exemption_details_map["AccountId"].tax_exemptions[0].status #=> String, one of "None", "Valid", "Expired", "Pending"
-    #   resp.tax_exemption_details_map["AccountId"].tax_exemptions[0].system_effective_date #=> Time
+    #   resp.tax_exemption_details_map["AccountId"].tax_exemptions[0].tax_exemption_type.display_name #=> String
+    #   resp.tax_exemption_details_map["AccountId"].tax_exemptions[0].tax_exemption_type.description #=> String
     #   resp.tax_exemption_details_map["AccountId"].tax_exemptions[0].tax_exemption_type.applicable_jurisdictions #=> Array
     #   resp.tax_exemption_details_map["AccountId"].tax_exemptions[0].tax_exemption_type.applicable_jurisdictions[0].country #=> String
     #   resp.tax_exemption_details_map["AccountId"].tax_exemptions[0].tax_exemption_type.applicable_jurisdictions[0].state #=> String
-    #   resp.tax_exemption_details_map["AccountId"].tax_exemptions[0].tax_exemption_type.description #=> String
-    #   resp.tax_exemption_details_map["AccountId"].tax_exemptions[0].tax_exemption_type.display_name #=> String
+    #   resp.tax_exemption_details_map["AccountId"].tax_exemptions[0].effective_date #=> Time
+    #   resp.tax_exemption_details_map["AccountId"].tax_exemptions[0].expiration_date #=> Time
+    #   resp.tax_exemption_details_map["AccountId"].tax_exemptions[0].system_effective_date #=> Time
+    #   resp.tax_exemption_details_map["AccountId"].tax_exemptions[0].status #=> String, one of "None", "Valid", "Expired", "Pending"
+    #   resp.tax_exemption_details_map["AccountId"].heritage_obtained_details #=> Boolean
+    #   resp.tax_exemption_details_map["AccountId"].heritage_obtained_parent_entity #=> String
+    #   resp.tax_exemption_details_map["AccountId"].heritage_obtained_reason #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/taxsettings-2018-05-10/ListTaxExemptions AWS API Documentation
     #
@@ -1210,73 +1338,86 @@ module Aws::TaxSettings
     #
     #   resp.account_details #=> Array
     #   resp.account_details[0].account_id #=> String
-    #   resp.account_details[0].account_meta_data.account_name #=> String
-    #   resp.account_details[0].account_meta_data.address.address_line_1 #=> String
-    #   resp.account_details[0].account_meta_data.address.address_line_2 #=> String
-    #   resp.account_details[0].account_meta_data.address.address_line_3 #=> String
-    #   resp.account_details[0].account_meta_data.address.city #=> String
-    #   resp.account_details[0].account_meta_data.address.country_code #=> String
-    #   resp.account_details[0].account_meta_data.address.district_or_county #=> String
-    #   resp.account_details[0].account_meta_data.address.postal_code #=> String
-    #   resp.account_details[0].account_meta_data.address.state_or_region #=> String
-    #   resp.account_details[0].account_meta_data.address_role_map #=> Hash
-    #   resp.account_details[0].account_meta_data.address_role_map["AddressRoleType"].country_code #=> String
-    #   resp.account_details[0].account_meta_data.address_role_map["AddressRoleType"].state_or_region #=> String
-    #   resp.account_details[0].account_meta_data.address_type #=> String, one of "TaxAddress", "BillingAddress", "ContactAddress"
-    #   resp.account_details[0].account_meta_data.seller #=> String
-    #   resp.account_details[0].tax_inheritance_details.inheritance_obtained_reason #=> String
-    #   resp.account_details[0].tax_inheritance_details.parent_entity_id #=> String
-    #   resp.account_details[0].tax_registration.additional_tax_information.brazil_additional_info.ccm_code #=> String
-    #   resp.account_details[0].tax_registration.additional_tax_information.brazil_additional_info.legal_nature_code #=> String
-    #   resp.account_details[0].tax_registration.additional_tax_information.canada_additional_info.canada_quebec_sales_tax_number #=> String
-    #   resp.account_details[0].tax_registration.additional_tax_information.canada_additional_info.canada_retail_sales_tax_number #=> String
-    #   resp.account_details[0].tax_registration.additional_tax_information.canada_additional_info.is_reseller_account #=> Boolean
-    #   resp.account_details[0].tax_registration.additional_tax_information.canada_additional_info.provincial_sales_tax_id #=> String
-    #   resp.account_details[0].tax_registration.additional_tax_information.egypt_additional_info.unique_identification_number #=> String
-    #   resp.account_details[0].tax_registration.additional_tax_information.egypt_additional_info.unique_identification_number_expiration_date #=> String
-    #   resp.account_details[0].tax_registration.additional_tax_information.estonia_additional_info.registry_commercial_code #=> String
-    #   resp.account_details[0].tax_registration.additional_tax_information.georgia_additional_info.person_type #=> String, one of "Legal Person", "Physical Person", "Business"
-    #   resp.account_details[0].tax_registration.additional_tax_information.greece_additional_info.contracting_authority_code #=> String
-    #   resp.account_details[0].tax_registration.additional_tax_information.india_additional_info.pan #=> String
-    #   resp.account_details[0].tax_registration.additional_tax_information.israel_additional_info.customer_type #=> String, one of "Business", "Individual"
-    #   resp.account_details[0].tax_registration.additional_tax_information.israel_additional_info.dealer_type #=> String, one of "Authorized", "Non-authorized"
-    #   resp.account_details[0].tax_registration.additional_tax_information.italy_additional_info.cig_number #=> String
-    #   resp.account_details[0].tax_registration.additional_tax_information.italy_additional_info.cup_number #=> String
-    #   resp.account_details[0].tax_registration.additional_tax_information.italy_additional_info.sdi_account_id #=> String
-    #   resp.account_details[0].tax_registration.additional_tax_information.italy_additional_info.tax_code #=> String
-    #   resp.account_details[0].tax_registration.additional_tax_information.kenya_additional_info.person_type #=> String, one of "Legal Person", "Physical Person", "Business"
-    #   resp.account_details[0].tax_registration.additional_tax_information.malaysia_additional_info.business_registration_number #=> String
-    #   resp.account_details[0].tax_registration.additional_tax_information.malaysia_additional_info.service_tax_codes #=> Array
-    #   resp.account_details[0].tax_registration.additional_tax_information.malaysia_additional_info.service_tax_codes[0] #=> String, one of "Consultancy", "Digital Service And Electronic Medium", "IT Services", "Training Or Coaching"
-    #   resp.account_details[0].tax_registration.additional_tax_information.malaysia_additional_info.tax_information_number #=> String
-    #   resp.account_details[0].tax_registration.additional_tax_information.poland_additional_info.individual_registration_number #=> String
-    #   resp.account_details[0].tax_registration.additional_tax_information.poland_additional_info.is_group_vat_enabled #=> Boolean
-    #   resp.account_details[0].tax_registration.additional_tax_information.romania_additional_info.tax_registration_number_type #=> String, one of "TaxRegistrationNumber", "LocalRegistrationNumber"
-    #   resp.account_details[0].tax_registration.additional_tax_information.saudi_arabia_additional_info.tax_registration_number_type #=> String, one of "TaxRegistrationNumber", "TaxIdentificationNumber", "CommercialRegistrationNumber"
-    #   resp.account_details[0].tax_registration.additional_tax_information.south_korea_additional_info.business_representative_name #=> String
-    #   resp.account_details[0].tax_registration.additional_tax_information.south_korea_additional_info.item_of_business #=> String
-    #   resp.account_details[0].tax_registration.additional_tax_information.south_korea_additional_info.line_of_business #=> String
-    #   resp.account_details[0].tax_registration.additional_tax_information.spain_additional_info.registration_type #=> String, one of "Intra-EU", "Local"
-    #   resp.account_details[0].tax_registration.additional_tax_information.turkey_additional_info.industries #=> String, one of "CirculatingOrg", "ProfessionalOrg", "Banks", "Insurance", "PensionAndBenefitFunds", "DevelopmentAgencies"
-    #   resp.account_details[0].tax_registration.additional_tax_information.turkey_additional_info.kep_email_id #=> String
-    #   resp.account_details[0].tax_registration.additional_tax_information.turkey_additional_info.secondary_tax_id #=> String
-    #   resp.account_details[0].tax_registration.additional_tax_information.turkey_additional_info.tax_office #=> String
-    #   resp.account_details[0].tax_registration.additional_tax_information.ukraine_additional_info.ukraine_trn_type #=> String, one of "Business", "Individual"
-    #   resp.account_details[0].tax_registration.additional_tax_information.vietnam_additional_info.electronic_transaction_code_number #=> String
-    #   resp.account_details[0].tax_registration.additional_tax_information.vietnam_additional_info.enterprise_identification_number #=> String
-    #   resp.account_details[0].tax_registration.additional_tax_information.vietnam_additional_info.payment_voucher_number #=> String
-    #   resp.account_details[0].tax_registration.additional_tax_information.vietnam_additional_info.payment_voucher_number_date #=> String
-    #   resp.account_details[0].tax_registration.certified_email_id #=> String
-    #   resp.account_details[0].tax_registration.jurisdiction.country_code #=> String
-    #   resp.account_details[0].tax_registration.jurisdiction.state_or_region #=> String
-    #   resp.account_details[0].tax_registration.legal_name #=> String
     #   resp.account_details[0].tax_registration.registration_id #=> String
-    #   resp.account_details[0].tax_registration.registration_type #=> String, one of "VAT", "GST", "CPF", "CNPJ", "SST", "TIN", "NRIC"
-    #   resp.account_details[0].tax_registration.sector #=> String, one of "Business", "Individual", "Government"
+    #   resp.account_details[0].tax_registration.registration_type #=> String, one of "VAT", "GST", "CPF", "CNPJ", "SST", "TIN", "NRIC", "PAN", "NIP"
+    #   resp.account_details[0].tax_registration.legal_name #=> String
     #   resp.account_details[0].tax_registration.status #=> String, one of "Verified", "Pending", "Deleted", "Rejected"
+    #   resp.account_details[0].tax_registration.sector #=> String, one of "Business", "Individual", "Government"
     #   resp.account_details[0].tax_registration.tax_document_metadatas #=> Array
     #   resp.account_details[0].tax_registration.tax_document_metadatas[0].tax_document_access_token #=> String
     #   resp.account_details[0].tax_registration.tax_document_metadatas[0].tax_document_name #=> String
+    #   resp.account_details[0].tax_registration.certified_email_id #=> String
+    #   resp.account_details[0].tax_registration.additional_tax_information.malaysia_additional_info.service_tax_codes #=> Array
+    #   resp.account_details[0].tax_registration.additional_tax_information.malaysia_additional_info.service_tax_codes[0] #=> String, one of "Consultancy", "Digital Service And Electronic Medium", "IT Services", "Training Or Coaching"
+    #   resp.account_details[0].tax_registration.additional_tax_information.malaysia_additional_info.tax_information_number #=> String
+    #   resp.account_details[0].tax_registration.additional_tax_information.malaysia_additional_info.business_registration_number #=> String
+    #   resp.account_details[0].tax_registration.additional_tax_information.israel_additional_info.dealer_type #=> String, one of "Authorized", "Non-authorized"
+    #   resp.account_details[0].tax_registration.additional_tax_information.israel_additional_info.customer_type #=> String, one of "Business", "Individual"
+    #   resp.account_details[0].tax_registration.additional_tax_information.estonia_additional_info.registry_commercial_code #=> String
+    #   resp.account_details[0].tax_registration.additional_tax_information.canada_additional_info.provincial_sales_tax_id #=> String
+    #   resp.account_details[0].tax_registration.additional_tax_information.canada_additional_info.canada_quebec_sales_tax_number #=> String
+    #   resp.account_details[0].tax_registration.additional_tax_information.canada_additional_info.canada_retail_sales_tax_number #=> String
+    #   resp.account_details[0].tax_registration.additional_tax_information.canada_additional_info.is_reseller_account #=> Boolean
+    #   resp.account_details[0].tax_registration.additional_tax_information.brazil_additional_info.ccm_code #=> String
+    #   resp.account_details[0].tax_registration.additional_tax_information.brazil_additional_info.legal_nature_code #=> String
+    #   resp.account_details[0].tax_registration.additional_tax_information.spain_additional_info.registration_type #=> String, one of "Intra-EU", "Local"
+    #   resp.account_details[0].tax_registration.additional_tax_information.kenya_additional_info.person_type #=> String, one of "Legal Person", "Physical Person", "Business"
+    #   resp.account_details[0].tax_registration.additional_tax_information.south_korea_additional_info.business_representative_name #=> String
+    #   resp.account_details[0].tax_registration.additional_tax_information.south_korea_additional_info.line_of_business #=> String
+    #   resp.account_details[0].tax_registration.additional_tax_information.south_korea_additional_info.item_of_business #=> String
+    #   resp.account_details[0].tax_registration.additional_tax_information.turkey_additional_info.tax_office #=> String
+    #   resp.account_details[0].tax_registration.additional_tax_information.turkey_additional_info.kep_email_id #=> String
+    #   resp.account_details[0].tax_registration.additional_tax_information.turkey_additional_info.secondary_tax_id #=> String
+    #   resp.account_details[0].tax_registration.additional_tax_information.turkey_additional_info.industries #=> String, one of "CirculatingOrg", "ProfessionalOrg", "Banks", "Insurance", "PensionAndBenefitFunds", "DevelopmentAgencies"
+    #   resp.account_details[0].tax_registration.additional_tax_information.georgia_additional_info.person_type #=> String, one of "Legal Person", "Physical Person", "Business"
+    #   resp.account_details[0].tax_registration.additional_tax_information.italy_additional_info.sdi_account_id #=> String
+    #   resp.account_details[0].tax_registration.additional_tax_information.italy_additional_info.cig_number #=> String
+    #   resp.account_details[0].tax_registration.additional_tax_information.italy_additional_info.cup_number #=> String
+    #   resp.account_details[0].tax_registration.additional_tax_information.italy_additional_info.tax_code #=> String
+    #   resp.account_details[0].tax_registration.additional_tax_information.italy_additional_info.customer_type #=> String, one of "Business", "Individual"
+    #   resp.account_details[0].tax_registration.additional_tax_information.romania_additional_info.tax_registration_number_type #=> String, one of "TaxRegistrationNumber", "LocalRegistrationNumber"
+    #   resp.account_details[0].tax_registration.additional_tax_information.ukraine_additional_info.ukraine_trn_type #=> String, one of "Business", "Individual"
+    #   resp.account_details[0].tax_registration.additional_tax_information.poland_additional_info.individual_registration_number #=> String
+    #   resp.account_details[0].tax_registration.additional_tax_information.poland_additional_info.is_group_vat_enabled #=> Boolean
+    #   resp.account_details[0].tax_registration.additional_tax_information.poland_additional_info.tax_registration_number_type #=> String, one of "EUTaxRegistrationNumber", "LocalTaxRegistrationNumber", "LocalRegistrationNumber"
+    #   resp.account_details[0].tax_registration.additional_tax_information.saudi_arabia_additional_info.tax_registration_number_type #=> String, one of "TaxRegistrationNumber", "TaxIdentificationNumber", "CommercialRegistrationNumber"
+    #   resp.account_details[0].tax_registration.additional_tax_information.india_additional_info.pan #=> String
+    #   resp.account_details[0].tax_registration.additional_tax_information.indonesia_additional_info.tax_registration_number_type #=> String, one of "NIK", "PassportNumber", "NPWP", "NITKU"
+    #   resp.account_details[0].tax_registration.additional_tax_information.indonesia_additional_info.ppn_exception_designation_code #=> String
+    #   resp.account_details[0].tax_registration.additional_tax_information.indonesia_additional_info.decision_number #=> String
+    #   resp.account_details[0].tax_registration.additional_tax_information.vietnam_additional_info.enterprise_identification_number #=> String
+    #   resp.account_details[0].tax_registration.additional_tax_information.vietnam_additional_info.electronic_transaction_code_number #=> String
+    #   resp.account_details[0].tax_registration.additional_tax_information.vietnam_additional_info.payment_voucher_number #=> String
+    #   resp.account_details[0].tax_registration.additional_tax_information.vietnam_additional_info.payment_voucher_number_date #=> String
+    #   resp.account_details[0].tax_registration.additional_tax_information.egypt_additional_info.unique_identification_number #=> String
+    #   resp.account_details[0].tax_registration.additional_tax_information.egypt_additional_info.unique_identification_number_expiration_date #=> String
+    #   resp.account_details[0].tax_registration.additional_tax_information.greece_additional_info.contracting_authority_code #=> String
+    #   resp.account_details[0].tax_registration.additional_tax_information.uzbekistan_additional_info.tax_registration_number_type #=> String, one of "Business", "Individual"
+    #   resp.account_details[0].tax_registration.additional_tax_information.uzbekistan_additional_info.vat_registration_number #=> String
+    #   resp.account_details[0].tax_registration.additional_tax_information.philippines_additional_info.is_vat_registered #=> Boolean
+    #   resp.account_details[0].tax_registration.additional_tax_information.belgium_additional_info.peppol_id #=> String
+    #   resp.account_details[0].tax_registration.additional_tax_information.belgium_additional_info.is_mercurius_box_enabled #=> Boolean
+    #   resp.account_details[0].tax_registration.additional_tax_information.chile_additional_info.document_type #=> String, one of "Invoice", "Receipt"
+    #   resp.account_details[0].tax_registration.additional_tax_information.chile_additional_info.business_activity #=> String
+    #   resp.account_details[0].tax_registration.additional_tax_information.france_additional_info.siren_number #=> String
+    #   resp.account_details[0].tax_registration.jurisdiction.state_or_region #=> String
+    #   resp.account_details[0].tax_registration.jurisdiction.country_code #=> String
+    #   resp.account_details[0].tax_inheritance_details.parent_entity_id #=> String
+    #   resp.account_details[0].tax_inheritance_details.inheritance_obtained_reason #=> String
+    #   resp.account_details[0].account_meta_data.account_name #=> String
+    #   resp.account_details[0].account_meta_data.seller #=> String
+    #   resp.account_details[0].account_meta_data.address.address_line_1 #=> String
+    #   resp.account_details[0].account_meta_data.address.address_line_2 #=> String
+    #   resp.account_details[0].account_meta_data.address.address_line_3 #=> String
+    #   resp.account_details[0].account_meta_data.address.district_or_county #=> String
+    #   resp.account_details[0].account_meta_data.address.city #=> String
+    #   resp.account_details[0].account_meta_data.address.state_or_region #=> String
+    #   resp.account_details[0].account_meta_data.address.postal_code #=> String
+    #   resp.account_details[0].account_meta_data.address.country_code #=> String
+    #   resp.account_details[0].account_meta_data.address_type #=> String, one of "TaxAddress", "BillingAddress", "ContactAddress"
+    #   resp.account_details[0].account_meta_data.address_role_map #=> Hash
+    #   resp.account_details[0].account_meta_data.address_role_map["AddressRoleType"].state_or_region #=> String
+    #   resp.account_details[0].account_meta_data.address_role_map["AddressRoleType"].country_code #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/taxsettings-2018-05-10/ListTaxRegistrations AWS API Documentation
@@ -1303,19 +1444,19 @@ module Aws::TaxSettings
     #
     #   resp = client.put_supplemental_tax_registration({
     #     tax_registration_entry: { # required
-    #       address: { # required
-    #         address_line_1: "AddressLine1", # required
-    #         address_line_2: "AddressLine2",
-    #         address_line_3: "AddressLine3",
-    #         city: "City", # required
-    #         country_code: "CountryCode", # required
-    #         district_or_county: "District",
-    #         postal_code: "PostalCode", # required
-    #         state_or_region: "State",
-    #       },
-    #       legal_name: "LegalName", # required
     #       registration_id: "RegistrationId", # required
     #       registration_type: "VAT", # required, accepts VAT
+    #       legal_name: "LegalName", # required
+    #       address: { # required
+    #         address_line_1: "AddressLine1",
+    #         address_line_2: "AddressLine2",
+    #         address_line_3: "AddressLine3",
+    #         district_or_county: "District",
+    #         city: "City",
+    #         state_or_region: "State",
+    #         postal_code: "PostalCode", # required
+    #         country_code: "CountryCode", # required
+    #       },
     #     },
     #   })
     #
@@ -1343,11 +1484,11 @@ module Aws::TaxSettings
     # @option params [required, Types::Authority] :authority
     #   The address domain associate with the tax information.
     #
-    # @option params [required, Types::ExemptionCertificate] :exemption_certificate
-    #   The exemption certificate.
-    #
     # @option params [required, String] :exemption_type
     #   The exemption type. Use the supported tax exemption type description.
+    #
+    # @option params [required, Types::ExemptionCertificate] :exemption_certificate
+    #   The exemption certificate.
     #
     # @return [Types::PutTaxExemptionResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1361,11 +1502,11 @@ module Aws::TaxSettings
     #       country: "CountryCode", # required
     #       state: "State",
     #     },
-    #     exemption_certificate: { # required
-    #       document_file: "data", # required
-    #       document_name: "ExemptionDocumentName", # required
-    #     },
     #     exemption_type: "GenericString", # required
+    #     exemption_certificate: { # required
+    #       document_name: "ExemptionDocumentName", # required
+    #       document_file: "data", # required
+    #     },
     #   })
     #
     # @example Response structure
@@ -1434,6 +1575,42 @@ module Aws::TaxSettings
     #
     # ^
     #
+    # **Indonesia**
+    #
+    # * `PutTaxRegistration`: The use of this operation to submit tax
+    #   information is subject to the [Amazon Web Services service
+    #   terms][2]. By submitting, you’re providing consent for Amazon Web
+    #   Services to validate NIK, NPWP, and NITKU data, provided by you with
+    #   the Directorate General of Taxes of Indonesia in accordance with the
+    #   Minister of Finance Regulation (PMK) Number 112/PMK.03/2022.
+    #
+    # * `BatchPutTaxRegistration`: The use of this operation to submit tax
+    #   information is subject to the [Amazon Web Services service
+    #   terms][2]. By submitting, you’re providing consent for Amazon Web
+    #   Services to validate NIK, NPWP, and NITKU data, provided by you with
+    #   the Directorate General of Taxes of Indonesia in accordance with the
+    #   Minister of Finance Regulation (PMK) Number 112/PMK.03/2022, through
+    #   our third-party partner PT Achilles Advanced Management
+    #   (OnlinePajak).
+    #
+    # * You must specify the `taxRegistrationNumberType` in the
+    #   `indonesiaAdditionalInfo` field of the `additionalTaxInformation`
+    #   object.
+    #
+    # * If you specify `decisionNumber`, you must specify the
+    #   `ppnExceptionDesignationCode` in the `indonesiaAdditionalInfo` field
+    #   of the `additionalTaxInformation` object. If the
+    #   `taxRegistrationNumberType` is set to NPWP or NITKU, valid values
+    #   for `ppnExceptionDesignationCode` are either `01`, `02`, `03`, `07`,
+    #   or `08`.
+    #
+    #   For other `taxRegistrationNumberType` values,
+    #   `ppnExceptionDesignationCode` must be either `01`, `07`, or `08`.
+    #
+    # * If `ppnExceptionDesignationCode` is `07` or `08`, you must specify
+    #   the `decisionNumber` in the `indonesiaAdditionalInfo` field of the
+    #   `additionalTaxInformation` object.
+    #
     # **Kenya**
     #
     # * You must specify the `personType` in the `kenyaAdditionalInfo` field
@@ -1489,6 +1666,14 @@ module Aws::TaxSettings
     #   IT service - 9907101676
     #
     #   Digital services and electronic medium - 9907121690
+    #
+    # **Mexico**
+    #
+    # * You must provide a Constancia de Situación fiscal (CSF) document in
+    #   the **verificationDetails** field.
+    #
+    # * You do not need to provide address and legal name. These will be
+    #   populated based on your tax registration number.
     #
     # **Nepal**
     #
@@ -1554,9 +1739,51 @@ module Aws::TaxSettings
     #
     # ^
     #
+    # **Philippines**
+    #
+    # * You can optionally specify the `isVatRegistered` in the
+    #   `philippinesAdditionalInfo` field of the `additionalTaxInformation`
+    #   object to indicate your VAT registration status with the Bureau of
+    #   Internal Revenue (BIR).
+    #
+    # ^
+    #
+    # **Belgium**
+    #
+    # * You can optionally specify the `peppolId` in the
+    #   `belgiumAdditionalInfo` field of the `additionalTaxInformation`
+    #   object.
+    #
+    # ^
+    #
+    # **Chile**
+    #
+    # * You can optionally specify the `documentType` and `businessActivity`
+    #   in the `chileAdditionalInfo` field of the `additionalTaxInformation`
+    #   object.
+    #
+    # ^
+    #
+    # **France**
+    #
+    # * You must specify the `sirenNumber` in the `franceAdditionalInfo`
+    #   field of the `additionalTaxInformation` object.
+    #
+    # ^
+    #
+    # **Poland**
+    #
+    # * You can optionally specify the `taxRegistrationNumberType` in the
+    #   `polandAdditionalInfo` field of the `additionalTaxInformation`
+    #   object. Valid values are `EUTaxRegistrationNumber`,
+    #   `LocalTaxRegistrationNumber`, or `LocalRegistrationNumber`.
+    #
+    # ^
+    #
     #
     #
     # [1]: https://console.aws.amazon.com/billing/home#/paymentpreferences/paymentmethods
+    # [2]: http://aws.amazon.com/service-terms/
     #
     # @option params [String] :account_id
     #   Your unique account identifier.
@@ -1574,108 +1801,133 @@ module Aws::TaxSettings
     #   resp = client.put_tax_registration({
     #     account_id: "AccountId",
     #     tax_registration_entry: { # required
+    #       registration_id: "RegistrationId", # required
+    #       registration_type: "VAT", # required, accepts VAT, GST, CPF, CNPJ, SST, TIN, NRIC, PAN, NIP
+    #       legal_name: "LegalName",
+    #       legal_address: {
+    #         address_line_1: "AddressLine1",
+    #         address_line_2: "AddressLine2",
+    #         address_line_3: "AddressLine3",
+    #         district_or_county: "District",
+    #         city: "City",
+    #         state_or_region: "State",
+    #         postal_code: "PostalCode", # required
+    #         country_code: "CountryCode", # required
+    #       },
+    #       sector: "Business", # accepts Business, Individual, Government
     #       additional_tax_information: {
+    #         malaysia_additional_info: {
+    #           service_tax_codes: ["Consultancy"], # accepts Consultancy, Digital Service And Electronic Medium, IT Services, Training Or Coaching
+    #           tax_information_number: "TaxInformationNumber",
+    #           business_registration_number: "BusinessRegistrationNumber",
+    #         },
+    #         israel_additional_info: {
+    #           dealer_type: "Authorized", # required, accepts Authorized, Non-authorized
+    #           customer_type: "Business", # required, accepts Business, Individual
+    #         },
+    #         estonia_additional_info: {
+    #           registry_commercial_code: "RegistryCommercialCode", # required
+    #         },
     #         canada_additional_info: {
+    #           provincial_sales_tax_id: "CanadaProvincialSalesTaxIdString",
     #           canada_quebec_sales_tax_number: "CanadaQuebecSalesTaxNumberString",
     #           canada_retail_sales_tax_number: "CanadaRetailSalesTaxNumberString",
     #           is_reseller_account: false,
-    #           provincial_sales_tax_id: "CanadaProvincialSalesTaxIdString",
+    #         },
+    #         spain_additional_info: {
+    #           registration_type: "Intra-EU", # required, accepts Intra-EU, Local
+    #         },
+    #         kenya_additional_info: {
+    #           person_type: "Legal Person", # required, accepts Legal Person, Physical Person, Business
+    #         },
+    #         south_korea_additional_info: {
+    #           business_representative_name: "BusinessRepresentativeName", # required
+    #           line_of_business: "LineOfBusiness", # required
+    #           item_of_business: "ItemOfBusiness", # required
+    #         },
+    #         turkey_additional_info: {
+    #           tax_office: "TaxOffice",
+    #           kep_email_id: "KepEmailId",
+    #           secondary_tax_id: "SecondaryTaxId",
+    #           industries: "CirculatingOrg", # accepts CirculatingOrg, ProfessionalOrg, Banks, Insurance, PensionAndBenefitFunds, DevelopmentAgencies
+    #         },
+    #         georgia_additional_info: {
+    #           person_type: "Legal Person", # required, accepts Legal Person, Physical Person, Business
+    #         },
+    #         italy_additional_info: {
+    #           sdi_account_id: "SdiAccountId",
+    #           cig_number: "CigNumber",
+    #           cup_number: "CupNumber",
+    #           tax_code: "TaxCode",
+    #           customer_type: "Business", # accepts Business, Individual
+    #         },
+    #         romania_additional_info: {
+    #           tax_registration_number_type: "TaxRegistrationNumber", # required, accepts TaxRegistrationNumber, LocalRegistrationNumber
+    #         },
+    #         ukraine_additional_info: {
+    #           ukraine_trn_type: "Business", # required, accepts Business, Individual
+    #         },
+    #         poland_additional_info: {
+    #           individual_registration_number: "IndividualRegistrationNumber",
+    #           is_group_vat_enabled: false,
+    #           tax_registration_number_type: "EUTaxRegistrationNumber", # accepts EUTaxRegistrationNumber, LocalTaxRegistrationNumber, LocalRegistrationNumber
+    #         },
+    #         saudi_arabia_additional_info: {
+    #           tax_registration_number_type: "TaxRegistrationNumber", # accepts TaxRegistrationNumber, TaxIdentificationNumber, CommercialRegistrationNumber
+    #         },
+    #         indonesia_additional_info: {
+    #           tax_registration_number_type: "NIK", # accepts NIK, PassportNumber, NPWP, NITKU
+    #           ppn_exception_designation_code: "PpnExceptionDesignationCode",
+    #           decision_number: "DecisionNumber",
+    #         },
+    #         vietnam_additional_info: {
+    #           enterprise_identification_number: "EnterpriseIdentificationNumber",
+    #           electronic_transaction_code_number: "ElectronicTransactionCodeNumber",
+    #           payment_voucher_number: "PaymentVoucherNumber",
+    #           payment_voucher_number_date: "DateString",
     #         },
     #         egypt_additional_info: {
     #           unique_identification_number: "UniqueIdentificationNumber",
     #           unique_identification_number_expiration_date: "DateString",
     #         },
-    #         estonia_additional_info: {
-    #           registry_commercial_code: "RegistryCommercialCode", # required
-    #         },
-    #         georgia_additional_info: {
-    #           person_type: "Legal Person", # required, accepts Legal Person, Physical Person, Business
-    #         },
     #         greece_additional_info: {
     #           contracting_authority_code: "ContractingAuthorityCode",
     #         },
-    #         israel_additional_info: {
-    #           customer_type: "Business", # required, accepts Business, Individual
-    #           dealer_type: "Authorized", # required, accepts Authorized, Non-authorized
+    #         uzbekistan_additional_info: {
+    #           tax_registration_number_type: "Business", # accepts Business, Individual
+    #           vat_registration_number: "VatRegistrationNumber",
     #         },
-    #         italy_additional_info: {
-    #           cig_number: "CigNumber",
-    #           cup_number: "CupNumber",
-    #           sdi_account_id: "SdiAccountId",
-    #           tax_code: "TaxCode",
+    #         philippines_additional_info: {
+    #           is_vat_registered: false,
     #         },
-    #         kenya_additional_info: {
-    #           person_type: "Legal Person", # required, accepts Legal Person, Physical Person, Business
+    #         belgium_additional_info: {
+    #           peppol_id: "PeppolId",
+    #           is_mercurius_box_enabled: false,
     #         },
-    #         malaysia_additional_info: {
-    #           business_registration_number: "BusinessRegistrationNumber",
-    #           service_tax_codes: ["Consultancy"], # accepts Consultancy, Digital Service And Electronic Medium, IT Services, Training Or Coaching
-    #           tax_information_number: "TaxInformationNumber",
+    #         chile_additional_info: {
+    #           document_type: "Invoice", # accepts Invoice, Receipt
+    #           business_activity: "GenericString",
     #         },
-    #         poland_additional_info: {
-    #           individual_registration_number: "IndividualRegistrationNumber",
-    #           is_group_vat_enabled: false,
-    #         },
-    #         romania_additional_info: {
-    #           tax_registration_number_type: "TaxRegistrationNumber", # required, accepts TaxRegistrationNumber, LocalRegistrationNumber
-    #         },
-    #         saudi_arabia_additional_info: {
-    #           tax_registration_number_type: "TaxRegistrationNumber", # accepts TaxRegistrationNumber, TaxIdentificationNumber, CommercialRegistrationNumber
-    #         },
-    #         south_korea_additional_info: {
-    #           business_representative_name: "BusinessRepresentativeName", # required
-    #           item_of_business: "ItemOfBusiness", # required
-    #           line_of_business: "LineOfBusiness", # required
-    #         },
-    #         spain_additional_info: {
-    #           registration_type: "Intra-EU", # required, accepts Intra-EU, Local
-    #         },
-    #         turkey_additional_info: {
-    #           industries: "CirculatingOrg", # accepts CirculatingOrg, ProfessionalOrg, Banks, Insurance, PensionAndBenefitFunds, DevelopmentAgencies
-    #           kep_email_id: "KepEmailId",
-    #           secondary_tax_id: "SecondaryTaxId",
-    #           tax_office: "TaxOffice",
-    #         },
-    #         ukraine_additional_info: {
-    #           ukraine_trn_type: "Business", # required, accepts Business, Individual
-    #         },
-    #         vietnam_additional_info: {
-    #           electronic_transaction_code_number: "ElectronicTransactionCodeNumber",
-    #           enterprise_identification_number: "EnterpriseIdentificationNumber",
-    #           payment_voucher_number: "PaymentVoucherNumber",
-    #           payment_voucher_number_date: "DateString",
+    #         france_additional_info: {
+    #           siren_number: "SirenNumber", # required
     #         },
     #       },
-    #       certified_email_id: "CertifiedEmailId",
-    #       legal_address: {
-    #         address_line_1: "AddressLine1", # required
-    #         address_line_2: "AddressLine2",
-    #         address_line_3: "AddressLine3",
-    #         city: "City", # required
-    #         country_code: "CountryCode", # required
-    #         district_or_county: "District",
-    #         postal_code: "PostalCode", # required
-    #         state_or_region: "State",
-    #       },
-    #       legal_name: "LegalName",
-    #       registration_id: "RegistrationId", # required
-    #       registration_type: "VAT", # required, accepts VAT, GST, CPF, CNPJ, SST, TIN, NRIC
-    #       sector: "Business", # accepts Business, Individual, Government
     #       verification_details: {
     #         date_of_birth: "DateOfBirth",
     #         tax_registration_documents: [
     #           {
-    #             file: {
-    #               file_content: "data", # required
-    #               file_name: "TaxDocumentName", # required
-    #             },
     #             s3_location: {
     #               bucket: "S3BucketName", # required
     #               key: "S3Key", # required
     #             },
+    #             file: {
+    #               file_name: "TaxDocumentName", # required
+    #               file_content: "data", # required
+    #             },
     #           },
     #         ],
     #       },
+    #       certified_email_id: "CertifiedEmailId",
     #     },
     #   })
     #
@@ -1710,7 +1962,7 @@ module Aws::TaxSettings
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-taxsettings'
-      context[:gem_version] = '1.20.0'
+      context[:gem_version] = '1.43.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

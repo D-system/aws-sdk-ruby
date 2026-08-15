@@ -1,0 +1,1166 @@
+# WARNING ABOUT GENERATED CODE
+#
+# This file is generated. See the contributing guide for more information:
+# https://github.com/aws/aws-sdk-ruby/blob/version-3/CONTRIBUTING.md
+#
+# WARNING ABOUT GENERATED CODE
+
+module Aws
+  module BedrockAgentCoreControl
+    module Params
+      type data_source_type = {
+      inline_examples: {
+        examples: Array[
+          {
+          }
+        ]
+      }?,
+      s3_source: {
+        s3_uri: ::String
+      }?
+    }
+
+      type limit_entry = {
+      dimensions: Hash[::String, ::String],
+      requests: Array[
+        {
+          rate: ::Float,
+          period: ("second" | "minute")
+        }
+      ]?,
+      tokens: Array[
+        {
+          rate: ::Float,
+          period: ("second" | "minute")
+        }
+      ]?,
+      connections: Array[
+        {
+          rate: ::Float,
+          period: ("second" | "minute")
+        }
+      ]?
+    }
+
+      type code_configuration = {
+      code: {
+        s3: {
+          bucket: ::String,
+          prefix: ::String,
+          version_id: ::String?
+        }?
+      },
+      runtime: ("PYTHON_3_10" | "PYTHON_3_11" | "PYTHON_3_12" | "PYTHON_3_13" | "PYTHON_3_14" | "NODE_22"),
+      entry_point: Array[::String]
+    }
+
+      type agent_runtime_artifact = {
+      container_configuration: {
+        container_uri: ::String
+      }?,
+      code_configuration: Params::code_configuration?
+    }
+
+      type network_configuration = {
+      network_mode: ("PUBLIC" | "VPC"),
+      network_mode_config: {
+        security_groups: Array[::String],
+        subnets: Array[::String],
+        require_service_s3_endpoint: bool?
+      }?
+    }
+
+      type managed_vpc_resource = {
+      vpc_identifier: ::String,
+      subnet_ids: Array[::String],
+      endpoint_ip_address_type: ("IPV4" | "IPV6"),
+      security_group_ids: Array[::String]?,
+      tags: Hash[::String, ::String]?,
+      routing_domain: ::String?
+    }
+
+      type private_endpoint = {
+      self_managed_lattice_resource: {
+        resource_configuration_identifier: ::String?
+      }?,
+      managed_vpc_resource: Params::managed_vpc_resource?
+    }
+
+      type custom_jwt_authorizer_configuration = {
+      discovery_url: ::String,
+      allowed_audience: Array[::String]?,
+      allowed_clients: Array[::String]?,
+      allowed_scopes: Array[::String]?,
+      advertised_scope_mapping: Hash[::String, ::String]?,
+      custom_claims: Array[
+        Params::custom_claim_validation_type
+      ]?,
+      private_endpoint: Params::private_endpoint?,
+      private_endpoint_overrides: Array[
+        Params::private_endpoint_override
+      ]?,
+      allowed_workload_configuration: {
+        hosting_environments: Array[
+          {
+            arn: ::String
+          }
+        ]?,
+        workload_identities: Array[::String]?
+      }?
+    }
+
+      type authorizer_configuration = {
+      custom_jwt_authorizer: Params::custom_jwt_authorizer_configuration?
+    }
+
+      type custom_claim_validation_type = {
+      inbound_token_claim_name: ::String,
+      inbound_token_claim_value_type: ("STRING" | "STRING_ARRAY"),
+      authorizing_claim_match_value: {
+        claim_match_value: {
+          match_value_string: ::String?,
+          match_value_string_list: Array[::String]?
+        },
+        claim_match_operator: ("EQUALS" | "CONTAINS" | "CONTAINS_ANY")
+      }
+    }
+
+      type private_endpoint_override = {
+      domain: ::String,
+      private_endpoint: Params::private_endpoint
+    }
+
+      type filesystem_configuration = {
+      session_storage: {
+        mount_path: ::String
+      }?,
+      s3_files_access_point: {
+        access_point_arn: ::String,
+        mount_path: ::String
+      }?,
+      efs_access_point: {
+        access_point_arn: ::String,
+        mount_path: ::String
+      }?,
+      capacity_provider_volume: {
+        volume_name: ::String,
+        mount_path: ::String
+      }?
+    }
+
+      type tools_file_system_configuration = {
+      s3_files_configuration: {
+        access_point_arn: ::String,
+        mount_path: ::String,
+        file_system_arn: ::String
+      }?,
+      efs_configuration: {
+        access_point_arn: ::String,
+        mount_path: ::String,
+        file_system_arn: ::String
+      }?
+    }
+
+      type rating_scale = {
+      numerical: Array[
+        {
+          definition: ::String,
+          value: ::Float,
+          label: ::String
+        }
+      ]?,
+      categorical: Array[
+        {
+          definition: ::String,
+          label: ::String
+        }
+      ]?
+    }
+
+      type bedrock_evaluator_model_config = {
+      model_id: ::String,
+      inference_config: {
+        max_tokens: ::Integer?,
+        temperature: ::Float?,
+        top_p: ::Float?,
+        stop_sequences: Array[::String]?
+      }?,
+      additional_model_request_fields: {
+      }?
+    }
+
+      type open_responses_evaluator_model_config = {
+      model_id: ::String,
+      max_output_tokens: ::Integer?,
+      temperature: ::Float?,
+      top_p: ::Float?,
+      reasoning: {
+        effort: ::String?
+      }?
+    }
+
+      type evaluator_model_config = {
+      bedrock_evaluator_model_config: Params::bedrock_evaluator_model_config?,
+      responses_evaluator_model_config: Params::open_responses_evaluator_model_config?
+    }
+
+      type llm_as_a_judge_evaluator_config = {
+      instructions: ::String,
+      rating_scale: Params::rating_scale,
+      model_config: Params::evaluator_model_config
+    }
+
+      type evaluator_config = {
+      llm_as_a_judge: Params::llm_as_a_judge_evaluator_config?,
+      code_based: {
+        lambda_config: {
+          lambda_arn: ::String,
+          lambda_timeout_in_seconds: ::Integer?
+        }?
+      }?
+    }
+
+      type mcp_gateway_configuration = {
+      supported_versions: Array[::String]?,
+      instructions: ::String?,
+      search_type: ("SEMANTIC")?,
+      session_configuration: {
+        session_timeout_in_seconds: ::Integer?
+      }?,
+      streaming_configuration: {
+        enable_response_streaming: bool?
+      }?
+    }
+
+      type gateway_protocol_configuration = {
+      mcp: Params::mcp_gateway_configuration?
+    }
+
+      type interceptor_input_configuration = {
+      pass_request_headers: bool,
+      payload_filter: {
+        exclude: Array[
+          {
+            field: ("RESPONSE_BODY")?
+          }
+        ]
+      }?
+    }
+
+      type gateway_interceptor_configuration = {
+      interceptor: {
+        lambda: {
+          arn: ::String
+        }?
+      },
+      interception_points: Array[("REQUEST" | "RESPONSE")],
+      input_configuration: Params::interceptor_input_configuration?
+    }
+
+      type match_principals = {
+      any_of: Array[
+        {
+          iam_principal: {
+            arn: ::String,
+            operator: ("StringEquals" | "StringLike")?
+          }?
+        }
+      ]
+    }
+
+      type condition = {
+      match_principals: Params::match_principals?,
+      match_paths: {
+        any_of: Array[::String]
+      }?
+    }
+
+      type weighted_override = {
+      traffic_split: Array[
+        Params::traffic_split_entry
+      ]
+    }
+
+      type configuration_bundle_action = {
+      static_override: {
+        bundle_arn: ::String,
+        bundle_version: ::String
+      }?,
+      weighted_override: Params::weighted_override?
+    }
+
+      type weighted_route = {
+      traffic_split: Array[
+        {
+          name: ::String,
+          weight: ::Integer,
+          target_name: ::String,
+          description: ::String?,
+          metadata: Hash[::String, ::String]?
+        }
+      ]
+    }
+
+      type route_to_target_action = {
+      static_route: {
+        target_name: ::String
+      }?,
+      weighted_route: Params::weighted_route?
+    }
+
+      type action = {
+      configuration_bundle: Params::configuration_bundle_action?,
+      route_to_target: Params::route_to_target_action?
+    }
+
+      type traffic_split_entry = {
+      name: ::String,
+      weight: ::Integer,
+      configuration_bundle: {
+        bundle_arn: ::String,
+        bundle_version: ::String
+      },
+      description: ::String?,
+      metadata: Hash[::String, ::String]?
+    }
+
+      type tool_schema = {
+      s3: {
+        uri: ::String?,
+        bucket_owner_account_id: ::String?
+      }?,
+      inline_payload: Array[
+        Params::tool_definition
+      ]?
+    }
+
+      type mcp_lambda_target_configuration = {
+      lambda_arn: ::String,
+      tool_schema: Params::tool_schema
+    }
+
+      type mcp_server_target_configuration = {
+      endpoint: ::String,
+      mcp_tool_schema: {
+        s3: {
+          uri: ::String?,
+          bucket_owner_account_id: ::String?
+        }?,
+        inline_payload: ::String?
+      }?,
+      listing_mode: ("DEFAULT" | "DYNAMIC")?,
+      resource_priority: ::Integer?
+    }
+
+      type api_gateway_tool_configuration = {
+      tool_overrides: Array[
+        {
+          name: ::String,
+          description: ::String?,
+          path: ::String,
+          method: ("GET" | "DELETE" | "HEAD" | "OPTIONS" | "PATCH" | "PUT" | "POST")
+        }
+      ]?,
+      tool_filters: Array[
+        {
+          filter_path: ::String,
+          methods: Array[("GET" | "DELETE" | "HEAD" | "OPTIONS" | "PATCH" | "PUT" | "POST")]
+        }
+      ]
+    }
+
+      type api_gateway_target_configuration = {
+      rest_api_id: ::String,
+      stage: ::String,
+      api_gateway_tool_configuration: Params::api_gateway_tool_configuration
+    }
+
+      type connector_target_configuration = {
+      source: {
+        connector_id: ::String,
+        version: ::String?
+      },
+      enabled: Array[::String]?,
+      configurations: Array[
+        Params::connector_configuration
+      ]?
+    }
+
+      type mcp_target_configuration = {
+      open_api_schema: {
+        s3: {
+          uri: ::String?,
+          bucket_owner_account_id: ::String?
+        }?,
+        inline_payload: ::String?
+      }?,
+      smithy_model: {
+        s3: {
+          uri: ::String?,
+          bucket_owner_account_id: ::String?
+        }?,
+        inline_payload: ::String?
+      }?,
+      lambda: Params::mcp_lambda_target_configuration?,
+      mcp_server: Params::mcp_server_target_configuration?,
+      api_gateway: Params::api_gateway_target_configuration?,
+      connector: Params::connector_target_configuration?
+    }
+
+      type http_api_schema_configuration = {
+      source: {
+        s3: {
+          uri: ::String?,
+          bucket_owner_account_id: ::String?
+        }?,
+        inline_payload: ::String?
+      }
+    }
+
+      type runtime_target_configuration = {
+      arn: ::String,
+      qualifier: ::String?,
+      schema: Params::http_api_schema_configuration?
+    }
+
+      type passthrough_target_configuration = {
+      endpoint: ::String,
+      protocol_type: ("MCP" | "A2A" | "INFERENCE" | "CUSTOM"),
+      schema: Params::http_api_schema_configuration?,
+      stickiness_configuration: {
+        identifier: ::String,
+        timeout: ::Integer?
+      }?
+    }
+
+      type http_target_configuration = {
+      agentcore_runtime: Params::runtime_target_configuration?,
+      passthrough: Params::passthrough_target_configuration?,
+      connector: {
+        source: {
+          connector_id: ::String
+        },
+        parameters: Hash[::String, ::String]?
+      }?
+    }
+
+      type inference_provider_target_configuration = {
+      endpoint: ::String,
+      model_mapping: {
+        provider_prefix: {
+          strip: bool?,
+          separator: ::String?
+        }?
+      }?,
+      operations: Array[
+        {
+          path: ::String,
+          provider_path: ::String?,
+          models: Array[
+            {
+              model: ::String
+            }
+          ]?
+        }
+      ]?
+    }
+
+      type inference_target_configuration = {
+      connector: {
+        source: {
+          connector_id: ::String
+        }
+      }?,
+      provider: Params::inference_provider_target_configuration?
+    }
+
+      type target_configuration = {
+      mcp: Params::mcp_target_configuration?,
+      http: Params::http_target_configuration?,
+      inference: Params::inference_target_configuration?
+    }
+
+      type schema_definition = {
+      type: ("string" | "number" | "object" | "array" | "boolean" | "integer"),
+      properties: Hash[::String, {
+          type: ("string" | "number" | "object" | "array" | "boolean" | "integer"),
+          properties: untyped?,
+          required: Array[::String]?,
+          items: untyped?,
+          description: ::String?
+        }]?,
+      required: Array[::String]?,
+      items: {
+        type: ("string" | "number" | "object" | "array" | "boolean" | "integer"),
+        properties: Hash[::String, untyped]?,
+        required: Array[::String]?,
+        items: untyped?,
+        description: ::String?
+      }?,
+      description: ::String?
+    }
+
+      type tool_definition = {
+      name: ::String,
+      description: ::String,
+      input_schema: Params::schema_definition,
+      output_schema: Params::schema_definition?
+    }
+
+      type connector_configuration = {
+      name: ::String,
+      description: ::String?,
+      parameter_values: {
+      }?,
+      parameter_overrides: Array[
+        {
+          path: ::String,
+          description: ::String?,
+          visible: bool?
+        }
+      ]?
+    }
+
+      type credential_provider = {
+      oauth_credential_provider: {
+        provider_arn: ::String,
+        scopes: Array[::String],
+        custom_parameters: Hash[::String, ::String]?,
+        grant_type: ("CLIENT_CREDENTIALS" | "AUTHORIZATION_CODE" | "TOKEN_EXCHANGE")?,
+        default_return_url: ::String?
+      }?,
+      api_key_credential_provider: {
+        provider_arn: ::String,
+        credential_parameter_name: ::String?,
+        credential_prefix: ::String?,
+        credential_location: ("HEADER" | "QUERY_PARAMETER")?
+      }?,
+      iam_credential_provider: {
+        service: ::String,
+        region: ::String?
+      }?
+    }
+
+      type credential_provider_configuration = {
+      credential_provider_type: ("GATEWAY_IAM_ROLE" | "OAUTH" | "API_KEY" | "CALLER_IAM_CREDENTIALS" | "JWT_PASSTHROUGH"),
+      credential_provider: Params::credential_provider?
+    }
+
+      type harness_agent_core_runtime_environment_request = {
+      lifecycle_configuration: {
+        idle_runtime_session_timeout: ::Integer?,
+        max_lifetime: ::Integer?
+      }?,
+      network_configuration: Params::network_configuration?,
+      filesystem_configurations: Array[
+        Params::filesystem_configuration
+      ]?
+    }
+
+      type harness_environment_provider_request = {
+      agent_core_runtime_environment: Params::harness_agent_core_runtime_environment_request?
+    }
+
+      type harness_bedrock_model_config = {
+      model_id: ::String,
+      max_tokens: ::Integer?,
+      temperature: ::Float?,
+      top_p: ::Float?,
+      api_format: ("converse_stream" | "responses" | "chat_completions")?,
+      additional_params: {
+      }?
+    }
+
+      type harness_open_ai_model_config = {
+      model_id: ::String,
+      api_key_arn: ::String,
+      max_tokens: ::Integer?,
+      temperature: ::Float?,
+      top_p: ::Float?,
+      api_format: ("chat_completions" | "responses")?,
+      additional_params: {
+      }?
+    }
+
+      type harness_gemini_model_config = {
+      model_id: ::String,
+      api_key_arn: ::String,
+      max_tokens: ::Integer?,
+      temperature: ::Float?,
+      top_p: ::Float?,
+      top_k: ::Integer?,
+      additional_params: {
+      }?
+    }
+
+      type harness_lite_llm_model_config = {
+      model_id: ::String,
+      api_key_arn: ::String?,
+      api_base: ::String?,
+      max_tokens: ::Integer?,
+      temperature: ::Float?,
+      top_p: ::Float?,
+      additional_params: {
+      }?
+    }
+
+      type harness_model_configuration = {
+      bedrock_model_config: Params::harness_bedrock_model_config?,
+      open_ai_model_config: Params::harness_open_ai_model_config?,
+      gemini_model_config: Params::harness_gemini_model_config?,
+      lite_llm_model_config: Params::harness_lite_llm_model_config?
+    }
+
+      type harness_gateway_outbound_auth = {
+      aws_iam: {
+      }?,
+      none: {
+      }?,
+      oauth: {
+        provider_arn: ::String,
+        scopes: Array[::String],
+        custom_parameters: Hash[::String, ::String]?,
+        grant_type: ("CLIENT_CREDENTIALS" | "AUTHORIZATION_CODE" | "TOKEN_EXCHANGE")?,
+        default_return_url: ::String?
+      }?
+    }
+
+      type harness_agent_core_gateway_config = {
+      gateway_arn: ::String,
+      outbound_auth: Params::harness_gateway_outbound_auth?
+    }
+
+      type harness_tool_configuration = {
+      remote_mcp: {
+        url: ::String,
+        headers: Hash[::String, ::String]?
+      }?,
+      agent_core_browser: {
+        browser_arn: ::String?
+      }?,
+      agent_core_gateway: Params::harness_agent_core_gateway_config?,
+      inline_function: {
+        description: ::String,
+        input_schema: {
+        }
+      }?,
+      agent_core_code_interpreter: {
+        code_interpreter_arn: ::String?
+      }?
+    }
+
+      type harness_tool = {
+      type: ("remote_mcp" | "agentcore_browser" | "agentcore_gateway" | "inline_function" | "agentcore_code_interpreter"),
+      name: ::String?,
+      config: Params::harness_tool_configuration?
+    }
+
+      type harness_skill_git_source = {
+      url: ::String,
+      path: ::String?,
+      auth: {
+        credential_arn: ::String,
+        username: ::String?
+      }?
+    }
+
+      type harness_skill = {
+      path: ::String?,
+      s3: {
+        uri: ::String
+      }?,
+      git: Params::harness_skill_git_source?,
+      aws_skills: {
+        paths: Array[::String]?
+      }?
+    }
+
+      type harness_agent_core_memory_configuration = {
+      arn: ::String,
+      actor_id: ::String?,
+      messages_count: ::Integer?,
+      retrieval_config: Hash[::String, {
+          top_k: ::Integer?,
+          relevance_score: ::Float?,
+          strategy_id: ::String?
+        }]?
+    }
+
+      type harness_memory_configuration = {
+      agent_core_memory_configuration: Params::harness_agent_core_memory_configuration?,
+      managed_memory_configuration: {
+        arn: ::String?,
+        strategies: Array[("SEMANTIC" | "SUMMARIZATION" | "USER_PREFERENCE" | "EPISODIC")]?,
+        event_expiry_duration: ::Integer?,
+        encryption_key_arn: ::String?
+      }?,
+      disabled: {
+      }?
+    }
+
+      type harness_truncation_strategy_configuration = {
+      sliding_window: {
+        messages_count: ::Integer?
+      }?,
+      summarization: {
+        summary_ratio: ::Float?,
+        preserve_recent_messages: ::Integer?,
+        summarization_system_prompt: ::String?
+      }?
+    }
+
+      type harness_truncation_configuration = {
+      strategy: ("sliding_window" | "summarization" | "none"),
+      config: Params::harness_truncation_strategy_configuration?
+    }
+
+      type memory_record_schema = {
+      metadata_schema: Array[
+        Params::metadata_schema_entry
+      ]?
+    }
+
+      type semantic_memory_strategy_input = {
+      name: ::String,
+      description: ::String?,
+      namespaces: Array[::String]?,
+      namespace_templates: Array[::String]?,
+      memory_record_schema: Params::memory_record_schema?
+    }
+
+      type summary_memory_strategy_input = {
+      name: ::String,
+      description: ::String?,
+      namespaces: Array[::String]?,
+      namespace_templates: Array[::String]?,
+      memory_record_schema: Params::memory_record_schema?
+    }
+
+      type user_preference_memory_strategy_input = {
+      name: ::String,
+      description: ::String?,
+      namespaces: Array[::String]?,
+      namespace_templates: Array[::String]?,
+      memory_record_schema: Params::memory_record_schema?
+    }
+
+      type semantic_override_configuration_input = {
+      extraction: {
+        append_to_prompt: ::String,
+        model_id: ::String
+      }?,
+      consolidation: {
+        append_to_prompt: ::String,
+        model_id: ::String
+      }?
+    }
+
+      type user_preference_override_configuration_input = {
+      extraction: {
+        append_to_prompt: ::String,
+        model_id: ::String
+      }?,
+      consolidation: {
+        append_to_prompt: ::String,
+        model_id: ::String
+      }?
+    }
+
+      type episodic_override_reflection_configuration_input = {
+      append_to_prompt: ::String,
+      model_id: ::String,
+      namespaces: Array[::String]?,
+      namespace_templates: Array[::String]?,
+      memory_record_schema: Params::memory_record_schema?
+    }
+
+      type episodic_override_configuration_input = {
+      extraction: {
+        append_to_prompt: ::String,
+        model_id: ::String
+      }?,
+      consolidation: {
+        append_to_prompt: ::String,
+        model_id: ::String
+      }?,
+      reflection: Params::episodic_override_reflection_configuration_input?
+    }
+
+      type self_managed_configuration_input = {
+      trigger_conditions: Array[
+        Params::trigger_condition_input
+      ]?,
+      invocation_configuration: {
+        topic_arn: ::String,
+        payload_delivery_bucket_name: ::String
+      },
+      historical_context_window_size: ::Integer?
+    }
+
+      type custom_configuration_input = {
+      semantic_override: Params::semantic_override_configuration_input?,
+      summary_override: {
+        consolidation: {
+          append_to_prompt: ::String,
+          model_id: ::String
+        }?
+      }?,
+      user_preference_override: Params::user_preference_override_configuration_input?,
+      episodic_override: Params::episodic_override_configuration_input?,
+      self_managed_configuration: Params::self_managed_configuration_input?
+    }
+
+      type custom_memory_strategy_input = {
+      name: ::String,
+      description: ::String?,
+      namespaces: Array[::String]?,
+      namespace_templates: Array[::String]?,
+      configuration: Params::custom_configuration_input?,
+      memory_record_schema: Params::memory_record_schema?
+    }
+
+      type episodic_reflection_configuration_input = {
+      namespaces: Array[::String]?,
+      namespace_templates: Array[::String]?,
+      memory_record_schema: Params::memory_record_schema?
+    }
+
+      type episodic_memory_strategy_input = {
+      name: ::String,
+      description: ::String?,
+      namespaces: Array[::String]?,
+      namespace_templates: Array[::String]?,
+      reflection_configuration: Params::episodic_reflection_configuration_input?,
+      memory_record_schema: Params::memory_record_schema?
+    }
+
+      type memory_strategy_input = {
+      semantic_memory_strategy: Params::semantic_memory_strategy_input?,
+      summary_memory_strategy: Params::summary_memory_strategy_input?,
+      user_preference_memory_strategy: Params::user_preference_memory_strategy_input?,
+      custom_memory_strategy: Params::custom_memory_strategy_input?,
+      episodic_memory_strategy: Params::episodic_memory_strategy_input?
+    }
+
+      type validation = {
+      string_validation: {
+        allowed_values: Array[::String]
+      }?,
+      string_list_validation: {
+        allowed_values: Array[::String]?,
+        max_items: ::Integer?
+      }?,
+      number_validation: {
+        min_value: ::Float?,
+        max_value: ::Float?
+      }?
+    }
+
+      type llm_extraction_config = {
+      llm_extraction_instruction: ::String?,
+      definition: ::String,
+      validation: Params::validation?
+    }
+
+      type extraction_config = {
+      llm_extraction_config: Params::llm_extraction_config?
+    }
+
+      type metadata_schema_entry = {
+      key: ::String,
+      type: ("STRING" | "STRINGLIST" | "NUMBER")?,
+      extraction_type: ("LLM_INFERRED" | "STRICTLY_CONSISTENT")?,
+      extraction_config: Params::extraction_config?
+    }
+
+      type trigger_condition_input = {
+      message_based_trigger: {
+        message_count: ::Integer?
+      }?,
+      token_based_trigger: {
+        token_count: ::Integer?
+      }?,
+      time_based_trigger: {
+        idle_session_timeout: ::Integer?
+      }?
+    }
+
+      type stream_delivery_resources = {
+      resources: Array[
+        Params::stream_delivery_resource
+      ]
+    }
+
+      type stream_delivery_resource = {
+      kinesis: {
+        data_stream_arn: ::String,
+        content_configurations: Array[
+          {
+            type: ("MEMORY_RECORDS"),
+            level: ("METADATA_ONLY" | "FULL_CONTENT")?
+          }
+        ]
+      }?
+    }
+
+      type oauth_2_discovery = {
+      discovery_url: ::String?,
+      authorization_server_metadata: {
+        issuer: ::String,
+        authorization_endpoint: ::String,
+        token_endpoint: ::String,
+        response_types: Array[::String]?,
+        token_endpoint_auth_methods: Array[::String]?
+      }?
+    }
+
+      type private_key_jwt_config = {
+      private_key_source: {
+        kms_key_source: {
+          kms_key_arn: ::String
+        }?
+      }?,
+      signing_algorithm: ("RS256" | "PS256" | "ES256")?,
+      additional_header_claims: Hash[::String, ::String]?,
+      additional_payload_claims: Hash[::String, ::String]?
+    }
+
+      type custom_oauth_2_provider_config_input = {
+      oauth_discovery: Params::oauth_2_discovery,
+      client_id: ::String?,
+      client_secret: ::String?,
+      client_secret_config: {
+        secret_id: ::String,
+        json_key: ::String
+      }?,
+      client_secret_source: ("MANAGED" | "EXTERNAL")?,
+      on_behalf_of_token_exchange_config: {
+        grant_type: ("TOKEN_EXCHANGE" | "JWT_AUTHORIZATION_GRANT"),
+        token_exchange_grant_type_config: {
+          actor_token_content: ("NONE" | "M2M" | "AWS_IAM_ID_TOKEN_JWT"),
+          actor_token_scopes: Array[::String]?
+        }?
+      }?,
+      client_authentication_method: ("CLIENT_SECRET_BASIC" | "CLIENT_SECRET_POST" | "AWS_IAM_ID_TOKEN_JWT" | "PRIVATE_KEY_JWT")?,
+      private_key_jwt_config: Params::private_key_jwt_config?,
+      private_endpoint: Params::private_endpoint?,
+      private_endpoint_overrides: Array[
+        Params::private_endpoint_override
+      ]?
+    }
+
+      type google_oauth_2_provider_config_input = {
+      client_id: ::String,
+      client_secret: ::String?,
+      client_secret_config: {
+        secret_id: ::String,
+        json_key: ::String
+      }?,
+      client_secret_source: ("MANAGED" | "EXTERNAL")?
+    }
+
+      type github_oauth_2_provider_config_input = {
+      client_id: ::String,
+      client_secret: ::String?,
+      client_secret_config: {
+        secret_id: ::String,
+        json_key: ::String
+      }?,
+      client_secret_source: ("MANAGED" | "EXTERNAL")?
+    }
+
+      type slack_oauth_2_provider_config_input = {
+      client_id: ::String,
+      client_secret: ::String?,
+      client_secret_config: {
+        secret_id: ::String,
+        json_key: ::String
+      }?,
+      client_secret_source: ("MANAGED" | "EXTERNAL")?
+    }
+
+      type salesforce_oauth_2_provider_config_input = {
+      client_id: ::String,
+      client_secret: ::String?,
+      client_secret_config: {
+        secret_id: ::String,
+        json_key: ::String
+      }?,
+      client_secret_source: ("MANAGED" | "EXTERNAL")?
+    }
+
+      type microsoft_oauth_2_provider_config_input = {
+      client_id: ::String,
+      client_secret: ::String?,
+      client_secret_config: {
+        secret_id: ::String,
+        json_key: ::String
+      }?,
+      client_secret_source: ("MANAGED" | "EXTERNAL")?,
+      tenant_id: ::String?
+    }
+
+      type atlassian_oauth_2_provider_config_input = {
+      client_id: ::String,
+      client_secret: ::String?,
+      client_secret_config: {
+        secret_id: ::String,
+        json_key: ::String
+      }?,
+      client_secret_source: ("MANAGED" | "EXTERNAL")?
+    }
+
+      type linkedin_oauth_2_provider_config_input = {
+      client_id: ::String,
+      client_secret: ::String?,
+      client_secret_config: {
+        secret_id: ::String,
+        json_key: ::String
+      }?,
+      client_secret_source: ("MANAGED" | "EXTERNAL")?
+    }
+
+      type included_oauth_2_provider_config_input = {
+      client_id: ::String,
+      client_secret: ::String?,
+      client_secret_config: {
+        secret_id: ::String,
+        json_key: ::String
+      }?,
+      client_secret_source: ("MANAGED" | "EXTERNAL")?,
+      issuer: ::String?,
+      authorization_endpoint: ::String?,
+      token_endpoint: ::String?
+    }
+
+      type oauth_2_provider_config_input = {
+      custom_oauth_2_provider_config: Params::custom_oauth_2_provider_config_input?,
+      google_oauth_2_provider_config: Params::google_oauth_2_provider_config_input?,
+      github_oauth_2_provider_config: Params::github_oauth_2_provider_config_input?,
+      slack_oauth_2_provider_config: Params::slack_oauth_2_provider_config_input?,
+      salesforce_oauth_2_provider_config: Params::salesforce_oauth_2_provider_config_input?,
+      microsoft_oauth_2_provider_config: Params::microsoft_oauth_2_provider_config_input?,
+      atlassian_oauth_2_provider_config: Params::atlassian_oauth_2_provider_config_input?,
+      linkedin_oauth_2_provider_config: Params::linkedin_oauth_2_provider_config_input?,
+      included_oauth_2_provider_config: Params::included_oauth_2_provider_config_input?
+    }
+
+      type rule = {
+      sampling_config: {
+        sampling_percentage: ::Float
+      },
+      filters: Array[
+        Params::filter
+      ]?,
+      session_config: {
+        session_timeout_minutes: ::Integer
+      }?
+    }
+
+      type filter = {
+      key: ::String,
+      operator: ("Equals" | "NotEquals" | "GreaterThan" | "LessThan" | "GreaterThanOrEqual" | "LessThanOrEqual" | "Contains" | "NotContains"),
+      value: {
+        string_value: ::String?,
+        double_value: ::Float?,
+        boolean_value: bool?
+      }
+    }
+
+      type credentials_provider_configuration = {
+      coinbase_cdp: {
+        credential_provider_arn: ::String
+      }?,
+      stripe_privy: {
+        credential_provider_arn: ::String
+      }?
+    }
+
+      type coinbase_cdp_configuration_input = {
+      api_key_id: ::String,
+      api_key_secret: ::String?,
+      api_key_secret_source: ("MANAGED" | "EXTERNAL")?,
+      api_key_secret_config: {
+        secret_id: ::String,
+        json_key: ::String
+      }?,
+      wallet_secret: ::String?,
+      wallet_secret_source: ("MANAGED" | "EXTERNAL")?,
+      wallet_secret_config: {
+        secret_id: ::String,
+        json_key: ::String
+      }?
+    }
+
+      type stripe_privy_configuration_input = {
+      app_id: ::String,
+      app_secret: ::String?,
+      app_secret_source: ("MANAGED" | "EXTERNAL")?,
+      app_secret_config: {
+        secret_id: ::String,
+        json_key: ::String
+      }?,
+      authorization_private_key: ::String?,
+      authorization_private_key_source: ("MANAGED" | "EXTERNAL")?,
+      authorization_private_key_config: {
+        secret_id: ::String,
+        json_key: ::String
+      }?,
+      authorization_id: ::String
+    }
+
+      type payment_provider_configuration_input = {
+      coinbase_cdp_configuration: Params::coinbase_cdp_configuration_input?,
+      stripe_privy_configuration: Params::stripe_privy_configuration_input?
+    }
+
+      type policy_definition = {
+      cedar: {
+        statement: ::String
+      }?,
+      policy_generation: {
+        policy_generation_id: ::String,
+        policy_generation_asset_id: ::String
+      }?,
+      policy: {
+        statement: ::String
+      }?
+    }
+
+      type from_url_synchronization_configuration = {
+      url: ::String,
+      credential_provider_configurations: Array[
+        Params::registry_record_credential_provider_configuration
+      ]?
+    }
+
+      type synchronization_configuration = {
+      from_url: Params::from_url_synchronization_configuration?
+    }
+
+      type registry_record_credential_provider_union = {
+      oauth_credential_provider: {
+        provider_arn: ::String,
+        grant_type: ("CLIENT_CREDENTIALS")?,
+        scopes: Array[::String]?,
+        custom_parameters: Hash[::String, ::String]?
+      }?,
+      iam_credential_provider: {
+        role_arn: ::String?,
+        service: ::String?,
+        region: ::String?
+      }?
+    }
+
+      type registry_record_credential_provider_configuration = {
+      credential_provider_type: ("OAUTH" | "IAM"),
+      credential_provider: Params::registry_record_credential_provider_union
+    }
+
+      type updated_authorizer_configuration = {
+      optional_value: Params::authorizer_configuration?
+    }
+
+    end
+  end
+end

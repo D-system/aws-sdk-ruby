@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -91,7 +92,7 @@ module Aws
                                          recommendation_id: ::String?,
                                          impression: Array[::String]?,
                                          properties: ::String?
-                                       },
+                                       }
                                      ]
                                    ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
@@ -103,7 +104,7 @@ module Aws
                            {
                              action_id: ::String,
                              properties: ::String?
-                           },
+                           }
                          ]
                        ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
@@ -126,7 +127,7 @@ module Aws
                             metric_attribution: {
                               event_attribution_source: ::String
                             }?
-                          },
+                          }
                         ]
                       ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
@@ -138,7 +139,7 @@ module Aws
                          {
                            item_id: ::String,
                            properties: ::String?
-                         },
+                         }
                        ]
                      ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
@@ -150,7 +151,7 @@ module Aws
                          {
                            user_id: ::String,
                            properties: ::String?
-                         },
+                         }
                        ]
                      ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]

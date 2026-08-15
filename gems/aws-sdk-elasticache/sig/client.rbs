@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -88,7 +89,7 @@ module Aws
                                     {
                                       key: ::String?,
                                       value: ::String?
-                                    },
+                                    }
                                   ]
                                 ) -> _AddTagsToResourceResponseSuccess
                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _AddTagsToResourceResponseSuccess
@@ -155,7 +156,7 @@ module Aws
                                               {
                                                 key: ::String?,
                                                 value: ::String?
-                                              },
+                                              }
                                             ]
                                           ) -> _CopyServerlessCacheSnapshotResponseSuccess
                                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CopyServerlessCacheSnapshotResponseSuccess
@@ -174,7 +175,7 @@ module Aws
                              {
                                key: ::String?,
                                value: ::String?
-                             },
+                             }
                            ]
                          ) -> _CopySnapshotResponseSuccess
                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CopySnapshotResponseSuccess
@@ -202,7 +203,7 @@ module Aws
                                     {
                                       key: ::String?,
                                       value: ::String?
-                                    },
+                                    }
                                   ],
                                   ?snapshot_arns: Array[::String],
                                   ?snapshot_name: ::String,
@@ -217,20 +218,7 @@ module Aws
                                   ?preferred_outpost_arn: ::String,
                                   ?preferred_outpost_arns: Array[::String],
                                   ?log_delivery_configurations: Array[
-                                    {
-                                      log_type: ("slow-log" | "engine-log")?,
-                                      destination_type: ("cloudwatch-logs" | "kinesis-firehose")?,
-                                      destination_details: {
-                                        cloud_watch_logs_details: {
-                                          log_group: ::String?
-                                        }?,
-                                        kinesis_firehose_details: {
-                                          delivery_stream: ::String?
-                                        }?
-                                      }?,
-                                      log_format: ("text" | "json")?,
-                                      enabled: bool?
-                                    },
+                                    Params::log_delivery_configuration_request
                                   ],
                                   ?transit_encryption_enabled: bool,
                                   ?network_type: ("ipv4" | "ipv6" | "dual_stack"),
@@ -251,7 +239,7 @@ module Aws
                                             {
                                               key: ::String?,
                                               value: ::String?
-                                            },
+                                            }
                                           ]
                                         ) -> _CreateCacheParameterGroupResponseSuccess
                                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateCacheParameterGroupResponseSuccess
@@ -268,7 +256,7 @@ module Aws
                                            {
                                              key: ::String?,
                                              value: ::String?
-                                           },
+                                           }
                                          ]
                                        ) -> _CreateCacheSecurityGroupResponseSuccess
                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateCacheSecurityGroupResponseSuccess
@@ -286,7 +274,7 @@ module Aws
                                          {
                                            key: ::String?,
                                            value: ::String?
-                                         },
+                                         }
                                        ]
                                      ) -> _CreateCacheSubnetGroupResponseSuccess
                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateCacheSubnetGroupResponseSuccess
@@ -328,7 +316,7 @@ module Aws
                                           replica_availability_zones: Array[::String]?,
                                           primary_outpost_arn: ::String?,
                                           replica_outpost_arns: Array[::String]?
-                                        },
+                                        }
                                       ],
                                       ?cache_node_type: ::String,
                                       ?engine: ::String,
@@ -341,7 +329,7 @@ module Aws
                                         {
                                           key: ::String?,
                                           value: ::String?
-                                        },
+                                        }
                                       ],
                                       ?snapshot_arns: Array[::String],
                                       ?snapshot_name: ::String,
@@ -357,27 +345,15 @@ module Aws
                                       ?kms_key_id: ::String,
                                       ?user_group_ids: Array[::String],
                                       ?log_delivery_configurations: Array[
-                                        {
-                                          log_type: ("slow-log" | "engine-log")?,
-                                          destination_type: ("cloudwatch-logs" | "kinesis-firehose")?,
-                                          destination_details: {
-                                            cloud_watch_logs_details: {
-                                              log_group: ::String?
-                                            }?,
-                                            kinesis_firehose_details: {
-                                              delivery_stream: ::String?
-                                            }?
-                                          }?,
-                                          log_format: ("text" | "json")?,
-                                          enabled: bool?
-                                        },
+                                        Params::log_delivery_configuration_request
                                       ],
                                       ?data_tiering_enabled: bool,
                                       ?network_type: ("ipv4" | "ipv6" | "dual_stack"),
                                       ?ip_discovery: ("ipv4" | "ipv6"),
                                       ?transit_encryption_mode: ("preferred" | "required"),
                                       ?cluster_mode: ("enabled" | "disabled" | "compatible"),
-                                      ?serverless_cache_snapshot_name: ::String
+                                      ?serverless_cache_snapshot_name: ::String,
+                                      ?durability: ("default" | "async" | "sync" | "disabled")
                                     ) -> _CreateReplicationGroupResponseSuccess
                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateReplicationGroupResponseSuccess
 
@@ -391,17 +367,7 @@ module Aws
                                      ?description: ::String,
                                      engine: ::String,
                                      ?major_engine_version: ::String,
-                                     ?cache_usage_limits: {
-                                       data_storage: {
-                                         maximum: ::Integer?,
-                                         minimum: ::Integer?,
-                                         unit: ("GB")
-                                       }?,
-                                       ecpu_per_second: {
-                                         maximum: ::Integer?,
-                                         minimum: ::Integer?
-                                       }?
-                                     },
+                                     ?cache_usage_limits: Params::cache_usage_limits,
                                      ?kms_key_id: ::String,
                                      ?security_group_ids: Array[::String],
                                      ?snapshot_arns_to_restore: Array[::String],
@@ -409,12 +375,13 @@ module Aws
                                        {
                                          key: ::String?,
                                          value: ::String?
-                                       },
+                                       }
                                      ],
                                      ?user_group_id: ::String,
                                      ?subnet_ids: Array[::String],
                                      ?snapshot_retention_limit: ::Integer,
-                                     ?daily_snapshot_time: ::String
+                                     ?daily_snapshot_time: ::String,
+                                     ?network_type: ("ipv4" | "ipv6" | "dual_stack")
                                    ) -> _CreateServerlessCacheResponseSuccess
                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateServerlessCacheResponseSuccess
 
@@ -431,7 +398,7 @@ module Aws
                                                 {
                                                   key: ::String?,
                                                   value: ::String?
-                                                },
+                                                }
                                               ]
                                             ) -> _CreateServerlessCacheSnapshotResponseSuccess
                                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateServerlessCacheSnapshotResponseSuccess
@@ -450,7 +417,7 @@ module Aws
                                {
                                  key: ::String?,
                                  value: ::String?
-                               },
+                               }
                              ]
                            ) -> _CreateSnapshotResponseSuccess
                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateSnapshotResponseSuccess
@@ -479,7 +446,7 @@ module Aws
                            {
                              key: ::String?,
                              value: ::String?
-                           },
+                           }
                          ],
                          ?authentication_mode: {
                            type: ("password" | "no-password-required" | "iam")?,
@@ -509,7 +476,7 @@ module Aws
                                  {
                                    key: ::String?,
                                    value: ::String?
-                                 },
+                                 }
                                ]
                              ) -> _CreateUserGroupResponseSuccess
                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateUserGroupResponseSuccess
@@ -542,7 +509,7 @@ module Aws
                                         new_replica_count: ::Integer,
                                         preferred_availability_zones: Array[::String]?,
                                         preferred_outpost_arns: Array[::String]?
-                                      },
+                                      }
                                     ],
                                     ?replicas_to_remove: Array[::String],
                                     apply_immediately: bool
@@ -952,7 +919,7 @@ module Aws
                               {
                                 name: ::String,
                                 values: Array[::String]
-                              },
+                              }
                             ],
                             ?max_records: ::Integer,
                             ?marker: ::String
@@ -1010,9 +977,9 @@ module Aws
                                                                     {
                                                                       node_group_id: ::String?,
                                                                       preferred_availability_zones: Array[::String]?
-                                                                    },
+                                                                    }
                                                                   ]
-                                                                },
+                                                                }
                                                               ],
                                                               apply_immediately: bool
                                                             ) -> _IncreaseNodeGroupsInGlobalReplicationGroupResponseSuccess
@@ -1032,7 +999,7 @@ module Aws
                                         new_replica_count: ::Integer,
                                         preferred_availability_zones: Array[::String]?,
                                         preferred_outpost_arns: Array[::String]?
-                                      },
+                                      }
                                     ],
                                     apply_immediately: bool
                                   ) -> _IncreaseReplicaCountResponseSuccess
@@ -1087,22 +1054,13 @@ module Aws
                                   ?auth_token: ::String,
                                   ?auth_token_update_strategy: ("SET" | "ROTATE" | "DELETE"),
                                   ?log_delivery_configurations: Array[
-                                    {
-                                      log_type: ("slow-log" | "engine-log")?,
-                                      destination_type: ("cloudwatch-logs" | "kinesis-firehose")?,
-                                      destination_details: {
-                                        cloud_watch_logs_details: {
-                                          log_group: ::String?
-                                        }?,
-                                        kinesis_firehose_details: {
-                                          delivery_stream: ::String?
-                                        }?
-                                      }?,
-                                      log_format: ("text" | "json")?,
-                                      enabled: bool?
-                                    },
+                                    Params::log_delivery_configuration_request
                                   ],
-                                  ?ip_discovery: ("ipv4" | "ipv6")
+                                  ?ip_discovery: ("ipv4" | "ipv6"),
+                                  ?scale_config: {
+                                    scale_percentage: ::Integer?,
+                                    scale_interval_minutes: ::Integer?
+                                  }
                                 ) -> _ModifyCacheClusterResponseSuccess
                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ModifyCacheClusterResponseSuccess
 
@@ -1117,7 +1075,7 @@ module Aws
                                             {
                                               parameter_name: ::String?,
                                               parameter_value: ::String?
-                                            },
+                                            }
                                           ]
                                         ) -> _ModifyCacheParameterGroupResponseSuccess
                                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ModifyCacheParameterGroupResponseSuccess
@@ -1183,25 +1141,13 @@ module Aws
                                       ?user_group_ids_to_remove: Array[::String],
                                       ?remove_user_groups: bool,
                                       ?log_delivery_configurations: Array[
-                                        {
-                                          log_type: ("slow-log" | "engine-log")?,
-                                          destination_type: ("cloudwatch-logs" | "kinesis-firehose")?,
-                                          destination_details: {
-                                            cloud_watch_logs_details: {
-                                              log_group: ::String?
-                                            }?,
-                                            kinesis_firehose_details: {
-                                              delivery_stream: ::String?
-                                            }?
-                                          }?,
-                                          log_format: ("text" | "json")?,
-                                          enabled: bool?
-                                        },
+                                        Params::log_delivery_configuration_request
                                       ],
                                       ?ip_discovery: ("ipv4" | "ipv6"),
                                       ?transit_encryption_enabled: bool,
                                       ?transit_encryption_mode: ("preferred" | "required"),
-                                      ?cluster_mode: ("enabled" | "disabled" | "compatible")
+                                      ?cluster_mode: ("enabled" | "disabled" | "compatible"),
+                                      ?durability: ("default" | "async" | "sync" | "disabled")
                                     ) -> _ModifyReplicationGroupResponseSuccess
                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ModifyReplicationGroupResponseSuccess
 
@@ -1218,7 +1164,7 @@ module Aws
                                                             {
                                                               node_group_id: ::String?,
                                                               preferred_availability_zones: Array[::String]?
-                                                            },
+                                                            }
                                                           ],
                                                           ?node_groups_to_remove: Array[::String],
                                                           ?node_groups_to_retain: Array[::String]
@@ -1233,17 +1179,7 @@ module Aws
       def modify_serverless_cache: (
                                      serverless_cache_name: ::String,
                                      ?description: ::String,
-                                     ?cache_usage_limits: {
-                                       data_storage: {
-                                         maximum: ::Integer?,
-                                         minimum: ::Integer?,
-                                         unit: ("GB")
-                                       }?,
-                                       ecpu_per_second: {
-                                         maximum: ::Integer?,
-                                         minimum: ::Integer?
-                                       }?
-                                     },
+                                     ?cache_usage_limits: Params::cache_usage_limits,
                                      ?remove_user_group: bool,
                                      ?user_group_id: ::String,
                                      ?security_group_ids: Array[::String],
@@ -1315,7 +1251,7 @@ module Aws
                                                       {
                                                         key: ::String?,
                                                         value: ::String?
-                                                      },
+                                                      }
                                                     ]
                                                   ) -> _PurchaseReservedCacheNodesOfferingResponseSuccess
                                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PurchaseReservedCacheNodesOfferingResponseSuccess
@@ -1365,7 +1301,7 @@ module Aws
                                            {
                                              parameter_name: ::String?,
                                              parameter_value: ::String?
-                                           },
+                                           }
                                          ]
                                        ) -> _ResetCacheParameterGroupResponseSuccess
                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ResetCacheParameterGroupResponseSuccess
@@ -1393,7 +1329,7 @@ module Aws
                                {
                                  address: ::String?,
                                  port: ::Integer?
-                               },
+                               }
                              ]
                            ) -> _StartMigrationResponseSuccess
                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartMigrationResponseSuccess
@@ -1420,7 +1356,7 @@ module Aws
                               {
                                 address: ::String?,
                                 port: ::Integer?
-                              },
+                              }
                             ]
                           ) -> _TestMigrationResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _TestMigrationResponseSuccess

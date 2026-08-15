@@ -95,8 +95,8 @@ module Aws::BedrockDataAutomationRuntime
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::BedrockDataAutomationRuntime
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::BedrockDataAutomationRuntime
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::BedrockDataAutomationRuntime
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::BedrockDataAutomationRuntime
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::BedrockDataAutomationRuntime
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::BedrockDataAutomationRuntime
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -375,8 +379,8 @@ module Aws::BedrockDataAutomationRuntime
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -488,6 +492,9 @@ module Aws::BedrockDataAutomationRuntime
     #   * {Types::GetDataAutomationStatusResponse#error_type #error_type} => String
     #   * {Types::GetDataAutomationStatusResponse#error_message #error_message} => String
     #   * {Types::GetDataAutomationStatusResponse#output_configuration #output_configuration} => Types::OutputConfiguration
+    #   * {Types::GetDataAutomationStatusResponse#job_submission_time #job_submission_time} => Time
+    #   * {Types::GetDataAutomationStatusResponse#job_completion_time #job_completion_time} => Time
+    #   * {Types::GetDataAutomationStatusResponse#job_duration_in_seconds #job_duration_in_seconds} => Integer
     #
     # @example Request syntax with placeholder values
     #
@@ -501,6 +508,9 @@ module Aws::BedrockDataAutomationRuntime
     #   resp.error_type #=> String
     #   resp.error_message #=> String
     #   resp.output_configuration.s3_uri #=> String
+    #   resp.job_submission_time #=> Time
+    #   resp.job_completion_time #=> Time
+    #   resp.job_duration_in_seconds #=> Integer
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-data-automation-runtime-2024-06-13/GetDataAutomationStatus AWS API Documentation
     #
@@ -508,6 +518,80 @@ module Aws::BedrockDataAutomationRuntime
     # @param [Hash] params ({})
     def get_data_automation_status(params = {}, options = {})
       req = build_request(:get_data_automation_status, params)
+      req.send_request(options)
+    end
+
+    # Sync API: Invoke data automation.
+    #
+    # @option params [required, Types::SyncInputConfiguration] :input_configuration
+    #   Input configuration.
+    #
+    # @option params [Types::DataAutomationConfiguration] :data_automation_configuration
+    #   Data automation configuration.
+    #
+    # @option params [Array<Types::Blueprint>] :blueprints
+    #   Blueprint list.
+    #
+    # @option params [required, String] :data_automation_profile_arn
+    #   Data automation profile ARN
+    #
+    # @option params [Types::EncryptionConfiguration] :encryption_configuration
+    #   Encryption configuration.
+    #
+    # @option params [Types::OutputConfiguration] :output_configuration
+    #   Output configuration.
+    #
+    # @return [Types::InvokeDataAutomationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::InvokeDataAutomationResponse#output_configuration #output_configuration} => Types::OutputConfiguration
+    #   * {Types::InvokeDataAutomationResponse#semantic_modality #semantic_modality} => String
+    #   * {Types::InvokeDataAutomationResponse#output_segments #output_segments} => Array&lt;Types::OutputSegment&gt;
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.invoke_data_automation({
+    #     input_configuration: { # required
+    #       bytes: "data",
+    #       s3_uri: "S3Uri",
+    #     },
+    #     data_automation_configuration: {
+    #       data_automation_project_arn: "DataAutomationArn", # required
+    #       stage: "LIVE", # accepts LIVE, DEVELOPMENT
+    #     },
+    #     blueprints: [
+    #       {
+    #         blueprint_arn: "BlueprintArn", # required
+    #         version: "BlueprintVersion",
+    #         stage: "DEVELOPMENT", # accepts DEVELOPMENT, LIVE
+    #       },
+    #     ],
+    #     data_automation_profile_arn: "DataAutomationProfileArn", # required
+    #     encryption_configuration: {
+    #       kms_key_id: "KMSKeyId", # required
+    #       kms_encryption_context: {
+    #         "EncryptionContextKey" => "EncryptionContextValue",
+    #       },
+    #     },
+    #     output_configuration: {
+    #       s3_uri: "S3Uri", # required
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.output_configuration.s3_uri #=> String
+    #   resp.semantic_modality #=> String, one of "DOCUMENT", "IMAGE", "AUDIO", "VIDEO"
+    #   resp.output_segments #=> Array
+    #   resp.output_segments[0].custom_output_status #=> String, one of "MATCH", "NO_MATCH"
+    #   resp.output_segments[0].custom_output #=> String
+    #   resp.output_segments[0].standard_output #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-data-automation-runtime-2024-06-13/InvokeDataAutomation AWS API Documentation
+    #
+    # @overload invoke_data_automation(params = {})
+    # @param [Hash] params ({})
+    def invoke_data_automation(params = {}, options = {})
+      req = build_request(:invoke_data_automation, params)
       req.send_request(options)
     end
 
@@ -553,6 +637,16 @@ module Aws::BedrockDataAutomationRuntime
     #     client_token: "IdempotencyToken",
     #     input_configuration: { # required
     #       s3_uri: "S3Uri", # required
+    #       asset_processing_configuration: {
+    #         video: {
+    #           segment_configuration: {
+    #             timestamp_segment: {
+    #               start_time_millis: 1, # required
+    #               end_time_millis: 1, # required
+    #             },
+    #           },
+    #         },
+    #       },
     #     },
     #     output_configuration: { # required
     #       s3_uri: "S3Uri", # required
@@ -706,7 +800,7 @@ module Aws::BedrockDataAutomationRuntime
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-bedrockdataautomationruntime'
-      context[:gem_version] = '1.5.0'
+      context[:gem_version] = '1.28.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

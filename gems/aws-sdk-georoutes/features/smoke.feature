@@ -8,6 +8,18 @@
 Feature: Smoke tests for GeoRoutes
 
   @georoutes @smoke
+  Scenario: SnapToRoadsSuccess
+    Given I create a 'Aws::GeoRoutes' client with config:
+      """
+{"region":"us-west-2","use_fips_endpoint":false,"use_dualstack_endpoint":false}
+      """
+    When I call the operation 'snap_to_roads' with params:
+      """
+{"trace_points":[{"position":[8.53404,50.16364]},{"position":[8.53379056,50.16352417]}]}
+      """
+    Then I expect an error was not raised
+
+  @georoutes @smoke
   Scenario: CalculateRouteMatrixSuccess
     Given I create a 'Aws::GeoRoutes' client with config:
       """
@@ -20,26 +32,14 @@ Feature: Smoke tests for GeoRoutes
     Then I expect an error was not raised
 
   @georoutes @smoke
-  Scenario: CalculateRoutesSuccess
+  Scenario: CalculateIsolinesSuccess
     Given I create a 'Aws::GeoRoutes' client with config:
       """
 {"region":"us-west-2","use_fips_endpoint":false,"use_dualstack_endpoint":false}
       """
-    When I call the operation 'calculate_routes' with params:
+    When I call the operation 'calculate_isolines' with params:
       """
-{"origin":[-123.253374,49.351673],"destination":[-123.930756,49.1314]}
-      """
-    Then I expect an error was not raised
-
-  @georoutes @smoke
-  Scenario: SnapToRoadsSuccess
-    Given I create a 'Aws::GeoRoutes' client with config:
-      """
-{"region":"us-west-2","use_fips_endpoint":false,"use_dualstack_endpoint":false}
-      """
-    When I call the operation 'snap_to_roads' with params:
-      """
-{"trace_points":[{"position":[8.53404,50.16364]},{"position":[8.53379056,50.16352417]}]}
+{"thresholds":{"time":[60]},"origin":[-123.116796,49.281476]}
       """
     Then I expect an error was not raised
 
@@ -56,13 +56,13 @@ Feature: Smoke tests for GeoRoutes
     Then I expect an error was not raised
 
   @georoutes @smoke
-  Scenario: CalculateIsolinesSuccess
+  Scenario: CalculateRoutesSuccess
     Given I create a 'Aws::GeoRoutes' client with config:
       """
 {"region":"us-west-2","use_fips_endpoint":false,"use_dualstack_endpoint":false}
       """
-    When I call the operation 'calculate_isolines' with params:
+    When I call the operation 'calculate_routes' with params:
       """
-{"thresholds":{"time":[60]},"origin":[-123.116796,49.281476]}
+{"origin":[-123.253374,49.351673],"destination":[-123.930756,49.1314]}
       """
     Then I expect an error was not raised

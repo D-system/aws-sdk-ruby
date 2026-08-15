@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -107,7 +108,7 @@ module Aws
                                         {
                                           actions: Array[::String]?,
                                           resources: Array[::String]?
-                                        },
+                                        }
                                       ],
                                       policy_type: ("IDENTITY_POLICY" | "RESOURCE_POLICY")
                                     ) -> _CheckAccessNotGrantedResponseSuccess
@@ -136,7 +137,7 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/AccessAnalyzer/Client.html#check_no_public_access-instance_method
       def check_no_public_access: (
                                     policy_document: ::String,
-                                    resource_type: ("AWS::DynamoDB::Table" | "AWS::DynamoDB::Stream" | "AWS::EFS::FileSystem" | "AWS::OpenSearchService::Domain" | "AWS::Kinesis::Stream" | "AWS::Kinesis::StreamConsumer" | "AWS::KMS::Key" | "AWS::Lambda::Function" | "AWS::S3::Bucket" | "AWS::S3::AccessPoint" | "AWS::S3Express::DirectoryBucket" | "AWS::S3::Glacier" | "AWS::S3Outposts::Bucket" | "AWS::S3Outposts::AccessPoint" | "AWS::SecretsManager::Secret" | "AWS::SNS::Topic" | "AWS::SQS::Queue" | "AWS::IAM::AssumeRolePolicyDocument")
+                                    resource_type: ("AWS::DynamoDB::Table" | "AWS::DynamoDB::Stream" | "AWS::EFS::FileSystem" | "AWS::OpenSearchService::Domain" | "AWS::Kinesis::Stream" | "AWS::Kinesis::StreamConsumer" | "AWS::KMS::Key" | "AWS::Lambda::Function" | "AWS::S3::Bucket" | "AWS::S3::AccessPoint" | "AWS::S3Express::DirectoryBucket" | "AWS::S3::Glacier" | "AWS::S3Outposts::Bucket" | "AWS::S3Outposts::AccessPoint" | "AWS::SecretsManager::Secret" | "AWS::SNS::Topic" | "AWS::SQS::Queue" | "AWS::IAM::AssumeRolePolicyDocument" | "AWS::S3Tables::TableBucket" | "AWS::ApiGateway::RestApi" | "AWS::CodeArtifact::Domain" | "AWS::Backup::BackupVault" | "AWS::CloudTrail::Dashboard" | "AWS::CloudTrail::EventDataStore" | "AWS::S3Tables::Table" | "AWS::S3Express::AccessPoint")
                                   ) -> _CheckNoPublicAccessResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CheckNoPublicAccessResponseSuccess
 
@@ -174,7 +175,7 @@ module Aws
                                                encryption_context_subset: Hash[::String, ::String]?
                                              }?,
                                              issuing_account: ::String
-                                           },
+                                           }
                                          ]?
                                        }?,
                                        rds_db_cluster_snapshot: {
@@ -202,7 +203,7 @@ module Aws
                                                id: ::String?,
                                                uri: ::String?
                                              }
-                                           },
+                                           }
                                          ]?,
                                          bucket_public_access_block: {
                                            ignore_public_acls: bool,
@@ -230,7 +231,17 @@ module Aws
                                          queue_policy: ::String?
                                        }?,
                                        s3_express_directory_bucket: {
-                                         bucket_policy: ::String?
+                                         bucket_policy: ::String?,
+                                         access_points: Hash[::String, {
+                                             access_point_policy: ::String?,
+                                             network_origin: {
+                                               vpc_configuration: {
+                                                 vpc_id: ::String
+                                               }?,
+                                               internet_configuration: {
+                                               }?
+                                             }?
+                                           }]?
                                        }?,
                                        dynamodb_stream: {
                                          stream_policy: ::String?
@@ -250,35 +261,13 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/AccessAnalyzer/Client.html#create_analyzer-instance_method
       def create_analyzer: (
                              analyzer_name: ::String,
-                             type: ("ACCOUNT" | "ORGANIZATION" | "ACCOUNT_UNUSED_ACCESS" | "ORGANIZATION_UNUSED_ACCESS"),
+                             type: ("ACCOUNT" | "ORGANIZATION" | "ACCOUNT_UNUSED_ACCESS" | "ORGANIZATION_UNUSED_ACCESS" | "ACCOUNT_INTERNAL_ACCESS" | "ORGANIZATION_INTERNAL_ACCESS"),
                              ?archive_rules: Array[
-                               {
-                                 rule_name: ::String,
-                                 filter: Hash[::String, {
-                                     eq: Array[::String]?,
-                                     neq: Array[::String]?,
-                                     contains: Array[::String]?,
-                                     exists: bool?
-                                   }]
-                               },
+                               Params::inline_archive_rule
                              ],
                              ?tags: Hash[::String, ::String],
                              ?client_token: ::String,
-                             ?configuration: {
-                               unused_access: {
-                                 unused_access_age: ::Integer?,
-                                 analysis_rule: {
-                                   exclusions: Array[
-                                     {
-                                       account_ids: Array[::String]?,
-                                       resource_tags: Array[
-                                         Hash[::String, ::String],
-                                       ]?
-                                     },
-                                   ]?
-                                 }?
-                               }?
-                             }
+                             ?configuration: Params::analyzer_configuration
                            ) -> _CreateAnalyzerResponseSuccess
                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateAnalyzerResponseSuccess
 
@@ -296,6 +285,21 @@ module Aws
                                ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
 
+      interface _CreateServiceLinkedAnalyzerResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateServiceLinkedAnalyzerResponse]
+        def arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/AccessAnalyzer/Client.html#create_service_linked_analyzer-instance_method
+      def create_service_linked_analyzer: (
+                                            type: ("ACCOUNT" | "ORGANIZATION" | "ACCOUNT_UNUSED_ACCESS" | "ORGANIZATION_UNUSED_ACCESS" | "ACCOUNT_INTERNAL_ACCESS" | "ORGANIZATION_INTERNAL_ACCESS"),
+                                            ?archive_rules: Array[
+                                              Params::inline_archive_rule
+                                            ],
+                                            ?client_token: ::String,
+                                            ?configuration: Params::analyzer_configuration
+                                          ) -> _CreateServiceLinkedAnalyzerResponseSuccess
+                                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateServiceLinkedAnalyzerResponseSuccess
+
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/AccessAnalyzer/Client.html#delete_analyzer-instance_method
       def delete_analyzer: (
                              analyzer_name: ::String,
@@ -310,6 +314,13 @@ module Aws
                                  ?client_token: ::String
                                ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/AccessAnalyzer/Client.html#delete_service_linked_analyzer-instance_method
+      def delete_service_linked_analyzer: (
+                                            analyzer_name: ::String,
+                                            ?client_token: ::String
+                                          ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+                                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
 
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/AccessAnalyzer/Client.html#generate_finding_recommendation-instance_method
       def generate_finding_recommendation: (
@@ -403,7 +414,7 @@ module Aws
         def status: () -> ("ACTIVE" | "ARCHIVED" | "RESOLVED")
         def updated_at: () -> ::Time
         def finding_details: () -> ::Array[Types::FindingDetails]
-        def finding_type: () -> ("ExternalAccess" | "UnusedIAMRole" | "UnusedIAMUserAccessKey" | "UnusedIAMUserPassword" | "UnusedPermission")
+        def finding_type: () -> ("ExternalAccess" | "UnusedIAMRole" | "UnusedIAMUserAccessKey" | "UnusedIAMUserPassword" | "UnusedPermission" | "InternalAccess")
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/AccessAnalyzer/Client.html#get_finding_v2-instance_method
       def get_finding_v2: (
@@ -494,7 +505,7 @@ module Aws
       def list_analyzers: (
                             ?next_token: ::String,
                             ?max_results: ::Integer,
-                            ?type: ("ACCOUNT" | "ORGANIZATION" | "ACCOUNT_UNUSED_ACCESS" | "ORGANIZATION_UNUSED_ACCESS")
+                            ?type: ("ACCOUNT" | "ORGANIZATION" | "ACCOUNT_UNUSED_ACCESS" | "ORGANIZATION_UNUSED_ACCESS" | "ACCOUNT_INTERNAL_ACCESS" | "ORGANIZATION_INTERNAL_ACCESS")
                           ) -> _ListAnalyzersResponseSuccess
                         | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListAnalyzersResponseSuccess
 
@@ -595,7 +606,7 @@ module Aws
                                            cloud_trail_arn: ::String,
                                            regions: Array[::String]?,
                                            all_regions: bool?
-                                         },
+                                         }
                                        ],
                                        access_role: ::String,
                                        start_time: ::Time,
@@ -640,21 +651,7 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/AccessAnalyzer/Client.html#update_analyzer-instance_method
       def update_analyzer: (
                              analyzer_name: ::String,
-                             ?configuration: {
-                               unused_access: {
-                                 unused_access_age: ::Integer?,
-                                 analysis_rule: {
-                                   exclusions: Array[
-                                     {
-                                       account_ids: Array[::String]?,
-                                       resource_tags: Array[
-                                         Hash[::String, ::String],
-                                       ]?
-                                     },
-                                   ]?
-                                 }?
-                               }?
-                             }
+                             ?configuration: Params::analyzer_configuration
                            ) -> _UpdateAnalyzerResponseSuccess
                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateAnalyzerResponseSuccess
 

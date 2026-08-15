@@ -47,6 +47,23 @@ module Aws::ServiceQuotas
     #
     class AssociateServiceQuotaTemplateResponse < Aws::EmptyStructure; end
 
+    # @!attribute [rw] request_id
+    #   The ID of the pending quota increase request for which you want to
+    #   open a Support case.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/service-quotas-2019-06-24/CreateSupportCaseRequest AWS API Documentation
+    #
+    class CreateSupportCaseRequest < Struct.new(
+      :request_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/service-quotas-2019-06-24/CreateSupportCaseResponse AWS API Documentation
+    #
+    class CreateSupportCaseResponse < Aws::EmptyStructure; end
+
     # @!attribute [rw] service_code
     #   Specifies the service identifier. To find the service code value for
     #   an Amazon Web Services service, use the ListServices operation.
@@ -108,14 +125,14 @@ module Aws::ServiceQuotas
     #
     #   * `DEPENDENCY_ACCESS_DENIED_ERROR` - The caller does not have the
     #     required permissions to complete the action. To resolve the error,
-    #     you must have permission to access the Amazon Web Service or
-    #     quota.
+    #     you must have permission to access the Amazon Web Services service
+    #     or quota.
     #
-    #   * `DEPENDENCY_THROTTLING_ERROR` - The Amazon Web Service is
+    #   * `DEPENDENCY_THROTTLING_ERROR` - The Amazon Web Services service is
     #     throttling Service Quotas.
     #
-    #   * `DEPENDENCY_SERVICE_ERROR` - The Amazon Web Service is not
-    #     available.
+    #   * `DEPENDENCY_SERVICE_ERROR` - The Amazon Web Services service is
+    #     not available.
     #
     #   * `SERVICE_QUOTA_NOT_AVAILABLE_ERROR` - There was an error in
     #     Service Quotas.
@@ -182,6 +199,151 @@ module Aws::ServiceQuotas
     #
     class GetAssociationForServiceQuotaTemplateResponse < Struct.new(
       :service_quota_template_association_status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @api private
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/service-quotas-2019-06-24/GetAutoManagementConfigurationRequest AWS API Documentation
+    #
+    class GetAutoManagementConfigurationRequest < Aws::EmptyStructure; end
+
+    # @!attribute [rw] opt_in_level
+    #   Information on the opt-in level for Automatic Management. Only
+    #   Amazon Web Services account level is supported.
+    #   @return [String]
+    #
+    # @!attribute [rw] opt_in_type
+    #   Information on the opt-in type for Automatic Management. There are
+    #   two modes: Notify only and Notify and Auto-Adjust. Currently, only
+    #   NotifyOnly is available.
+    #   @return [String]
+    #
+    # @!attribute [rw] notification_arn
+    #   The [User Notifications][1] Amazon Resource Name (ARN) for Automatic
+    #   Management notifications.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/notifications/latest/userguide/resource-level-permissions.html#rlp-table
+    #   @return [String]
+    #
+    # @!attribute [rw] opt_in_status
+    #   Status on whether Automatic Management is started or stopped.
+    #   @return [String]
+    #
+    # @!attribute [rw] exclusion_list
+    #   List of Amazon Web Services services excluded from Automatic
+    #   Management. You won't be notified of Service Quotas utilization for
+    #   Amazon Web Services services added to the Automatic Management
+    #   exclusion list.
+    #   @return [Hash<String,Array<Types::QuotaInfo>>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/service-quotas-2019-06-24/GetAutoManagementConfigurationResponse AWS API Documentation
+    #
+    class GetAutoManagementConfigurationResponse < Struct.new(
+      :opt_in_level,
+      :opt_in_type,
+      :notification_arn,
+      :opt_in_status,
+      :exclusion_list)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] report_id
+    #   The unique identifier for the quota utilization report. This
+    #   identifier is returned by the `StartQuotaUtilizationReport`
+    #   operation.
+    #   @return [String]
+    #
+    # @!attribute [rw] next_token
+    #   A token that indicates the next page of results to retrieve. This
+    #   token is returned in the response when there are more results
+    #   available. Omit this parameter for the first request.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return per page. The default value
+    #   is 1,000 and the maximum allowed value is 1,000.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/service-quotas-2019-06-24/GetQuotaUtilizationReportRequest AWS API Documentation
+    #
+    class GetQuotaUtilizationReportRequest < Struct.new(
+      :report_id,
+      :next_token,
+      :max_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] report_id
+    #   The unique identifier for the quota utilization report.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The current status of the report generation. Possible values are:
+    #
+    #   * `PENDING` - The report generation is in progress. Retry this
+    #     operation after a few seconds.
+    #
+    #   * `IN_PROGRESS` - The report is being processed. Continue polling
+    #     until the status changes to `COMPLETED`.
+    #
+    #   * `COMPLETED` - The report is ready and quota utilization data is
+    #     available in the response.
+    #
+    #   * `FAILED` - The report generation failed. Check the `ErrorCode` and
+    #     `ErrorMessage` fields for details.
+    #   @return [String]
+    #
+    # @!attribute [rw] generated_at
+    #   The timestamp when the report was generated, in ISO 8601 format.
+    #   @return [Time]
+    #
+    # @!attribute [rw] total_count
+    #   The total number of quotas included in the report across all pages.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] quotas
+    #   A list of quota utilization records, sorted by utilization
+    #   percentage in descending order. Each record includes the quota code,
+    #   service code, service name, quota name, namespace, utilization
+    #   percentage, default value, applied value, and whether the quota is
+    #   adjustable. Up to 1,000 records are returned per page.
+    #   @return [Array<Types::QuotaUtilizationInfo>]
+    #
+    # @!attribute [rw] next_token
+    #   A token that indicates more results are available. Include this
+    #   token in the next request to retrieve the next page of results. If
+    #   this field is not present, you have retrieved all available results.
+    #   @return [String]
+    #
+    # @!attribute [rw] error_code
+    #   An error code indicating the reason for failure when the report
+    #   status is `FAILED`. This field is only present when the status is
+    #   `FAILED`.
+    #   @return [String]
+    #
+    # @!attribute [rw] error_message
+    #   A detailed error message describing the failure when the report
+    #   status is `FAILED`. This field is only present when the status is
+    #   `FAILED`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/service-quotas-2019-06-24/GetQuotaUtilizationReportResponse AWS API Documentation
+    #
+    class GetQuotaUtilizationReportResponse < Struct.new(
+      :report_id,
+      :status,
+      :generated_at,
+      :total_count,
+      :quotas,
+      :next_token,
+      :error_code,
+      :error_message)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -260,9 +422,7 @@ module Aws::ServiceQuotas
     #   @return [String]
     #
     # @!attribute [rw] context_id
-    #   Specifies the Amazon Web Services account or resource to which the
-    #   quota applies. The value in this field depends on the context scope
-    #   associated with the specified service quota.
+    #   Specifies the resource with an Amazon Resource Name (ARN).
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/service-quotas-2019-06-24/GetServiceQuotaRequest AWS API Documentation
@@ -427,8 +587,8 @@ module Aws::ServiceQuotas
     #   @return [Integer]
     #
     # @!attribute [rw] quota_requested_at_level
-    #   Specifies at which level within the Amazon Web Services account the
-    #   quota request applies to.
+    #   Filters the response to return quota requests for the `ACCOUNT`,
+    #   `RESOURCE`, or `ALL` levels. `ACCOUNT` is the default.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/service-quotas-2019-06-24/ListRequestedServiceQuotaChangeHistoryByQuotaRequest AWS API Documentation
@@ -500,8 +660,8 @@ module Aws::ServiceQuotas
     #   @return [Integer]
     #
     # @!attribute [rw] quota_requested_at_level
-    #   Specifies at which level within the Amazon Web Services account the
-    #   quota request applies to.
+    #   Filters the response to return quota requests for the `ACCOUNT`,
+    #   `RESOURCE`, or `ALL` levels. `ACCOUNT` is the default.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/service-quotas-2019-06-24/ListRequestedServiceQuotaChangeHistoryRequest AWS API Documentation
@@ -639,8 +799,8 @@ module Aws::ServiceQuotas
     #   @return [String]
     #
     # @!attribute [rw] quota_applied_at_level
-    #   Specifies at which level of granularity that the quota value is
-    #   applied.
+    #   Filters the response to return applied quota values for the
+    #   `ACCOUNT`, `RESOURCE`, or `ALL` levels. `ACCOUNT` is the default.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/service-quotas-2019-06-24/ListServiceQuotasRequest AWS API Documentation
@@ -718,7 +878,7 @@ module Aws::ServiceQuotas
     #   @return [String]
     #
     # @!attribute [rw] services
-    #   The list of the Amazon Web Service names and service codes.
+    #   The list of the Amazon Web Services service names and service codes.
     #   @return [Array<Types::ServiceInfo>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/service-quotas-2019-06-24/ListServicesResponse AWS API Documentation
@@ -878,23 +1038,37 @@ module Aws::ServiceQuotas
       include Aws::Structure
     end
 
-    # A structure that describes the context for a service quota. The
-    # context identifies what the quota applies to.
+    # A structure that describes the context for a resource-level quota. For
+    # resource-level quotas, such as `Instances per OpenSearch Service
+    # Domain`, you can apply the quota value at the resource-level for each
+    # OpenSearch Service Domain in your Amazon Web Services account.
+    # Together the attributes of this structure help you understand how the
+    # quota is implemented by Amazon Web Services and how you can manage it.
+    # For quotas such as `Amazon OpenSearch Service Domains` which can be
+    # managed at the account-level for each Amazon Web Services Region, the
+    # `QuotaContext` field is absent. See the attribute descriptions below
+    # to further understand how to use them.
     #
     # @!attribute [rw] context_scope
-    #   Specifies whether the quota applies to an Amazon Web Services
-    #   account, or to a resource.
+    #   Specifies the scope to which the quota value is applied. If the
+    #   scope is `RESOURCE`, the quota value is applied to each resource in
+    #   the Amazon Web Services account. If the scope is `ACCOUNT`, the
+    #   quota value is applied to the Amazon Web Services account.
     #   @return [String]
     #
     # @!attribute [rw] context_scope_type
-    #   When the `ContextScope` is `RESOURCE`, then this specifies the
-    #   resource type of the specified resource.
+    #   Specifies the resource type to which the quota can be applied.
     #   @return [String]
     #
     # @!attribute [rw] context_id
-    #   Specifies the Amazon Web Services account or resource to which the
-    #   quota applies. The value in this field depends on the context scope
-    #   associated with the specified service quota.
+    #   Specifies the resource, or resources, to which the quota applies.
+    #   The value for this field is either an Amazon Resource Name (ARN) or
+    #   *. If the value is an ARN, the quota value applies to that
+    #   resource. If the value is *, then the quota value applies to all
+    #   resources listed in the `ContextScopeType` field. The quota value
+    #   applies to all resources for which you haven’t previously applied a
+    #   quota value, and any new resources you create in your Amazon Web
+    #   Services account.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/service-quotas-2019-06-24/QuotaContextInfo AWS API Documentation
@@ -922,6 +1096,34 @@ module Aws::ServiceQuotas
       include Aws::Structure
     end
 
+    # Information on your Service Quotas for [Service Quotas Automatic
+    # Management][1]. Automatic Management monitors your Service Quotas
+    # utilization and notifies you before you run out of your allocated
+    # quotas.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/servicequotas/latest/userguide/automatic-management.html
+    #
+    # @!attribute [rw] quota_code
+    #   The Service Quotas code for the Amazon Web Services service
+    #   monitored with Automatic Management.
+    #   @return [String]
+    #
+    # @!attribute [rw] quota_name
+    #   The Service Quotas name for the Amazon Web Services service
+    #   monitored with Automatic Management.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/service-quotas-2019-06-24/QuotaInfo AWS API Documentation
+    #
+    class QuotaInfo < Struct.new(
+      :quota_code,
+      :quota_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Information about the quota period.
     #
     # @!attribute [rw] period_value
@@ -937,6 +1139,64 @@ module Aws::ServiceQuotas
     class QuotaPeriod < Struct.new(
       :period_value,
       :period_unit)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Information about a quota's utilization, including the quota code,
+    # service information, current usage, and applied limits.
+    #
+    # @!attribute [rw] quota_code
+    #   The quota identifier.
+    #   @return [String]
+    #
+    # @!attribute [rw] service_code
+    #   The service identifier.
+    #   @return [String]
+    #
+    # @!attribute [rw] quota_name
+    #   The quota name.
+    #   @return [String]
+    #
+    # @!attribute [rw] namespace
+    #   The namespace of the metric used to track quota usage.
+    #   @return [String]
+    #
+    # @!attribute [rw] utilization
+    #   The utilization percentage of the quota, calculated as (current
+    #   usage / applied value) × 100. Values range from 0.0 to 100.0 or
+    #   higher if usage exceeds the quota limit.
+    #   @return [Float]
+    #
+    # @!attribute [rw] default_value
+    #   The default value of the quota.
+    #   @return [Float]
+    #
+    # @!attribute [rw] applied_value
+    #   The applied value of the quota, which may be higher than the default
+    #   value if a quota increase has been requested and approved.
+    #   @return [Float]
+    #
+    # @!attribute [rw] service_name
+    #   The service name.
+    #   @return [String]
+    #
+    # @!attribute [rw] adjustable
+    #   Indicates whether the quota value can be increased.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/service-quotas-2019-06-24/QuotaUtilizationInfo AWS API Documentation
+    #
+    class QuotaUtilizationInfo < Struct.new(
+      :quota_code,
+      :service_code,
+      :quota_name,
+      :namespace,
+      :utilization,
+      :default_value,
+      :applied_value,
+      :service_name,
+      :adjustable)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -957,10 +1217,20 @@ module Aws::ServiceQuotas
     #   @return [Float]
     #
     # @!attribute [rw] context_id
-    #   Specifies the Amazon Web Services account or resource to which the
-    #   quota applies. The value in this field depends on the context scope
-    #   associated with the specified service quota.
+    #   Specifies the resource with an Amazon Resource Name (ARN).
     #   @return [String]
+    #
+    # @!attribute [rw] support_case_allowed
+    #   Specifies if an Amazon Web Services Support case can be opened for
+    #   the quota increase request. This parameter is optional.
+    #
+    #   By default, this flag is set to `True` and Amazon Web Services may
+    #   create a support case for some quota increase requests. You can set
+    #   this flag to `False` if you do not want a support case created when
+    #   you request a quota increase. If you set the flag to `False`, Amazon
+    #   Web Services does not open a support case and updates the request
+    #   status to `Not approved`.
+    #   @return [Boolean]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/service-quotas-2019-06-24/RequestServiceQuotaIncreaseRequest AWS API Documentation
     #
@@ -968,7 +1238,8 @@ module Aws::ServiceQuotas
       :service_code,
       :quota_code,
       :desired_value,
-      :context_id)
+      :context_id,
+      :support_case_allowed)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -989,6 +1260,19 @@ module Aws::ServiceQuotas
     #
     # @!attribute [rw] id
     #   The unique identifier.
+    #   @return [String]
+    #
+    # @!attribute [rw] request_type
+    #   The type of quota increase request. Possible values include:
+    #
+    #   * `AutomaticManagement` - The request was automatically created by
+    #     Service Quotas Automatic Management when quota utilization
+    #     approached the limit.
+    #
+    #   ^
+    #
+    #   If this field is not present, the request was manually created by a
+    #   user.
     #   @return [String]
     #
     # @!attribute [rw] case_id
@@ -1020,6 +1304,30 @@ module Aws::ServiceQuotas
     #
     # @!attribute [rw] status
     #   The state of the quota increase request.
+    #
+    #   * `PENDING`: The quota increase request is under review by Amazon
+    #     Web Services.
+    #
+    #   * `CASE_OPENED`: Service Quotas opened a support case to process the
+    #     quota increase request. Follow-up on the support case for more
+    #     information.
+    #
+    #   * `APPROVED`: The quota increase request is approved.
+    #
+    #   * `DENIED`: The quota increase request can't be approved by Service
+    #     Quotas. Contact Amazon Web Services Support for more details.
+    #
+    #   * `NOT APPROVED`: The quota increase request can't be approved by
+    #     Service Quotas. Contact Amazon Web Services Support for more
+    #     details.
+    #
+    #   * `CASE_CLOSED`: The support case associated with this quota
+    #     increase request was closed. Check the support case correspondence
+    #     for the outcome of your quota request.
+    #
+    #   * `INVALID_REQUEST`: Service Quotas couldn't process your
+    #     resource-level quota increase request because the Amazon Resource
+    #     Name (ARN) specified as part of the `ContextId` is invalid.
     #   @return [String]
     #
     # @!attribute [rw] created
@@ -1048,8 +1356,8 @@ module Aws::ServiceQuotas
     #   @return [String]
     #
     # @!attribute [rw] quota_requested_at_level
-    #   Specifies at which level within the Amazon Web Services account the
-    #   quota request applies to.
+    #   Filters the response to return quota requests for the `ACCOUNT`,
+    #   `RESOURCE`, or `ALL` levels. `ACCOUNT` is the default.
     #   @return [String]
     #
     # @!attribute [rw] quota_context
@@ -1060,6 +1368,7 @@ module Aws::ServiceQuotas
     #
     class RequestedServiceQuotaChange < Struct.new(
       :id,
+      :request_type,
       :case_id,
       :service_code,
       :service_name,
@@ -1105,7 +1414,7 @@ module Aws::ServiceQuotas
       include Aws::Structure
     end
 
-    # Information about an Amazon Web Service.
+    # Information about an Amazon Web Services service.
     #
     # @!attribute [rw] service_code
     #   Specifies the service identifier. To find the service code value for
@@ -1179,13 +1488,17 @@ module Aws::ServiceQuotas
     #   @return [Types::ErrorReason]
     #
     # @!attribute [rw] quota_applied_at_level
-    #   Specifies at which level of granularity that the quota value is
-    #   applied.
+    #   Filters the response to return applied quota values for the
+    #   `ACCOUNT`, `RESOURCE`, or `ALL` levels. `ACCOUNT` is the default.
     #   @return [String]
     #
     # @!attribute [rw] quota_context
     #   The context for this service quota.
     #   @return [Types::QuotaContextInfo]
+    #
+    # @!attribute [rw] description
+    #   The quota description.
+    #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/service-quotas-2019-06-24/ServiceQuota AWS API Documentation
     #
@@ -1203,7 +1516,8 @@ module Aws::ServiceQuotas
       :period,
       :error_reason,
       :quota_applied_at_level,
-      :quota_context)
+      :quota_context,
+      :description)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1272,6 +1586,92 @@ module Aws::ServiceQuotas
       SENSITIVE = []
       include Aws::Structure
     end
+
+    # @!attribute [rw] opt_in_level
+    #   Sets the opt-in level for Automatic Management. Only Amazon Web
+    #   Services account level is supported.
+    #   @return [String]
+    #
+    # @!attribute [rw] opt_in_type
+    #   Sets the opt-in type for Automatic Management. There are two modes:
+    #   Notify only and Notify and Auto-Adjust. Currently, only NotifyOnly
+    #   is available.
+    #   @return [String]
+    #
+    # @!attribute [rw] notification_arn
+    #   The [User Notifications][1] Amazon Resource Name (ARN) for Automatic
+    #   Management notifications.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/notifications/latest/userguide/resource-level-permissions.html#rlp-table
+    #   @return [String]
+    #
+    # @!attribute [rw] exclusion_list
+    #   List of Amazon Web Services services excluded from Automatic
+    #   Management. You won't be notified of Service Quotas utilization for
+    #   Amazon Web Services services added to the Automatic Management
+    #   exclusion list.
+    #   @return [Hash<String,Array<String>>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/service-quotas-2019-06-24/StartAutoManagementRequest AWS API Documentation
+    #
+    class StartAutoManagementRequest < Struct.new(
+      :opt_in_level,
+      :opt_in_type,
+      :notification_arn,
+      :exclusion_list)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/service-quotas-2019-06-24/StartAutoManagementResponse AWS API Documentation
+    #
+    class StartAutoManagementResponse < Aws::EmptyStructure; end
+
+    # @api private
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/service-quotas-2019-06-24/StartQuotaUtilizationReportRequest AWS API Documentation
+    #
+    class StartQuotaUtilizationReportRequest < Aws::EmptyStructure; end
+
+    # @!attribute [rw] report_id
+    #   A unique identifier for the quota utilization report. Use this
+    #   identifier with the `GetQuotaUtilizationReport` operation to
+    #   retrieve the report results.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The current status of the report generation. The status will be
+    #   `PENDING` when the report is first initiated.
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   An optional message providing additional information about the
+    #   report generation status. This field may contain details about the
+    #   report initiation or indicate if an existing recent report is being
+    #   reused.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/service-quotas-2019-06-24/StartQuotaUtilizationReportResponse AWS API Documentation
+    #
+    class StartQuotaUtilizationReportResponse < Struct.new(
+      :report_id,
+      :status,
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @api private
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/service-quotas-2019-06-24/StopAutoManagementRequest AWS API Documentation
+    #
+    class StopAutoManagementRequest < Aws::EmptyStructure; end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/service-quotas-2019-06-24/StopAutoManagementResponse AWS API Documentation
+    #
+    class StopAutoManagementResponse < Aws::EmptyStructure; end
 
     # A complex data type that contains a tag key and tag value.
     #
@@ -1414,6 +1814,42 @@ module Aws::ServiceQuotas
     # @see http://docs.aws.amazon.com/goto/WebAPI/service-quotas-2019-06-24/UntagResourceResponse AWS API Documentation
     #
     class UntagResourceResponse < Aws::EmptyStructure; end
+
+    # @!attribute [rw] opt_in_type
+    #   Information on the opt-in type for your Automatic Management
+    #   configuration. There are two modes: Notify only and Notify and
+    #   Auto-Adjust. Currently, only NotifyOnly is available.
+    #   @return [String]
+    #
+    # @!attribute [rw] notification_arn
+    #   The [User Notifications][1] Amazon Resource Name (ARN) for Automatic
+    #   Management notifications you want to update.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/notifications/latest/userguide/resource-level-permissions.html#rlp-table
+    #   @return [String]
+    #
+    # @!attribute [rw] exclusion_list
+    #   List of Amazon Web Services services you want to exclude from
+    #   Automatic Management. You won't be notified of Service Quotas
+    #   utilization for Amazon Web Services services added to the Automatic
+    #   Management exclusion list.
+    #   @return [Hash<String,Array<String>>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/service-quotas-2019-06-24/UpdateAutoManagementRequest AWS API Documentation
+    #
+    class UpdateAutoManagementRequest < Struct.new(
+      :opt_in_type,
+      :notification_arn,
+      :exclusion_list)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/service-quotas-2019-06-24/UpdateAutoManagementResponse AWS API Documentation
+    #
+    class UpdateAutoManagementResponse < Aws::EmptyStructure; end
 
   end
 end

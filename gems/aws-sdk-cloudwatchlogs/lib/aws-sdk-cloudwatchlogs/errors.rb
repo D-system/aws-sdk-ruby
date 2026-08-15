@@ -30,6 +30,8 @@ module Aws::CloudWatchLogs
   # * {AccessDeniedException}
   # * {ConflictException}
   # * {DataAlreadyAcceptedException}
+  # * {InternalServerException}
+  # * {InternalStreamingException}
   # * {InvalidOperationException}
   # * {InvalidParameterException}
   # * {InvalidSequenceTokenException}
@@ -85,6 +87,31 @@ module Aws::CloudWatchLogs
       # @return [String]
       def expected_sequence_token
         @data[:expected_sequence_token]
+      end
+    end
+
+    class InternalServerException < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::CloudWatchLogs::Types::InternalServerException] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+    end
+
+    class InternalStreamingException < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::CloudWatchLogs::Types::InternalStreamingException] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+
+      # @return [String]
+      def message
+        @message || @data[:message]
       end
     end
 

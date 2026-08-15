@@ -144,6 +144,11 @@ module Aws::LakeFormation
       SENSITIVE: []
     end
 
+    class ConflictException
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
     class CreateDataCellsFilterRequest
       attr_accessor table_data: Types::DataCellsFilter
       SENSITIVE: []
@@ -178,6 +183,7 @@ module Aws::LakeFormation
       attr_accessor instance_arn: ::String
       attr_accessor external_filtering: Types::ExternalFilteringConfiguration
       attr_accessor share_recipients: ::Array[Types::DataLakePrincipal]
+      attr_accessor service_integrations: ::Array[Types::ServiceIntegrationUnion]
       SENSITIVE: []
     end
 
@@ -332,6 +338,7 @@ module Aws::LakeFormation
       attr_accessor application_arn: ::String
       attr_accessor external_filtering: Types::ExternalFilteringConfiguration
       attr_accessor share_recipients: ::Array[Types::DataLakePrincipal]
+      attr_accessor service_integrations: ::Array[Types::ServiceIntegrationUnion]
       attr_accessor resource_share: ::String
       SENSITIVE: []
     end
@@ -529,6 +536,21 @@ module Aws::LakeFormation
     class GetTableObjectsResponse
       attr_accessor objects: ::Array[Types::PartitionObjects]
       attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class GetTemporaryDataLocationCredentialsRequest
+      attr_accessor duration_seconds: ::Integer
+      attr_accessor audit_context: Types::AuditContext
+      attr_accessor data_locations: ::Array[::String]
+      attr_accessor credentials_scope: ("READ" | "READWRITE")
+      SENSITIVE: []
+    end
+
+    class GetTemporaryDataLocationCredentialsResponse
+      attr_accessor credentials: Types::TemporaryCredentials
+      attr_accessor accessible_data_locations: ::Array[::String]
+      attr_accessor credentials_scope: ("READ" | "READWRITE")
       SENSITIVE: []
     end
 
@@ -869,6 +891,22 @@ module Aws::LakeFormation
       SENSITIVE: []
     end
 
+    class RedshiftConnect
+      attr_accessor authorization: ("ENABLED" | "DISABLED")
+      SENSITIVE: []
+    end
+
+    class RedshiftScopeUnion
+      attr_accessor redshift_connect: Types::RedshiftConnect
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class RedshiftConnect < RedshiftScopeUnion
+      end
+      class Unknown < RedshiftScopeUnion
+      end
+    end
+
     class RegisterResourceRequest
       attr_accessor resource_arn: ::String
       attr_accessor use_service_linked_role: bool
@@ -876,6 +914,7 @@ module Aws::LakeFormation
       attr_accessor with_federation: bool
       attr_accessor hybrid_access_enabled: bool
       attr_accessor with_privileged_access: bool
+      attr_accessor expected_resource_owner_account: ::String
       SENSITIVE: []
     end
 
@@ -914,6 +953,8 @@ module Aws::LakeFormation
       attr_accessor with_federation: bool
       attr_accessor hybrid_access_enabled: bool
       attr_accessor with_privileged_access: bool
+      attr_accessor verification_status: ("VERIFIED" | "VERIFICATION_FAILED" | "NOT_VERIFIED")
+      attr_accessor expected_resource_owner_account: ::String
       SENSITIVE: []
     end
 
@@ -972,6 +1013,17 @@ module Aws::LakeFormation
       attr_accessor next_token: ::String
       attr_accessor table_list: ::Array[Types::TaggedTable]
       SENSITIVE: []
+    end
+
+    class ServiceIntegrationUnion
+      attr_accessor redshift: ::Array[Types::RedshiftScopeUnion]
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class Redshift < ServiceIntegrationUnion
+      end
+      class Unknown < ServiceIntegrationUnion
+      end
     end
 
     class StartQueryPlanningRequest
@@ -1050,6 +1102,14 @@ module Aws::LakeFormation
       SENSITIVE: []
     end
 
+    class TemporaryCredentials
+      attr_accessor access_key_id: ::String
+      attr_accessor secret_access_key: ::String
+      attr_accessor session_token: ::String
+      attr_accessor expiration: ::Time
+      SENSITIVE: []
+    end
+
     class ThrottledException
       attr_accessor message: ::String
       SENSITIVE: []
@@ -1111,6 +1171,7 @@ module Aws::LakeFormation
     class UpdateLakeFormationIdentityCenterConfigurationRequest
       attr_accessor catalog_id: ::String
       attr_accessor share_recipients: ::Array[Types::DataLakePrincipal]
+      attr_accessor service_integrations: ::Array[Types::ServiceIntegrationUnion]
       attr_accessor application_status: ("ENABLED" | "DISABLED")
       attr_accessor external_filtering: Types::ExternalFilteringConfiguration
       SENSITIVE: []
@@ -1124,6 +1185,7 @@ module Aws::LakeFormation
       attr_accessor resource_arn: ::String
       attr_accessor with_federation: bool
       attr_accessor hybrid_access_enabled: bool
+      attr_accessor expected_resource_owner_account: ::String
       SENSITIVE: []
     end
 

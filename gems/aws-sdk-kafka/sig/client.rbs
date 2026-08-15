@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -97,104 +98,23 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Kafka/Client.html#create_cluster-instance_method
       def create_cluster: (
-                            broker_node_group_info: {
-                              broker_az_distribution: ("DEFAULT")?,
-                              client_subnets: Array[::String],
-                              instance_type: ::String,
-                              security_groups: Array[::String]?,
-                              storage_info: {
-                                ebs_storage_info: {
-                                  provisioned_throughput: {
-                                    enabled: bool?,
-                                    volume_throughput: ::Integer?
-                                  }?,
-                                  volume_size: ::Integer?
-                                }?
-                              }?,
-                              connectivity_info: {
-                                public_access: {
-                                  type: ::String?
-                                }?,
-                                vpc_connectivity: {
-                                  client_authentication: {
-                                    sasl: {
-                                      scram: {
-                                        enabled: bool?
-                                      }?,
-                                      iam: {
-                                        enabled: bool?
-                                      }?
-                                    }?,
-                                    tls: {
-                                      enabled: bool?
-                                    }?
-                                  }?
-                                }?
-                              }?,
-                              zone_ids: Array[::String]?
-                            },
-                            ?client_authentication: {
-                              sasl: {
-                                scram: {
-                                  enabled: bool?
-                                }?,
-                                iam: {
-                                  enabled: bool?
-                                }?
-                              }?,
-                              tls: {
-                                certificate_authority_arn_list: Array[::String]?,
-                                enabled: bool?
-                              }?,
-                              unauthenticated: {
-                                enabled: bool?
-                              }?
-                            },
+                            broker_node_group_info: Params::broker_node_group_info,
+                            ?client_authentication: Params::client_authentication,
                             cluster_name: ::String,
                             ?configuration_info: {
                               arn: ::String,
                               revision: ::Integer
                             },
-                            ?encryption_info: {
-                              encryption_at_rest: {
-                                data_volume_kms_key_id: ::String
-                              }?,
-                              encryption_in_transit: {
-                                client_broker: ("TLS" | "TLS_PLAINTEXT" | "PLAINTEXT")?,
-                                in_cluster: bool?
-                              }?
-                            },
+                            ?encryption_info: Params::encryption_info,
                             ?enhanced_monitoring: ("DEFAULT" | "PER_BROKER" | "PER_TOPIC_PER_BROKER" | "PER_TOPIC_PER_PARTITION"),
                             kafka_version: ::String,
-                            ?logging_info: {
-                              broker_logs: {
-                                cloud_watch_logs: {
-                                  enabled: bool,
-                                  log_group: ::String?
-                                }?,
-                                firehose: {
-                                  delivery_stream: ::String?,
-                                  enabled: bool
-                                }?,
-                                s3: {
-                                  bucket: ::String?,
-                                  enabled: bool,
-                                  prefix: ::String?
-                                }?
-                              }
-                            },
+                            ?logging_info: Params::logging_info,
                             number_of_broker_nodes: ::Integer,
-                            ?open_monitoring: {
-                              prometheus: {
-                                jmx_exporter: {
-                                  enabled_in_broker: bool
-                                }?,
-                                node_exporter: {
-                                  enabled_in_broker: bool
-                                }?
-                              }
-                            },
+                            ?open_monitoring: Params::open_monitoring_info,
                             ?tags: Hash[::String, ::String],
+                            ?rebalancing: {
+                              status: ("PAUSED" | "ACTIVE")
+                            },
                             ?storage_mode: ("LOCAL" | "TIERED")
                           ) -> _CreateClusterResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateClusterResponseSuccess
@@ -211,110 +131,29 @@ module Aws
                                cluster_name: ::String,
                                ?tags: Hash[::String, ::String],
                                ?provisioned: {
-                                 broker_node_group_info: {
-                                   broker_az_distribution: ("DEFAULT")?,
-                                   client_subnets: Array[::String],
-                                   instance_type: ::String,
-                                   security_groups: Array[::String]?,
-                                   storage_info: {
-                                     ebs_storage_info: {
-                                       provisioned_throughput: {
-                                         enabled: bool?,
-                                         volume_throughput: ::Integer?
-                                       }?,
-                                       volume_size: ::Integer?
-                                     }?
-                                   }?,
-                                   connectivity_info: {
-                                     public_access: {
-                                       type: ::String?
-                                     }?,
-                                     vpc_connectivity: {
-                                       client_authentication: {
-                                         sasl: {
-                                           scram: {
-                                             enabled: bool?
-                                           }?,
-                                           iam: {
-                                             enabled: bool?
-                                           }?
-                                         }?,
-                                         tls: {
-                                           enabled: bool?
-                                         }?
-                                       }?
-                                     }?
-                                   }?,
-                                   zone_ids: Array[::String]?
-                                 },
-                                 client_authentication: {
-                                   sasl: {
-                                     scram: {
-                                       enabled: bool?
-                                     }?,
-                                     iam: {
-                                       enabled: bool?
-                                     }?
-                                   }?,
-                                   tls: {
-                                     certificate_authority_arn_list: Array[::String]?,
-                                     enabled: bool?
-                                   }?,
-                                   unauthenticated: {
-                                     enabled: bool?
-                                   }?
-                                 }?,
+                                 broker_node_group_info: Params::broker_node_group_info,
+                                 client_authentication: Params::client_authentication?,
                                  configuration_info: {
                                    arn: ::String,
                                    revision: ::Integer
                                  }?,
-                                 encryption_info: {
-                                   encryption_at_rest: {
-                                     data_volume_kms_key_id: ::String
-                                   }?,
-                                   encryption_in_transit: {
-                                     client_broker: ("TLS" | "TLS_PLAINTEXT" | "PLAINTEXT")?,
-                                     in_cluster: bool?
-                                   }?
-                                 }?,
+                                 encryption_info: Params::encryption_info?,
                                  enhanced_monitoring: ("DEFAULT" | "PER_BROKER" | "PER_TOPIC_PER_BROKER" | "PER_TOPIC_PER_PARTITION")?,
-                                 open_monitoring: {
-                                   prometheus: {
-                                     jmx_exporter: {
-                                       enabled_in_broker: bool
-                                     }?,
-                                     node_exporter: {
-                                       enabled_in_broker: bool
-                                     }?
-                                   }
-                                 }?,
+                                 open_monitoring: Params::open_monitoring_info?,
                                  kafka_version: ::String,
-                                 logging_info: {
-                                   broker_logs: {
-                                     cloud_watch_logs: {
-                                       enabled: bool,
-                                       log_group: ::String?
-                                     }?,
-                                     firehose: {
-                                       delivery_stream: ::String?,
-                                       enabled: bool
-                                     }?,
-                                     s3: {
-                                       bucket: ::String?,
-                                       enabled: bool,
-                                       prefix: ::String?
-                                     }?
-                                   }
-                                 }?,
+                                 logging_info: Params::logging_info?,
                                  number_of_broker_nodes: ::Integer,
-                                 storage_mode: ("LOCAL" | "TIERED")?
+                                 storage_mode: ("LOCAL" | "TIERED")?,
+                                 rebalancing: {
+                                   status: ("PAUSED" | "ACTIVE")
+                                 }?
                                },
                                ?serverless: {
                                  vpc_configs: Array[
                                    {
                                      subnet_ids: Array[::String],
                                      security_group_ids: Array[::String]?
-                                   },
+                                   }
                                  ],
                                  client_authentication: {
                                    sasl: {
@@ -344,6 +183,100 @@ module Aws
                                 ) -> _CreateConfigurationResponseSuccess
                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateConfigurationResponseSuccess
 
+      interface _CreateChannelResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateChannelResponse]
+        def channel_arn: () -> ::String
+        def cluster_operation_arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Kafka/Client.html#create_channel-instance_method
+      def create_channel: (
+                            channel_name: ::String,
+                            cluster_arn: ::String,
+                            ?encryption_configuration: {
+                              kms_key_arn: ::String
+                            },
+                            ?iceberg_destination_configuration: {
+                              append_only: bool,
+                              catalog: {
+                                catalog_arn: ::String?,
+                                warehouse_location: ::String?
+                              }?,
+                              data_freshness_in_seconds: ::Integer?,
+                              dead_letter_queue_s3: {
+                                bucket_arn: ::String,
+                                error_output_prefix: ::String?,
+                                expected_bucket_owner: ::String?
+                              },
+                              destination_table_list: Array[
+                                {
+                                  destination_database_name: ::String?,
+                                  destination_table_name: ::String?,
+                                  partition_spec: {
+                                    partition_strategy: ("TIME_HOUR"),
+                                    source_list: Array[
+                                      {
+                                        source_name: ::String?
+                                      }
+                                    ]?
+                                  }?
+                                }
+                              ],
+                              schema_evolution: {
+                                enable_schema_evolution: bool?
+                              },
+                              service_execution_role_arn: ::String,
+                              table_creation: {
+                                enable_table_creation: bool?
+                              },
+                              compression_type: ("ZSTD" | "SNAPPY")?
+                            },
+                            ?logging_info: {
+                              cloud_watch_logs: {
+                                enabled: bool,
+                                log_group: ::String?
+                              }?,
+                              firehose: {
+                                delivery_stream: ::String?,
+                                enabled: bool
+                              }?,
+                              s3: {
+                                bucket: ::String?,
+                                enabled: bool,
+                                prefix: ::String?
+                              }?
+                            },
+                            ?s3_destination_configuration: {
+                              data_freshness_in_seconds: ::Integer?,
+                              dead_letter_queue_s3: {
+                                bucket_arn: ::String,
+                                error_output_prefix: ::String?,
+                                expected_bucket_owner: ::String?
+                              },
+                              service_execution_role_arn: ::String,
+                              storage: {
+                                bucket_arn: ::String,
+                                compression_type: ("NONE" | "GZIP" | "ZSTD"),
+                                output_prefix: ::String?,
+                                output_key_template: ::String?,
+                                storage_class: ("STANDARD" | "INTELLIGENT_TIERING" | "GLACIER_IR"),
+                                expected_bucket_owner: ::String?
+                              }
+                            },
+                            ?tags: Hash[::String, ::String],
+                            topic_configuration_list: Array[
+                              {
+                                record_converter: {
+                                  value_converter: ("BYTE_ARRAY" | "JSON" | "JSON_SCHEMA_GSR" | "STRING")
+                                },
+                                record_schema: {
+                                  gsr_arn: ::String
+                                }?,
+                                topic_arn: ::String
+                              }
+                            ]
+                          ) -> _CreateChannelResponseSuccess
+                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateChannelResponseSuccess
+
       interface _CreateReplicatorResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::CreateReplicatorResponse]
         def replicator_arn: () -> ::String
@@ -357,24 +290,45 @@ module Aws
                                  {
                                    amazon_msk_cluster: {
                                      msk_cluster_arn: ::String
-                                   },
+                                   }?,
+                                   apache_kafka_cluster: {
+                                     apache_kafka_cluster_id: ::String,
+                                     bootstrap_broker_string: ::String
+                                   }?,
                                    vpc_config: {
                                      security_group_ids: Array[::String]?,
                                      subnet_ids: Array[::String]
-                                   }
-                                 },
+                                   }?,
+                                   client_authentication: {
+                                     sasl_scram: {
+                                       mechanism: ("SHA256" | "SHA512"),
+                                       secret_arn: ::String
+                                     }?,
+                                     mtls: {
+                                       secret_arn: ::String
+                                     }?
+                                   }?,
+                                   encryption_in_transit: {
+                                     encryption_type: ("TLS"),
+                                     root_ca_certificate: ::String?
+                                   }?
+                                 }
                                ],
+                               ?log_delivery: Params::log_delivery,
                                replication_info_list: Array[
                                  {
                                    consumer_group_replication: {
                                      consumer_groups_to_exclude: Array[::String]?,
                                      consumer_groups_to_replicate: Array[::String],
                                      detect_and_copy_new_consumer_groups: bool?,
-                                     synchronise_consumer_group_offsets: bool?
+                                     synchronise_consumer_group_offsets: bool?,
+                                     consumer_group_offset_sync_mode: ("LEGACY" | "ENHANCED")?
                                    },
-                                   source_kafka_cluster_arn: ::String,
+                                   source_kafka_cluster_arn: ::String?,
+                                   source_kafka_cluster_id: ::String?,
                                    target_compression_type: ("NONE" | "GZIP" | "SNAPPY" | "LZ4" | "ZSTD"),
-                                   target_kafka_cluster_arn: ::String,
+                                   target_kafka_cluster_arn: ::String?,
+                                   target_kafka_cluster_id: ::String?,
                                    topic_replication: {
                                      copy_access_control_lists_for_topics: bool?,
                                      copy_topic_configurations: bool?,
@@ -388,13 +342,29 @@ module Aws
                                      topics_to_exclude: Array[::String]?,
                                      topics_to_replicate: Array[::String]
                                    }
-                                 },
+                                 }
                                ],
                                replicator_name: ::String,
                                service_execution_role_arn: ::String,
                                ?tags: Hash[::String, ::String]
                              ) -> _CreateReplicatorResponseSuccess
                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateReplicatorResponseSuccess
+
+      interface _CreateTopicResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateTopicResponse]
+        def topic_arn: () -> ::String
+        def topic_name: () -> ::String
+        def status: () -> ("CREATING" | "UPDATING" | "DELETING" | "ACTIVE")
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Kafka/Client.html#create_topic-instance_method
+      def create_topic: (
+                          cluster_arn: ::String,
+                          topic_name: ::String,
+                          partition_count: ::Integer,
+                          replication_factor: ::Integer,
+                          ?configs: ::String
+                        ) -> _CreateTopicResponseSuccess
+                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateTopicResponseSuccess
 
       interface _CreateVpcConnectionResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::CreateVpcConnectionResponse]
@@ -430,6 +400,18 @@ module Aws
                           ) -> _DeleteClusterResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteClusterResponseSuccess
 
+      interface _DeleteChannelResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DeleteChannelResponse]
+        def channel_arn: () -> ::String
+        def cluster_operation_arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Kafka/Client.html#delete_channel-instance_method
+      def delete_channel: (
+                            channel_arn: ::String,
+                            cluster_arn: ::String
+                          ) -> _DeleteChannelResponseSuccess
+                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteChannelResponseSuccess
+
       interface _DeleteConfigurationResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DeleteConfigurationResponse]
         def arn: () -> ::String
@@ -452,6 +434,19 @@ module Aws
                                replicator_arn: ::String
                              ) -> _DeleteReplicatorResponseSuccess
                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteReplicatorResponseSuccess
+
+      interface _DeleteTopicResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DeleteTopicResponse]
+        def topic_arn: () -> ::String
+        def topic_name: () -> ::String
+        def status: () -> ("CREATING" | "UPDATING" | "DELETING" | "ACTIVE")
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Kafka/Client.html#delete_topic-instance_method
+      def delete_topic: (
+                          cluster_arn: ::String,
+                          topic_name: ::String
+                        ) -> _DeleteTopicResponseSuccess
+                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteTopicResponseSuccess
 
       interface _DeleteVpcConnectionResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DeleteVpcConnectionResponse]
@@ -504,6 +499,29 @@ module Aws
                                          ) -> _DescribeClusterOperationV2ResponseSuccess
                                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeClusterOperationV2ResponseSuccess
 
+      interface _DescribeChannelResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DescribeChannelResponse]
+        def channel_arn: () -> ::String
+        def channel_name: () -> ::String
+        def encryption_configuration: () -> Types::EncryptionConfiguration
+        def iceberg_destination_configuration: () -> Types::IcebergDestinationConfiguration
+        def s3_destination_configuration: () -> Types::S3DestinationConfiguration
+        def status: () -> ("CREATING" | "ACTIVE" | "UPDATING" | "DELETING" | "FAILED" | "SUSPENDING" | "SUSPENDED")
+        def destination_type: () -> ("ICEBERG" | "S3")
+        def creation_time: () -> ::Time
+        def topic_configuration_list: () -> ::Array[Types::TopicConfiguration]
+        def logging_info: () -> Types::ChannelLoggingInfo
+        def state_info: () -> Types::ChannelStateInfo
+        def cluster_operation_arn: () -> ::String
+        def tags: () -> ::Hash[::String, ::String]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Kafka/Client.html#describe_channel-instance_method
+      def describe_channel: (
+                              channel_arn: ::String,
+                              cluster_arn: ::String
+                            ) -> _DescribeChannelResponseSuccess
+                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeChannelResponseSuccess
+
       interface _DescribeConfigurationResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DescribeConfigurationResponse]
         def arn: () -> ::String
@@ -541,6 +559,7 @@ module Aws
         def current_version: () -> ::String
         def is_replicator_reference: () -> bool
         def kafka_clusters: () -> ::Array[Types::KafkaClusterDescription]
+        def log_delivery: () -> Types::LogDelivery
         def replication_info_list: () -> ::Array[Types::ReplicationInfoDescription]
         def replicator_arn: () -> ::String
         def replicator_description: () -> ::String
@@ -556,6 +575,36 @@ module Aws
                                  replicator_arn: ::String
                                ) -> _DescribeReplicatorResponseSuccess
                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeReplicatorResponseSuccess
+
+      interface _DescribeTopicResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DescribeTopicResponse]
+        def topic_arn: () -> ::String
+        def topic_name: () -> ::String
+        def replication_factor: () -> ::Integer
+        def partition_count: () -> ::Integer
+        def configs: () -> ::String
+        def status: () -> ("CREATING" | "UPDATING" | "DELETING" | "ACTIVE")
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Kafka/Client.html#describe_topic-instance_method
+      def describe_topic: (
+                            cluster_arn: ::String,
+                            topic_name: ::String
+                          ) -> _DescribeTopicResponseSuccess
+                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeTopicResponseSuccess
+
+      interface _DescribeTopicPartitionsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DescribeTopicPartitionsResponse]
+        def partitions: () -> ::Array[Types::TopicPartitionInfo]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Kafka/Client.html#describe_topic_partitions-instance_method
+      def describe_topic_partitions: (
+                                       cluster_arn: ::String,
+                                       topic_name: ::String,
+                                       ?max_results: ::Integer,
+                                       ?next_token: ::String
+                                     ) -> _DescribeTopicPartitionsResponseSuccess
+                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeTopicPartitionsResponseSuccess
 
       interface _DescribeVpcConnectionResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DescribeVpcConnectionResponse]
@@ -599,6 +648,10 @@ module Aws
         def bootstrap_broker_string_vpc_connectivity_tls: () -> ::String
         def bootstrap_broker_string_vpc_connectivity_sasl_scram: () -> ::String
         def bootstrap_broker_string_vpc_connectivity_sasl_iam: () -> ::String
+        def bootstrap_broker_string_ipv_6: () -> ::String
+        def bootstrap_broker_string_tls_ipv_6: () -> ::String
+        def bootstrap_broker_string_sasl_scram_ipv_6: () -> ::String
+        def bootstrap_broker_string_sasl_iam_ipv_6: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Kafka/Client.html#get_bootstrap_brokers-instance_method
       def get_bootstrap_brokers: (
@@ -615,6 +668,20 @@ module Aws
                                            ?cluster_arn: ::String
                                          ) -> _GetCompatibleKafkaVersionsResponseSuccess
                                        | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetCompatibleKafkaVersionsResponseSuccess
+
+      interface _ListChannelsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListChannelsResponse]
+        def channels: () -> ::Array[Types::ChannelInfo]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Kafka/Client.html#list_channels-instance_method
+      def list_channels: (
+                           cluster_arn: ::String,
+                           ?max_results: ::Integer,
+                           ?next_token: ::String,
+                           ?topic_name_filter: ::String
+                         ) -> _ListChannelsResponseSuccess
+                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListChannelsResponseSuccess
 
       interface _ListClusterOperationsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListClusterOperationsResponse]
@@ -780,6 +847,20 @@ module Aws
                                 ) -> _ListVpcConnectionsResponseSuccess
                               | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListVpcConnectionsResponseSuccess
 
+      interface _ListTopicsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListTopicsResponse]
+        def topics: () -> ::Array[Types::TopicInfo]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Kafka/Client.html#list_topics-instance_method
+      def list_topics: (
+                         cluster_arn: ::String,
+                         ?max_results: ::Integer,
+                         ?next_token: ::String,
+                         ?topic_name_filter: ::String
+                       ) -> _ListTopicsResponseSuccess
+                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListTopicsResponseSuccess
+
       interface _RejectClientVpcConnectionResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::RejectClientVpcConnectionResponse]
       end
@@ -891,7 +972,7 @@ module Aws
                                          volume_throughput: ::Integer?
                                        }?,
                                        volume_size_gb: ::Integer?
-                                     },
+                                     }
                                    ]
                                  ) -> _UpdateBrokerStorageResponseSuccess
                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateBrokerStorageResponseSuccess
@@ -908,6 +989,24 @@ module Aws
                                   server_properties: ::String
                                 ) -> _UpdateConfigurationResponseSuccess
                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateConfigurationResponseSuccess
+
+      interface _UpdateChannelResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::UpdateChannelResponse]
+        def channel_arn: () -> ::String
+        def cluster_operation_arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Kafka/Client.html#update_channel-instance_method
+      def update_channel: (
+                            channel_arn: ::String,
+                            cluster_arn: ::String,
+                            ?iceberg_destination_update: {
+                              data_freshness_in_seconds: ::Integer
+                            },
+                            ?s3_destination_update: {
+                              data_freshness_in_seconds: ::Integer
+                            }
+                          ) -> _UpdateChannelResponseSuccess
+                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateChannelResponseSuccess
 
       interface _UpdateClusterConfigurationResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::UpdateClusterConfigurationResponse]
@@ -950,27 +1049,11 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Kafka/Client.html#update_connectivity-instance_method
       def update_connectivity: (
                                  cluster_arn: ::String,
-                                 connectivity_info: {
-                                   public_access: {
-                                     type: ::String?
-                                   }?,
-                                   vpc_connectivity: {
-                                     client_authentication: {
-                                       sasl: {
-                                         scram: {
-                                           enabled: bool?
-                                         }?,
-                                         iam: {
-                                           enabled: bool?
-                                         }?
-                                       }?,
-                                       tls: {
-                                         enabled: bool?
-                                       }?
-                                     }?
-                                   }?
-                                 },
-                                 current_version: ::String
+                                 ?connectivity_info: Params::connectivity_info,
+                                 current_version: ::String,
+                                 ?zookeeper_access: {
+                                   enabled: bool?
+                                 }
                                ) -> _UpdateConnectivityResponseSuccess
                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateConnectivityResponseSuccess
 
@@ -984,35 +1067,25 @@ module Aws
                                cluster_arn: ::String,
                                current_version: ::String,
                                ?enhanced_monitoring: ("DEFAULT" | "PER_BROKER" | "PER_TOPIC_PER_BROKER" | "PER_TOPIC_PER_PARTITION"),
-                               ?open_monitoring: {
-                                 prometheus: {
-                                   jmx_exporter: {
-                                     enabled_in_broker: bool
-                                   }?,
-                                   node_exporter: {
-                                     enabled_in_broker: bool
-                                   }?
-                                 }
-                               },
-                               ?logging_info: {
-                                 broker_logs: {
-                                   cloud_watch_logs: {
-                                     enabled: bool,
-                                     log_group: ::String?
-                                   }?,
-                                   firehose: {
-                                     delivery_stream: ::String?,
-                                     enabled: bool
-                                   }?,
-                                   s3: {
-                                     bucket: ::String?,
-                                     enabled: bool,
-                                     prefix: ::String?
-                                   }?
-                                 }
-                               }
+                               ?open_monitoring: Params::open_monitoring_info,
+                               ?logging_info: Params::logging_info
                              ) -> _UpdateMonitoringResponseSuccess
                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateMonitoringResponseSuccess
+
+      interface _UpdateRebalancingResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::UpdateRebalancingResponse]
+        def cluster_arn: () -> ::String
+        def cluster_operation_arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Kafka/Client.html#update_rebalancing-instance_method
+      def update_rebalancing: (
+                                cluster_arn: ::String,
+                                current_version: ::String,
+                                rebalancing: {
+                                  status: ("PAUSED" | "ACTIVE")
+                                }
+                              ) -> _UpdateRebalancingResponseSuccess
+                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateRebalancingResponseSuccess
 
       interface _UpdateReplicationInfoResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::UpdateReplicationInfoResponse]
@@ -1028,9 +1101,12 @@ module Aws
                                        synchronise_consumer_group_offsets: bool
                                      },
                                      current_version: ::String,
+                                     ?log_delivery: Params::log_delivery,
                                      replicator_arn: ::String,
-                                     source_kafka_cluster_arn: ::String,
-                                     target_kafka_cluster_arn: ::String,
+                                     ?source_kafka_cluster_arn: ::String,
+                                     ?source_kafka_cluster_id: ::String,
+                                     ?target_kafka_cluster_arn: ::String,
+                                     ?target_kafka_cluster_id: ::String,
                                      ?topic_replication: {
                                        copy_access_control_lists_for_topics: bool,
                                        copy_topic_configurations: bool,
@@ -1048,34 +1124,10 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Kafka/Client.html#update_security-instance_method
       def update_security: (
-                             ?client_authentication: {
-                               sasl: {
-                                 scram: {
-                                   enabled: bool?
-                                 }?,
-                                 iam: {
-                                   enabled: bool?
-                                 }?
-                               }?,
-                               tls: {
-                                 certificate_authority_arn_list: Array[::String]?,
-                                 enabled: bool?
-                               }?,
-                               unauthenticated: {
-                                 enabled: bool?
-                               }?
-                             },
+                             ?client_authentication: Params::client_authentication,
                              cluster_arn: ::String,
                              current_version: ::String,
-                             ?encryption_info: {
-                               encryption_at_rest: {
-                                 data_volume_kms_key_id: ::String
-                               }?,
-                               encryption_in_transit: {
-                                 client_broker: ("TLS" | "TLS_PLAINTEXT" | "PLAINTEXT")?,
-                                 in_cluster: bool?
-                               }?
-                             }
+                             ?encryption_info: Params::encryption_info
                            ) -> _UpdateSecurityResponseSuccess
                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateSecurityResponseSuccess
 
@@ -1096,6 +1148,21 @@ module Aws
                             ?volume_size_gb: ::Integer
                           ) -> _UpdateStorageResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateStorageResponseSuccess
+
+      interface _UpdateTopicResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::UpdateTopicResponse]
+        def topic_arn: () -> ::String
+        def topic_name: () -> ::String
+        def status: () -> ("CREATING" | "UPDATING" | "DELETING" | "ACTIVE")
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Kafka/Client.html#update_topic-instance_method
+      def update_topic: (
+                          cluster_arn: ::String,
+                          topic_name: ::String,
+                          ?configs: ::String,
+                          ?partition_count: ::Integer
+                        ) -> _UpdateTopicResponseSuccess
+                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateTopicResponseSuccess
     end
   end
 end

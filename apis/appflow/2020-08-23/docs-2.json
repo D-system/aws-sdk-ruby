@@ -44,8 +44,7 @@
     },
     "AccessDeniedException": {
       "base": "<p>AppFlow/Requester has invalid or missing permissions.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "AccessKeyId": {
       "base": null,
@@ -306,13 +305,11 @@
     },
     "CancelFlowExecutionsRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CancelFlowExecutionsResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CatalogType": {
       "base": null,
@@ -375,8 +372,7 @@
     },
     "ConflictException": {
       "base": "<p> There was a conflict when processing the request (for example, a flow with the given name already exists within the account. Check for conflicting resource names and try again. </p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ConnectionMode": {
       "base": null,
@@ -388,8 +384,7 @@
     },
     "ConnectorAuthenticationException": {
       "base": "<p> An error occurred when authenticating with the connector endpoint. </p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ConnectorConfiguration": {
       "base": "<p> The configuration settings related to a given connector. </p>",
@@ -566,7 +561,7 @@
         "DescribeConnectorEntityRequest$connectorProfileName": "<p> The name of the connector profile. The name is unique for each <code>ConnectorProfile</code> in the Amazon Web Services account. </p>",
         "DestinationFlowConfig$connectorProfileName": "<p> The name of the connector profile. This name must be unique for each connector profile in the Amazon Web Services account. </p>",
         "ListConnectorEntitiesRequest$connectorProfileName": "<p> The name of the connector profile. The name is unique for each <code>ConnectorProfile</code> in the Amazon Web Services account, and is used to query the downstream connector. </p>",
-        "ResetConnectorMetadataCacheRequest$connectorProfileName": "<p>The name of the connector profile that you want to reset cached metadata for.</p> <p>You can omit this parameter if you're resetting the cache for any of the following connectors: Amazon Connect, Amazon EventBridge, Amazon Lookout for Metrics, Amazon S3, or Upsolver. If you're resetting the cache for any other connector, you must include this parameter in your request.</p>",
+        "ResetConnectorMetadataCacheRequest$connectorProfileName": "<p>The name of the connector profile that you want to reset cached metadata for.</p> <p>You can omit this parameter if you're resetting the cache for any of the following connectors: Connect Customer, Amazon EventBridge, Amazon Lookout for Metrics, Amazon S3, or Upsolver. If you're resetting the cache for any other connector, you must include this parameter in your request.</p>",
         "SourceFlowConfig$connectorProfileName": "<p> The name of the connector profile. This name must be unique for each connector profile in the Amazon Web Services account. </p>",
         "UpdateConnectorProfileRequest$connectorProfileName": "<p> The name of the connector profile and is unique for each <code>ConnectorProfile</code> in the Amazon Web Services account. </p>"
       }
@@ -626,8 +621,7 @@
     },
     "ConnectorServerException": {
       "base": "<p> An error occurred when retrieving data from the connector endpoint. </p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ConnectorSuppliedValue": {
       "base": null,
@@ -665,7 +659,7 @@
         "FlowDefinition$sourceConnectorType": "<p> Specifies the source connector type, such as Salesforce, Amazon S3, Amplitude, and so on. </p>",
         "FlowDefinition$destinationConnectorType": "<p> Specifies the destination connector type, such as Salesforce, Amazon S3, Amplitude, and so on. </p>",
         "ListConnectorEntitiesRequest$connectorType": "<p> The type of connector, such as Salesforce, Amplitude, and so on. </p>",
-        "ResetConnectorMetadataCacheRequest$connectorType": "<p>The type of connector to reset cached metadata for.</p> <p>You must include this parameter in your request if you're resetting the cache for any of the following connectors: Amazon Connect, Amazon EventBridge, Amazon Lookout for Metrics, Amazon S3, or Upsolver. If you're resetting the cache for any other connector, you can omit this parameter from your request. </p>",
+        "ResetConnectorMetadataCacheRequest$connectorType": "<p>The type of connector to reset cached metadata for.</p> <p>You must include this parameter in your request if you're resetting the cache for any of the following connectors: Connect Customer, Amazon EventBridge, Amazon Lookout for Metrics, Amazon S3, or Upsolver. If you're resetting the cache for any other connector, you can omit this parameter from your request. </p>",
         "SourceFlowConfig$connectorType": "<p> The type of connector, such as Salesforce, Amplitude, and so on. </p>"
       }
     },
@@ -685,23 +679,19 @@
     },
     "CreateConnectorProfileRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateConnectorProfileResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateFlowRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateFlowResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreatedBy": {
       "base": null,
@@ -800,15 +790,15 @@
       }
     },
     "CustomerProfilesDestinationProperties": {
-      "base": "<p> The properties that are applied when Amazon Connect Customer Profiles is used as a destination. </p>",
+      "base": "<p> The properties that are applied when Connect Customer Customer Profiles is used as a destination. </p>",
       "refs": {
-        "DestinationConnectorProperties$CustomerProfiles": "<p> The properties required to query Amazon Connect Customer Profiles. </p>"
+        "DestinationConnectorProperties$CustomerProfiles": "<p> The properties required to query Connect Customer Customer Profiles. </p>"
       }
     },
     "CustomerProfilesMetadata": {
-      "base": "<p> The connector metadata specific to Amazon Connect Customer Profiles. </p>",
+      "base": "<p> The connector metadata specific to Connect Customer Customer Profiles. </p>",
       "refs": {
-        "ConnectorMetadata$CustomerProfiles": "<p> The connector metadata specific to Amazon Connect Customer Profiles. </p>"
+        "ConnectorMetadata$CustomerProfiles": "<p> The connector metadata specific to Connect Customer Customer Profiles. </p>"
       }
     },
     "DataApiRoleArn": {
@@ -913,83 +903,67 @@
     },
     "DeleteConnectorProfileRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteConnectorProfileResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteFlowRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteFlowResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeConnectorEntityRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeConnectorEntityResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeConnectorProfilesRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeConnectorProfilesResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeConnectorRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeConnectorResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeConnectorsRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeConnectorsResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeFlowExecutionRecordsRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeFlowExecutionRecordsResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeFlowRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeFlowResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "Description": {
       "base": null,
@@ -1043,7 +1017,7 @@
     "DomainName": {
       "base": null,
       "refs": {
-        "CustomerProfilesDestinationProperties$domainName": "<p> The unique name of the Amazon Connect Customer Profiles domain. </p>"
+        "CustomerProfilesDestinationProperties$domainName": "<p> The unique name of the Connect Customer Customer Profiles domain. </p>"
       }
     },
     "Double": {
@@ -1447,8 +1421,7 @@
     },
     "InternalServerException": {
       "base": "<p> An internal service error occurred during the processing of your request. Try again later. </p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "JavaBoolean": {
       "base": null,
@@ -1498,23 +1471,19 @@
     },
     "ListConnectorEntitiesRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListConnectorEntitiesResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListConnectorsRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListConnectorsResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListEntitiesMaxResults": {
       "base": null,
@@ -1524,23 +1493,19 @@
     },
     "ListFlowsRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListFlowsResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListTagsForResourceRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListTagsForResourceResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "LogoURL": {
       "base": null,
@@ -1783,7 +1748,7 @@
     "ObjectTypeName": {
       "base": null,
       "refs": {
-        "CustomerProfilesDestinationProperties$objectTypeName": "<p> The object specified in the Amazon Connect Customer Profiles flow destination. </p>"
+        "CustomerProfilesDestinationProperties$objectTypeName": "<p> The object specified in the Connect Customer Customer Profiles flow destination. </p>"
       }
     },
     "Operator": {
@@ -2000,13 +1965,11 @@
     },
     "RegisterConnectorRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "RegisterConnectorResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "RegisteredBy": {
       "base": null,
@@ -2024,18 +1987,15 @@
     },
     "ResetConnectorMetadataCacheRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ResetConnectorMetadataCacheResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ResourceNotFoundException": {
       "base": "<p> The resource specified in the request (such as the source or destination connector profile) is not found. </p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "RoleArn": {
       "base": null,
@@ -2263,8 +2223,7 @@
     },
     "ServiceQuotaExceededException": {
       "base": "<p> The request would cause a service quota (such as the number of flows) to be exceeded. </p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "SingularConnectorOperator": {
       "base": null,
@@ -2384,23 +2343,19 @@
     },
     "StartFlowRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "StartFlowResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "StopFlowRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "StopFlowResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "String": {
       "base": null,
@@ -2502,13 +2457,11 @@
     },
     "TagResourceRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "TagResourceResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "TagValue": {
       "base": null,
@@ -2544,8 +2497,7 @@
     },
     "ThrottlingException": {
       "base": "<p>API calls have exceeded the maximum allowed API request rate per account and per Region. </p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "Timezone": {
       "base": null,
@@ -2633,58 +2585,47 @@
     },
     "UnregisterConnectorRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UnregisterConnectorResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UnsupportedOperationException": {
       "base": "<p> The requested operation is not supported for the current flow. </p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "UntagResourceRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UntagResourceResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateConnectorProfileRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateConnectorProfileResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateConnectorRegistrationRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateConnectorRegistrationResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateFlowRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateFlowResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdatedBy": {
       "base": null,
@@ -2729,8 +2670,7 @@
     },
     "ValidationException": {
       "base": "<p> The request has invalid or missing parameters. </p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "Value": {
       "base": null,

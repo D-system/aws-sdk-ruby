@@ -95,8 +95,8 @@ module Aws::Personalize
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::Personalize
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::Personalize
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::Personalize
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::Personalize
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::Personalize
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::Personalize
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -375,8 +379,8 @@ module Aws::Personalize
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -594,6 +598,9 @@ module Aws::Personalize
     #     batch_inference_job_config: {
     #       item_exploration_config: {
     #         "ParameterName" => "ParameterValue",
+    #       },
+    #       ranking_influence: {
+    #         "POPULARITY" => 1.0,
     #       },
     #     },
     #     tags: [
@@ -848,6 +855,9 @@ module Aws::Personalize
     #       },
     #       enable_metadata_with_recommendations: false,
     #       sync_with_latest_solution_version: false,
+    #       ranking_influence: {
+    #         "POPULARITY" => 1.0,
+    #       },
     #     },
     #     tags: [
     #       {
@@ -1378,7 +1388,7 @@ module Aws::Personalize
     # @option params [required, Types::DataSource] :data_source
     #   The Amazon S3 bucket that contains the training data to import.
     #
-    # @option params [required, String] :role_arn
+    # @option params [String] :role_arn
     #   The ARN of the IAM role that has permissions to read from the Amazon
     #   S3 data source.
     #
@@ -1417,7 +1427,7 @@ module Aws::Personalize
     #     data_source: { # required
     #       data_location: "S3Location",
     #     },
-    #     role_arn: "RoleArn", # required
+    #     role_arn: "RoleArn",
     #     tags: [
     #       {
     #         tag_key: "TagKey", # required
@@ -1778,6 +1788,9 @@ module Aws::Personalize
     #         excluded_dataset_columns: {
     #           "DatasetType" => ["ColumnName"],
     #         },
+    #         included_dataset_columns: {
+    #           "DatasetType" => ["ColumnName"],
+    #         },
     #       },
     #       enable_metadata_with_recommendations: false,
     #     },
@@ -1999,6 +2012,13 @@ module Aws::Personalize
     #   [2]: https://docs.aws.amazon.com/personalize/latest/dg/API_ListSolutionVersions.html
     #   [3]: https://docs.aws.amazon.com/personalize/latest/dg/API_DescribeSolutionVersion.html
     #
+    # @option params [Boolean] :perform_incremental_update
+    #   Whether to perform incremental training updates on your model. When
+    #   enabled, this allows the model to learn from new data more frequently
+    #   without requiring full retraining, which enables near real-time
+    #   personalization. This parameter is supported only for solutions that
+    #   use the semantic-similarity recipe.
+    #
     # @option params [String] :recipe_arn
     #   The Amazon Resource Name (ARN) of the recipe to use for model
     #   training. This is required when `performAutoML` is false. For
@@ -2049,6 +2069,7 @@ module Aws::Personalize
     #     perform_hpo: false,
     #     perform_auto_ml: false,
     #     perform_auto_training: false,
+    #     perform_incremental_update: false,
     #     recipe_arn: "Arn",
     #     dataset_group_arn: "Arn", # required
     #     event_type: "EventType",
@@ -2097,12 +2118,24 @@ module Aws::Personalize
     #         metric_name: "MetricName",
     #         recipe_list: ["Arn"],
     #       },
+    #       events_config: {
+    #         event_parameters_list: [
+    #           {
+    #             event_type: "EventType",
+    #             event_value_threshold: 1.0,
+    #             weight: 1.0,
+    #           },
+    #         ],
+    #       },
     #       optimization_objective: {
     #         item_attribute: "ItemAttribute",
     #         objective_sensitivity: "LOW", # accepts LOW, MEDIUM, HIGH, OFF
     #       },
     #       training_data_config: {
     #         excluded_dataset_columns: {
+    #           "DatasetType" => ["ColumnName"],
+    #         },
+    #         included_dataset_columns: {
     #           "DatasetType" => ["ColumnName"],
     #         },
     #       },
@@ -2286,12 +2319,12 @@ module Aws::Personalize
 
     # Deletes a dataset. You can't delete a dataset if an associated
     # `DatasetImportJob` or `SolutionVersion` is in the CREATE PENDING or IN
-    # PROGRESS state. For more information on datasets, see
-    # [CreateDataset][1].
+    # PROGRESS state. For more information about deleting datasets, see
+    # [Deleting a dataset][1].
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/personalize/latest/dg/API_CreateDataset.html
+    # [1]: https://docs.aws.amazon.com/personalize/latest/dg/delete-dataset.html
     #
     # @option params [required, String] :dataset_arn
     #   The Amazon Resource Name (ARN) of the dataset to delete.
@@ -2587,6 +2620,8 @@ module Aws::Personalize
     #   resp.batch_inference_job.job_output.s3_data_destination.kms_key_arn #=> String
     #   resp.batch_inference_job.batch_inference_job_config.item_exploration_config #=> Hash
     #   resp.batch_inference_job.batch_inference_job_config.item_exploration_config["ParameterName"] #=> String
+    #   resp.batch_inference_job.batch_inference_job_config.ranking_influence #=> Hash
+    #   resp.batch_inference_job.batch_inference_job_config.ranking_influence["RankingInfluenceType"] #=> Float
     #   resp.batch_inference_job.role_arn #=> String
     #   resp.batch_inference_job.batch_inference_job_mode #=> String, one of "BATCH_INFERENCE", "THEME_GENERATION"
     #   resp.batch_inference_job.theme_generation_config.fields_for_theme_generation.item_name #=> String
@@ -2687,6 +2722,8 @@ module Aws::Personalize
     #   resp.campaign.campaign_config.item_exploration_config["ParameterName"] #=> String
     #   resp.campaign.campaign_config.enable_metadata_with_recommendations #=> Boolean
     #   resp.campaign.campaign_config.sync_with_latest_solution_version #=> Boolean
+    #   resp.campaign.campaign_config.ranking_influence #=> Hash
+    #   resp.campaign.campaign_config.ranking_influence["RankingInfluenceType"] #=> Float
     #   resp.campaign.status #=> String
     #   resp.campaign.failure_reason #=> String
     #   resp.campaign.creation_date_time #=> Time
@@ -2697,6 +2734,8 @@ module Aws::Personalize
     #   resp.campaign.latest_campaign_update.campaign_config.item_exploration_config["ParameterName"] #=> String
     #   resp.campaign.latest_campaign_update.campaign_config.enable_metadata_with_recommendations #=> Boolean
     #   resp.campaign.latest_campaign_update.campaign_config.sync_with_latest_solution_version #=> Boolean
+    #   resp.campaign.latest_campaign_update.campaign_config.ranking_influence #=> Hash
+    #   resp.campaign.latest_campaign_update.campaign_config.ranking_influence["RankingInfluenceType"] #=> Float
     #   resp.campaign.latest_campaign_update.status #=> String
     #   resp.campaign.latest_campaign_update.failure_reason #=> String
     #   resp.campaign.latest_campaign_update.creation_date_time #=> Time
@@ -3180,6 +3219,9 @@ module Aws::Personalize
     #   resp.recommender.recommender_config.training_data_config.excluded_dataset_columns #=> Hash
     #   resp.recommender.recommender_config.training_data_config.excluded_dataset_columns["DatasetType"] #=> Array
     #   resp.recommender.recommender_config.training_data_config.excluded_dataset_columns["DatasetType"][0] #=> String
+    #   resp.recommender.recommender_config.training_data_config.included_dataset_columns #=> Hash
+    #   resp.recommender.recommender_config.training_data_config.included_dataset_columns["DatasetType"] #=> Array
+    #   resp.recommender.recommender_config.training_data_config.included_dataset_columns["DatasetType"][0] #=> String
     #   resp.recommender.recommender_config.enable_metadata_with_recommendations #=> Boolean
     #   resp.recommender.creation_date_time #=> Time
     #   resp.recommender.last_updated_date_time #=> Time
@@ -3191,6 +3233,9 @@ module Aws::Personalize
     #   resp.recommender.latest_recommender_update.recommender_config.training_data_config.excluded_dataset_columns #=> Hash
     #   resp.recommender.latest_recommender_update.recommender_config.training_data_config.excluded_dataset_columns["DatasetType"] #=> Array
     #   resp.recommender.latest_recommender_update.recommender_config.training_data_config.excluded_dataset_columns["DatasetType"][0] #=> String
+    #   resp.recommender.latest_recommender_update.recommender_config.training_data_config.included_dataset_columns #=> Hash
+    #   resp.recommender.latest_recommender_update.recommender_config.training_data_config.included_dataset_columns["DatasetType"] #=> Array
+    #   resp.recommender.latest_recommender_update.recommender_config.training_data_config.included_dataset_columns["DatasetType"][0] #=> String
     #   resp.recommender.latest_recommender_update.recommender_config.enable_metadata_with_recommendations #=> Boolean
     #   resp.recommender.latest_recommender_update.creation_date_time #=> Time
     #   resp.recommender.latest_recommender_update.last_updated_date_time #=> Time
@@ -3273,6 +3318,7 @@ module Aws::Personalize
     #   resp.solution.perform_hpo #=> Boolean
     #   resp.solution.perform_auto_ml #=> Boolean
     #   resp.solution.perform_auto_training #=> Boolean
+    #   resp.solution.perform_incremental_update #=> Boolean
     #   resp.solution.recipe_arn #=> String
     #   resp.solution.dataset_group_arn #=> String
     #   resp.solution.event_type #=> String
@@ -3301,11 +3347,18 @@ module Aws::Personalize
     #   resp.solution.solution_config.auto_ml_config.metric_name #=> String
     #   resp.solution.solution_config.auto_ml_config.recipe_list #=> Array
     #   resp.solution.solution_config.auto_ml_config.recipe_list[0] #=> String
+    #   resp.solution.solution_config.events_config.event_parameters_list #=> Array
+    #   resp.solution.solution_config.events_config.event_parameters_list[0].event_type #=> String
+    #   resp.solution.solution_config.events_config.event_parameters_list[0].event_value_threshold #=> Float
+    #   resp.solution.solution_config.events_config.event_parameters_list[0].weight #=> Float
     #   resp.solution.solution_config.optimization_objective.item_attribute #=> String
     #   resp.solution.solution_config.optimization_objective.objective_sensitivity #=> String, one of "LOW", "MEDIUM", "HIGH", "OFF"
     #   resp.solution.solution_config.training_data_config.excluded_dataset_columns #=> Hash
     #   resp.solution.solution_config.training_data_config.excluded_dataset_columns["DatasetType"] #=> Array
     #   resp.solution.solution_config.training_data_config.excluded_dataset_columns["DatasetType"][0] #=> String
+    #   resp.solution.solution_config.training_data_config.included_dataset_columns #=> Hash
+    #   resp.solution.solution_config.training_data_config.included_dataset_columns["DatasetType"] #=> Array
+    #   resp.solution.solution_config.training_data_config.included_dataset_columns["DatasetType"][0] #=> String
     #   resp.solution.solution_config.auto_training_config.scheduling_expression #=> String
     #   resp.solution.auto_ml_result.best_recipe_arn #=> String
     #   resp.solution.status #=> String
@@ -3319,8 +3372,13 @@ module Aws::Personalize
     #   resp.solution.latest_solution_version.last_updated_date_time #=> Time
     #   resp.solution.latest_solution_version.failure_reason #=> String
     #   resp.solution.latest_solution_update.solution_update_config.auto_training_config.scheduling_expression #=> String
+    #   resp.solution.latest_solution_update.solution_update_config.events_config.event_parameters_list #=> Array
+    #   resp.solution.latest_solution_update.solution_update_config.events_config.event_parameters_list[0].event_type #=> String
+    #   resp.solution.latest_solution_update.solution_update_config.events_config.event_parameters_list[0].event_value_threshold #=> Float
+    #   resp.solution.latest_solution_update.solution_update_config.events_config.event_parameters_list[0].weight #=> Float
     #   resp.solution.latest_solution_update.status #=> String
     #   resp.solution.latest_solution_update.perform_auto_training #=> Boolean
+    #   resp.solution.latest_solution_update.perform_incremental_update #=> Boolean
     #   resp.solution.latest_solution_update.creation_date_time #=> Time
     #   resp.solution.latest_solution_update.last_updated_date_time #=> Time
     #   resp.solution.latest_solution_update.failure_reason #=> String
@@ -3361,6 +3419,7 @@ module Aws::Personalize
     #   resp.solution_version.solution_arn #=> String
     #   resp.solution_version.perform_hpo #=> Boolean
     #   resp.solution_version.perform_auto_ml #=> Boolean
+    #   resp.solution_version.perform_incremental_update #=> Boolean
     #   resp.solution_version.recipe_arn #=> String
     #   resp.solution_version.event_type #=> String
     #   resp.solution_version.dataset_group_arn #=> String
@@ -3389,11 +3448,18 @@ module Aws::Personalize
     #   resp.solution_version.solution_config.auto_ml_config.metric_name #=> String
     #   resp.solution_version.solution_config.auto_ml_config.recipe_list #=> Array
     #   resp.solution_version.solution_config.auto_ml_config.recipe_list[0] #=> String
+    #   resp.solution_version.solution_config.events_config.event_parameters_list #=> Array
+    #   resp.solution_version.solution_config.events_config.event_parameters_list[0].event_type #=> String
+    #   resp.solution_version.solution_config.events_config.event_parameters_list[0].event_value_threshold #=> Float
+    #   resp.solution_version.solution_config.events_config.event_parameters_list[0].weight #=> Float
     #   resp.solution_version.solution_config.optimization_objective.item_attribute #=> String
     #   resp.solution_version.solution_config.optimization_objective.objective_sensitivity #=> String, one of "LOW", "MEDIUM", "HIGH", "OFF"
     #   resp.solution_version.solution_config.training_data_config.excluded_dataset_columns #=> Hash
     #   resp.solution_version.solution_config.training_data_config.excluded_dataset_columns["DatasetType"] #=> Array
     #   resp.solution_version.solution_config.training_data_config.excluded_dataset_columns["DatasetType"][0] #=> String
+    #   resp.solution_version.solution_config.training_data_config.included_dataset_columns #=> Hash
+    #   resp.solution_version.solution_config.training_data_config.included_dataset_columns["DatasetType"] #=> Array
+    #   resp.solution_version.solution_config.training_data_config.included_dataset_columns["DatasetType"][0] #=> String
     #   resp.solution_version.solution_config.auto_training_config.scheduling_expression #=> String
     #   resp.solution_version.training_hours #=> Float
     #   resp.solution_version.training_mode #=> String, one of "FULL", "UPDATE", "AUTOTRAIN"
@@ -4188,6 +4254,9 @@ module Aws::Personalize
     #   resp.recommenders[0].recommender_config.training_data_config.excluded_dataset_columns #=> Hash
     #   resp.recommenders[0].recommender_config.training_data_config.excluded_dataset_columns["DatasetType"] #=> Array
     #   resp.recommenders[0].recommender_config.training_data_config.excluded_dataset_columns["DatasetType"][0] #=> String
+    #   resp.recommenders[0].recommender_config.training_data_config.included_dataset_columns #=> Hash
+    #   resp.recommenders[0].recommender_config.training_data_config.included_dataset_columns["DatasetType"] #=> Array
+    #   resp.recommenders[0].recommender_config.training_data_config.included_dataset_columns["DatasetType"][0] #=> String
     #   resp.recommenders[0].recommender_config.enable_metadata_with_recommendations #=> Boolean
     #   resp.recommenders[0].status #=> String
     #   resp.recommenders[0].creation_date_time #=> Time
@@ -4637,6 +4706,9 @@ module Aws::Personalize
     #       },
     #       enable_metadata_with_recommendations: false,
     #       sync_with_latest_solution_version: false,
+    #       ranking_influence: {
+    #         "POPULARITY" => 1.0,
+    #       },
     #     },
     #   })
     #
@@ -4778,6 +4850,9 @@ module Aws::Personalize
     #         excluded_dataset_columns: {
     #           "DatasetType" => ["ColumnName"],
     #         },
+    #         included_dataset_columns: {
+    #           "DatasetType" => ["ColumnName"],
+    #         },
     #       },
     #       enable_metadata_with_recommendations: false,
     #     },
@@ -4839,6 +4914,13 @@ module Aws::Personalize
     #   [2]: https://docs.aws.amazon.com/personalize/latest/dg/API_ListSolutionVersions.html
     #   [3]: https://docs.aws.amazon.com/personalize/latest/dg/API_DescribeSolutionVersion.html
     #
+    # @option params [Boolean] :perform_incremental_update
+    #   Whether to perform incremental training updates on your model. When
+    #   enabled, this allows the model to learn from new data more frequently
+    #   without requiring full retraining, which enables near real-time
+    #   personalization. This parameter is supported only for solutions that
+    #   use the semantic-similarity recipe.
+    #
     # @option params [Types::SolutionUpdateConfig] :solution_update_config
     #   The new configuration details of the solution.
     #
@@ -4851,9 +4933,19 @@ module Aws::Personalize
     #   resp = client.update_solution({
     #     solution_arn: "Arn", # required
     #     perform_auto_training: false,
+    #     perform_incremental_update: false,
     #     solution_update_config: {
     #       auto_training_config: {
     #         scheduling_expression: "SchedulingExpression",
+    #       },
+    #       events_config: {
+    #         event_parameters_list: [
+    #           {
+    #             event_type: "EventType",
+    #             event_value_threshold: 1.0,
+    #             weight: 1.0,
+    #           },
+    #         ],
     #       },
     #     },
     #   })
@@ -4889,7 +4981,7 @@ module Aws::Personalize
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-personalize'
-      context[:gem_version] = '1.79.0'
+      context[:gem_version] = '1.101.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

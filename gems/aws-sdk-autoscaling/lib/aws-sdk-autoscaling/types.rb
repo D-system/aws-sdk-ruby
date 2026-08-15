@@ -172,10 +172,16 @@ module Aws::AutoScaling
     #   A scaling activity.
     #   @return [Types::Activity]
     #
+    # @!attribute [rw] activities
+    #   The scaling activities related to terminating the instances from the
+    #   Auto Scaling group.
+    #   @return [Array<Types::Activity>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/autoscaling-2011-01-01/ActivityType AWS API Documentation
     #
     class ActivityType < Struct.new(
-      :activity)
+      :activity,
+      :activities)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -357,11 +363,12 @@ module Aws::AutoScaling
     #   @return [String]
     #
     # @!attribute [rw] launch_configuration_name
-    #   The name of the associated launch configuration.
+    #   The name of the associated launch configuration for the Auto Scaling
+    #   group.
     #   @return [String]
     #
     # @!attribute [rw] launch_template
-    #   The launch template for the group.
+    #   The launch template for the Auto Scaling group.
     #   @return [Types::LaunchTemplateSpecification]
     #
     # @!attribute [rw] mixed_instances_policy
@@ -369,15 +376,15 @@ module Aws::AutoScaling
     #   @return [Types::MixedInstancesPolicy]
     #
     # @!attribute [rw] min_size
-    #   The minimum size of the group.
+    #   The minimum size of the Auto Scaling group.
     #   @return [Integer]
     #
     # @!attribute [rw] max_size
-    #   The maximum size of the group.
+    #   The maximum size of the Auto Scaling group.
     #   @return [Integer]
     #
     # @!attribute [rw] desired_capacity
-    #   The desired size of the group.
+    #   The desired size of the Auto Scaling group.
     #   @return [Integer]
     #
     # @!attribute [rw] predicted_capacity
@@ -386,11 +393,17 @@ module Aws::AutoScaling
     #   @return [Integer]
     #
     # @!attribute [rw] default_cooldown
-    #   The duration of the default cooldown period, in seconds.
+    #   The duration of the default cooldown period, in seconds, for the
+    #   Auto Scaling group.
     #   @return [Integer]
     #
     # @!attribute [rw] availability_zones
-    #   One or more Availability Zones for the group.
+    #   One or more Availability Zones for the Auto Scaling group.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] availability_zone_ids
+    #   The Availability Zone IDs where the Auto Scaling group can launch
+    #   instances.
     #   @return [Array<String>]
     #
     # @!attribute [rw] load_balancer_names
@@ -403,41 +416,43 @@ module Aws::AutoScaling
     #   @return [Array<String>]
     #
     # @!attribute [rw] health_check_type
-    #   A comma-separated value string of one or more health check types.
+    #   One or more comma-separated health check types for the Auto Scaling
+    #   group.
     #   @return [String]
     #
     # @!attribute [rw] health_check_grace_period
-    #   The duration of the health check grace period, in seconds.
+    #   The duration of the health check grace period, in seconds, for the
+    #   Auto Scaling group.
     #   @return [Integer]
     #
     # @!attribute [rw] instances
-    #   The EC2 instances associated with the group.
+    #   The EC2 instances associated with the Auto Scaling group.
     #   @return [Array<Types::Instance>]
     #
     # @!attribute [rw] created_time
-    #   The date and time the group was created.
+    #   The date and time the Auto Scaling group was created.
     #   @return [Time]
     #
     # @!attribute [rw] suspended_processes
-    #   The suspended processes associated with the group.
+    #   The suspended processes associated with the Auto Scaling group.
     #   @return [Array<Types::SuspendedProcess>]
     #
     # @!attribute [rw] placement_group
-    #   The name of the placement group into which to launch your instances,
-    #   if any.
+    #   The name of the placement group into which to launch EC2 instances
+    #   for the Auto Scaling group.
     #   @return [String]
     #
     # @!attribute [rw] vpc_zone_identifier
-    #   One or more subnet IDs, if applicable, separated by commas.
+    #   One or more comma-separated subnet IDs for the Auto Scaling group.
     #   @return [String]
     #
     # @!attribute [rw] enabled_metrics
-    #   The metrics enabled for the group.
+    #   The metrics enabled for the Auto Scaling group.
     #   @return [Array<Types::EnabledMetric>]
     #
     # @!attribute [rw] status
-    #   The current state of the group when the [DeleteAutoScalingGroup][1]
-    #   operation is in progress.
+    #   The current state of the Auto Scaling group when the
+    #   [DeleteAutoScalingGroup][1] operation is in progress.
     #
     #
     #
@@ -445,16 +460,24 @@ module Aws::AutoScaling
     #   @return [String]
     #
     # @!attribute [rw] tags
-    #   The tags for the group.
+    #   The tags for the Auto Scaling group.
     #   @return [Array<Types::TagDescription>]
     #
     # @!attribute [rw] termination_policies
-    #   The termination policies for the group.
+    #   The termination policies for the Auto Scaling group.
     #   @return [Array<String>]
     #
     # @!attribute [rw] new_instances_protected_from_scale_in
-    #   Indicates whether newly launched instances are protected from
-    #   termination by Amazon EC2 Auto Scaling when scaling in.
+    #   Indicates whether newly launched EC2 instances are protected from
+    #   termination when scaling in for the Auto Scaling group.
+    #
+    #   For more information about preventing instances from terminating on
+    #   scale in, see [Use instance scale-in protection][1] in the *Amazon
+    #   EC2 Auto Scaling User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/autoscaling/ec2/userguide/ec2-auto-scaling-instance-protection.html
     #   @return [Boolean]
     #
     # @!attribute [rw] service_linked_role_arn
@@ -464,10 +487,8 @@ module Aws::AutoScaling
     #   @return [String]
     #
     # @!attribute [rw] max_instance_lifetime
-    #   The maximum amount of time, in seconds, that an instance can be in
-    #   service.
-    #
-    #   Valid Range: Minimum value of 0.
+    #   The maximum amount of time, in seconds, that an EC2 instance can be
+    #   in service for the Auto Scaling group.
     #   @return [Integer]
     #
     # @!attribute [rw] capacity_rebalance
@@ -493,7 +514,8 @@ module Aws::AutoScaling
     #   @return [String]
     #
     # @!attribute [rw] default_instance_warmup
-    #   The duration of the default instance warmup, in seconds.
+    #   The duration of the default EC2 instance warmup time, in seconds,
+    #   for the Auto Scaling group.
     #   @return [Integer]
     #
     # @!attribute [rw] traffic_sources
@@ -504,17 +526,32 @@ module Aws::AutoScaling
     #   An instance maintenance policy.
     #   @return [Types::InstanceMaintenancePolicy]
     #
+    # @!attribute [rw] deletion_protection
+    #   The deletion protection setting for the Auto Scaling group.
+    #   @return [String]
+    #
     # @!attribute [rw] availability_zone_distribution
-    #   The instance capacity distribution across Availability Zones.
+    #   The EC2 instance capacity distribution across Availability Zones for
+    #   the Auto Scaling group.
     #   @return [Types::AvailabilityZoneDistribution]
     #
     # @!attribute [rw] availability_zone_impairment_policy
-    #   The Availability Zone impairment policy.
+    #   The Availability Zone impairment policy for the Auto Scaling group.
     #   @return [Types::AvailabilityZoneImpairmentPolicy]
     #
     # @!attribute [rw] capacity_reservation_specification
-    #   The capacity reservation specification.
+    #   The capacity reservation specification for the Auto Scaling group.
     #   @return [Types::CapacityReservationSpecification]
+    #
+    # @!attribute [rw] instance_lifecycle_policy
+    #   The instance lifecycle policy for the Auto Scaling group.
+    #   @return [Types::InstanceLifecyclePolicy]
+    #
+    # @!attribute [rw] operator
+    #   The entity that manages the Auto Scaling group, if applicable. When
+    #   set, only the designated operator can make changes to the group
+    #   configuration.
+    #   @return [Types::Operator]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/autoscaling-2011-01-01/AutoScalingGroup AWS API Documentation
     #
@@ -530,6 +567,7 @@ module Aws::AutoScaling
       :predicted_capacity,
       :default_cooldown,
       :availability_zones,
+      :availability_zone_ids,
       :load_balancer_names,
       :target_group_arns,
       :health_check_type,
@@ -554,9 +592,12 @@ module Aws::AutoScaling
       :default_instance_warmup,
       :traffic_sources,
       :instance_maintenance_policy,
+      :deletion_protection,
       :availability_zone_distribution,
       :availability_zone_impairment_policy,
-      :capacity_reservation_specification)
+      :capacity_reservation_specification,
+      :instance_lifecycle_policy,
+      :operator)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -568,6 +609,12 @@ module Aws::AutoScaling
     #
     #   If you omit this property, all Auto Scaling groups are described.
     #   @return [Array<String>]
+    #
+    # @!attribute [rw] include_instances
+    #   Specifies whether to include information about Amazon EC2 instances
+    #   in the response. When set to `true` (default), the response includes
+    #   instance details.
+    #   @return [Boolean]
     #
     # @!attribute [rw] next_token
     #   The token for the next set of items to return. (You received this
@@ -587,6 +634,7 @@ module Aws::AutoScaling
     #
     class AutoScalingGroupNamesType < Struct.new(
       :auto_scaling_group_names,
+      :include_instances,
       :next_token,
       :max_records,
       :filters)
@@ -633,6 +681,10 @@ module Aws::AutoScaling
     #   The Availability Zone for the instance.
     #   @return [String]
     #
+    # @!attribute [rw] availability_zone_id
+    #   The Availability Zone ID where the instance is located.
+    #   @return [String]
+    #
     # @!attribute [rw] lifecycle_state
     #   The lifecycle state for the instance. The `Quarantined` state is not
     #   used. For more information, see [Amazon EC2 Auto Scaling instance
@@ -640,12 +692,16 @@ module Aws::AutoScaling
     #
     #   Valid values: `Pending` \| `Pending:Wait` \| `Pending:Proceed` \|
     #   `Quarantined` \| `InService` \| `Terminating` \| `Terminating:Wait`
-    #   \| `Terminating:Proceed` \| `Terminated` \| `Detaching` \|
-    #   `Detached` \| `EnteringStandby` \| `Standby` \| `Warmed:Pending` \|
-    #   `Warmed:Pending:Wait` \| `Warmed:Pending:Proceed` \|
+    #   \| `Terminating:Proceed` \| `Terminating:Retained` \| `Terminated`
+    #   \| `Detaching` \| `Detached` \| `EnteringStandby` \| `Standby` \|
+    #   `ReplacingRootVolume` \| `ReplacingRootVolume:Wait` \|
+    #   `ReplacingRootVolume:Proceed` \| `RootVolumeReplaced` \|
+    #   `Warmed:Pending` \| `Warmed:Pending:Wait` \|
+    #   `Warmed:Pending:Proceed` \| `Warmed:Pending:Retained` \|
     #   `Warmed:Terminating` \| `Warmed:Terminating:Wait` \|
-    #   `Warmed:Terminating:Proceed` \| `Warmed:Terminated` \|
-    #   `Warmed:Stopped` \| `Warmed:Running`
+    #   `Warmed:Terminating:Proceed` \| `Warmed:Terminating:Retained` \|
+    #   `Warmed:Terminated` \| `Warmed:Stopped` \| `Warmed:Running` \|
+    #   `Warmed:Hibernated`
     #
     #
     #
@@ -669,6 +725,27 @@ module Aws::AutoScaling
     #   The launch template for the instance.
     #   @return [Types::LaunchTemplateSpecification]
     #
+    # @!attribute [rw] image_id
+    #   The ID of the Amazon Machine Image (AMI) associated with the
+    #   instance. This field shows the current AMI ID of the instance's
+    #   root volume. It may differ from the original AMI used when the
+    #   instance was first launched.
+    #
+    #   This field appears for:
+    #
+    #   * Instances with root volume replacements through Instance Refresh
+    #
+    #   * Instances launched with AMI overrides
+    #
+    #   This field won't appear for:
+    #
+    #   * Existing instances launched from Launch Templates without
+    #     overrides
+    #
+    #   * Existing instances that didn’t have their root volume replaced
+    #     through Instance Refresh
+    #   @return [String]
+    #
     # @!attribute [rw] protected_from_scale_in
     #   Indicates whether the instance is protected from termination by
     #   Amazon EC2 Auto Scaling when scaling in.
@@ -688,10 +765,12 @@ module Aws::AutoScaling
       :instance_type,
       :auto_scaling_group_name,
       :availability_zone,
+      :availability_zone_id,
       :lifecycle_state,
       :health_status,
       :launch_configuration_name,
       :launch_template,
+      :image_id,
       :protected_from_scale_in,
       :weighted_capacity)
       SENSITIVE = []
@@ -732,6 +811,10 @@ module Aws::AutoScaling
     #   * `balanced-best-effort` - If launches fail in an Availability Zone,
     #     Auto Scaling will attempt to launch in another healthy
     #     Availability Zone instead.
+    #
+    #   * `reservations-then-balanced` - Auto Scaling will first attempt to
+    #     launch into your Capacity Reservations, and then balance any
+    #     remaining capacity across healthy Availability Zones.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/autoscaling-2011-01-01/AvailabilityZoneDistribution AWS API Documentation
@@ -893,7 +976,7 @@ module Aws::AutoScaling
     # @!attribute [rw] device_name
     #   The device name assigned to the volume (for example, `/dev/sdh` or
     #   `xvdh`). For more information, see [Device naming on Linux
-    #   instances][1] in the *Amazon EC2 User Guide for Linux Instances*.
+    #   instances][1] in the *Amazon EC2 User Guide*.
     #
     #   <note markdown="1"> To define a block device mapping, set the device name and exactly
     #   one of the following properties: `Ebs`, `NoDevice`, or
@@ -948,10 +1031,21 @@ module Aws::AutoScaling
     #   The name of the Auto Scaling group.
     #   @return [String]
     #
+    # @!attribute [rw] wait_for_transitioning_instances
+    #   When cancelling an instance refresh, this indicates whether to wait
+    #   for in-flight launches and terminations to complete. The default is
+    #   true.
+    #
+    #   When set to false, Amazon EC2 Auto Scaling cancels the instance
+    #   refresh without waiting for any pending launches or terminations to
+    #   complete.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/autoscaling-2011-01-01/CancelInstanceRefreshType AWS API Documentation
     #
     class CancelInstanceRefreshType < Struct.new(
-      :auto_scaling_group_name)
+      :auto_scaling_group_name,
+      :wait_for_transitioning_instances)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1216,6 +1310,12 @@ module Aws::AutoScaling
     #   network interface ID is specified in a launch template.
     #   @return [Array<String>]
     #
+    # @!attribute [rw] availability_zone_ids
+    #   A list of Availability Zone IDs where the Auto Scaling group can
+    #   launch instances. You cannot specify both AvailabilityZones and
+    #   AvailabilityZoneIds in the same request.
+    #   @return [Array<String>]
+    #
     # @!attribute [rw] load_balancer_names
     #   A list of Classic Load Balancers associated with this Auto Scaling
     #   group. For Application Load Balancers, Network Load Balancers, and
@@ -1272,7 +1372,7 @@ module Aws::AutoScaling
     # @!attribute [rw] placement_group
     #   The name of the placement group into which to launch your instances.
     #   For more information, see [Placement groups][1] in the *Amazon EC2
-    #   User Guide for Linux Instances*.
+    #   User Guide*.
     #
     #   <note markdown="1"> A *cluster* placement group is a logical grouping of instances
     #   within a single Availability Zone. You cannot specify multiple
@@ -1340,6 +1440,28 @@ module Aws::AutoScaling
     #   One or more lifecycle hooks to add to the Auto Scaling group before
     #   instances are launched.
     #   @return [Array<Types::LifecycleHookSpecification>]
+    #
+    # @!attribute [rw] deletion_protection
+    #   The deletion protection setting for the Auto Scaling group. This
+    #   setting helps safeguard your Auto Scaling group and its instances by
+    #   controlling whether the `DeleteAutoScalingGroup` operation is
+    #   allowed. When deletion protection is enabled, users cannot delete
+    #   the Auto Scaling group according to the specified protection level
+    #   until the setting is changed back to a less restrictive level.
+    #
+    #   The valid values are `none`, `prevent-force-deletion`, and
+    #   `prevent-all-deletion`.
+    #
+    #   Default: `none`
+    #
+    #   For more information, see [ Configure deletion protection for your
+    #   Amazon EC2 Auto Scaling resources][1] in the *Amazon EC2 Auto
+    #   Scaling User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/autoscaling/ec2/userguide/resource-deletion-protection.html
+    #   @return [String]
     #
     # @!attribute [rw] tags
     #   One or more tags. You can tag your Auto Scaling group and propagate
@@ -1474,6 +1596,34 @@ module Aws::AutoScaling
     #   The capacity reservation specification for the Auto Scaling group.
     #   @return [Types::CapacityReservationSpecification]
     #
+    # @!attribute [rw] instance_lifecycle_policy
+    #   The instance lifecycle policy for the Auto Scaling group. This
+    #   policy controls instance behavior when an instance transitions
+    #   through its lifecycle states. Configure retention triggers to
+    #   specify when instances should move to a `Retained` state instead of
+    #   automatic termination.
+    #
+    #   For more information, see [ Control instance retention with instance
+    #   lifecycle policies][1] in the *Amazon EC2 Auto Scaling User Guide*.
+    #
+    #   <note markdown="1"> Instances in a Retained state will continue to incur standard EC2
+    #   charges until terminated.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/autoscaling/ec2/userguide/instance-lifecycle-policy.html
+    #   @return [Types::InstanceLifecyclePolicy]
+    #
+    # @!attribute [rw] operator
+    #   The entity that manages the Auto Scaling group. If you specify this
+    #   parameter, Amazon EC2 Auto Scaling passes the operator identity to
+    #   EC2 for instance launches and only allows the designated operator to
+    #   make changes to the Auto Scaling group. All mutating API calls from
+    #   non-operator callers are rejected with an `AccessDenied` exception.
+    #   @return [Types::Operator]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/autoscaling-2011-01-01/CreateAutoScalingGroupType AWS API Documentation
     #
     class CreateAutoScalingGroupType < Struct.new(
@@ -1487,6 +1637,7 @@ module Aws::AutoScaling
       :desired_capacity,
       :default_cooldown,
       :availability_zones,
+      :availability_zone_ids,
       :load_balancer_names,
       :target_group_arns,
       :health_check_type,
@@ -1497,6 +1648,7 @@ module Aws::AutoScaling
       :new_instances_protected_from_scale_in,
       :capacity_rebalance,
       :lifecycle_hook_specification_list,
+      :deletion_protection,
       :tags,
       :service_linked_role_arn,
       :max_instance_lifetime,
@@ -1508,7 +1660,9 @@ module Aws::AutoScaling
       :availability_zone_distribution,
       :availability_zone_impairment_policy,
       :skip_zonal_shift_validation,
-      :capacity_reservation_specification)
+      :capacity_reservation_specification,
+      :instance_lifecycle_policy,
+      :operator)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1521,7 +1675,7 @@ module Aws::AutoScaling
     # @!attribute [rw] image_id
     #   The ID of the Amazon Machine Image (AMI) that was assigned during
     #   registration. For more information, see [Find a Linux AMI][1] in the
-    #   *Amazon EC2 User Guide for Linux Instances*.
+    #   *Amazon EC2 User Guide*.
     #
     #   If you specify `InstanceId`, an `ImageId` is not required.
     #
@@ -1532,8 +1686,7 @@ module Aws::AutoScaling
     #
     # @!attribute [rw] key_name
     #   The name of the key pair. For more information, see [Amazon EC2 key
-    #   pairs and Amazon EC2 instances][1] in the *Amazon EC2 User Guide for
-    #   Linux Instances*.
+    #   pairs and Amazon EC2 instances][1] in the *Amazon EC2 User Guide*.
     #
     #
     #
@@ -1594,7 +1747,7 @@ module Aws::AutoScaling
     # @!attribute [rw] instance_type
     #   Specifies the instance type of the EC2 instance. For information
     #   about available instance types, see [Available instance types][1] in
-    #   the *Amazon EC2 User Guide for Linux Instances*.
+    #   the *Amazon EC2 User Guide*.
     #
     #   If you specify `InstanceId`, an `InstanceType` is not required.
     #
@@ -1608,7 +1761,7 @@ module Aws::AutoScaling
     #
     #   <note markdown="1"> We recommend that you use PV-GRUB instead of kernels and RAM disks.
     #   For more information, see [User provided kernels][1] in the *Amazon
-    #   EC2 User Guide for Linux Instances*.
+    #   EC2 User Guide*.
     #
     #    </note>
     #
@@ -1622,7 +1775,7 @@ module Aws::AutoScaling
     #
     #   <note markdown="1"> We recommend that you use PV-GRUB instead of kernels and RAM disks.
     #   For more information, see [User provided kernels][1] in the *Amazon
-    #   EC2 User Guide for Linux Instances*.
+    #   EC2 User Guide*.
     #
     #    </note>
     #
@@ -1636,7 +1789,7 @@ module Aws::AutoScaling
     #   attach to the instances at launch. By default, the block devices
     #   specified in the block device mapping for the AMI are used. For more
     #   information, see [Block device mappings][1] in the *Amazon EC2 User
-    #   Guide for Linux Instances*.
+    #   Guide*.
     #
     #
     #
@@ -1701,8 +1854,7 @@ module Aws::AutoScaling
     #   with all instance types. Additional fees are incurred when you
     #   enable EBS optimization for an instance type that is not
     #   EBS-optimized by default. For more information, see [Amazon
-    #   EBS-optimized instances][1] in the *Amazon EC2 User Guide for Linux
-    #   Instances*.
+    #   EBS-optimized instances][1] in the *Amazon EC2 User Guide*.
     #
     #   The default value is `false`.
     #
@@ -2390,17 +2542,21 @@ module Aws::AutoScaling
     end
 
     # @!attribute [rw] activity_ids
-    #   The activity IDs of the desired scaling activities. If you omit this
-    #   property, all activities for the past six weeks are described. If
-    #   unknown activities are requested, they are ignored with no error. If
-    #   you specify an Auto Scaling group, the results are limited to that
-    #   group.
+    #   The activity IDs of the desired scaling activities. If unknown
+    #   activity IDs are requested, they are ignored with no error. Only
+    #   activities started within the last six weeks can be returned
+    #   regardless of the activity IDs specified. If other filters are
+    #   specified with the request, only results matching all filter
+    #   criteria can be returned.
     #
     #   Array Members: Maximum number of 50 IDs.
     #   @return [Array<String>]
     #
     # @!attribute [rw] auto_scaling_group_name
     #   The name of the Auto Scaling group.
+    #
+    #   Omitting this property performs an account-wide operation, which can
+    #   result in slower or timed-out requests.
     #   @return [String]
     #
     # @!attribute [rw] include_deleted_groups
@@ -2418,6 +2574,40 @@ module Aws::AutoScaling
     #   token from a previous call.)
     #   @return [String]
     #
+    # @!attribute [rw] filters
+    #   One or more filters to limit the results based on specific criteria.
+    #   The following filters are supported:
+    #
+    #   * `StartTimeLowerBound` - The earliest scaling activities to return
+    #     based on the activity start time. Scaling activities with a start
+    #     time earlier than this value are not included in the results. Only
+    #     activities started within the last six weeks can be returned
+    #     regardless of the value specified.
+    #
+    #   * `StartTimeUpperBound` - The latest scaling activities to return
+    #     based on the activity start time. Scaling activities with a start
+    #     time later than this value are not included in the results. Only
+    #     activities started within the last six weeks can be returned
+    #     regardless of the value specified.
+    #
+    #   * `Status` - The `StatusCode` value of the scaling activity. This
+    #     filter can only be used in combination with the
+    #     `AutoScalingGroupName` parameter. For valid `StatusCode` values,
+    #     see [Activity][1] in the *Amazon EC2 Auto Scaling API Reference*.
+    #
+    #   `StartTimeLowerBound` and `StartTimeUpperBound` accept ISO 8601
+    #   formatted timestamps. Timestamps without a timezone offset are
+    #   assumed to be UTC.
+    #
+    #   * `2000-01-18T08:15:00Z`
+    #
+    #   * `2000-01-18T16:15:00+08:00`
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/autoscaling/ec2/APIReference/API_Activity.html
+    #   @return [Array<Types::Filter>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/autoscaling-2011-01-01/DescribeScalingActivitiesType AWS API Documentation
     #
     class DescribeScalingActivitiesType < Struct.new(
@@ -2425,7 +2615,8 @@ module Aws::AutoScaling
       :auto_scaling_group_name,
       :include_deleted_groups,
       :max_records,
-      :next_token)
+      :next_token,
+      :filters)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3254,10 +3445,11 @@ module Aws::AutoScaling
     #   The name of the filter.
     #
     #   The valid values for `Name` depend on which API operation you're
-    #   using with the filter ([DescribeAutoScalingGroups][1] or
-    #   [DescribeTags][2]).
+    #   using with the filter.
     #
-    #   **DescribeAutoScalingGroups**
+    #   <b> <a
+    #   href="https://docs.aws.amazon.com/autoscaling/ec2/APIReference/API_DescribeAutoScalingGroups.html">DescribeAutoScalingGroups</a>
+    #   </b>
     #
     #   Valid values for `Name` include the following:
     #
@@ -3273,7 +3465,9 @@ module Aws::AutoScaling
     #     value. The results only include information about the Auto Scaling
     #     groups associated with the specified key/value combination.
     #
-    #   **DescribeTags**
+    #   <b> <a
+    #   href="https://docs.aws.amazon.com/autoscaling/ec2/APIReference/API_DescribeTags.html">DescribeTags</a>
+    #   </b>
     #
     #   Valid values for `Name` include the following:
     #
@@ -3292,10 +3486,40 @@ module Aws::AutoScaling
     #     include information about the tags associated with the specified
     #     Boolean value.
     #
+    #   <b> <a
+    #   href="https://docs.aws.amazon.com/autoscaling/ec2/APIReference/API_DescribeScalingActivities.html">DescribeScalingActivities</a>
+    #   </b>
+    #
+    #   Valid values for `Name` include the following:
+    #
+    #   * `StartTimeLowerBound` - The earliest scaling activities to return
+    #     based on the activity start time. Scaling activities with a start
+    #     time earlier than this value are not included in the results. Only
+    #     activities started within the last six weeks can be returned
+    #     regardless of the value specified.
+    #
+    #   * `StartTimeUpperBound` - The latest scaling activities to return
+    #     based on the activity start time. Scaling activities with a start
+    #     time later than this value are not included in the results. Only
+    #     activities started within the last six weeks can be returned
+    #     regardless of the value specified.
+    #
+    #   * `Status` - The `StatusCode` value of the scaling activity. This
+    #     filter can only be used in combination with the
+    #     `AutoScalingGroupName` parameter. For valid `StatusCode` values,
+    #     see [Activity][1] in the *Amazon EC2 Auto Scaling API Reference*.
+    #
+    #   `StartTimeLowerBound` and `StartTimeUpperBound` accept ISO 8601
+    #   formatted timestamps. Timestamps without a timezone offset are
+    #   assumed to be UTC.
+    #
+    #   * `2000-01-18T08:15:00Z`
+    #
+    #   * `2000-01-18T16:15:00+08:00`
     #
     #
-    #   [1]: https://docs.aws.amazon.com/autoscaling/ec2/APIReference/API_DescribeAutoScalingGroups.html
-    #   [2]: https://docs.aws.amazon.com/autoscaling/ec2/APIReference/API_DescribeTags.html
+    #
+    #   [1]: https://docs.aws.amazon.com/autoscaling/ec2/APIReference/API_Activity.html
     #   @return [String]
     #
     # @!attribute [rw] values
@@ -3303,11 +3527,17 @@ module Aws::AutoScaling
     #
     #   If you specify multiple values for a filter, the values are
     #   automatically logically joined with an `OR`, and the request returns
-    #   all results that match any of the specified values. For example,
-    #   specify "tag:environment" for the filter name and
-    #   "production,development" for the filter values to find Auto
-    #   Scaling groups with the tag "environment=production" or
-    #   "environment=development".
+    #   all results that match any of the specified values.
+    #
+    #   **DescribeAutoScalingGroups example:** Specify "tag:environment"
+    #   for the filter name and "production,development" for the filter
+    #   values to find Auto Scaling groups with the tag
+    #   "environment=production" or "environment=development".
+    #
+    #   **DescribeScalingActivities example:** Specify "Status" for the
+    #   filter name and "Successful,Failed" for the filter values to find
+    #   scaling activities with a status of either "Successful" or
+    #   "Failed".
     #   @return [Array<String>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/autoscaling-2011-01-01/Filter AWS API Documentation
@@ -3377,6 +3607,36 @@ module Aws::AutoScaling
       include Aws::Structure
     end
 
+    # The service is currently processing another request with the same
+    # client token. Retry the request with the same client token—the
+    # in-flight operation will complete and return its result.
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/autoscaling-2011-01-01/IdempotentCallInProgressFault AWS API Documentation
+    #
+    class IdempotentCallInProgressFault < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Indicates that the parameters in the current request do not match the
+    # parameters from a previous request with the same client token within
+    # the idempotency window.
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/autoscaling-2011-01-01/IdempotentParameterMismatchError AWS API Documentation
+    #
+    class IdempotentParameterMismatchError < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Describes an EC2 instance.
     #
     # @!attribute [rw] instance_id
@@ -3389,6 +3649,10 @@ module Aws::AutoScaling
     #
     # @!attribute [rw] availability_zone
     #   The Availability Zone in which the instance is running.
+    #   @return [String]
+    #
+    # @!attribute [rw] availability_zone_id
+    #   The Availability Zone ID where the instance was launched.
     #   @return [String]
     #
     # @!attribute [rw] lifecycle_state
@@ -3417,6 +3681,27 @@ module Aws::AutoScaling
     #   The launch template for the instance.
     #   @return [Types::LaunchTemplateSpecification]
     #
+    # @!attribute [rw] image_id
+    #   The ID of the Amazon Machine Image (AMI) used for the instance's
+    #   current root volume. This value reflects the most recent AMI applied
+    #   to the instance, including updates made through root volume
+    #   replacement operations.
+    #
+    #   This field appears for:
+    #
+    #   * Instances with root volume replacements through Instance Refresh
+    #
+    #   * Instances launched with AMI overrides
+    #
+    #   This field won't appear for:
+    #
+    #   * Existing instances launched from Launch Templates without
+    #     overrides
+    #
+    #   * Existing instances that didn’t have their root volume replaced
+    #     through Instance Refresh
+    #   @return [String]
+    #
     # @!attribute [rw] protected_from_scale_in
     #   Indicates whether the instance is protected from termination by
     #   Amazon EC2 Auto Scaling when scaling in.
@@ -3435,12 +3720,84 @@ module Aws::AutoScaling
       :instance_id,
       :instance_type,
       :availability_zone,
+      :availability_zone_id,
       :lifecycle_state,
       :health_status,
       :launch_configuration_name,
       :launch_template,
+      :image_id,
       :protected_from_scale_in,
       :weighted_capacity)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains details about a collection of instances launched in the Auto
+    # Scaling group.
+    #
+    # @!attribute [rw] instance_type
+    #   The instance type of the launched instances.
+    #   @return [String]
+    #
+    # @!attribute [rw] market_type
+    #   The market type for the instances (On-Demand or Spot).
+    #   @return [String]
+    #
+    # @!attribute [rw] subnet_id
+    #   The ID of the subnet where the instances were launched.
+    #   @return [String]
+    #
+    # @!attribute [rw] availability_zone
+    #   The Availability Zone where the instances were launched.
+    #   @return [String]
+    #
+    # @!attribute [rw] availability_zone_id
+    #   The Availability Zone ID where the instances in this collection were
+    #   launched.
+    #   @return [String]
+    #
+    # @!attribute [rw] instance_ids
+    #   A list of instance IDs for the successfully launched instances.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/autoscaling-2011-01-01/InstanceCollection AWS API Documentation
+    #
+    class InstanceCollection < Struct.new(
+      :instance_type,
+      :market_type,
+      :subnet_id,
+      :availability_zone,
+      :availability_zone_id,
+      :instance_ids)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The instance lifecycle policy for the Auto Scaling group. This policy
+    # controls instance behavior when an instance transitions through its
+    # lifecycle states. Configure retention triggers to specify when
+    # instances should move to a `Retained` state instead of automatic
+    # termination.
+    #
+    # For more information, see [ Control instance retention with instance
+    # lifecycle policies][1] in the *Amazon EC2 Auto Scaling User Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/autoscaling/ec2/userguide/instance-lifecycle-policy.html
+    #
+    # @!attribute [rw] retention_triggers
+    #   Specifies the conditions that trigger instance retention behavior.
+    #   These triggers determine when instances should move to a `Retained`
+    #   state instead of automatic termination. This allows you to maintain
+    #   control over instance management when lifecycles transition and
+    #   operations fail.
+    #   @return [Types::RetentionTriggers]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/autoscaling-2011-01-01/InstanceLifecyclePolicy AWS API Documentation
+    #
+    class InstanceLifecyclePolicy < Struct.new(
+      :retention_triggers)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3651,6 +4008,17 @@ module Aws::AutoScaling
     #   The rollback details.
     #   @return [Types::RollbackDetails]
     #
+    # @!attribute [rw] strategy
+    #   The strategy to use for the instance refresh. This determines how
+    #   instances in the Auto Scaling group are updated. Default is Rolling.
+    #
+    #   * `Rolling` – Terminates instances and launches replacements in
+    #     batches
+    #
+    #   * `ReplaceRootVolume` – Updates instances by replacing only the root
+    #     volume without terminating the instance
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/autoscaling-2011-01-01/InstanceRefresh AWS API Documentation
     #
     class InstanceRefresh < Struct.new(
@@ -3665,7 +4033,8 @@ module Aws::AutoScaling
       :progress_details,
       :preferences,
       :desired_configuration,
-      :rollback_details)
+      :rollback_details,
+      :strategy)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3786,7 +4155,7 @@ module Aws::AutoScaling
     # Scaling User Guide*. For help determining which instance types match
     # your attributes before you apply them to your Auto Scaling group, see
     # [Preview instance types with specified attributes][2] in the *Amazon
-    # EC2 User Guide for Linux Instances*.
+    # EC2 User Guide*.
     #
     #
     #
@@ -3811,6 +4180,8 @@ module Aws::AutoScaling
     #
     #   * For instance types with Amazon Web Services CPUs, specify
     #     `amazon-web-services`.
+    #
+    #   * For instance types with Apple CPUs, specify `apple`.
     #
     #   <note markdown="1"> Don't confuse the CPU hardware manufacturer with the CPU hardware
     #   architecture. Instances will be launched with a compatible CPU
@@ -3856,8 +4227,7 @@ module Aws::AutoScaling
     #     current generation includes EC2 instance types currently
     #     recommended for use. This typically includes the latest two to
     #     three generations in each instance family. For more information,
-    #     see [Instance types][1] in the *Amazon EC2 User Guide for Linux
-    #     Instances*.
+    #     see [Instance types][1] in the *Amazon EC2 User Guide*.
     #
     #   * For previous generation instance types, specify `previous`.
     #
@@ -3968,8 +4338,7 @@ module Aws::AutoScaling
     # @!attribute [rw] burstable_performance
     #   Indicates whether burstable performance instance types are included,
     #   excluded, or required. For more information, see [Burstable
-    #   performance instances][1] in the *Amazon EC2 User Guide for Linux
-    #   Instances*.
+    #   performance instances][1] in the *Amazon EC2 User Guide*.
     #
     #   Default: `excluded`
     #
@@ -3995,8 +4364,7 @@ module Aws::AutoScaling
     # @!attribute [rw] local_storage
     #   Indicates whether instance types with instance store volumes are
     #   included, excluded, or required. For more information, see [Amazon
-    #   EC2 instance store][1] in the *Amazon EC2 User Guide for Linux
-    #   Instances*.
+    #   EC2 instance store][1] in the *Amazon EC2 User Guide*.
     #
     #   Default: `included`
     #
@@ -4027,8 +4395,7 @@ module Aws::AutoScaling
     # @!attribute [rw] baseline_ebs_bandwidth_mbps
     #   The minimum and maximum baseline bandwidth performance for an
     #   instance type, in Mbps. For more information, see [Amazon
-    #   EBS–optimized instances][1] in the *Amazon EC2 User Guide for Linux
-    #   Instances*.
+    #   EBS–optimized instances][1] in the *Amazon EC2 User Guide*.
     #
     #   Default: No minimum or maximum limits
     #
@@ -4376,7 +4743,7 @@ module Aws::AutoScaling
     # @!attribute [rw] image_id
     #   The ID of the Amazon Machine Image (AMI) to use to launch your EC2
     #   instances. For more information, see [Find a Linux AMI][1] in the
-    #   *Amazon EC2 User Guide for Linux Instances*.
+    #   *Amazon EC2 User Guide*.
     #
     #
     #
@@ -4387,7 +4754,7 @@ module Aws::AutoScaling
     #   The name of the key pair.
     #
     #   For more information, see [Amazon EC2 key pairs and Amazon EC2
-    #   instances][1] in the *Amazon EC2 User Guide for Linux Instances*.
+    #   instances][1] in the *Amazon EC2 User Guide*.
     #
     #
     #
@@ -4415,22 +4782,21 @@ module Aws::AutoScaling
     #
     # @!attribute [rw] user_data
     #   The user data to make available to the launched EC2 instances. For
-    #   more information, see [Instance metadata and user data][1] (Linux)
-    #   and [Instance metadata and user data][2] (Windows). If you are using
-    #   a command line tool, base64-encoding is performed for you, and you
-    #   can load the text from a file. Otherwise, you must provide
-    #   base64-encoded text. User data is limited to 16 KB.
+    #   more information, see [Instance metadata and user data][1] in the
+    #   *Amazon EC2 User Guide*. If you are using a command line tool,
+    #   base64-encoding is performed for you, and you can load the text from
+    #   a file. Otherwise, you must provide base64-encoded text. User data
+    #   is limited to 16 KB.
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html
-    #   [2]: https://docs.aws.amazon.com/AWSEC2/latest/WindowsGuide/ec2-instance-metadata.html
     #   @return [String]
     #
     # @!attribute [rw] instance_type
     #   The instance type for the instances. For information about available
     #   instance types, see [Available instance types][1] in the *Amazon EC2
-    #   User Guide for Linux Instances*.
+    #   User Guide*.
     #
     #
     #
@@ -4450,7 +4816,7 @@ module Aws::AutoScaling
     #   attach to the instances at launch. By default, the block devices
     #   specified in the block device mapping for the AMI are used. For more
     #   information, see [Block device mappings][1] in the *Amazon EC2 User
-    #   Guide for Linux Instances*.
+    #   Guide*.
     #
     #
     #
@@ -4500,8 +4866,7 @@ module Aws::AutoScaling
     # @!attribute [rw] ebs_optimized
     #   Specifies whether the launch configuration is optimized for EBS I/O
     #   (`true`) or not (`false`). For more information, see [Amazon
-    #   EBS-optimized instances][1] in the *Amazon EC2 User Guide for Linux
-    #   Instances*.
+    #   EBS-optimized instances][1] in the *Amazon EC2 User Guide*.
     #
     #
     #
@@ -4627,6 +4992,146 @@ module Aws::AutoScaling
       include Aws::Structure
     end
 
+    # Contains details about errors encountered during instance launch
+    # attempts.
+    #
+    # @!attribute [rw] instance_type
+    #   The instance type that failed to launch.
+    #   @return [String]
+    #
+    # @!attribute [rw] market_type
+    #   The market type (On-Demand or Spot) that encountered the launch
+    #   error.
+    #   @return [String]
+    #
+    # @!attribute [rw] subnet_id
+    #   The subnet ID where the instance launch was attempted.
+    #   @return [String]
+    #
+    # @!attribute [rw] availability_zone
+    #   The Availability Zone where the instance launch was attempted.
+    #   @return [String]
+    #
+    # @!attribute [rw] availability_zone_id
+    #   The Availability Zone ID where the launch error occurred.
+    #   @return [String]
+    #
+    # @!attribute [rw] error_code
+    #   The error code representing the type of error encountered (e.g.,
+    #   InsufficientInstanceCapacity).
+    #   @return [String]
+    #
+    # @!attribute [rw] error_message
+    #   A descriptive message providing details about the error encountered
+    #   during the launch attempt.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/autoscaling-2011-01-01/LaunchInstancesError AWS API Documentation
+    #
+    class LaunchInstancesError < Struct.new(
+      :instance_type,
+      :market_type,
+      :subnet_id,
+      :availability_zone,
+      :availability_zone_id,
+      :error_code,
+      :error_message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] auto_scaling_group_name
+    #   The name of the Auto Scaling group to launch instances into.
+    #   @return [String]
+    #
+    # @!attribute [rw] requested_capacity
+    #   The number of instances to launch. Although this value can exceed
+    #   100 for instance weights, the actual instance count is limited to
+    #   100 instances per launch.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] client_token
+    #   A unique, case-sensitive identifier to ensure idempotency of the
+    #   request.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #   @return [String]
+    #
+    # @!attribute [rw] availability_zones
+    #   The Availability Zones for the instance launch. Must match or be
+    #   included in the Auto Scaling group's Availability Zone
+    #   configuration. Either `AvailabilityZones` or `SubnetIds` must be
+    #   specified for groups with multiple Availability Zone configurations.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] availability_zone_ids
+    #   A list of Availability Zone IDs where instances should be launched.
+    #   Must match or be included in the group's AZ configuration. You
+    #   cannot specify both AvailabilityZones and AvailabilityZoneIds.
+    #   Required for multi-AZ groups, optional for single-AZ groups.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] subnet_ids
+    #   The subnet IDs for the instance launch. Either `AvailabilityZones`
+    #   or `SubnetIds` must be specified. If both are specified, the subnets
+    #   must reside in the specified Availability Zones.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] retry_strategy
+    #   Specifies whether to retry asynchronously if the synchronous launch
+    #   fails. Valid values are NONE (default, no async retry) and
+    #   RETRY\_WITH\_GROUP\_CONFIGURATION (increase desired capacity and
+    #   retry with group configuration).
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/autoscaling-2011-01-01/LaunchInstancesRequest AWS API Documentation
+    #
+    class LaunchInstancesRequest < Struct.new(
+      :auto_scaling_group_name,
+      :requested_capacity,
+      :client_token,
+      :availability_zones,
+      :availability_zone_ids,
+      :subnet_ids,
+      :retry_strategy)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] auto_scaling_group_name
+    #   The name of the Auto Scaling group where the instances were
+    #   launched.
+    #   @return [String]
+    #
+    # @!attribute [rw] client_token
+    #   The idempotency token used for the request, either
+    #   customer-specified or auto-generated.
+    #   @return [String]
+    #
+    # @!attribute [rw] instances
+    #   A list of successfully launched instances including details such as
+    #   instance type, Availability Zone, subnet, lifecycle state, and
+    #   instance IDs.
+    #   @return [Array<Types::InstanceCollection>]
+    #
+    # @!attribute [rw] errors
+    #   A list of errors encountered during the launch attempt including
+    #   details about failed instance launches with their corresponding
+    #   error codes and messages.
+    #   @return [Array<Types::LaunchInstancesError>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/autoscaling-2011-01-01/LaunchInstancesResult AWS API Documentation
+    #
+    class LaunchInstancesResult < Struct.new(
+      :auto_scaling_group_name,
+      :client_token,
+      :instances,
+      :errors)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Use this structure to specify the launch templates and instance types
     # (overrides) for a mixed instances policy.
     #
@@ -4673,7 +5178,7 @@ module Aws::AutoScaling
     #   The instance type, such as `m3.xlarge`. You must specify an instance
     #   type that is supported in your requested Region and Availability
     #   Zones. For more information, see [Instance types][1] in the *Amazon
-    #   EC2 User Guide for Linux Instances*.
+    #   EC2 User Guide*.
     #
     #   You can specify up to 40 instance types per Auto Scaling group.
     #
@@ -4750,13 +5255,30 @@ module Aws::AutoScaling
     #    </note>
     #   @return [Types::InstanceRequirements]
     #
+    # @!attribute [rw] image_id
+    #   The ID of the Amazon Machine Image (AMI) to use for instances
+    #   launched with this override. When using Instance Refresh with
+    #   `ReplaceRootVolume` strategy, this specifies the AMI for root volume
+    #   replacement operations.
+    #
+    #   For `ReplaceRootVolume` operations:
+    #
+    #   * All overrides in the `MixedInstancesPolicy` must specify an
+    #     ImageId
+    #
+    #   * The AMI must contain only a single root volume
+    #
+    #   * Root volume replacement doesn't support multi-volume AMIs
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/autoscaling-2011-01-01/LaunchTemplateOverrides AWS API Documentation
     #
     class LaunchTemplateOverrides < Struct.new(
       :instance_type,
       :weighted_capacity,
       :launch_template_specification,
-      :instance_requirements)
+      :instance_requirements,
+      :image_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5442,7 +5964,7 @@ module Aws::AutoScaling
     # types that support the specified minimum bandwidth, but the actual
     # bandwidth of your instance might go below the specified minimum at
     # times. For more information, see [Available instance bandwidth][2] in
-    # the *Amazon EC2 User Guide for Linux Instances*.
+    # the *Amazon EC2 User Guide*.
     #
     #  </note>
     #
@@ -5525,6 +6047,23 @@ module Aws::AutoScaling
       :auto_scaling_group_name,
       :topic_arn,
       :notification_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Describes the entity that manages an Auto Scaling group.
+    #
+    # @!attribute [rw] principal
+    #   The service principal that is authorized to manage the Auto Scaling
+    #   group. When an operator is specified, only the designated operator
+    #   service principal can make mutating changes to the Auto Scaling
+    #   group.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/autoscaling-2011-01-01/Operator AWS API Documentation
+    #
+    class Operator < Struct.new(
+      :principal)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6799,6 +7338,17 @@ module Aws::AutoScaling
     #   If you do not specify this property, the default is 100 percent, or
     #   the percentage set in the instance maintenance policy for the Auto
     #   Scaling group, if defined.
+    #
+    #   Explicitly setting `MaxHealthyPercentage` to 100 is not equivalent
+    #   to omitting it. When `MaxHealthyPercentage` is explicitly set and it
+    #   is mathematically impossible to replace instances while honoring
+    #   both `MinHealthyPercentage` and `MaxHealthyPercentage` bounds
+    #   simultaneously, Auto Scaling launches a new instance before
+    #   terminating an old one (temporarily exceeding the desired capacity).
+    #   When `MaxHealthyPercentage` is omitted, Auto Scaling terminates an
+    #   instance and launches its replacement simultaneously. This
+    #   behavioral difference can affect workflows that depend on instance
+    #   replacement ordering.
     #   @return [Integer]
     #
     # @!attribute [rw] bake_time
@@ -6848,6 +7398,32 @@ module Aws::AutoScaling
     #
     class ResourceInUseFault < Struct.new(
       :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Defines the specific triggers that cause instances to be retained in a
+    # Retained state rather than terminated. Each trigger corresponds to a
+    # different failure scenario during the instance lifecycle. This allows
+    # fine-grained control over when to preserve instances for manual
+    # intervention.
+    #
+    # @!attribute [rw] terminate_hook_abandon
+    #   Specifies the action when a termination lifecycle hook is abandoned
+    #   due to failure, timeout, or explicit abandonment (calling
+    #   CompleteLifecycleAction).
+    #
+    #   Set to `retain` to move instances to a retained state. Set to
+    #   `terminate` for default termination behavior.
+    #
+    #   Retained instances don't count toward desired capacity and remain
+    #   until you call `TerminateInstanceInAutoScalingGroup`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/autoscaling-2011-01-01/RetentionTriggers AWS API Documentation
+    #
+    class RetentionTriggers < Struct.new(
+      :terminate_hook_abandon)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7386,8 +7962,8 @@ module Aws::AutoScaling
     #   @return [String]
     #
     # @!attribute [rw] strategy
-    #   The strategy to use for the instance refresh. The only valid value
-    #   is `Rolling`.
+    #   The strategy to use for the instance refresh. The default value is
+    #   `Rolling`.
     #   @return [String]
     #
     # @!attribute [rw] desired_configuration
@@ -7818,6 +8394,18 @@ module Aws::AutoScaling
     #   The ID of the instance.
     #   @return [String]
     #
+    # @!attribute [rw] instance_ids
+    #   The IDs of the instances. You can specify up to 100 instances.
+    #
+    #   This parameter requires that you also specify
+    #   `AutoScalingGroupName`.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] auto_scaling_group_name
+    #   The name of the Auto Scaling group. Required when using
+    #   `InstanceIds`.
+    #   @return [String]
+    #
     # @!attribute [rw] should_decrement_desired_capacity
     #   Indicates whether terminating the instance also decrements the size
     #   of the Auto Scaling group.
@@ -7827,6 +8415,8 @@ module Aws::AutoScaling
     #
     class TerminateInstanceInAutoScalingGroupType < Struct.new(
       :instance_id,
+      :instance_ids,
+      :auto_scaling_group_name,
       :should_decrement_desired_capacity)
       SENSITIVE = []
       include Aws::Structure
@@ -8051,6 +8641,12 @@ module Aws::AutoScaling
     #   One or more Availability Zones for the group.
     #   @return [Array<String>]
     #
+    # @!attribute [rw] availability_zone_ids
+    #   A list of Availability Zone IDs for the Auto Scaling group. You
+    #   cannot specify both AvailabilityZones and AvailabilityZoneIds in the
+    #   same request.
+    #   @return [Array<String>]
+    #
     # @!attribute [rw] health_check_type
     #   A comma-separated value string of one or more health check types.
     #
@@ -8085,8 +8681,7 @@ module Aws::AutoScaling
     #   The name of an existing placement group into which to launch your
     #   instances. To remove the placement group setting, pass an empty
     #   string for `placement-group`. For more information about placement
-    #   groups, see [Placement groups][1] in the *Amazon EC2 User Guide for
-    #   Linux Instances*.
+    #   groups, see [Placement groups][1] in the *Amazon EC2 User Guide*.
     #
     #   <note markdown="1"> A *cluster* placement group is a logical grouping of instances
     #   within a single Availability Zone. You cannot specify multiple
@@ -8160,13 +8755,21 @@ module Aws::AutoScaling
     #   @return [Integer]
     #
     # @!attribute [rw] capacity_rebalance
-    #   Enables or disables Capacity Rebalancing. For more information, see
-    #   [Use Capacity Rebalancing to handle Amazon EC2 Spot
-    #   Interruptions][1] in the *Amazon EC2 Auto Scaling User Guide*.
+    #   Enables or disables Capacity Rebalancing. If Capacity Rebalancing is
+    #   disabled, proactive replacement of at-risk Spot Instances does not
+    #   occur. For more information, see [Capacity Rebalancing in Auto
+    #   Scaling to replace at-risk Spot Instances][1] in the *Amazon EC2
+    #   Auto Scaling User Guide*.
+    #
+    #   <note markdown="1"> To suspend rebalancing across Availability Zones, use the
+    #   [SuspendProcesses][2] API.
+    #
+    #    </note>
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/autoscaling/ec2/userguide/ec2-auto-scaling-capacity-rebalancing.html
+    #   [2]: https://docs.aws.amazon.com/autoscaling/ec2/APIReference/API_SuspendedProcess.html
     #   @return [Boolean]
     #
     # @!attribute [rw] context
@@ -8250,6 +8853,43 @@ module Aws::AutoScaling
     #   The capacity reservation specification for the Auto Scaling group.
     #   @return [Types::CapacityReservationSpecification]
     #
+    # @!attribute [rw] instance_lifecycle_policy
+    #   The instance lifecycle policy for the Auto Scaling group. This
+    #   policy controls instance behavior when an instance transitions
+    #   through its lifecycle states. Configure retention triggers to
+    #   specify when instances should move to a `Retained` state instead of
+    #   automatic termination.
+    #
+    #   For more information, see [ Control instance retention with instance
+    #   lifecycle policies][1] in the *Amazon EC2 Auto Scaling User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/autoscaling/ec2/userguide/instance-lifecycle-policy.html
+    #   @return [Types::InstanceLifecyclePolicy]
+    #
+    # @!attribute [rw] deletion_protection
+    #   The deletion protection setting for the Auto Scaling group. This
+    #   setting helps safeguard your Auto Scaling group and its instances by
+    #   controlling whether the `DeleteAutoScalingGroup` operation is
+    #   allowed. When deletion protection is enabled, users cannot delete
+    #   the Auto Scaling group according to the specified protection level
+    #   until the setting is changed back to a less restrictive level.
+    #
+    #   The valid values are `none`, `prevent-force-deletion`, and
+    #   `prevent-all-deletion`.
+    #
+    #   Default: `none`
+    #
+    #   For more information, see [ Configure deletion protection for your
+    #   Amazon EC2 Auto Scaling resources][1] in the *Amazon EC2 Auto
+    #   Scaling User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/autoscaling/ec2/userguide/resource-deletion-protection.html
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/autoscaling-2011-01-01/UpdateAutoScalingGroupType AWS API Documentation
     #
     class UpdateAutoScalingGroupType < Struct.new(
@@ -8262,6 +8902,7 @@ module Aws::AutoScaling
       :desired_capacity,
       :default_cooldown,
       :availability_zones,
+      :availability_zone_ids,
       :health_check_type,
       :health_check_grace_period,
       :placement_group,
@@ -8278,7 +8919,9 @@ module Aws::AutoScaling
       :availability_zone_distribution,
       :availability_zone_impairment_policy,
       :skip_zonal_shift_validation,
-      :capacity_reservation_specification)
+      :capacity_reservation_specification,
+      :instance_lifecycle_policy,
+      :deletion_protection)
       SENSITIVE = []
       include Aws::Structure
     end

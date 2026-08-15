@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -90,7 +91,7 @@ module Aws
                                                                 ?override_allowed_prefixes_to_direct_connect_gateway: Array[
                                                                   {
                                                                     cidr: ::String?
-                                                                  },
+                                                                  }
                                                                 ]
                                                               ) -> _AcceptDirectConnectGatewayAssociationProposalResponseSuccess
                                                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _AcceptDirectConnectGatewayAssociationProposalResponseSuccess
@@ -119,6 +120,8 @@ module Aws
         def port_encryption_status: () -> ::String
         def encryption_mode: () -> ::String
         def mac_sec_keys: () -> ::Array[Types::MacSecKey]
+        def rate_limiter_status: () -> Types::RateLimiterStatus
+        def partner_interconnect_mac_sec_capable: () -> bool
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DirectConnect/Client.html#allocate_connection_on_interconnect-instance_method
       def allocate_connection_on_interconnect: (
@@ -154,6 +157,8 @@ module Aws
         def port_encryption_status: () -> ::String
         def encryption_mode: () -> ::String
         def mac_sec_keys: () -> ::Array[Types::MacSecKey]
+        def rate_limiter_status: () -> Types::RateLimiterStatus
+        def partner_interconnect_mac_sec_capable: () -> bool
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DirectConnect/Client.html#allocate_hosted_connection-instance_method
       def allocate_hosted_connection: (
@@ -166,7 +171,7 @@ module Aws
                                           {
                                             key: ::String,
                                             value: ::String?
-                                          },
+                                          }
                                         ]
                                       ) -> _AllocateHostedConnectionResponseSuccess
                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _AllocateHostedConnectionResponseSuccess
@@ -181,12 +186,13 @@ module Aws
         def virtual_interface_name: () -> ::String
         def vlan: () -> ::Integer
         def asn: () -> ::Integer
+        def asn_long: () -> ::Integer
         def amazon_side_asn: () -> ::Integer
         def auth_key: () -> ::String
         def amazon_address: () -> ::String
         def customer_address: () -> ::String
         def address_family: () -> ("ipv4" | "ipv6")
-        def virtual_interface_state: () -> ("confirming" | "verifying" | "pending" | "available" | "down" | "deleting" | "deleted" | "rejected" | "unknown")
+        def virtual_interface_state: () -> ("confirming" | "verifying" | "pending" | "available" | "down" | "testing" | "deleting" | "deleted" | "rejected" | "unknown")
         def customer_router_config: () -> ::String
         def mtu: () -> ::Integer
         def jumbo_frame_capable: () -> bool
@@ -199,6 +205,7 @@ module Aws
         def aws_logical_device_id: () -> ::String
         def tags: () -> ::Array[Types::Tag]
         def site_link_enabled: () -> bool
+        def rate_limit: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DirectConnect/Client.html#allocate_private_virtual_interface-instance_method
       def allocate_private_virtual_interface: (
@@ -207,7 +214,8 @@ module Aws
                                                 new_private_virtual_interface_allocation: {
                                                   virtual_interface_name: ::String,
                                                   vlan: ::Integer,
-                                                  asn: ::Integer,
+                                                  asn: ::Integer?,
+                                                  asn_long: ::Integer?,
                                                   mtu: ::Integer?,
                                                   auth_key: ::String?,
                                                   amazon_address: ::String?,
@@ -217,8 +225,9 @@ module Aws
                                                     {
                                                       key: ::String,
                                                       value: ::String?
-                                                    },
-                                                  ]?
+                                                    }
+                                                  ]?,
+                                                  rate_limit: ::String?
                                                 }
                                               ) -> _AllocatePrivateVirtualInterfaceResponseSuccess
                                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _AllocatePrivateVirtualInterfaceResponseSuccess
@@ -233,12 +242,13 @@ module Aws
         def virtual_interface_name: () -> ::String
         def vlan: () -> ::Integer
         def asn: () -> ::Integer
+        def asn_long: () -> ::Integer
         def amazon_side_asn: () -> ::Integer
         def auth_key: () -> ::String
         def amazon_address: () -> ::String
         def customer_address: () -> ::String
         def address_family: () -> ("ipv4" | "ipv6")
-        def virtual_interface_state: () -> ("confirming" | "verifying" | "pending" | "available" | "down" | "deleting" | "deleted" | "rejected" | "unknown")
+        def virtual_interface_state: () -> ("confirming" | "verifying" | "pending" | "available" | "down" | "testing" | "deleting" | "deleted" | "rejected" | "unknown")
         def customer_router_config: () -> ::String
         def mtu: () -> ::Integer
         def jumbo_frame_capable: () -> bool
@@ -251,6 +261,7 @@ module Aws
         def aws_logical_device_id: () -> ::String
         def tags: () -> ::Array[Types::Tag]
         def site_link_enabled: () -> bool
+        def rate_limit: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DirectConnect/Client.html#allocate_public_virtual_interface-instance_method
       def allocate_public_virtual_interface: (
@@ -259,7 +270,8 @@ module Aws
                                                new_public_virtual_interface_allocation: {
                                                  virtual_interface_name: ::String,
                                                  vlan: ::Integer,
-                                                 asn: ::Integer,
+                                                 asn: ::Integer?,
+                                                 asn_long: ::Integer?,
                                                  auth_key: ::String?,
                                                  amazon_address: ::String?,
                                                  customer_address: ::String?,
@@ -267,14 +279,15 @@ module Aws
                                                  route_filter_prefixes: Array[
                                                    {
                                                      cidr: ::String?
-                                                   },
+                                                   }
                                                  ]?,
                                                  tags: Array[
                                                    {
                                                      key: ::String,
                                                      value: ::String?
-                                                   },
-                                                 ]?
+                                                   }
+                                                 ]?,
+                                                 rate_limit: ::String?
                                                }
                                              ) -> _AllocatePublicVirtualInterfaceResponseSuccess
                                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _AllocatePublicVirtualInterfaceResponseSuccess
@@ -291,6 +304,7 @@ module Aws
                                                   virtual_interface_name: ::String?,
                                                   vlan: ::Integer?,
                                                   asn: ::Integer?,
+                                                  asn_long: ::Integer?,
                                                   mtu: ::Integer?,
                                                   auth_key: ::String?,
                                                   amazon_address: ::String?,
@@ -300,8 +314,9 @@ module Aws
                                                     {
                                                       key: ::String,
                                                       value: ::String?
-                                                    },
-                                                  ]?
+                                                    }
+                                                  ]?,
+                                                  rate_limit: ::String?
                                                 }
                                               ) -> _AllocateTransitVirtualInterfaceResponseSuccess
                                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _AllocateTransitVirtualInterfaceResponseSuccess
@@ -330,6 +345,8 @@ module Aws
         def port_encryption_status: () -> ::String
         def encryption_mode: () -> ::String
         def mac_sec_keys: () -> ::Array[Types::MacSecKey]
+        def rate_limiter_status: () -> Types::RateLimiterStatus
+        def partner_interconnect_mac_sec_capable: () -> bool
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DirectConnect/Client.html#associate_connection_with_lag-instance_method
       def associate_connection_with_lag: (
@@ -362,6 +379,8 @@ module Aws
         def port_encryption_status: () -> ::String
         def encryption_mode: () -> ::String
         def mac_sec_keys: () -> ::Array[Types::MacSecKey]
+        def rate_limiter_status: () -> Types::RateLimiterStatus
+        def partner_interconnect_mac_sec_capable: () -> bool
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DirectConnect/Client.html#associate_hosted_connection-instance_method
       def associate_hosted_connection: (
@@ -394,12 +413,13 @@ module Aws
         def virtual_interface_name: () -> ::String
         def vlan: () -> ::Integer
         def asn: () -> ::Integer
+        def asn_long: () -> ::Integer
         def amazon_side_asn: () -> ::Integer
         def auth_key: () -> ::String
         def amazon_address: () -> ::String
         def customer_address: () -> ::String
         def address_family: () -> ("ipv4" | "ipv6")
-        def virtual_interface_state: () -> ("confirming" | "verifying" | "pending" | "available" | "down" | "deleting" | "deleted" | "rejected" | "unknown")
+        def virtual_interface_state: () -> ("confirming" | "verifying" | "pending" | "available" | "down" | "testing" | "deleting" | "deleted" | "rejected" | "unknown")
         def customer_router_config: () -> ::String
         def mtu: () -> ::Integer
         def jumbo_frame_capable: () -> bool
@@ -412,6 +432,7 @@ module Aws
         def aws_logical_device_id: () -> ::String
         def tags: () -> ::Array[Types::Tag]
         def site_link_enabled: () -> bool
+        def rate_limit: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DirectConnect/Client.html#associate_virtual_interface-instance_method
       def associate_virtual_interface: (
@@ -442,7 +463,7 @@ module Aws
 
       interface _ConfirmPrivateVirtualInterfaceResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ConfirmPrivateVirtualInterfaceResponse]
-        def virtual_interface_state: () -> ("confirming" | "verifying" | "pending" | "available" | "down" | "deleting" | "deleted" | "rejected" | "unknown")
+        def virtual_interface_state: () -> ("confirming" | "verifying" | "pending" | "available" | "down" | "testing" | "deleting" | "deleted" | "rejected" | "unknown")
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DirectConnect/Client.html#confirm_private_virtual_interface-instance_method
       def confirm_private_virtual_interface: (
@@ -454,7 +475,7 @@ module Aws
 
       interface _ConfirmPublicVirtualInterfaceResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ConfirmPublicVirtualInterfaceResponse]
-        def virtual_interface_state: () -> ("confirming" | "verifying" | "pending" | "available" | "down" | "deleting" | "deleted" | "rejected" | "unknown")
+        def virtual_interface_state: () -> ("confirming" | "verifying" | "pending" | "available" | "down" | "testing" | "deleting" | "deleted" | "rejected" | "unknown")
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DirectConnect/Client.html#confirm_public_virtual_interface-instance_method
       def confirm_public_virtual_interface: (
@@ -464,7 +485,7 @@ module Aws
 
       interface _ConfirmTransitVirtualInterfaceResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ConfirmTransitVirtualInterfaceResponse]
-        def virtual_interface_state: () -> ("confirming" | "verifying" | "pending" | "available" | "down" | "deleting" | "deleted" | "rejected" | "unknown")
+        def virtual_interface_state: () -> ("confirming" | "verifying" | "pending" | "available" | "down" | "testing" | "deleting" | "deleted" | "rejected" | "unknown")
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DirectConnect/Client.html#confirm_transit_virtual_interface-instance_method
       def confirm_transit_virtual_interface: (
@@ -482,6 +503,7 @@ module Aws
                              ?virtual_interface_id: ::String,
                              ?new_bgp_peer: {
                                asn: ::Integer?,
+                               asn_long: ::Integer?,
                                auth_key: ::String?,
                                address_family: ("ipv4" | "ipv6")?,
                                amazon_address: ::String?,
@@ -514,6 +536,8 @@ module Aws
         def port_encryption_status: () -> ::String
         def encryption_mode: () -> ::String
         def mac_sec_keys: () -> ::Array[Types::MacSecKey]
+        def rate_limiter_status: () -> Types::RateLimiterStatus
+        def partner_interconnect_mac_sec_capable: () -> bool
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DirectConnect/Client.html#create_connection-instance_method
       def create_connection: (
@@ -525,7 +549,7 @@ module Aws
                                  {
                                    key: ::String,
                                    value: ::String?
-                                 },
+                                 }
                                ],
                                ?provider_name: ::String,
                                ?request_mac_sec: bool
@@ -539,6 +563,12 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DirectConnect/Client.html#create_direct_connect_gateway-instance_method
       def create_direct_connect_gateway: (
                                            direct_connect_gateway_name: ::String,
+                                           ?tags: Array[
+                                             {
+                                               key: ::String,
+                                               value: ::String?
+                                             }
+                                           ],
                                            ?amazon_side_asn: ::Integer
                                          ) -> _CreateDirectConnectGatewayResponseSuccess
                                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateDirectConnectGatewayResponseSuccess
@@ -554,7 +584,7 @@ module Aws
                                                        ?add_allowed_prefixes_to_direct_connect_gateway: Array[
                                                          {
                                                            cidr: ::String?
-                                                         },
+                                                         }
                                                        ],
                                                        ?virtual_gateway_id: ::String
                                                      ) -> _CreateDirectConnectGatewayAssociationResponseSuccess
@@ -572,12 +602,12 @@ module Aws
                                                                 ?add_allowed_prefixes_to_direct_connect_gateway: Array[
                                                                   {
                                                                     cidr: ::String?
-                                                                  },
+                                                                  }
                                                                 ],
                                                                 ?remove_allowed_prefixes_to_direct_connect_gateway: Array[
                                                                   {
                                                                     cidr: ::String?
-                                                                  },
+                                                                  }
                                                                 ]
                                                               ) -> _CreateDirectConnectGatewayAssociationProposalResponseSuccess
                                                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateDirectConnectGatewayAssociationProposalResponseSuccess
@@ -599,6 +629,10 @@ module Aws
         def has_logical_redundancy: () -> ("unknown" | "yes" | "no")
         def tags: () -> ::Array[Types::Tag]
         def provider_name: () -> ::String
+        def mac_sec_capable: () -> bool
+        def port_encryption_status: () -> ::String
+        def encryption_mode: () -> ::String
+        def mac_sec_keys: () -> ::Array[Types::MacSecKey]
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DirectConnect/Client.html#create_interconnect-instance_method
       def create_interconnect: (
@@ -610,9 +644,10 @@ module Aws
                                    {
                                      key: ::String,
                                      value: ::String?
-                                   },
+                                   }
                                  ],
-                                 ?provider_name: ::String
+                                 ?provider_name: ::String,
+                                 ?request_mac_sec: bool
                                ) -> _CreateInterconnectResponseSuccess
                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateInterconnectResponseSuccess
 
@@ -639,6 +674,7 @@ module Aws
         def mac_sec_capable: () -> bool
         def encryption_mode: () -> ::String
         def mac_sec_keys: () -> ::Array[Types::MacSecKey]
+        def rate_limiter_status: () -> Types::RateLimiterStatus
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DirectConnect/Client.html#create_lag-instance_method
       def create_lag: (
@@ -651,13 +687,13 @@ module Aws
                           {
                             key: ::String,
                             value: ::String?
-                          },
+                          }
                         ],
                         ?child_connection_tags: Array[
                           {
                             key: ::String,
                             value: ::String?
-                          },
+                          }
                         ],
                         ?provider_name: ::String,
                         ?request_mac_sec: bool
@@ -674,12 +710,13 @@ module Aws
         def virtual_interface_name: () -> ::String
         def vlan: () -> ::Integer
         def asn: () -> ::Integer
+        def asn_long: () -> ::Integer
         def amazon_side_asn: () -> ::Integer
         def auth_key: () -> ::String
         def amazon_address: () -> ::String
         def customer_address: () -> ::String
         def address_family: () -> ("ipv4" | "ipv6")
-        def virtual_interface_state: () -> ("confirming" | "verifying" | "pending" | "available" | "down" | "deleting" | "deleted" | "rejected" | "unknown")
+        def virtual_interface_state: () -> ("confirming" | "verifying" | "pending" | "available" | "down" | "testing" | "deleting" | "deleted" | "rejected" | "unknown")
         def customer_router_config: () -> ::String
         def mtu: () -> ::Integer
         def jumbo_frame_capable: () -> bool
@@ -692,6 +729,7 @@ module Aws
         def aws_logical_device_id: () -> ::String
         def tags: () -> ::Array[Types::Tag]
         def site_link_enabled: () -> bool
+        def rate_limit: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DirectConnect/Client.html#create_private_virtual_interface-instance_method
       def create_private_virtual_interface: (
@@ -699,7 +737,8 @@ module Aws
                                               new_private_virtual_interface: {
                                                 virtual_interface_name: ::String,
                                                 vlan: ::Integer,
-                                                asn: ::Integer,
+                                                asn: ::Integer?,
+                                                asn_long: ::Integer?,
                                                 mtu: ::Integer?,
                                                 auth_key: ::String?,
                                                 amazon_address: ::String?,
@@ -711,9 +750,10 @@ module Aws
                                                   {
                                                     key: ::String,
                                                     value: ::String?
-                                                  },
+                                                  }
                                                 ]?,
-                                                enable_site_link: bool?
+                                                enable_site_link: bool?,
+                                                rate_limit: ::String?
                                               }
                                             ) -> _CreatePrivateVirtualInterfaceResponseSuccess
                                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreatePrivateVirtualInterfaceResponseSuccess
@@ -728,12 +768,13 @@ module Aws
         def virtual_interface_name: () -> ::String
         def vlan: () -> ::Integer
         def asn: () -> ::Integer
+        def asn_long: () -> ::Integer
         def amazon_side_asn: () -> ::Integer
         def auth_key: () -> ::String
         def amazon_address: () -> ::String
         def customer_address: () -> ::String
         def address_family: () -> ("ipv4" | "ipv6")
-        def virtual_interface_state: () -> ("confirming" | "verifying" | "pending" | "available" | "down" | "deleting" | "deleted" | "rejected" | "unknown")
+        def virtual_interface_state: () -> ("confirming" | "verifying" | "pending" | "available" | "down" | "testing" | "deleting" | "deleted" | "rejected" | "unknown")
         def customer_router_config: () -> ::String
         def mtu: () -> ::Integer
         def jumbo_frame_capable: () -> bool
@@ -746,6 +787,7 @@ module Aws
         def aws_logical_device_id: () -> ::String
         def tags: () -> ::Array[Types::Tag]
         def site_link_enabled: () -> bool
+        def rate_limit: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DirectConnect/Client.html#create_public_virtual_interface-instance_method
       def create_public_virtual_interface: (
@@ -753,7 +795,8 @@ module Aws
                                              new_public_virtual_interface: {
                                                virtual_interface_name: ::String,
                                                vlan: ::Integer,
-                                               asn: ::Integer,
+                                               asn: ::Integer?,
+                                               asn_long: ::Integer?,
                                                auth_key: ::String?,
                                                amazon_address: ::String?,
                                                customer_address: ::String?,
@@ -761,14 +804,15 @@ module Aws
                                                route_filter_prefixes: Array[
                                                  {
                                                    cidr: ::String?
-                                                 },
+                                                 }
                                                ]?,
                                                tags: Array[
                                                  {
                                                    key: ::String,
                                                    value: ::String?
-                                                 },
-                                               ]?
+                                                 }
+                                               ]?,
+                                               rate_limit: ::String?
                                              }
                                            ) -> _CreatePublicVirtualInterfaceResponseSuccess
                                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreatePublicVirtualInterfaceResponseSuccess
@@ -784,6 +828,7 @@ module Aws
                                                 virtual_interface_name: ::String?,
                                                 vlan: ::Integer?,
                                                 asn: ::Integer?,
+                                                asn_long: ::Integer?,
                                                 mtu: ::Integer?,
                                                 auth_key: ::String?,
                                                 amazon_address: ::String?,
@@ -794,9 +839,10 @@ module Aws
                                                   {
                                                     key: ::String,
                                                     value: ::String?
-                                                  },
+                                                  }
                                                 ]?,
-                                                enable_site_link: bool?
+                                                enable_site_link: bool?,
+                                                rate_limit: ::String?
                                               }
                                             ) -> _CreateTransitVirtualInterfaceResponseSuccess
                                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateTransitVirtualInterfaceResponseSuccess
@@ -809,6 +855,7 @@ module Aws
       def delete_bgp_peer: (
                              ?virtual_interface_id: ::String,
                              ?asn: ::Integer,
+                             ?asn_long: ::Integer,
                              ?customer_address: ::String,
                              ?bgp_peer_id: ::String
                            ) -> _DeleteBGPPeerResponseSuccess
@@ -838,6 +885,8 @@ module Aws
         def port_encryption_status: () -> ::String
         def encryption_mode: () -> ::String
         def mac_sec_keys: () -> ::Array[Types::MacSecKey]
+        def rate_limiter_status: () -> Types::RateLimiterStatus
+        def partner_interconnect_mac_sec_capable: () -> bool
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DirectConnect/Client.html#delete_connection-instance_method
       def delete_connection: (
@@ -910,6 +959,7 @@ module Aws
         def mac_sec_capable: () -> bool
         def encryption_mode: () -> ::String
         def mac_sec_keys: () -> ::Array[Types::MacSecKey]
+        def rate_limiter_status: () -> Types::RateLimiterStatus
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DirectConnect/Client.html#delete_lag-instance_method
       def delete_lag: (
@@ -919,7 +969,7 @@ module Aws
 
       interface _DeleteVirtualInterfaceResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DeleteVirtualInterfaceResponse]
-        def virtual_interface_state: () -> ("confirming" | "verifying" | "pending" | "available" | "down" | "deleting" | "deleted" | "rejected" | "unknown")
+        def virtual_interface_state: () -> ("confirming" | "verifying" | "pending" | "available" | "down" | "testing" | "deleting" | "deleted" | "rejected" | "unknown")
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DirectConnect/Client.html#delete_virtual_interface-instance_method
       def delete_virtual_interface: (
@@ -942,16 +992,20 @@ module Aws
       interface _DescribeConnectionsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::Connections]
         def connections: () -> ::Array[Types::Connection]
+        def next_token: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DirectConnect/Client.html#describe_connections-instance_method
       def describe_connections: (
-                                  ?connection_id: ::String
+                                  ?connection_id: ::String,
+                                  ?max_results: ::Integer,
+                                  ?next_token: ::String
                                 ) -> _DescribeConnectionsResponseSuccess
                               | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeConnectionsResponseSuccess
 
       interface _DescribeConnectionsOnInterconnectResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::Connections]
         def connections: () -> ::Array[Types::Connection]
+        def next_token: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DirectConnect/Client.html#describe_connections_on_interconnect-instance_method
       def describe_connections_on_interconnect: (
@@ -1029,10 +1083,13 @@ module Aws
       interface _DescribeHostedConnectionsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::Connections]
         def connections: () -> ::Array[Types::Connection]
+        def next_token: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DirectConnect/Client.html#describe_hosted_connections-instance_method
       def describe_hosted_connections: (
-                                         connection_id: ::String
+                                         connection_id: ::String,
+                                         ?max_results: ::Integer,
+                                         ?next_token: ::String
                                        ) -> _DescribeHostedConnectionsResponseSuccess
                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeHostedConnectionsResponseSuccess
 
@@ -1051,20 +1108,26 @@ module Aws
       interface _DescribeInterconnectsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::Interconnects]
         def interconnects: () -> ::Array[Types::Interconnect]
+        def next_token: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DirectConnect/Client.html#describe_interconnects-instance_method
       def describe_interconnects: (
-                                    ?interconnect_id: ::String
+                                    ?interconnect_id: ::String,
+                                    ?max_results: ::Integer,
+                                    ?next_token: ::String
                                   ) -> _DescribeInterconnectsResponseSuccess
                                 | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeInterconnectsResponseSuccess
 
       interface _DescribeLagsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::Lags]
         def lags: () -> ::Array[Types::Lag]
+        def next_token: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DirectConnect/Client.html#describe_lags-instance_method
       def describe_lags: (
-                           ?lag_id: ::String
+                           ?lag_id: ::String,
+                           ?max_results: ::Integer,
+                           ?next_token: ::String
                          ) -> _DescribeLagsResponseSuccess
                        | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeLagsResponseSuccess
 
@@ -1124,11 +1187,14 @@ module Aws
       interface _DescribeVirtualInterfacesResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::VirtualInterfaces]
         def virtual_interfaces: () -> ::Array[Types::VirtualInterface]
+        def next_token: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DirectConnect/Client.html#describe_virtual_interfaces-instance_method
       def describe_virtual_interfaces: (
                                          ?connection_id: ::String,
-                                         ?virtual_interface_id: ::String
+                                         ?virtual_interface_id: ::String,
+                                         ?max_results: ::Integer,
+                                         ?next_token: ::String
                                        ) -> _DescribeVirtualInterfacesResponseSuccess
                                      | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeVirtualInterfacesResponseSuccess
 
@@ -1156,6 +1222,8 @@ module Aws
         def port_encryption_status: () -> ::String
         def encryption_mode: () -> ::String
         def mac_sec_keys: () -> ::Array[Types::MacSecKey]
+        def rate_limiter_status: () -> Types::RateLimiterStatus
+        def partner_interconnect_mac_sec_capable: () -> bool
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DirectConnect/Client.html#disassociate_connection_from_lag-instance_method
       def disassociate_connection_from_lag: (
@@ -1175,6 +1243,27 @@ module Aws
                                       secret_arn: ::String
                                     ) -> _DisassociateMacSecKeyResponseSuccess
                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DisassociateMacSecKeyResponseSuccess
+
+      interface _ListVirtualInterfaceRoutesResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListVirtualInterfaceRoutesResponse]
+        def virtual_interface_id: () -> ::String
+        def routes: () -> ::Array[Types::Route]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DirectConnect/Client.html#list_virtual_interface_routes-instance_method
+      def list_virtual_interface_routes: (
+                                           ?virtual_interface_id: ::String,
+                                           ?filters: {
+                                             route_direction: ("accepted" | "advertised")?,
+                                             address_family: ("ipv4" | "ipv6")?,
+                                             cidrs: Array[::String]?,
+                                             as_path: Array[::Integer]?,
+                                             communities: Array[::String]?
+                                           },
+                                           ?max_results: ::Integer,
+                                           ?next_token: ::String
+                                         ) -> _ListVirtualInterfaceRoutesResponseSuccess
+                                       | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListVirtualInterfaceRoutesResponseSuccess
 
       interface _ListVirtualInterfaceTestHistoryResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListVirtualInterfaceTestHistoryResponse]
@@ -1224,7 +1313,7 @@ module Aws
                             {
                               key: ::String,
                               value: ::String?
-                            },
+                            }
                           ]
                         ) -> _TagResourceResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _TagResourceResponseSuccess
@@ -1263,6 +1352,8 @@ module Aws
         def port_encryption_status: () -> ::String
         def encryption_mode: () -> ::String
         def mac_sec_keys: () -> ::Array[Types::MacSecKey]
+        def rate_limiter_status: () -> Types::RateLimiterStatus
+        def partner_interconnect_mac_sec_capable: () -> bool
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DirectConnect/Client.html#update_connection-instance_method
       def update_connection: (
@@ -1293,12 +1384,12 @@ module Aws
                                                        ?add_allowed_prefixes_to_direct_connect_gateway: Array[
                                                          {
                                                            cidr: ::String?
-                                                         },
+                                                         }
                                                        ],
                                                        ?remove_allowed_prefixes_to_direct_connect_gateway: Array[
                                                          {
                                                            cidr: ::String?
-                                                         },
+                                                         }
                                                        ]
                                                      ) -> _UpdateDirectConnectGatewayAssociationResponseSuccess
                                                    | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateDirectConnectGatewayAssociationResponseSuccess
@@ -1326,6 +1417,7 @@ module Aws
         def mac_sec_capable: () -> bool
         def encryption_mode: () -> ::String
         def mac_sec_keys: () -> ::Array[Types::MacSecKey]
+        def rate_limiter_status: () -> Types::RateLimiterStatus
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DirectConnect/Client.html#update_lag-instance_method
       def update_lag: (
@@ -1346,12 +1438,13 @@ module Aws
         def virtual_interface_name: () -> ::String
         def vlan: () -> ::Integer
         def asn: () -> ::Integer
+        def asn_long: () -> ::Integer
         def amazon_side_asn: () -> ::Integer
         def auth_key: () -> ::String
         def amazon_address: () -> ::String
         def customer_address: () -> ::String
         def address_family: () -> ("ipv4" | "ipv6")
-        def virtual_interface_state: () -> ("confirming" | "verifying" | "pending" | "available" | "down" | "deleting" | "deleted" | "rejected" | "unknown")
+        def virtual_interface_state: () -> ("confirming" | "verifying" | "pending" | "available" | "down" | "testing" | "deleting" | "deleted" | "rejected" | "unknown")
         def customer_router_config: () -> ::String
         def mtu: () -> ::Integer
         def jumbo_frame_capable: () -> bool
@@ -1364,13 +1457,15 @@ module Aws
         def aws_logical_device_id: () -> ::String
         def tags: () -> ::Array[Types::Tag]
         def site_link_enabled: () -> bool
+        def rate_limit: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DirectConnect/Client.html#update_virtual_interface_attributes-instance_method
       def update_virtual_interface_attributes: (
                                                  virtual_interface_id: ::String,
                                                  ?mtu: ::Integer,
                                                  ?enable_site_link: bool,
-                                                 ?virtual_interface_name: ::String
+                                                 ?virtual_interface_name: ::String,
+                                                 ?rate_limit: ::String
                                                ) -> _UpdateVirtualInterfaceAttributesResponseSuccess
                                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateVirtualInterfaceAttributesResponseSuccess
     end

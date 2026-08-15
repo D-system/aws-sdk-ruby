@@ -97,8 +97,8 @@ module Aws::APIGateway
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -126,22 +126,24 @@ module Aws::APIGateway
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -169,6 +171,11 @@ module Aws::APIGateway
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -194,7 +201,7 @@ module Aws::APIGateway
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -202,8 +209,7 @@ module Aws::APIGateway
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -256,8 +262,8 @@ module Aws::APIGateway
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -319,17 +325,15 @@ module Aws::APIGateway
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -370,8 +374,8 @@ module Aws::APIGateway
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -963,7 +967,7 @@ module Aws::APIGateway
     #
     # @option params [Types::EndpointConfiguration] :endpoint_configuration
     #   The endpoint configuration of this DomainName showing the endpoint
-    #   types of the domain name.
+    #   types and IP address types of the domain name.
     #
     # @option params [Hash<String,String>] :tags
     #   The key-value map of strings. The valid character set is
@@ -972,7 +976,12 @@ module Aws::APIGateway
     #
     # @option params [String] :security_policy
     #   The Transport Layer Security (TLS) version + cipher suite for this
-    #   DomainName. The valid values are `TLS_1_0` and `TLS_1_2`.
+    #   DomainName.
+    #
+    # @option params [String] :endpoint_access_mode
+    #   The endpoint access mode of the DomainName. Only available for
+    #   DomainNames that use security policies that start with
+    #   `SecurityPolicy_`.
     #
     # @option params [Types::MutualTlsAuthenticationInput] :mutual_tls_authentication
     #   The mutual TLS authentication configuration for a custom domain name.
@@ -990,6 +999,11 @@ module Aws::APIGateway
     #   A stringified JSON policy document that applies to the `execute-api`
     #   service for this DomainName regardless of the caller and Method
     #   configuration. Supported only for private custom domain names.
+    #
+    # @option params [String] :routing_mode
+    #   The routing mode for this domain name. The routing mode determines how
+    #   API Gateway sends traffic from your custom domain name to your private
+    #   APIs.
     #
     # @return [Types::DomainName] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1009,11 +1023,13 @@ module Aws::APIGateway
     #   * {Types::DomainName#domain_name_status #domain_name_status} => String
     #   * {Types::DomainName#domain_name_status_message #domain_name_status_message} => String
     #   * {Types::DomainName#security_policy #security_policy} => String
+    #   * {Types::DomainName#endpoint_access_mode #endpoint_access_mode} => String
     #   * {Types::DomainName#tags #tags} => Hash&lt;String,String&gt;
     #   * {Types::DomainName#mutual_tls_authentication #mutual_tls_authentication} => Types::MutualTlsAuthentication
     #   * {Types::DomainName#ownership_verification_certificate_arn #ownership_verification_certificate_arn} => String
     #   * {Types::DomainName#management_policy #management_policy} => String
     #   * {Types::DomainName#policy #policy} => String
+    #   * {Types::DomainName#routing_mode #routing_mode} => String
     #
     # @example Request syntax with placeholder values
     #
@@ -1028,18 +1044,21 @@ module Aws::APIGateway
     #     regional_certificate_arn: "String",
     #     endpoint_configuration: {
     #       types: ["REGIONAL"], # accepts REGIONAL, EDGE, PRIVATE
+    #       ip_address_type: "ipv4", # accepts ipv4, dualstack
     #       vpc_endpoint_ids: ["String"],
     #     },
     #     tags: {
     #       "String" => "String",
     #     },
-    #     security_policy: "TLS_1_0", # accepts TLS_1_0, TLS_1_2
+    #     security_policy: "TLS_1_0", # accepts TLS_1_0, TLS_1_2, SecurityPolicy_TLS13_1_3_2025_09, SecurityPolicy_TLS13_1_3_FIPS_2025_09, SecurityPolicy_TLS13_1_2_PFS_PQ_2025_09, SecurityPolicy_TLS13_1_2_FIPS_PQ_2025_09, SecurityPolicy_TLS13_1_2_FIPS_PFS_PQ_2025_09, SecurityPolicy_TLS13_1_2_PQ_2025_09, SecurityPolicy_TLS13_1_2_2021_06, SecurityPolicy_TLS13_2025_EDGE, SecurityPolicy_TLS12_PFS_2025_EDGE, SecurityPolicy_TLS12_2018_EDGE
+    #     endpoint_access_mode: "BASIC", # accepts BASIC, STRICT
     #     mutual_tls_authentication: {
     #       truststore_uri: "String",
     #       truststore_version: "String",
     #     },
     #     ownership_verification_certificate_arn: "String",
     #     policy: "String",
+    #     routing_mode: "BASE_PATH_MAPPING_ONLY", # accepts BASE_PATH_MAPPING_ONLY, ROUTING_RULE_ONLY, ROUTING_RULE_THEN_BASE_PATH_MAPPING
     #   })
     #
     # @example Response structure
@@ -1058,11 +1077,13 @@ module Aws::APIGateway
     #   resp.distribution_hosted_zone_id #=> String
     #   resp.endpoint_configuration.types #=> Array
     #   resp.endpoint_configuration.types[0] #=> String, one of "REGIONAL", "EDGE", "PRIVATE"
+    #   resp.endpoint_configuration.ip_address_type #=> String, one of "ipv4", "dualstack"
     #   resp.endpoint_configuration.vpc_endpoint_ids #=> Array
     #   resp.endpoint_configuration.vpc_endpoint_ids[0] #=> String
-    #   resp.domain_name_status #=> String, one of "AVAILABLE", "UPDATING", "PENDING", "PENDING_CERTIFICATE_REIMPORT", "PENDING_OWNERSHIP_VERIFICATION"
+    #   resp.domain_name_status #=> String, one of "AVAILABLE", "UPDATING", "PENDING", "PENDING_CERTIFICATE_REIMPORT", "PENDING_OWNERSHIP_VERIFICATION", "FAILED"
     #   resp.domain_name_status_message #=> String
-    #   resp.security_policy #=> String, one of "TLS_1_0", "TLS_1_2"
+    #   resp.security_policy #=> String, one of "TLS_1_0", "TLS_1_2", "SecurityPolicy_TLS13_1_3_2025_09", "SecurityPolicy_TLS13_1_3_FIPS_2025_09", "SecurityPolicy_TLS13_1_2_PFS_PQ_2025_09", "SecurityPolicy_TLS13_1_2_FIPS_PQ_2025_09", "SecurityPolicy_TLS13_1_2_FIPS_PFS_PQ_2025_09", "SecurityPolicy_TLS13_1_2_PQ_2025_09", "SecurityPolicy_TLS13_1_2_2021_06", "SecurityPolicy_TLS13_2025_EDGE", "SecurityPolicy_TLS12_PFS_2025_EDGE", "SecurityPolicy_TLS12_2018_EDGE"
+    #   resp.endpoint_access_mode #=> String, one of "BASIC", "STRICT"
     #   resp.tags #=> Hash
     #   resp.tags["String"] #=> String
     #   resp.mutual_tls_authentication.truststore_uri #=> String
@@ -1072,6 +1093,7 @@ module Aws::APIGateway
     #   resp.ownership_verification_certificate_arn #=> String
     #   resp.management_policy #=> String
     #   resp.policy #=> String
+    #   resp.routing_mode #=> String, one of "BASE_PATH_MAPPING_ONLY", "ROUTING_RULE_ONLY", "ROUTING_RULE_THEN_BASE_PATH_MAPPING"
     #
     # @overload create_domain_name(params = {})
     # @param [Hash] params ({})
@@ -1306,6 +1328,8 @@ module Aws::APIGateway
     #   resp.resource_methods["String"].method_integration.integration_responses["String"].response_templates["String"] #=> String
     #   resp.resource_methods["String"].method_integration.integration_responses["String"].content_handling #=> String, one of "CONVERT_TO_BINARY", "CONVERT_TO_TEXT"
     #   resp.resource_methods["String"].method_integration.tls_config.insecure_skip_verification #=> Boolean
+    #   resp.resource_methods["String"].method_integration.response_transfer_mode #=> String, one of "BUFFERED", "STREAM"
+    #   resp.resource_methods["String"].method_integration.integration_target #=> String
     #   resp.resource_methods["String"].authorization_scopes #=> Array
     #   resp.resource_methods["String"].authorization_scopes[0] #=> String
     #
@@ -1350,7 +1374,7 @@ module Aws::APIGateway
     #
     # @option params [Types::EndpointConfiguration] :endpoint_configuration
     #   The endpoint configuration of this RestApi showing the endpoint types
-    #   of the API.
+    #   and IP address types of the API.
     #
     # @option params [String] :policy
     #   A stringified JSON policy document that applies to this RestApi
@@ -1368,6 +1392,14 @@ module Aws::APIGateway
     #   endpoint. To require that clients use a custom domain name to invoke
     #   your API, disable the default endpoint
     #
+    # @option params [String] :security_policy
+    #   The Transport Layer Security (TLS) version + cipher suite for this
+    #   RestApi.
+    #
+    # @option params [String] :endpoint_access_mode
+    #   The endpoint access mode of the RestApi. Only available for RestApis
+    #   that use security policies that start with `SecurityPolicy_`.
+    #
     # @return [Types::RestApi] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::RestApi#id #id} => String
@@ -1384,6 +1416,10 @@ module Aws::APIGateway
     #   * {Types::RestApi#tags #tags} => Hash&lt;String,String&gt;
     #   * {Types::RestApi#disable_execute_api_endpoint #disable_execute_api_endpoint} => Boolean
     #   * {Types::RestApi#root_resource_id #root_resource_id} => String
+    #   * {Types::RestApi#security_policy #security_policy} => String
+    #   * {Types::RestApi#endpoint_access_mode #endpoint_access_mode} => String
+    #   * {Types::RestApi#api_status #api_status} => String
+    #   * {Types::RestApi#api_status_message #api_status_message} => String
     #
     # @example Request syntax with placeholder values
     #
@@ -1397,6 +1433,7 @@ module Aws::APIGateway
     #     api_key_source: "HEADER", # accepts HEADER, AUTHORIZER
     #     endpoint_configuration: {
     #       types: ["REGIONAL"], # accepts REGIONAL, EDGE, PRIVATE
+    #       ip_address_type: "ipv4", # accepts ipv4, dualstack
     #       vpc_endpoint_ids: ["String"],
     #     },
     #     policy: "String",
@@ -1404,6 +1441,8 @@ module Aws::APIGateway
     #       "String" => "String",
     #     },
     #     disable_execute_api_endpoint: false,
+    #     security_policy: "TLS_1_0", # accepts TLS_1_0, TLS_1_2, SecurityPolicy_TLS13_1_3_2025_09, SecurityPolicy_TLS13_1_3_FIPS_2025_09, SecurityPolicy_TLS13_1_2_PFS_PQ_2025_09, SecurityPolicy_TLS13_1_2_FIPS_PQ_2025_09, SecurityPolicy_TLS13_1_2_FIPS_PFS_PQ_2025_09, SecurityPolicy_TLS13_1_2_PQ_2025_09, SecurityPolicy_TLS13_1_2_2021_06, SecurityPolicy_TLS13_2025_EDGE, SecurityPolicy_TLS12_PFS_2025_EDGE, SecurityPolicy_TLS12_2018_EDGE
+    #     endpoint_access_mode: "BASIC", # accepts BASIC, STRICT
     #   })
     #
     # @example Response structure
@@ -1421,6 +1460,7 @@ module Aws::APIGateway
     #   resp.api_key_source #=> String, one of "HEADER", "AUTHORIZER"
     #   resp.endpoint_configuration.types #=> Array
     #   resp.endpoint_configuration.types[0] #=> String, one of "REGIONAL", "EDGE", "PRIVATE"
+    #   resp.endpoint_configuration.ip_address_type #=> String, one of "ipv4", "dualstack"
     #   resp.endpoint_configuration.vpc_endpoint_ids #=> Array
     #   resp.endpoint_configuration.vpc_endpoint_ids[0] #=> String
     #   resp.policy #=> String
@@ -1428,6 +1468,10 @@ module Aws::APIGateway
     #   resp.tags["String"] #=> String
     #   resp.disable_execute_api_endpoint #=> Boolean
     #   resp.root_resource_id #=> String
+    #   resp.security_policy #=> String, one of "TLS_1_0", "TLS_1_2", "SecurityPolicy_TLS13_1_3_2025_09", "SecurityPolicy_TLS13_1_3_FIPS_2025_09", "SecurityPolicy_TLS13_1_2_PFS_PQ_2025_09", "SecurityPolicy_TLS13_1_2_FIPS_PQ_2025_09", "SecurityPolicy_TLS13_1_2_FIPS_PFS_PQ_2025_09", "SecurityPolicy_TLS13_1_2_PQ_2025_09", "SecurityPolicy_TLS13_1_2_2021_06", "SecurityPolicy_TLS13_2025_EDGE", "SecurityPolicy_TLS12_PFS_2025_EDGE", "SecurityPolicy_TLS12_2018_EDGE"
+    #   resp.endpoint_access_mode #=> String, one of "BASIC", "STRICT"
+    #   resp.api_status #=> String, one of "UPDATING", "AVAILABLE", "PENDING", "FAILED"
+    #   resp.api_status_message #=> String
     #
     # @overload create_rest_api(params = {})
     # @param [Hash] params ({})
@@ -3118,11 +3162,13 @@ module Aws::APIGateway
     #   * {Types::DomainName#domain_name_status #domain_name_status} => String
     #   * {Types::DomainName#domain_name_status_message #domain_name_status_message} => String
     #   * {Types::DomainName#security_policy #security_policy} => String
+    #   * {Types::DomainName#endpoint_access_mode #endpoint_access_mode} => String
     #   * {Types::DomainName#tags #tags} => Hash&lt;String,String&gt;
     #   * {Types::DomainName#mutual_tls_authentication #mutual_tls_authentication} => Types::MutualTlsAuthentication
     #   * {Types::DomainName#ownership_verification_certificate_arn #ownership_verification_certificate_arn} => String
     #   * {Types::DomainName#management_policy #management_policy} => String
     #   * {Types::DomainName#policy #policy} => String
+    #   * {Types::DomainName#routing_mode #routing_mode} => String
     #
     # @example Request syntax with placeholder values
     #
@@ -3147,11 +3193,13 @@ module Aws::APIGateway
     #   resp.distribution_hosted_zone_id #=> String
     #   resp.endpoint_configuration.types #=> Array
     #   resp.endpoint_configuration.types[0] #=> String, one of "REGIONAL", "EDGE", "PRIVATE"
+    #   resp.endpoint_configuration.ip_address_type #=> String, one of "ipv4", "dualstack"
     #   resp.endpoint_configuration.vpc_endpoint_ids #=> Array
     #   resp.endpoint_configuration.vpc_endpoint_ids[0] #=> String
-    #   resp.domain_name_status #=> String, one of "AVAILABLE", "UPDATING", "PENDING", "PENDING_CERTIFICATE_REIMPORT", "PENDING_OWNERSHIP_VERIFICATION"
+    #   resp.domain_name_status #=> String, one of "AVAILABLE", "UPDATING", "PENDING", "PENDING_CERTIFICATE_REIMPORT", "PENDING_OWNERSHIP_VERIFICATION", "FAILED"
     #   resp.domain_name_status_message #=> String
-    #   resp.security_policy #=> String, one of "TLS_1_0", "TLS_1_2"
+    #   resp.security_policy #=> String, one of "TLS_1_0", "TLS_1_2", "SecurityPolicy_TLS13_1_3_2025_09", "SecurityPolicy_TLS13_1_3_FIPS_2025_09", "SecurityPolicy_TLS13_1_2_PFS_PQ_2025_09", "SecurityPolicy_TLS13_1_2_FIPS_PQ_2025_09", "SecurityPolicy_TLS13_1_2_FIPS_PFS_PQ_2025_09", "SecurityPolicy_TLS13_1_2_PQ_2025_09", "SecurityPolicy_TLS13_1_2_2021_06", "SecurityPolicy_TLS13_2025_EDGE", "SecurityPolicy_TLS12_PFS_2025_EDGE", "SecurityPolicy_TLS12_2018_EDGE"
+    #   resp.endpoint_access_mode #=> String, one of "BASIC", "STRICT"
     #   resp.tags #=> Hash
     #   resp.tags["String"] #=> String
     #   resp.mutual_tls_authentication.truststore_uri #=> String
@@ -3161,6 +3209,7 @@ module Aws::APIGateway
     #   resp.ownership_verification_certificate_arn #=> String
     #   resp.management_policy #=> String
     #   resp.policy #=> String
+    #   resp.routing_mode #=> String, one of "BASE_PATH_MAPPING_ONLY", "ROUTING_RULE_ONLY", "ROUTING_RULE_THEN_BASE_PATH_MAPPING"
     #
     # @overload get_domain_name(params = {})
     # @param [Hash] params ({})
@@ -3260,11 +3309,13 @@ module Aws::APIGateway
     #   resp.items[0].distribution_hosted_zone_id #=> String
     #   resp.items[0].endpoint_configuration.types #=> Array
     #   resp.items[0].endpoint_configuration.types[0] #=> String, one of "REGIONAL", "EDGE", "PRIVATE"
+    #   resp.items[0].endpoint_configuration.ip_address_type #=> String, one of "ipv4", "dualstack"
     #   resp.items[0].endpoint_configuration.vpc_endpoint_ids #=> Array
     #   resp.items[0].endpoint_configuration.vpc_endpoint_ids[0] #=> String
-    #   resp.items[0].domain_name_status #=> String, one of "AVAILABLE", "UPDATING", "PENDING", "PENDING_CERTIFICATE_REIMPORT", "PENDING_OWNERSHIP_VERIFICATION"
+    #   resp.items[0].domain_name_status #=> String, one of "AVAILABLE", "UPDATING", "PENDING", "PENDING_CERTIFICATE_REIMPORT", "PENDING_OWNERSHIP_VERIFICATION", "FAILED"
     #   resp.items[0].domain_name_status_message #=> String
-    #   resp.items[0].security_policy #=> String, one of "TLS_1_0", "TLS_1_2"
+    #   resp.items[0].security_policy #=> String, one of "TLS_1_0", "TLS_1_2", "SecurityPolicy_TLS13_1_3_2025_09", "SecurityPolicy_TLS13_1_3_FIPS_2025_09", "SecurityPolicy_TLS13_1_2_PFS_PQ_2025_09", "SecurityPolicy_TLS13_1_2_FIPS_PQ_2025_09", "SecurityPolicy_TLS13_1_2_FIPS_PFS_PQ_2025_09", "SecurityPolicy_TLS13_1_2_PQ_2025_09", "SecurityPolicy_TLS13_1_2_2021_06", "SecurityPolicy_TLS13_2025_EDGE", "SecurityPolicy_TLS12_PFS_2025_EDGE", "SecurityPolicy_TLS12_2018_EDGE"
+    #   resp.items[0].endpoint_access_mode #=> String, one of "BASIC", "STRICT"
     #   resp.items[0].tags #=> Hash
     #   resp.items[0].tags["String"] #=> String
     #   resp.items[0].mutual_tls_authentication.truststore_uri #=> String
@@ -3274,6 +3325,7 @@ module Aws::APIGateway
     #   resp.items[0].ownership_verification_certificate_arn #=> String
     #   resp.items[0].management_policy #=> String
     #   resp.items[0].policy #=> String
+    #   resp.items[0].routing_mode #=> String, one of "BASE_PATH_MAPPING_ONLY", "ROUTING_RULE_ONLY", "ROUTING_RULE_THEN_BASE_PATH_MAPPING"
     #
     # @overload get_domain_names(params = {})
     # @param [Hash] params ({})
@@ -3460,6 +3512,8 @@ module Aws::APIGateway
     #   * {Types::Integration#cache_key_parameters #cache_key_parameters} => Array&lt;String&gt;
     #   * {Types::Integration#integration_responses #integration_responses} => Hash&lt;String,Types::IntegrationResponse&gt;
     #   * {Types::Integration#tls_config #tls_config} => Types::TlsConfig
+    #   * {Types::Integration#response_transfer_mode #response_transfer_mode} => String
+    #   * {Types::Integration#integration_target #integration_target} => String
     #
     # @example Request syntax with placeholder values
     #
@@ -3496,6 +3550,8 @@ module Aws::APIGateway
     #   resp.integration_responses["String"].response_templates["String"] #=> String
     #   resp.integration_responses["String"].content_handling #=> String, one of "CONVERT_TO_BINARY", "CONVERT_TO_TEXT"
     #   resp.tls_config.insecure_skip_verification #=> Boolean
+    #   resp.response_transfer_mode #=> String, one of "BUFFERED", "STREAM"
+    #   resp.integration_target #=> String
     #
     # @overload get_integration(params = {})
     # @param [Hash] params ({})
@@ -3628,6 +3684,8 @@ module Aws::APIGateway
     #   resp.method_integration.integration_responses["String"].response_templates["String"] #=> String
     #   resp.method_integration.integration_responses["String"].content_handling #=> String, one of "CONVERT_TO_BINARY", "CONVERT_TO_TEXT"
     #   resp.method_integration.tls_config.insecure_skip_verification #=> Boolean
+    #   resp.method_integration.response_transfer_mode #=> String, one of "BUFFERED", "STREAM"
+    #   resp.method_integration.integration_target #=> String
     #   resp.authorization_scopes #=> Array
     #   resp.authorization_scopes[0] #=> String
     #
@@ -3959,6 +4017,8 @@ module Aws::APIGateway
     #   resp.resource_methods["String"].method_integration.integration_responses["String"].response_templates["String"] #=> String
     #   resp.resource_methods["String"].method_integration.integration_responses["String"].content_handling #=> String, one of "CONVERT_TO_BINARY", "CONVERT_TO_TEXT"
     #   resp.resource_methods["String"].method_integration.tls_config.insecure_skip_verification #=> Boolean
+    #   resp.resource_methods["String"].method_integration.response_transfer_mode #=> String, one of "BUFFERED", "STREAM"
+    #   resp.resource_methods["String"].method_integration.integration_target #=> String
     #   resp.resource_methods["String"].authorization_scopes #=> Array
     #   resp.resource_methods["String"].authorization_scopes[0] #=> String
     #
@@ -4056,6 +4116,8 @@ module Aws::APIGateway
     #   resp.items[0].resource_methods["String"].method_integration.integration_responses["String"].response_templates["String"] #=> String
     #   resp.items[0].resource_methods["String"].method_integration.integration_responses["String"].content_handling #=> String, one of "CONVERT_TO_BINARY", "CONVERT_TO_TEXT"
     #   resp.items[0].resource_methods["String"].method_integration.tls_config.insecure_skip_verification #=> Boolean
+    #   resp.items[0].resource_methods["String"].method_integration.response_transfer_mode #=> String, one of "BUFFERED", "STREAM"
+    #   resp.items[0].resource_methods["String"].method_integration.integration_target #=> String
     #   resp.items[0].resource_methods["String"].authorization_scopes #=> Array
     #   resp.items[0].resource_methods["String"].authorization_scopes[0] #=> String
     #
@@ -4087,6 +4149,10 @@ module Aws::APIGateway
     #   * {Types::RestApi#tags #tags} => Hash&lt;String,String&gt;
     #   * {Types::RestApi#disable_execute_api_endpoint #disable_execute_api_endpoint} => Boolean
     #   * {Types::RestApi#root_resource_id #root_resource_id} => String
+    #   * {Types::RestApi#security_policy #security_policy} => String
+    #   * {Types::RestApi#endpoint_access_mode #endpoint_access_mode} => String
+    #   * {Types::RestApi#api_status #api_status} => String
+    #   * {Types::RestApi#api_status_message #api_status_message} => String
     #
     # @example Request syntax with placeholder values
     #
@@ -4109,6 +4175,7 @@ module Aws::APIGateway
     #   resp.api_key_source #=> String, one of "HEADER", "AUTHORIZER"
     #   resp.endpoint_configuration.types #=> Array
     #   resp.endpoint_configuration.types[0] #=> String, one of "REGIONAL", "EDGE", "PRIVATE"
+    #   resp.endpoint_configuration.ip_address_type #=> String, one of "ipv4", "dualstack"
     #   resp.endpoint_configuration.vpc_endpoint_ids #=> Array
     #   resp.endpoint_configuration.vpc_endpoint_ids[0] #=> String
     #   resp.policy #=> String
@@ -4116,6 +4183,10 @@ module Aws::APIGateway
     #   resp.tags["String"] #=> String
     #   resp.disable_execute_api_endpoint #=> Boolean
     #   resp.root_resource_id #=> String
+    #   resp.security_policy #=> String, one of "TLS_1_0", "TLS_1_2", "SecurityPolicy_TLS13_1_3_2025_09", "SecurityPolicy_TLS13_1_3_FIPS_2025_09", "SecurityPolicy_TLS13_1_2_PFS_PQ_2025_09", "SecurityPolicy_TLS13_1_2_FIPS_PQ_2025_09", "SecurityPolicy_TLS13_1_2_FIPS_PFS_PQ_2025_09", "SecurityPolicy_TLS13_1_2_PQ_2025_09", "SecurityPolicy_TLS13_1_2_2021_06", "SecurityPolicy_TLS13_2025_EDGE", "SecurityPolicy_TLS12_PFS_2025_EDGE", "SecurityPolicy_TLS12_2018_EDGE"
+    #   resp.endpoint_access_mode #=> String, one of "BASIC", "STRICT"
+    #   resp.api_status #=> String, one of "UPDATING", "AVAILABLE", "PENDING", "FAILED"
+    #   resp.api_status_message #=> String
     #
     # @overload get_rest_api(params = {})
     # @param [Hash] params ({})
@@ -4164,6 +4235,7 @@ module Aws::APIGateway
     #   resp.items[0].api_key_source #=> String, one of "HEADER", "AUTHORIZER"
     #   resp.items[0].endpoint_configuration.types #=> Array
     #   resp.items[0].endpoint_configuration.types[0] #=> String, one of "REGIONAL", "EDGE", "PRIVATE"
+    #   resp.items[0].endpoint_configuration.ip_address_type #=> String, one of "ipv4", "dualstack"
     #   resp.items[0].endpoint_configuration.vpc_endpoint_ids #=> Array
     #   resp.items[0].endpoint_configuration.vpc_endpoint_ids[0] #=> String
     #   resp.items[0].policy #=> String
@@ -4171,6 +4243,10 @@ module Aws::APIGateway
     #   resp.items[0].tags["String"] #=> String
     #   resp.items[0].disable_execute_api_endpoint #=> Boolean
     #   resp.items[0].root_resource_id #=> String
+    #   resp.items[0].security_policy #=> String, one of "TLS_1_0", "TLS_1_2", "SecurityPolicy_TLS13_1_3_2025_09", "SecurityPolicy_TLS13_1_3_FIPS_2025_09", "SecurityPolicy_TLS13_1_2_PFS_PQ_2025_09", "SecurityPolicy_TLS13_1_2_FIPS_PQ_2025_09", "SecurityPolicy_TLS13_1_2_FIPS_PFS_PQ_2025_09", "SecurityPolicy_TLS13_1_2_PQ_2025_09", "SecurityPolicy_TLS13_1_2_2021_06", "SecurityPolicy_TLS13_2025_EDGE", "SecurityPolicy_TLS12_PFS_2025_EDGE", "SecurityPolicy_TLS12_2018_EDGE"
+    #   resp.items[0].endpoint_access_mode #=> String, one of "BASIC", "STRICT"
+    #   resp.items[0].api_status #=> String, one of "UPDATING", "AVAILABLE", "PENDING", "FAILED"
+    #   resp.items[0].api_status_message #=> String
     #
     # @overload get_rest_apis(params = {})
     # @param [Hash] params ({})
@@ -4965,6 +5041,10 @@ module Aws::APIGateway
     #   * {Types::RestApi#tags #tags} => Hash&lt;String,String&gt;
     #   * {Types::RestApi#disable_execute_api_endpoint #disable_execute_api_endpoint} => Boolean
     #   * {Types::RestApi#root_resource_id #root_resource_id} => String
+    #   * {Types::RestApi#security_policy #security_policy} => String
+    #   * {Types::RestApi#endpoint_access_mode #endpoint_access_mode} => String
+    #   * {Types::RestApi#api_status #api_status} => String
+    #   * {Types::RestApi#api_status_message #api_status_message} => String
     #
     # @example Request syntax with placeholder values
     #
@@ -4991,6 +5071,7 @@ module Aws::APIGateway
     #   resp.api_key_source #=> String, one of "HEADER", "AUTHORIZER"
     #   resp.endpoint_configuration.types #=> Array
     #   resp.endpoint_configuration.types[0] #=> String, one of "REGIONAL", "EDGE", "PRIVATE"
+    #   resp.endpoint_configuration.ip_address_type #=> String, one of "ipv4", "dualstack"
     #   resp.endpoint_configuration.vpc_endpoint_ids #=> Array
     #   resp.endpoint_configuration.vpc_endpoint_ids[0] #=> String
     #   resp.policy #=> String
@@ -4998,6 +5079,10 @@ module Aws::APIGateway
     #   resp.tags["String"] #=> String
     #   resp.disable_execute_api_endpoint #=> Boolean
     #   resp.root_resource_id #=> String
+    #   resp.security_policy #=> String, one of "TLS_1_0", "TLS_1_2", "SecurityPolicy_TLS13_1_3_2025_09", "SecurityPolicy_TLS13_1_3_FIPS_2025_09", "SecurityPolicy_TLS13_1_2_PFS_PQ_2025_09", "SecurityPolicy_TLS13_1_2_FIPS_PQ_2025_09", "SecurityPolicy_TLS13_1_2_FIPS_PFS_PQ_2025_09", "SecurityPolicy_TLS13_1_2_PQ_2025_09", "SecurityPolicy_TLS13_1_2_2021_06", "SecurityPolicy_TLS13_2025_EDGE", "SecurityPolicy_TLS12_PFS_2025_EDGE", "SecurityPolicy_TLS12_2018_EDGE"
+    #   resp.endpoint_access_mode #=> String, one of "BASIC", "STRICT"
+    #   resp.api_status #=> String, one of "UPDATING", "AVAILABLE", "PENDING", "FAILED"
+    #   resp.api_status_message #=> String
     #
     # @overload import_rest_api(params = {})
     # @param [Hash] params ({})
@@ -5166,10 +5251,17 @@ module Aws::APIGateway
     #
     # @option params [Integer] :timeout_in_millis
     #   Custom timeout between 50 and 29,000 milliseconds. The default value
-    #   is 29,000 milliseconds or 29 seconds.
+    #   is 29,000 milliseconds or 29 seconds. You can increase the default
+    #   value to longer than 29 seconds for Regional or private APIs only.
     #
     # @option params [Types::TlsConfig] :tls_config
     #   Specifies the TLS configuration for an integration.
+    #
+    # @option params [String] :response_transfer_mode
+    #   The response transfer mode of the integration.
+    #
+    # @option params [String] :integration_target
+    #   The ALB or NLB listener to send the request to.
     #
     # @return [Types::Integration] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -5188,6 +5280,8 @@ module Aws::APIGateway
     #   * {Types::Integration#cache_key_parameters #cache_key_parameters} => Array&lt;String&gt;
     #   * {Types::Integration#integration_responses #integration_responses} => Hash&lt;String,Types::IntegrationResponse&gt;
     #   * {Types::Integration#tls_config #tls_config} => Types::TlsConfig
+    #   * {Types::Integration#response_transfer_mode #response_transfer_mode} => String
+    #   * {Types::Integration#integration_target #integration_target} => String
     #
     # @example Request syntax with placeholder values
     #
@@ -5215,6 +5309,8 @@ module Aws::APIGateway
     #     tls_config: {
     #       insecure_skip_verification: false,
     #     },
+    #     response_transfer_mode: "BUFFERED", # accepts BUFFERED, STREAM
+    #     integration_target: "String",
     #   })
     #
     # @example Response structure
@@ -5244,6 +5340,8 @@ module Aws::APIGateway
     #   resp.integration_responses["String"].response_templates["String"] #=> String
     #   resp.integration_responses["String"].content_handling #=> String, one of "CONVERT_TO_BINARY", "CONVERT_TO_TEXT"
     #   resp.tls_config.insecure_skip_verification #=> Boolean
+    #   resp.response_transfer_mode #=> String, one of "BUFFERED", "STREAM"
+    #   resp.integration_target #=> String
     #
     # @overload put_integration(params = {})
     # @param [Hash] params ({})
@@ -5475,6 +5573,8 @@ module Aws::APIGateway
     #   resp.method_integration.integration_responses["String"].response_templates["String"] #=> String
     #   resp.method_integration.integration_responses["String"].content_handling #=> String, one of "CONVERT_TO_BINARY", "CONVERT_TO_TEXT"
     #   resp.method_integration.tls_config.insecure_skip_verification #=> Boolean
+    #   resp.method_integration.response_transfer_mode #=> String, one of "BUFFERED", "STREAM"
+    #   resp.method_integration.integration_target #=> String
     #   resp.authorization_scopes #=> Array
     #   resp.authorization_scopes[0] #=> String
     #
@@ -5602,6 +5702,10 @@ module Aws::APIGateway
     #   * {Types::RestApi#tags #tags} => Hash&lt;String,String&gt;
     #   * {Types::RestApi#disable_execute_api_endpoint #disable_execute_api_endpoint} => Boolean
     #   * {Types::RestApi#root_resource_id #root_resource_id} => String
+    #   * {Types::RestApi#security_policy #security_policy} => String
+    #   * {Types::RestApi#endpoint_access_mode #endpoint_access_mode} => String
+    #   * {Types::RestApi#api_status #api_status} => String
+    #   * {Types::RestApi#api_status_message #api_status_message} => String
     #
     # @example Request syntax with placeholder values
     #
@@ -5630,6 +5734,7 @@ module Aws::APIGateway
     #   resp.api_key_source #=> String, one of "HEADER", "AUTHORIZER"
     #   resp.endpoint_configuration.types #=> Array
     #   resp.endpoint_configuration.types[0] #=> String, one of "REGIONAL", "EDGE", "PRIVATE"
+    #   resp.endpoint_configuration.ip_address_type #=> String, one of "ipv4", "dualstack"
     #   resp.endpoint_configuration.vpc_endpoint_ids #=> Array
     #   resp.endpoint_configuration.vpc_endpoint_ids[0] #=> String
     #   resp.policy #=> String
@@ -5637,6 +5742,10 @@ module Aws::APIGateway
     #   resp.tags["String"] #=> String
     #   resp.disable_execute_api_endpoint #=> Boolean
     #   resp.root_resource_id #=> String
+    #   resp.security_policy #=> String, one of "TLS_1_0", "TLS_1_2", "SecurityPolicy_TLS13_1_3_2025_09", "SecurityPolicy_TLS13_1_3_FIPS_2025_09", "SecurityPolicy_TLS13_1_2_PFS_PQ_2025_09", "SecurityPolicy_TLS13_1_2_FIPS_PQ_2025_09", "SecurityPolicy_TLS13_1_2_FIPS_PFS_PQ_2025_09", "SecurityPolicy_TLS13_1_2_PQ_2025_09", "SecurityPolicy_TLS13_1_2_2021_06", "SecurityPolicy_TLS13_2025_EDGE", "SecurityPolicy_TLS12_PFS_2025_EDGE", "SecurityPolicy_TLS12_2018_EDGE"
+    #   resp.endpoint_access_mode #=> String, one of "BASIC", "STRICT"
+    #   resp.api_status #=> String, one of "UPDATING", "AVAILABLE", "PENDING", "FAILED"
+    #   resp.api_status_message #=> String
     #
     # @overload put_rest_api(params = {})
     # @param [Hash] params ({})
@@ -6374,11 +6483,13 @@ module Aws::APIGateway
     #   * {Types::DomainName#domain_name_status #domain_name_status} => String
     #   * {Types::DomainName#domain_name_status_message #domain_name_status_message} => String
     #   * {Types::DomainName#security_policy #security_policy} => String
+    #   * {Types::DomainName#endpoint_access_mode #endpoint_access_mode} => String
     #   * {Types::DomainName#tags #tags} => Hash&lt;String,String&gt;
     #   * {Types::DomainName#mutual_tls_authentication #mutual_tls_authentication} => Types::MutualTlsAuthentication
     #   * {Types::DomainName#ownership_verification_certificate_arn #ownership_verification_certificate_arn} => String
     #   * {Types::DomainName#management_policy #management_policy} => String
     #   * {Types::DomainName#policy #policy} => String
+    #   * {Types::DomainName#routing_mode #routing_mode} => String
     #
     # @example Request syntax with placeholder values
     #
@@ -6411,11 +6522,13 @@ module Aws::APIGateway
     #   resp.distribution_hosted_zone_id #=> String
     #   resp.endpoint_configuration.types #=> Array
     #   resp.endpoint_configuration.types[0] #=> String, one of "REGIONAL", "EDGE", "PRIVATE"
+    #   resp.endpoint_configuration.ip_address_type #=> String, one of "ipv4", "dualstack"
     #   resp.endpoint_configuration.vpc_endpoint_ids #=> Array
     #   resp.endpoint_configuration.vpc_endpoint_ids[0] #=> String
-    #   resp.domain_name_status #=> String, one of "AVAILABLE", "UPDATING", "PENDING", "PENDING_CERTIFICATE_REIMPORT", "PENDING_OWNERSHIP_VERIFICATION"
+    #   resp.domain_name_status #=> String, one of "AVAILABLE", "UPDATING", "PENDING", "PENDING_CERTIFICATE_REIMPORT", "PENDING_OWNERSHIP_VERIFICATION", "FAILED"
     #   resp.domain_name_status_message #=> String
-    #   resp.security_policy #=> String, one of "TLS_1_0", "TLS_1_2"
+    #   resp.security_policy #=> String, one of "TLS_1_0", "TLS_1_2", "SecurityPolicy_TLS13_1_3_2025_09", "SecurityPolicy_TLS13_1_3_FIPS_2025_09", "SecurityPolicy_TLS13_1_2_PFS_PQ_2025_09", "SecurityPolicy_TLS13_1_2_FIPS_PQ_2025_09", "SecurityPolicy_TLS13_1_2_FIPS_PFS_PQ_2025_09", "SecurityPolicy_TLS13_1_2_PQ_2025_09", "SecurityPolicy_TLS13_1_2_2021_06", "SecurityPolicy_TLS13_2025_EDGE", "SecurityPolicy_TLS12_PFS_2025_EDGE", "SecurityPolicy_TLS12_2018_EDGE"
+    #   resp.endpoint_access_mode #=> String, one of "BASIC", "STRICT"
     #   resp.tags #=> Hash
     #   resp.tags["String"] #=> String
     #   resp.mutual_tls_authentication.truststore_uri #=> String
@@ -6425,6 +6538,7 @@ module Aws::APIGateway
     #   resp.ownership_verification_certificate_arn #=> String
     #   resp.management_policy #=> String
     #   resp.policy #=> String
+    #   resp.routing_mode #=> String, one of "BASE_PATH_MAPPING_ONLY", "ROUTING_RULE_ONLY", "ROUTING_RULE_THEN_BASE_PATH_MAPPING"
     #
     # @overload update_domain_name(params = {})
     # @param [Hash] params ({})
@@ -6526,6 +6640,8 @@ module Aws::APIGateway
     #   * {Types::Integration#cache_key_parameters #cache_key_parameters} => Array&lt;String&gt;
     #   * {Types::Integration#integration_responses #integration_responses} => Hash&lt;String,Types::IntegrationResponse&gt;
     #   * {Types::Integration#tls_config #tls_config} => Types::TlsConfig
+    #   * {Types::Integration#response_transfer_mode #response_transfer_mode} => String
+    #   * {Types::Integration#integration_target #integration_target} => String
     #
     # @example Request syntax with placeholder values
     #
@@ -6570,6 +6686,8 @@ module Aws::APIGateway
     #   resp.integration_responses["String"].response_templates["String"] #=> String
     #   resp.integration_responses["String"].content_handling #=> String, one of "CONVERT_TO_BINARY", "CONVERT_TO_TEXT"
     #   resp.tls_config.insecure_skip_verification #=> Boolean
+    #   resp.response_transfer_mode #=> String, one of "BUFFERED", "STREAM"
+    #   resp.integration_target #=> String
     #
     # @overload update_integration(params = {})
     # @param [Hash] params ({})
@@ -6735,6 +6853,8 @@ module Aws::APIGateway
     #   resp.method_integration.integration_responses["String"].response_templates["String"] #=> String
     #   resp.method_integration.integration_responses["String"].content_handling #=> String, one of "CONVERT_TO_BINARY", "CONVERT_TO_TEXT"
     #   resp.method_integration.tls_config.insecure_skip_verification #=> Boolean
+    #   resp.method_integration.response_transfer_mode #=> String, one of "BUFFERED", "STREAM"
+    #   resp.method_integration.integration_target #=> String
     #   resp.authorization_scopes #=> Array
     #   resp.authorization_scopes[0] #=> String
     #
@@ -6999,6 +7119,8 @@ module Aws::APIGateway
     #   resp.resource_methods["String"].method_integration.integration_responses["String"].response_templates["String"] #=> String
     #   resp.resource_methods["String"].method_integration.integration_responses["String"].content_handling #=> String, one of "CONVERT_TO_BINARY", "CONVERT_TO_TEXT"
     #   resp.resource_methods["String"].method_integration.tls_config.insecure_skip_verification #=> Boolean
+    #   resp.resource_methods["String"].method_integration.response_transfer_mode #=> String, one of "BUFFERED", "STREAM"
+    #   resp.resource_methods["String"].method_integration.integration_target #=> String
     #   resp.resource_methods["String"].authorization_scopes #=> Array
     #   resp.resource_methods["String"].authorization_scopes[0] #=> String
     #
@@ -7038,6 +7160,10 @@ module Aws::APIGateway
     #   * {Types::RestApi#tags #tags} => Hash&lt;String,String&gt;
     #   * {Types::RestApi#disable_execute_api_endpoint #disable_execute_api_endpoint} => Boolean
     #   * {Types::RestApi#root_resource_id #root_resource_id} => String
+    #   * {Types::RestApi#security_policy #security_policy} => String
+    #   * {Types::RestApi#endpoint_access_mode #endpoint_access_mode} => String
+    #   * {Types::RestApi#api_status #api_status} => String
+    #   * {Types::RestApi#api_status_message #api_status_message} => String
     #
     # @example Request syntax with placeholder values
     #
@@ -7068,6 +7194,7 @@ module Aws::APIGateway
     #   resp.api_key_source #=> String, one of "HEADER", "AUTHORIZER"
     #   resp.endpoint_configuration.types #=> Array
     #   resp.endpoint_configuration.types[0] #=> String, one of "REGIONAL", "EDGE", "PRIVATE"
+    #   resp.endpoint_configuration.ip_address_type #=> String, one of "ipv4", "dualstack"
     #   resp.endpoint_configuration.vpc_endpoint_ids #=> Array
     #   resp.endpoint_configuration.vpc_endpoint_ids[0] #=> String
     #   resp.policy #=> String
@@ -7075,6 +7202,10 @@ module Aws::APIGateway
     #   resp.tags["String"] #=> String
     #   resp.disable_execute_api_endpoint #=> Boolean
     #   resp.root_resource_id #=> String
+    #   resp.security_policy #=> String, one of "TLS_1_0", "TLS_1_2", "SecurityPolicy_TLS13_1_3_2025_09", "SecurityPolicy_TLS13_1_3_FIPS_2025_09", "SecurityPolicy_TLS13_1_2_PFS_PQ_2025_09", "SecurityPolicy_TLS13_1_2_FIPS_PQ_2025_09", "SecurityPolicy_TLS13_1_2_FIPS_PFS_PQ_2025_09", "SecurityPolicy_TLS13_1_2_PQ_2025_09", "SecurityPolicy_TLS13_1_2_2021_06", "SecurityPolicy_TLS13_2025_EDGE", "SecurityPolicy_TLS12_PFS_2025_EDGE", "SecurityPolicy_TLS12_2018_EDGE"
+    #   resp.endpoint_access_mode #=> String, one of "BASIC", "STRICT"
+    #   resp.api_status #=> String, one of "UPDATING", "AVAILABLE", "PENDING", "FAILED"
+    #   resp.api_status_message #=> String
     #
     # @overload update_rest_api(params = {})
     # @param [Hash] params ({})
@@ -7377,7 +7508,7 @@ module Aws::APIGateway
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-apigateway'
-      context[:gem_version] = '1.113.0'
+      context[:gem_version] = '1.137.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

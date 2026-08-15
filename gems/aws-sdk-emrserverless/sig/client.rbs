@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -85,7 +86,8 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EMRServerless/Client.html#cancel_job_run-instance_method
       def cancel_job_run: (
                             application_id: ::String,
-                            job_run_id: ::String
+                            job_run_id: ::String,
+                            ?shutdown_grace_period_in_seconds: ::Integer
                           ) -> _CancelJobRunResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CancelJobRunResponseSuccess
 
@@ -101,15 +103,7 @@ module Aws
                                 release_label: ::String,
                                 type: ::String,
                                 client_token: ::String,
-                                ?initial_capacity: Hash[::String, {
-                                    worker_count: ::Integer,
-                                    worker_configuration: {
-                                      cpu: ::String,
-                                      memory: ::String,
-                                      disk: ::String?,
-                                      disk_type: ::String?
-                                    }?
-                                  }],
+                                ?initial_capacity: Hash[::String, Params::initial_capacity_config],
                                 ?maximum_capacity: {
                                   cpu: ::String,
                                   memory: ::String,
@@ -129,11 +123,13 @@ module Aws
                                 },
                                 ?architecture: ("ARM64" | "X86_64"),
                                 ?image_configuration: {
-                                  image_uri: ::String?
+                                  image_uri: ::String?,
+                                  application_level_digest_resolution: bool?
                                 },
                                 ?worker_type_specifications: Hash[::String, {
                                     image_configuration: {
-                                      image_uri: ::String?
+                                      image_uri: ::String?,
+                                      application_level_digest_resolution: bool?
                                     }?
                                   }],
                                 ?runtime_configuration: Array[
@@ -141,35 +137,28 @@ module Aws
                                     classification: ::String,
                                     properties: Hash[::String, ::String]?,
                                     configurations: untyped?
-                                  },
+                                  }
                                 ],
-                                ?monitoring_configuration: {
-                                  s3_monitoring_configuration: {
-                                    log_uri: ::String?,
-                                    encryption_key_arn: ::String?
-                                  }?,
-                                  managed_persistence_monitoring_configuration: {
-                                    enabled: bool?,
-                                    encryption_key_arn: ::String?
-                                  }?,
-                                  cloud_watch_logging_configuration: {
-                                    enabled: bool,
-                                    log_group_name: ::String?,
-                                    log_stream_name_prefix: ::String?,
-                                    encryption_key_arn: ::String?,
-                                    log_types: Hash[::String, Array[::String]]?
-                                  }?,
-                                  prometheus_monitoring_configuration: {
-                                    remote_write_url: ::String?
-                                  }?
+                                ?monitoring_configuration: Params::monitoring_configuration,
+                                ?disk_encryption_configuration: {
+                                  encryption_context: Hash[::String, ::String]?,
+                                  encryption_key_arn: ::String?
                                 },
                                 ?interactive_configuration: {
                                   studio_enabled: bool?,
-                                  livy_endpoint_enabled: bool?
+                                  livy_endpoint_enabled: bool?,
+                                  session_enabled: bool?
                                 },
                                 ?scheduler_configuration: {
                                   queue_timeout_minutes: ::Integer?,
                                   max_concurrent_runs: ::Integer?
+                                },
+                                ?identity_center_configuration: {
+                                  identity_center_instance_arn: ::String?,
+                                  user_background_sessions_enabled: bool?
+                                },
+                                ?job_level_cost_allocation_configuration: {
+                                  enabled: bool?
                                 }
                               ) -> _CreateApplicationResponseSuccess
                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateApplicationResponseSuccess
@@ -218,6 +207,44 @@ module Aws
                        ) -> _GetJobRunResponseSuccess
                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetJobRunResponseSuccess
 
+      interface _GetResourceDashboardResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetResourceDashboardResponse]
+        def url: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EMRServerless/Client.html#get_resource_dashboard-instance_method
+      def get_resource_dashboard: (
+                                    application_id: ::String,
+                                    resource_id: ::String,
+                                    resource_type: ("SESSION")
+                                  ) -> _GetResourceDashboardResponseSuccess
+                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetResourceDashboardResponseSuccess
+
+      interface _GetSessionResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetSessionResponse]
+        def session: () -> Types::Session
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EMRServerless/Client.html#get_session-instance_method
+      def get_session: (
+                         application_id: ::String,
+                         session_id: ::String
+                       ) -> _GetSessionResponseSuccess
+                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetSessionResponseSuccess
+
+      interface _GetSessionEndpointResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetSessionEndpointResponse]
+        def application_id: () -> ::String
+        def session_id: () -> ::String
+        def endpoint: () -> ::String
+        def auth_token: () -> ::String
+        def auth_token_expires_at: () -> ::Time
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EMRServerless/Client.html#get_session_endpoint-instance_method
+      def get_session_endpoint: (
+                                  application_id: ::String,
+                                  session_id: ::String
+                                ) -> _GetSessionEndpointResponseSuccess
+                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetSessionEndpointResponseSuccess
+
       interface _ListApplicationsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListApplicationsResponse]
         def applications: () -> ::Array[Types::ApplicationSummary]
@@ -262,6 +289,22 @@ module Aws
                          ) -> _ListJobRunsResponseSuccess
                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListJobRunsResponseSuccess
 
+      interface _ListSessionsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListSessionsResponse]
+        def sessions: () -> ::Array[Types::SessionSummary]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EMRServerless/Client.html#list_sessions-instance_method
+      def list_sessions: (
+                           application_id: ::String,
+                           ?next_token: ::String,
+                           ?max_results: ::Integer,
+                           ?states: Array[("SUBMITTED" | "STARTING" | "STARTED" | "IDLE" | "BUSY" | "FAILED" | "TERMINATING" | "TERMINATED")],
+                           ?created_at_after: ::Time,
+                           ?created_at_before: ::Time
+                         ) -> _ListSessionsResponseSuccess
+                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListSessionsResponseSuccess
+
       interface _ListTagsForResourceResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListTagsForResourceResponse]
         def tags: () -> ::Hash[::String, ::String]
@@ -292,6 +335,10 @@ module Aws
                            application_id: ::String,
                            client_token: ::String,
                            execution_role_arn: ::String,
+                           ?execution_iam_policy: {
+                             policy: ::String?,
+                             policy_arns: Array[::String]?
+                           },
                            ?job_driver: {
                              spark_submit: {
                                entry_point: ::String,
@@ -310,27 +357,12 @@ module Aws
                                  classification: ::String,
                                  properties: Hash[::String, ::String]?,
                                  configurations: untyped?
-                               },
+                               }
                              ]?,
-                             monitoring_configuration: {
-                               s3_monitoring_configuration: {
-                                 log_uri: ::String?,
-                                 encryption_key_arn: ::String?
-                               }?,
-                               managed_persistence_monitoring_configuration: {
-                                 enabled: bool?,
-                                 encryption_key_arn: ::String?
-                               }?,
-                               cloud_watch_logging_configuration: {
-                                 enabled: bool,
-                                 log_group_name: ::String?,
-                                 log_stream_name_prefix: ::String?,
-                                 encryption_key_arn: ::String?,
-                                 log_types: Hash[::String, Array[::String]]?
-                               }?,
-                               prometheus_monitoring_configuration: {
-                                 remote_write_url: ::String?
-                               }?
+                             monitoring_configuration: Params::monitoring_configuration?,
+                             disk_encryption_configuration: {
+                               encryption_context: Hash[::String, ::String]?,
+                               encryption_key_arn: ::String?
                              }?
                            },
                            ?tags: Hash[::String, ::String],
@@ -343,6 +375,32 @@ module Aws
                            }
                          ) -> _StartJobRunResponseSuccess
                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartJobRunResponseSuccess
+
+      interface _StartSessionResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::StartSessionResponse]
+        def application_id: () -> ::String
+        def session_id: () -> ::String
+        def arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EMRServerless/Client.html#start_session-instance_method
+      def start_session: (
+                           application_id: ::String,
+                           client_token: ::String,
+                           execution_role_arn: ::String,
+                           ?configuration_overrides: {
+                             runtime_configuration: Array[
+                               {
+                                 classification: ::String,
+                                 properties: Hash[::String, ::String]?,
+                                 configurations: untyped?
+                               }
+                             ]?
+                           },
+                           ?tags: Hash[::String, ::String],
+                           ?idle_timeout_minutes: ::Integer,
+                           ?name: ::String
+                         ) -> _StartSessionResponseSuccess
+                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartSessionResponseSuccess
 
       interface _StopApplicationResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::StopApplicationResponse]
@@ -363,6 +421,18 @@ module Aws
                         ) -> _TagResourceResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _TagResourceResponseSuccess
 
+      interface _TerminateSessionResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::TerminateSessionResponse]
+        def application_id: () -> ::String
+        def session_id: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EMRServerless/Client.html#terminate_session-instance_method
+      def terminate_session: (
+                               application_id: ::String,
+                               session_id: ::String
+                             ) -> _TerminateSessionResponseSuccess
+                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _TerminateSessionResponseSuccess
+
       interface _UntagResourceResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::UntagResourceResponse]
       end
@@ -381,15 +451,7 @@ module Aws
       def update_application: (
                                 application_id: ::String,
                                 client_token: ::String,
-                                ?initial_capacity: Hash[::String, {
-                                    worker_count: ::Integer,
-                                    worker_configuration: {
-                                      cpu: ::String,
-                                      memory: ::String,
-                                      disk: ::String?,
-                                      disk_type: ::String?
-                                    }?
-                                  }],
+                                ?initial_capacity: Hash[::String, Params::initial_capacity_config],
                                 ?maximum_capacity: {
                                   cpu: ::String,
                                   memory: ::String,
@@ -408,16 +470,19 @@ module Aws
                                 },
                                 ?architecture: ("ARM64" | "X86_64"),
                                 ?image_configuration: {
-                                  image_uri: ::String?
+                                  image_uri: ::String?,
+                                  application_level_digest_resolution: bool?
                                 },
                                 ?worker_type_specifications: Hash[::String, {
                                     image_configuration: {
-                                      image_uri: ::String?
+                                      image_uri: ::String?,
+                                      application_level_digest_resolution: bool?
                                     }?
                                   }],
                                 ?interactive_configuration: {
                                   studio_enabled: bool?,
-                                  livy_endpoint_enabled: bool?
+                                  livy_endpoint_enabled: bool?,
+                                  session_enabled: bool?
                                 },
                                 ?release_label: ::String,
                                 ?runtime_configuration: Array[
@@ -425,31 +490,23 @@ module Aws
                                     classification: ::String,
                                     properties: Hash[::String, ::String]?,
                                     configurations: untyped?
-                                  },
+                                  }
                                 ],
-                                ?monitoring_configuration: {
-                                  s3_monitoring_configuration: {
-                                    log_uri: ::String?,
-                                    encryption_key_arn: ::String?
-                                  }?,
-                                  managed_persistence_monitoring_configuration: {
-                                    enabled: bool?,
-                                    encryption_key_arn: ::String?
-                                  }?,
-                                  cloud_watch_logging_configuration: {
-                                    enabled: bool,
-                                    log_group_name: ::String?,
-                                    log_stream_name_prefix: ::String?,
-                                    encryption_key_arn: ::String?,
-                                    log_types: Hash[::String, Array[::String]]?
-                                  }?,
-                                  prometheus_monitoring_configuration: {
-                                    remote_write_url: ::String?
-                                  }?
+                                ?monitoring_configuration: Params::monitoring_configuration,
+                                ?disk_encryption_configuration: {
+                                  encryption_context: Hash[::String, ::String]?,
+                                  encryption_key_arn: ::String?
                                 },
                                 ?scheduler_configuration: {
                                   queue_timeout_minutes: ::Integer?,
                                   max_concurrent_runs: ::Integer?
+                                },
+                                ?identity_center_configuration: {
+                                  identity_center_instance_arn: ::String?,
+                                  user_background_sessions_enabled: bool?
+                                },
+                                ?job_level_cost_allocation_configuration: {
+                                  enabled: bool?
                                 }
                               ) -> _UpdateApplicationResponseSuccess
                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateApplicationResponseSuccess

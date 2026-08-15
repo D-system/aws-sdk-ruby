@@ -9,49 +9,49 @@ module Aws::Mgn
   module Types
 
     class AccessDeniedException
-      attr_accessor code: ::String
       attr_accessor message: ::String
+      attr_accessor code: ::String
       SENSITIVE: []
     end
 
     class Application
-      attr_accessor application_aggregated_status: Types::ApplicationAggregatedStatus
       attr_accessor application_id: ::String
       attr_accessor arn: ::String
-      attr_accessor creation_date_time: ::String
+      attr_accessor name: ::String
       attr_accessor description: ::String
       attr_accessor is_archived: bool
+      attr_accessor application_aggregated_status: Types::ApplicationAggregatedStatus
+      attr_accessor creation_date_time: ::String
       attr_accessor last_modified_date_time: ::String
-      attr_accessor name: ::String
       attr_accessor tags: ::Hash[::String, ::String]
       attr_accessor wave_id: ::String
       SENSITIVE: [:tags]
     end
 
     class ApplicationAggregatedStatus
-      attr_accessor health_status: ("HEALTHY" | "LAGGING" | "ERROR")
       attr_accessor last_update_date_time: ::String
+      attr_accessor health_status: ("HEALTHY" | "LAGGING" | "ERROR")
       attr_accessor progress_status: ("NOT_STARTED" | "IN_PROGRESS" | "COMPLETED")
       attr_accessor total_source_servers: ::Integer
       SENSITIVE: []
     end
 
     class ArchiveApplicationRequest
-      attr_accessor account_id: ::String
       attr_accessor application_id: ::String
+      attr_accessor account_id: ::String
       SENSITIVE: []
     end
 
     class ArchiveWaveRequest
-      attr_accessor account_id: ::String
       attr_accessor wave_id: ::String
+      attr_accessor account_id: ::String
       SENSITIVE: []
     end
 
     class AssociateApplicationsRequest
-      attr_accessor account_id: ::String
-      attr_accessor application_i_ds: ::Array[::String]
       attr_accessor wave_id: ::String
+      attr_accessor application_i_ds: ::Array[::String]
+      attr_accessor account_id: ::String
       SENSITIVE: []
     end
 
@@ -59,9 +59,9 @@ module Aws::Mgn
     end
 
     class AssociateSourceServersRequest
-      attr_accessor account_id: ::String
       attr_accessor application_id: ::String
       attr_accessor source_server_i_ds: ::Array[::String]
+      attr_accessor account_id: ::String
       SENSITIVE: []
     end
 
@@ -75,9 +75,9 @@ module Aws::Mgn
     end
 
     class ChangeServerLifeCycleStateRequest
-      attr_accessor account_id: ::String
-      attr_accessor life_cycle: Types::ChangeServerLifeCycleStateSourceServerLifecycle
       attr_accessor source_server_id: ::String
+      attr_accessor life_cycle: Types::ChangeServerLifeCycleStateSourceServerLifecycle
+      attr_accessor account_id: ::String
       SENSITIVE: []
     end
 
@@ -86,135 +86,165 @@ module Aws::Mgn
       SENSITIVE: []
     end
 
+    class Checksum
+      attr_accessor encryption_algorithm: ("SHA256")
+      attr_accessor hash: ::String
+      SENSITIVE: []
+    end
+
+    class CodeGenerationOutputFormatStatusDetails
+      attr_accessor status: ("SUCCEEDED" | "FAILED")
+      attr_accessor status_detail_list: ::String
+      SENSITIVE: []
+    end
+
     class ConflictException
-      attr_accessor code: ::String
-      attr_accessor errors: ::Array[Types::ErrorDetails]
       attr_accessor message: ::String
+      attr_accessor code: ::String
       attr_accessor resource_id: ::String
       attr_accessor resource_type: ::String
+      attr_accessor errors: ::Array[Types::ErrorDetails]
       SENSITIVE: []
     end
 
     class Connector
-      attr_accessor arn: ::String
       attr_accessor connector_id: ::String
       attr_accessor name: ::String
-      attr_accessor ssm_command_config: Types::ConnectorSsmCommandConfig
       attr_accessor ssm_instance_id: ::String
+      attr_accessor arn: ::String
       attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor ssm_command_config: Types::ConnectorSsmCommandConfig
       SENSITIVE: [:tags]
     end
 
     class ConnectorSsmCommandConfig
-      attr_accessor cloud_watch_log_group_name: ::String
-      attr_accessor cloud_watch_output_enabled: bool
-      attr_accessor output_s3_bucket_name: ::String
       attr_accessor s3_output_enabled: bool
+      attr_accessor output_s3_bucket_name: ::String
+      attr_accessor cloud_watch_output_enabled: bool
+      attr_accessor cloud_watch_log_group_name: ::String
       SENSITIVE: []
     end
 
     class CreateApplicationRequest
-      attr_accessor account_id: ::String
-      attr_accessor description: ::String
       attr_accessor name: ::String
+      attr_accessor description: ::String
       attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor account_id: ::String
       SENSITIVE: [:tags]
     end
 
     class CreateConnectorRequest
       attr_accessor name: ::String
-      attr_accessor ssm_command_config: Types::ConnectorSsmCommandConfig
       attr_accessor ssm_instance_id: ::String
       attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor ssm_command_config: Types::ConnectorSsmCommandConfig
       SENSITIVE: [:tags]
     end
 
     class CreateLaunchConfigurationTemplateRequest
-      attr_accessor associate_public_ip_address: bool
-      attr_accessor boot_mode: ("LEGACY_BIOS" | "UEFI" | "USE_SOURCE")
-      attr_accessor copy_private_ip: bool
-      attr_accessor copy_tags: bool
-      attr_accessor enable_map_auto_tagging: bool
-      attr_accessor large_volume_conf: Types::LaunchTemplateDiskConf
-      attr_accessor launch_disposition: ("STOPPED" | "STARTED")
-      attr_accessor licensing: Types::Licensing
-      attr_accessor map_auto_tagging_mpe_id: ::String
       attr_accessor post_launch_actions: Types::PostLaunchActions
-      attr_accessor small_volume_conf: Types::LaunchTemplateDiskConf
-      attr_accessor small_volume_max_size: ::Integer
+      attr_accessor enable_map_auto_tagging: bool
+      attr_accessor map_auto_tagging_mpe_id: ::String
       attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor launch_disposition: ("STOPPED" | "STARTED")
       attr_accessor target_instance_type_right_sizing_method: ("NONE" | "BASIC")
+      attr_accessor copy_private_ip: bool
+      attr_accessor associate_public_ip_address: bool
+      attr_accessor copy_tags: bool
+      attr_accessor licensing: Types::Licensing
+      attr_accessor boot_mode: ("LEGACY_BIOS" | "UEFI" | "USE_SOURCE")
+      attr_accessor small_volume_max_size: ::Integer
+      attr_accessor small_volume_conf: Types::LaunchTemplateDiskConf
+      attr_accessor large_volume_conf: Types::LaunchTemplateDiskConf
+      attr_accessor enable_parameters_encryption: bool
+      attr_accessor parameters_encryption_key: ::String
       SENSITIVE: [:tags]
     end
 
+    class CreateNetworkMigrationDefinitionRequest
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor source_configurations: ::Array[Types::SourceConfiguration]
+      attr_accessor target_s3_configuration: Types::TargetS3Configuration
+      attr_accessor target_network: Types::TargetNetwork
+      attr_accessor target_deployment: ("SINGLE_ACCOUNT" | "MULTI_ACCOUNT")
+      attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor scope_tags: ::Hash[::String, ::String]
+      SENSITIVE: [:tags, :scope_tags]
+    end
+
     class CreateReplicationConfigurationTemplateRequest
+      attr_accessor staging_area_subnet_id: ::String
       attr_accessor associate_default_security_group: bool
-      attr_accessor bandwidth_throttling: ::Integer
-      attr_accessor create_public_ip: bool
-      attr_accessor data_plane_routing: ("PRIVATE_IP" | "PUBLIC_IP")
+      attr_accessor replication_servers_security_groups_i_ds: ::Array[::String]
+      attr_accessor replication_server_instance_type: ::String
+      attr_accessor use_dedicated_replication_server: bool
       attr_accessor default_large_staging_disk_type: ("GP2" | "ST1" | "GP3")
       attr_accessor ebs_encryption: ("DEFAULT" | "CUSTOM")
       attr_accessor ebs_encryption_key_arn: ::String
-      attr_accessor replication_server_instance_type: ::String
-      attr_accessor replication_servers_security_groups_i_ds: ::Array[::String]
-      attr_accessor staging_area_subnet_id: ::String
+      attr_accessor bandwidth_throttling: ::Integer
+      attr_accessor data_plane_routing: ("PRIVATE_IP" | "PUBLIC_IP")
+      attr_accessor create_public_ip: bool
       attr_accessor staging_area_tags: ::Hash[::String, ::String]
-      attr_accessor tags: ::Hash[::String, ::String]
-      attr_accessor use_dedicated_replication_server: bool
       attr_accessor use_fips_endpoint: bool
+      attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor internet_protocol: ("IPV4" | "IPV6")
+      attr_accessor store_snapshot_on_local_zone: bool
+      attr_accessor storage_configuration: Types::StorageConfiguration
       SENSITIVE: [:staging_area_tags, :tags]
     end
 
     class CreateWaveRequest
-      attr_accessor account_id: ::String
-      attr_accessor description: ::String
       attr_accessor name: ::String
+      attr_accessor description: ::String
       attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor account_id: ::String
       SENSITIVE: [:tags]
     end
 
     class DataReplicationError
-      attr_accessor error: ("AGENT_NOT_SEEN" | "SNAPSHOTS_FAILURE" | "NOT_CONVERGING" | "UNSTABLE_NETWORK" | "FAILED_TO_CREATE_SECURITY_GROUP" | "FAILED_TO_LAUNCH_REPLICATION_SERVER" | "FAILED_TO_BOOT_REPLICATION_SERVER" | "FAILED_TO_AUTHENTICATE_WITH_SERVICE" | "FAILED_TO_DOWNLOAD_REPLICATION_SOFTWARE" | "FAILED_TO_CREATE_STAGING_DISKS" | "FAILED_TO_ATTACH_STAGING_DISKS" | "FAILED_TO_PAIR_REPLICATION_SERVER_WITH_AGENT" | "FAILED_TO_CONNECT_AGENT_TO_REPLICATION_SERVER" | "FAILED_TO_START_DATA_TRANSFER" | "UNSUPPORTED_VM_CONFIGURATION" | "LAST_SNAPSHOT_JOB_FAILED")
+      attr_accessor error: ("AGENT_NOT_SEEN" | "SNAPSHOTS_FAILURE" | "NOT_CONVERGING" | "UNSTABLE_NETWORK" | "FAILED_TO_CREATE_SECURITY_GROUP" | "FAILED_TO_LAUNCH_REPLICATION_SERVER" | "FAILED_TO_BOOT_REPLICATION_SERVER" | "FAILED_TO_AUTHENTICATE_WITH_SERVICE" | "FAILED_TO_DOWNLOAD_REPLICATION_SOFTWARE" | "FAILED_TO_CREATE_STAGING_DISKS" | "FAILED_TO_ATTACH_STAGING_DISKS" | "FAILED_TO_PAIR_REPLICATION_SERVER_WITH_AGENT" | "FAILED_TO_CONNECT_AGENT_TO_REPLICATION_SERVER" | "FAILED_TO_START_DATA_TRANSFER" | "UNSUPPORTED_VM_CONFIGURATION" | "LAST_SNAPSHOT_JOB_FAILED" | "FAILED_TO_SETUP_FSX_PROXY" | "FAILED_TO_CREATE_FSX_SNAPSHOT")
       attr_accessor raw_error: ::String
       SENSITIVE: []
     end
 
     class DataReplicationInfo
-      attr_accessor data_replication_error: Types::DataReplicationError
-      attr_accessor data_replication_initiation: Types::DataReplicationInitiation
-      attr_accessor data_replication_state: ("STOPPED" | "INITIATING" | "INITIAL_SYNC" | "BACKLOG" | "CREATING_SNAPSHOT" | "CONTINUOUS" | "PAUSED" | "RESCAN" | "STALLED" | "DISCONNECTED" | "PENDING_SNAPSHOT_SHIPPING" | "SHIPPING_SNAPSHOT")
-      attr_accessor eta_date_time: ::String
       attr_accessor lag_duration: ::String
-      attr_accessor last_snapshot_date_time: ::String
+      attr_accessor eta_date_time: ::String
       attr_accessor replicated_disks: ::Array[Types::DataReplicationInfoReplicatedDisk]
+      attr_accessor data_replication_state: ("STOPPED" | "INITIATING" | "INITIAL_SYNC" | "BACKLOG" | "CREATING_SNAPSHOT" | "CONTINUOUS" | "PAUSED" | "RESCAN" | "STALLED" | "DISCONNECTED" | "PENDING_SNAPSHOT_SHIPPING" | "SHIPPING_SNAPSHOT")
+      attr_accessor data_replication_initiation: Types::DataReplicationInitiation
+      attr_accessor data_replication_error: Types::DataReplicationError
+      attr_accessor last_snapshot_date_time: ::String
+      attr_accessor replicator_id: ::String
       SENSITIVE: []
     end
 
     class DataReplicationInfoReplicatedDisk
-      attr_accessor backlogged_storage_bytes: ::Integer
       attr_accessor device_name: ::String
+      attr_accessor total_storage_bytes: ::Integer
       attr_accessor replicated_storage_bytes: ::Integer
       attr_accessor rescanned_storage_bytes: ::Integer
-      attr_accessor total_storage_bytes: ::Integer
+      attr_accessor backlogged_storage_bytes: ::Integer
       SENSITIVE: []
     end
 
     class DataReplicationInitiation
-      attr_accessor next_attempt_date_time: ::String
       attr_accessor start_date_time: ::String
+      attr_accessor next_attempt_date_time: ::String
       attr_accessor steps: ::Array[Types::DataReplicationInitiationStep]
       SENSITIVE: []
     end
 
     class DataReplicationInitiationStep
-      attr_accessor name: ("WAIT" | "CREATE_SECURITY_GROUP" | "LAUNCH_REPLICATION_SERVER" | "BOOT_REPLICATION_SERVER" | "AUTHENTICATE_WITH_SERVICE" | "DOWNLOAD_REPLICATION_SOFTWARE" | "CREATE_STAGING_DISKS" | "ATTACH_STAGING_DISKS" | "PAIR_REPLICATION_SERVER_WITH_AGENT" | "CONNECT_AGENT_TO_REPLICATION_SERVER" | "START_DATA_TRANSFER")
+      attr_accessor name: ("WAIT" | "CREATE_SECURITY_GROUP" | "LAUNCH_REPLICATION_SERVER" | "BOOT_REPLICATION_SERVER" | "AUTHENTICATE_WITH_SERVICE" | "DOWNLOAD_REPLICATION_SOFTWARE" | "CREATE_STAGING_DISKS" | "ATTACH_STAGING_DISKS" | "PAIR_REPLICATION_SERVER_WITH_AGENT" | "CONNECT_AGENT_TO_REPLICATION_SERVER" | "START_DATA_TRANSFER" | "SETUP_FSX_PROXY")
       attr_accessor status: ("NOT_STARTED" | "IN_PROGRESS" | "SUCCEEDED" | "FAILED" | "SKIPPED")
       SENSITIVE: []
     end
 
     class DeleteApplicationRequest
-      attr_accessor account_id: ::String
       attr_accessor application_id: ::String
+      attr_accessor account_id: ::String
       SENSITIVE: []
     end
 
@@ -227,8 +257,8 @@ module Aws::Mgn
     end
 
     class DeleteJobRequest
-      attr_accessor account_id: ::String
       attr_accessor job_id: ::String
+      attr_accessor account_id: ::String
       SENSITIVE: []
     end
 
@@ -243,6 +273,17 @@ module Aws::Mgn
     class DeleteLaunchConfigurationTemplateResponse < Aws::EmptyStructure
     end
 
+    class DeleteNetworkMigrationDefinitionRequest
+      attr_accessor network_migration_definition_id: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteNetworkMigrationDefinitionResponse < Aws::EmptyStructure
+    end
+
+    class DeleteOperation < Aws::EmptyStructure
+    end
+
     class DeleteReplicationConfigurationTemplateRequest
       attr_accessor replication_configuration_template_id: ::String
       SENSITIVE: []
@@ -252,8 +293,8 @@ module Aws::Mgn
     end
 
     class DeleteSourceServerRequest
-      attr_accessor account_id: ::String
       attr_accessor source_server_id: ::String
+      attr_accessor account_id: ::String
       SENSITIVE: []
     end
 
@@ -266,8 +307,8 @@ module Aws::Mgn
     end
 
     class DeleteWaveRequest
-      attr_accessor account_id: ::String
       attr_accessor wave_id: ::String
+      attr_accessor account_id: ::String
       SENSITIVE: []
     end
 
@@ -275,10 +316,10 @@ module Aws::Mgn
     end
 
     class DescribeJobLogItemsRequest
-      attr_accessor account_id: ::String
       attr_accessor job_id: ::String
       attr_accessor max_results: ::Integer
       attr_accessor next_token: ::String
+      attr_accessor account_id: ::String
       SENSITIVE: []
     end
 
@@ -289,16 +330,16 @@ module Aws::Mgn
     end
 
     class DescribeJobsRequest
-      attr_accessor account_id: ::String
       attr_accessor filters: Types::DescribeJobsRequestFilters
       attr_accessor max_results: ::Integer
       attr_accessor next_token: ::String
+      attr_accessor account_id: ::String
       SENSITIVE: []
     end
 
     class DescribeJobsRequestFilters
-      attr_accessor from_date: ::String
       attr_accessor job_i_ds: ::Array[::String]
+      attr_accessor from_date: ::String
       attr_accessor to_date: ::String
       SENSITIVE: []
     end
@@ -323,9 +364,9 @@ module Aws::Mgn
     end
 
     class DescribeReplicationConfigurationTemplatesRequest
+      attr_accessor replication_configuration_template_i_ds: ::Array[::String]
       attr_accessor max_results: ::Integer
       attr_accessor next_token: ::String
-      attr_accessor replication_configuration_template_i_ds: ::Array[::String]
       SENSITIVE: []
     end
 
@@ -336,19 +377,19 @@ module Aws::Mgn
     end
 
     class DescribeSourceServersRequest
-      attr_accessor account_id: ::String
       attr_accessor filters: Types::DescribeSourceServersRequestFilters
       attr_accessor max_results: ::Integer
       attr_accessor next_token: ::String
+      attr_accessor account_id: ::String
       SENSITIVE: []
     end
 
     class DescribeSourceServersRequestFilters
-      attr_accessor application_i_ds: ::Array[::String]
-      attr_accessor is_archived: bool
-      attr_accessor life_cycle_states: ::Array[("STOPPED" | "NOT_READY" | "READY_FOR_TEST" | "TESTING" | "READY_FOR_CUTOVER" | "CUTTING_OVER" | "CUTOVER" | "DISCONNECTED" | "DISCOVERED" | "PENDING_INSTALLATION")]
-      attr_accessor replication_types: ::Array[("AGENT_BASED" | "SNAPSHOT_SHIPPING")]
       attr_accessor source_server_i_ds: ::Array[::String]
+      attr_accessor is_archived: bool
+      attr_accessor replication_types: ::Array[("AGENT_BASED" | "SNAPSHOT_SHIPPING")]
+      attr_accessor life_cycle_states: ::Array[("STOPPED" | "NOT_READY" | "READY_FOR_TEST" | "TESTING" | "READY_FOR_CUTOVER" | "CUTTING_OVER" | "CUTOVER" | "DISCONNECTED" | "DISCOVERED" | "PENDING_INSTALLATION")]
+      attr_accessor application_i_ds: ::Array[::String]
       SENSITIVE: []
     end
 
@@ -371,9 +412,9 @@ module Aws::Mgn
     end
 
     class DisassociateApplicationsRequest
-      attr_accessor account_id: ::String
-      attr_accessor application_i_ds: ::Array[::String]
       attr_accessor wave_id: ::String
+      attr_accessor application_i_ds: ::Array[::String]
+      attr_accessor account_id: ::String
       SENSITIVE: []
     end
 
@@ -381,9 +422,9 @@ module Aws::Mgn
     end
 
     class DisassociateSourceServersRequest
-      attr_accessor account_id: ::String
       attr_accessor application_id: ::String
       attr_accessor source_server_i_ds: ::Array[::String]
+      attr_accessor account_id: ::String
       SENSITIVE: []
     end
 
@@ -391,20 +432,34 @@ module Aws::Mgn
     end
 
     class DisconnectFromServiceRequest
-      attr_accessor account_id: ::String
       attr_accessor source_server_id: ::String
+      attr_accessor account_id: ::String
       SENSITIVE: []
     end
 
     class Disk
-      attr_accessor bytes: ::Integer
       attr_accessor device_name: ::String
+      attr_accessor bytes: ::Integer
+      SENSITIVE: []
+    end
+
+    class EnrichmentSourceS3Configuration
+      attr_accessor s3_bucket: ::String
+      attr_accessor s3_bucket_owner: ::String
+      attr_accessor s3_key: ::String
+      SENSITIVE: []
+    end
+
+    class EnrichmentTargetS3Configuration
+      attr_accessor s3_bucket: ::String
+      attr_accessor s3_bucket_owner: ::String
+      attr_accessor s3_key: ::String
       SENSITIVE: []
     end
 
     class ErrorDetails
-      attr_accessor code: ::String
       attr_accessor message: ::String
+      attr_accessor code: ::String
       attr_accessor resource_id: ::String
       attr_accessor resource_type: ::String
       SENSITIVE: []
@@ -416,91 +471,130 @@ module Aws::Mgn
     end
 
     class ExportTask
+      attr_accessor export_id: ::String
+      attr_accessor arn: ::String
+      attr_accessor s3_bucket: ::String
+      attr_accessor s3_key: ::String
+      attr_accessor s3_bucket_owner: ::String
       attr_accessor creation_date_time: ::String
       attr_accessor end_date_time: ::String
-      attr_accessor export_id: ::String
-      attr_accessor progress_percentage: ::Float
-      attr_accessor s3_bucket: ::String
-      attr_accessor s3_bucket_owner: ::String
-      attr_accessor s3_key: ::String
       attr_accessor status: ("PENDING" | "STARTED" | "FAILED" | "SUCCEEDED")
+      attr_accessor progress_percentage: ::Float
       attr_accessor summary: Types::ExportTaskSummary
-      SENSITIVE: []
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: [:tags]
     end
 
     class ExportTaskError
-      attr_accessor error_data: Types::ExportErrorData
       attr_accessor error_date_time: ::String
+      attr_accessor error_data: Types::ExportErrorData
       SENSITIVE: []
     end
 
     class ExportTaskSummary
-      attr_accessor applications_count: ::Integer
       attr_accessor servers_count: ::Integer
+      attr_accessor applications_count: ::Integer
       attr_accessor waves_count: ::Integer
       SENSITIVE: []
     end
 
     class FinalizeCutoverRequest
-      attr_accessor account_id: ::String
       attr_accessor source_server_id: ::String
+      attr_accessor account_id: ::String
+      SENSITIVE: []
+    end
+
+    class FsxOntapConfiguration
+      attr_accessor storage_virtual_machine_id: ::String
+      attr_accessor credentials_secret_arn: ::String
       SENSITIVE: []
     end
 
     class GetLaunchConfigurationRequest
-      attr_accessor account_id: ::String
       attr_accessor source_server_id: ::String
+      attr_accessor account_id: ::String
+      SENSITIVE: []
+    end
+
+    class GetNetworkMigrationDefinitionRequest
+      attr_accessor network_migration_definition_id: ::String
+      SENSITIVE: []
+    end
+
+    class GetNetworkMigrationMapperSegmentConstructRequest
+      attr_accessor network_migration_definition_id: ::String
+      attr_accessor network_migration_execution_id: ::String
+      attr_accessor segment_id: ::String
+      attr_accessor construct_id: ::String
+      SENSITIVE: []
+    end
+
+    class GetNetworkMigrationMapperSegmentConstructResponse
+      attr_accessor construct: Types::NetworkMigrationMapperSegmentConstruct
       SENSITIVE: []
     end
 
     class GetReplicationConfigurationRequest
-      attr_accessor account_id: ::String
       attr_accessor source_server_id: ::String
+      attr_accessor account_id: ::String
       SENSITIVE: []
     end
 
     class IdentificationHints
-      attr_accessor aws_instance_id: ::String
       attr_accessor fqdn: ::String
       attr_accessor hostname: ::String
-      attr_accessor vm_path: ::String
       attr_accessor vm_ware_uuid: ::String
+      attr_accessor aws_instance_id: ::String
+      attr_accessor vm_path: ::String
       SENSITIVE: []
     end
 
     class ImportErrorData
-      attr_accessor account_id: ::String
-      attr_accessor application_id: ::String
-      attr_accessor ec2_launch_template_id: ::String
-      attr_accessor raw_error: ::String
-      attr_accessor row_number: ::Integer
       attr_accessor source_server_id: ::String
+      attr_accessor application_id: ::String
       attr_accessor wave_id: ::String
+      attr_accessor ec2_launch_template_id: ::String
+      attr_accessor row_number: ::Integer
+      attr_accessor raw_error: ::String
+      attr_accessor account_id: ::String
+      SENSITIVE: []
+    end
+
+    class ImportFileEnrichment
+      attr_accessor job_id: ::String
+      attr_accessor created_at: ::Time
+      attr_accessor ended_at: ::Time
+      attr_accessor status: ("PENDING" | "STARTED" | "FAILED" | "SUCCEEDED" | "SUCCEEDED_WITH_WARNINGS")
+      attr_accessor status_details: ::String
+      attr_accessor checksum: Types::Checksum
+      attr_accessor s3_bucket_target: Types::EnrichmentTargetS3Configuration
       SENSITIVE: []
     end
 
     class ImportTask
+      attr_accessor import_id: ::String
+      attr_accessor arn: ::String
+      attr_accessor s3_bucket_source: Types::S3BucketSource
       attr_accessor creation_date_time: ::String
       attr_accessor end_date_time: ::String
-      attr_accessor import_id: ::String
-      attr_accessor progress_percentage: ::Float
-      attr_accessor s3_bucket_source: Types::S3BucketSource
       attr_accessor status: ("PENDING" | "STARTED" | "FAILED" | "SUCCEEDED")
+      attr_accessor progress_percentage: ::Float
       attr_accessor summary: Types::ImportTaskSummary
-      SENSITIVE: []
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: [:tags]
     end
 
     class ImportTaskError
-      attr_accessor error_data: Types::ImportErrorData
       attr_accessor error_date_time: ::String
       attr_accessor error_type: ("VALIDATION_ERROR" | "PROCESSING_ERROR")
+      attr_accessor error_data: Types::ImportErrorData
       SENSITIVE: []
     end
 
     class ImportTaskSummary
+      attr_accessor waves: Types::ImportTaskSummaryWaves
       attr_accessor applications: Types::ImportTaskSummaryApplications
       attr_accessor servers: Types::ImportTaskSummaryServers
-      attr_accessor waves: Types::ImportTaskSummaryWaves
       SENSITIVE: []
     end
 
@@ -535,90 +629,105 @@ module Aws::Mgn
     end
 
     class Job
+      attr_accessor job_id: ::String
       attr_accessor arn: ::String
+      attr_accessor type: ("LAUNCH" | "TERMINATE")
+      attr_accessor initiated_by: ("START_TEST" | "START_CUTOVER" | "DIAGNOSTIC" | "TERMINATE")
       attr_accessor creation_date_time: ::String
       attr_accessor end_date_time: ::String
-      attr_accessor initiated_by: ("START_TEST" | "START_CUTOVER" | "DIAGNOSTIC" | "TERMINATE")
-      attr_accessor job_id: ::String
-      attr_accessor participating_servers: ::Array[Types::ParticipatingServer]
       attr_accessor status: ("PENDING" | "STARTED" | "COMPLETED")
+      attr_accessor participating_servers: ::Array[Types::ParticipatingServer]
       attr_accessor tags: ::Hash[::String, ::String]
-      attr_accessor type: ("LAUNCH" | "TERMINATE")
       SENSITIVE: [:tags]
     end
 
     class JobLog
+      attr_accessor log_date_time: ::String
       attr_accessor event: ("JOB_START" | "SERVER_SKIPPED" | "CLEANUP_START" | "CLEANUP_END" | "CLEANUP_FAIL" | "SNAPSHOT_START" | "SNAPSHOT_END" | "SNAPSHOT_FAIL" | "USING_PREVIOUS_SNAPSHOT" | "CONVERSION_START" | "CONVERSION_END" | "CONVERSION_FAIL" | "LAUNCH_START" | "LAUNCH_FAILED" | "JOB_CANCEL" | "JOB_END")
       attr_accessor event_data: Types::JobLogEventData
-      attr_accessor log_date_time: ::String
       SENSITIVE: []
     end
 
     class JobLogEventData
-      attr_accessor conversion_server_id: ::String
-      attr_accessor raw_error: ::String
       attr_accessor source_server_id: ::String
+      attr_accessor conversion_server_id: ::String
       attr_accessor target_instance_id: ::String
+      attr_accessor raw_error: ::String
+      attr_accessor attempt_count: ::Integer
+      attr_accessor max_attempts_count: ::Integer
       SENSITIVE: []
     end
 
     class JobPostLaunchActionsLaunchStatus
+      attr_accessor ssm_document: Types::SsmDocument
+      attr_accessor ssm_document_type: ("AUTOMATION" | "COMMAND")
       attr_accessor execution_id: ::String
       attr_accessor execution_status: ("IN_PROGRESS" | "SUCCESS" | "FAILED")
       attr_accessor failure_reason: ::String
-      attr_accessor ssm_document: Types::SsmDocument
-      attr_accessor ssm_document_type: ("AUTOMATION" | "COMMAND")
+      SENSITIVE: []
+    end
+
+    class LastKnownCheck
+      attr_accessor type: ("EC2" | "FSx")
+      attr_accessor name: ::String
+      attr_accessor status: ("PASSED" | "FAILED" | "PENDING")
+      attr_accessor error: ::String
+      attr_accessor checked_at: ::Time
       SENSITIVE: []
     end
 
     class LaunchConfiguration
-      attr_accessor boot_mode: ("LEGACY_BIOS" | "UEFI" | "USE_SOURCE")
+      attr_accessor source_server_id: ::String
+      attr_accessor name: ::String
+      attr_accessor ec2_launch_template_id: ::String
+      attr_accessor launch_disposition: ("STOPPED" | "STARTED")
+      attr_accessor target_instance_type_right_sizing_method: ("NONE" | "BASIC")
       attr_accessor copy_private_ip: bool
       attr_accessor copy_tags: bool
-      attr_accessor ec2_launch_template_id: ::String
-      attr_accessor enable_map_auto_tagging: bool
-      attr_accessor launch_disposition: ("STOPPED" | "STARTED")
       attr_accessor licensing: Types::Licensing
-      attr_accessor map_auto_tagging_mpe_id: ::String
-      attr_accessor name: ::String
+      attr_accessor boot_mode: ("LEGACY_BIOS" | "UEFI" | "USE_SOURCE")
       attr_accessor post_launch_actions: Types::PostLaunchActions
-      attr_accessor source_server_id: ::String
-      attr_accessor target_instance_type_right_sizing_method: ("NONE" | "BASIC")
+      attr_accessor enable_map_auto_tagging: bool
+      attr_accessor map_auto_tagging_mpe_id: ::String
       SENSITIVE: []
     end
 
     class LaunchConfigurationTemplate
-      attr_accessor arn: ::String
-      attr_accessor associate_public_ip_address: bool
-      attr_accessor boot_mode: ("LEGACY_BIOS" | "UEFI" | "USE_SOURCE")
-      attr_accessor copy_private_ip: bool
-      attr_accessor copy_tags: bool
-      attr_accessor ec2_launch_template_id: ::String
-      attr_accessor enable_map_auto_tagging: bool
-      attr_accessor large_volume_conf: Types::LaunchTemplateDiskConf
       attr_accessor launch_configuration_template_id: ::String
-      attr_accessor launch_disposition: ("STOPPED" | "STARTED")
-      attr_accessor licensing: Types::Licensing
-      attr_accessor map_auto_tagging_mpe_id: ::String
+      attr_accessor arn: ::String
       attr_accessor post_launch_actions: Types::PostLaunchActions
-      attr_accessor small_volume_conf: Types::LaunchTemplateDiskConf
-      attr_accessor small_volume_max_size: ::Integer
+      attr_accessor enable_map_auto_tagging: bool
+      attr_accessor map_auto_tagging_mpe_id: ::String
       attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor ec2_launch_template_id: ::String
+      attr_accessor launch_disposition: ("STOPPED" | "STARTED")
       attr_accessor target_instance_type_right_sizing_method: ("NONE" | "BASIC")
+      attr_accessor copy_private_ip: bool
+      attr_accessor associate_public_ip_address: bool
+      attr_accessor copy_tags: bool
+      attr_accessor licensing: Types::Licensing
+      attr_accessor boot_mode: ("LEGACY_BIOS" | "UEFI" | "USE_SOURCE")
+      attr_accessor small_volume_max_size: ::Integer
+      attr_accessor small_volume_conf: Types::LaunchTemplateDiskConf
+      attr_accessor large_volume_conf: Types::LaunchTemplateDiskConf
+      attr_accessor enable_parameters_encryption: bool
+      attr_accessor parameters_encryption_key: ::String
       SENSITIVE: [:tags]
     end
 
     class LaunchTemplateDiskConf
+      attr_accessor volume_type: ("io1" | "io2" | "gp3" | "gp2" | "st1" | "sc1" | "standard")
       attr_accessor iops: ::Integer
       attr_accessor throughput: ::Integer
-      attr_accessor volume_type: ("io1" | "io2" | "gp3" | "gp2" | "st1" | "sc1" | "standard")
       SENSITIVE: []
     end
 
     class LaunchedInstance
       attr_accessor ec2_instance_id: ::String
-      attr_accessor first_boot: ("WAITING" | "SUCCEEDED" | "UNKNOWN" | "STOPPED")
       attr_accessor job_id: ::String
+      attr_accessor first_boot: ("WAITING" | "SUCCEEDED" | "UNKNOWN" | "STOPPED")
+      attr_accessor last_known_checks: ::Array[Types::LastKnownCheck]
+      attr_accessor last_known_fsx_checks_status: ("PASSED" | "FAILED" | "PENDING")
       SENSITIVE: []
     end
 
@@ -629,19 +738,19 @@ module Aws::Mgn
 
     class LifeCycle
       attr_accessor added_to_service_date_time: ::String
-      attr_accessor elapsed_replication_duration: ::String
       attr_accessor first_byte_date_time: ::String
-      attr_accessor last_cutover: Types::LifeCycleLastCutover
+      attr_accessor elapsed_replication_duration: ::String
       attr_accessor last_seen_by_service_date_time: ::String
       attr_accessor last_test: Types::LifeCycleLastTest
+      attr_accessor last_cutover: Types::LifeCycleLastCutover
       attr_accessor state: ("STOPPED" | "NOT_READY" | "READY_FOR_TEST" | "TESTING" | "READY_FOR_CUTOVER" | "CUTTING_OVER" | "CUTOVER" | "DISCONNECTED" | "DISCOVERED" | "PENDING_INSTALLATION")
       SENSITIVE: []
     end
 
     class LifeCycleLastCutover
-      attr_accessor finalized: Types::LifeCycleLastCutoverFinalized
       attr_accessor initiated: Types::LifeCycleLastCutoverInitiated
       attr_accessor reverted: Types::LifeCycleLastCutoverReverted
+      attr_accessor finalized: Types::LifeCycleLastCutoverFinalized
       SENSITIVE: []
     end
 
@@ -662,9 +771,9 @@ module Aws::Mgn
     end
 
     class LifeCycleLastTest
-      attr_accessor finalized: Types::LifeCycleLastTestFinalized
       attr_accessor initiated: Types::LifeCycleLastTestInitiated
       attr_accessor reverted: Types::LifeCycleLastTestReverted
+      attr_accessor finalized: Types::LifeCycleLastTestFinalized
       SENSITIVE: []
     end
 
@@ -685,10 +794,10 @@ module Aws::Mgn
     end
 
     class ListApplicationsRequest
-      attr_accessor account_id: ::String
       attr_accessor filters: Types::ListApplicationsRequestFilters
       attr_accessor max_results: ::Integer
       attr_accessor next_token: ::String
+      attr_accessor account_id: ::String
       SENSITIVE: []
     end
 
@@ -767,6 +876,24 @@ module Aws::Mgn
       SENSITIVE: []
     end
 
+    class ListImportFileEnrichmentsFilters
+      attr_accessor job_i_ds: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class ListImportFileEnrichmentsRequest
+      attr_accessor filters: Types::ListImportFileEnrichmentsFilters
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListImportFileEnrichmentsResponse
+      attr_accessor items: ::Array[Types::ImportFileEnrichment]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
     class ListImportsRequest
       attr_accessor filters: Types::ListImportsRequestFilters
       attr_accessor max_results: ::Integer
@@ -797,12 +924,246 @@ module Aws::Mgn
       SENSITIVE: []
     end
 
+    class ListNetworkMigrationAnalysesFilters
+      attr_accessor job_i_ds: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class ListNetworkMigrationAnalysesRequest
+      attr_accessor network_migration_execution_id: ::String
+      attr_accessor network_migration_definition_id: ::String
+      attr_accessor filters: Types::ListNetworkMigrationAnalysesFilters
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListNetworkMigrationAnalysesResponse
+      attr_accessor items: ::Array[Types::NetworkMigrationAnalysisJobDetails]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListNetworkMigrationAnalysisResultsFilters
+      attr_accessor vpc_i_ds: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class ListNetworkMigrationAnalysisResultsRequest
+      attr_accessor network_migration_execution_id: ::String
+      attr_accessor network_migration_definition_id: ::String
+      attr_accessor filters: Types::ListNetworkMigrationAnalysisResultsFilters
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListNetworkMigrationAnalysisResultsResponse
+      attr_accessor items: ::Array[Types::NetworkMigrationAnalysisResult]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListNetworkMigrationCodeGenerationSegmentsFilters
+      attr_accessor segment_i_ds: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class ListNetworkMigrationCodeGenerationSegmentsRequest
+      attr_accessor network_migration_execution_id: ::String
+      attr_accessor network_migration_definition_id: ::String
+      attr_accessor filters: Types::ListNetworkMigrationCodeGenerationSegmentsFilters
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListNetworkMigrationCodeGenerationSegmentsResponse
+      attr_accessor items: ::Array[Types::NetworkMigrationCodeGenerationSegment]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListNetworkMigrationCodeGenerationsFilters
+      attr_accessor job_i_ds: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class ListNetworkMigrationCodeGenerationsRequest
+      attr_accessor network_migration_execution_id: ::String
+      attr_accessor network_migration_definition_id: ::String
+      attr_accessor filters: Types::ListNetworkMigrationCodeGenerationsFilters
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListNetworkMigrationCodeGenerationsResponse
+      attr_accessor items: ::Array[Types::NetworkMigrationCodeGenerationJobDetails]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListNetworkMigrationDefinitionsRequest
+      attr_accessor filters: Types::ListNetworkMigrationDefinitionsRequestFilters
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListNetworkMigrationDefinitionsRequestFilters
+      attr_accessor network_migration_definition_i_ds: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class ListNetworkMigrationDefinitionsResponse
+      attr_accessor items: ::Array[Types::NetworkMigrationDefinitionSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListNetworkMigrationDeployedStacksRequest
+      attr_accessor network_migration_execution_id: ::String
+      attr_accessor network_migration_definition_id: ::String
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListNetworkMigrationDeployedStacksResponse
+      attr_accessor items: ::Array[Types::NetworkMigrationDeployedStackDetails]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListNetworkMigrationDeployerJobFilters
+      attr_accessor job_i_ds: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class ListNetworkMigrationDeployerJobResponse
+      attr_accessor items: ::Array[Types::NetworkMigrationDeployerJobDetails]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListNetworkMigrationDeploymentsRequest
+      attr_accessor network_migration_execution_id: ::String
+      attr_accessor network_migration_definition_id: ::String
+      attr_accessor filters: Types::ListNetworkMigrationDeployerJobFilters
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListNetworkMigrationExecutionRequestFilters
+      attr_accessor network_migration_execution_i_ds: ::Array[::String]
+      attr_accessor network_migration_execution_statuses: ::Array[("PENDING" | "STARTED" | "SUCCEEDED" | "FAILED")]
+      SENSITIVE: []
+    end
+
+    class ListNetworkMigrationExecutionsRequest
+      attr_accessor network_migration_definition_id: ::String
+      attr_accessor filters: Types::ListNetworkMigrationExecutionRequestFilters
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListNetworkMigrationExecutionsResponse
+      attr_accessor items: ::Array[Types::NetworkMigrationExecution]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListNetworkMigrationMapperSegmentConstructsFilters
+      attr_accessor construct_i_ds: ::Array[::String]
+      attr_accessor construct_types: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class ListNetworkMigrationMapperSegmentConstructsRequest
+      attr_accessor network_migration_execution_id: ::String
+      attr_accessor network_migration_definition_id: ::String
+      attr_accessor segment_id: ::String
+      attr_accessor filters: Types::ListNetworkMigrationMapperSegmentConstructsFilters
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListNetworkMigrationMapperSegmentConstructsResponse
+      attr_accessor items: ::Array[Types::NetworkMigrationMapperSegmentConstruct]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListNetworkMigrationMapperSegmentsFilters
+      attr_accessor segment_i_ds: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class ListNetworkMigrationMapperSegmentsRequest
+      attr_accessor network_migration_execution_id: ::String
+      attr_accessor network_migration_definition_id: ::String
+      attr_accessor filters: Types::ListNetworkMigrationMapperSegmentsFilters
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListNetworkMigrationMapperSegmentsResponse
+      attr_accessor items: ::Array[Types::NetworkMigrationMapperSegment]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListNetworkMigrationMappingUpdatesFilters
+      attr_accessor job_i_ds: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class ListNetworkMigrationMappingUpdatesRequest
+      attr_accessor network_migration_execution_id: ::String
+      attr_accessor network_migration_definition_id: ::String
+      attr_accessor filters: Types::ListNetworkMigrationMappingUpdatesFilters
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListNetworkMigrationMappingUpdatesResponse
+      attr_accessor items: ::Array[Types::NetworkMigrationMappingUpdateJobDetails]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListNetworkMigrationMappingsFilters
+      attr_accessor job_i_ds: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class ListNetworkMigrationMappingsRequest
+      attr_accessor network_migration_execution_id: ::String
+      attr_accessor network_migration_definition_id: ::String
+      attr_accessor filters: Types::ListNetworkMigrationMappingsFilters
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListNetworkMigrationMappingsResponse
+      attr_accessor items: ::Array[Types::NetworkMigrationMappingJobDetails]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
     class ListSourceServerActionsRequest
-      attr_accessor account_id: ::String
+      attr_accessor source_server_id: ::String
       attr_accessor filters: Types::SourceServerActionsRequestFilters
       attr_accessor max_results: ::Integer
       attr_accessor next_token: ::String
-      attr_accessor source_server_id: ::String
+      attr_accessor account_id: ::String
       SENSITIVE: []
     end
 
@@ -823,8 +1184,8 @@ module Aws::Mgn
     end
 
     class ListTemplateActionsRequest
-      attr_accessor filters: Types::TemplateActionsRequestFilters
       attr_accessor launch_configuration_template_id: ::String
+      attr_accessor filters: Types::TemplateActionsRequestFilters
       attr_accessor max_results: ::Integer
       attr_accessor next_token: ::String
       SENSITIVE: []
@@ -837,16 +1198,16 @@ module Aws::Mgn
     end
 
     class ListWavesRequest
-      attr_accessor account_id: ::String
       attr_accessor filters: Types::ListWavesRequestFilters
       attr_accessor max_results: ::Integer
       attr_accessor next_token: ::String
+      attr_accessor account_id: ::String
       SENSITIVE: []
     end
 
     class ListWavesRequestFilters
-      attr_accessor is_archived: bool
       attr_accessor wave_i_ds: ::Array[::String]
+      attr_accessor is_archived: bool
       SENSITIVE: []
     end
 
@@ -862,15 +1223,218 @@ module Aws::Mgn
     end
 
     class MarkAsArchivedRequest
-      attr_accessor account_id: ::String
       attr_accessor source_server_id: ::String
+      attr_accessor account_id: ::String
+      SENSITIVE: []
+    end
+
+    class MergeConstruct
+      attr_accessor segment_id: ::String
+      attr_accessor construct_id: ::String
+      SENSITIVE: []
+    end
+
+    class MergeOperation
+      attr_accessor merge_constructs: ::Array[Types::MergeConstruct]
       SENSITIVE: []
     end
 
     class NetworkInterface
+      attr_accessor mac_address: ::String
       attr_accessor ips: ::Array[::String]
       attr_accessor is_primary: bool
-      attr_accessor mac_address: ::String
+      SENSITIVE: []
+    end
+
+    class NetworkMigrationAnalysisJobDetails
+      attr_accessor job_id: ::String
+      attr_accessor network_migration_execution_id: ::String
+      attr_accessor network_migration_definition_id: ::String
+      attr_accessor created_at: ::Time
+      attr_accessor ended_at: ::Time
+      attr_accessor status: ("PENDING" | "STARTED" | "SUCCEEDED" | "FAILED")
+      attr_accessor status_details: ::String
+      SENSITIVE: []
+    end
+
+    class NetworkMigrationAnalysisResult
+      attr_accessor job_id: ::String
+      attr_accessor network_migration_execution_id: ::String
+      attr_accessor network_migration_definition_id: ::String
+      attr_accessor analyzer_type: ("REACHABILITY_ANALYZER")
+      attr_accessor source: Types::NetworkMigrationAnalysisResultSource
+      attr_accessor target: Types::NetworkMigrationAnalysisResultTarget
+      attr_accessor status: ("PENDING" | "STARTED" | "SUCCEEDED" | "FAILED")
+      attr_accessor analysis_result: ::String
+      SENSITIVE: []
+    end
+
+    class NetworkMigrationAnalysisResultSource
+      attr_accessor vpc_id: ::String
+      attr_accessor subnet_id: ::String
+      SENSITIVE: []
+    end
+
+    class NetworkMigrationAnalysisResultTarget
+      attr_accessor vpc_id: ::String
+      attr_accessor subnet_id: ::String
+      SENSITIVE: []
+    end
+
+    class NetworkMigrationCodeGenerationArtifact
+      attr_accessor artifact_id: ::String
+      attr_accessor artifact_type: ("CDK_TYPESCRIPT" | "CLOUDFORMATION_TEMPLATE" | "CDKTF_TYPESCRIPT" | "TERRAFORM_CONFIGURATION" | "CDK_L2_TYPESCRIPT")
+      attr_accessor artifact_sub_type: ("APPLICATION" | "NESTED_STACK" | "STACK")
+      attr_accessor logical_id: ::String
+      attr_accessor output_s3_configuration: Types::S3Configuration
+      attr_accessor checksum: Types::Checksum
+      attr_accessor created_at: ::Time
+      SENSITIVE: []
+    end
+
+    class NetworkMigrationCodeGenerationJobDetails
+      attr_accessor job_id: ::String
+      attr_accessor network_migration_execution_id: ::String
+      attr_accessor network_migration_definition_id: ::String
+      attr_accessor created_at: ::Time
+      attr_accessor ended_at: ::Time
+      attr_accessor status: ("PENDING" | "STARTED" | "SUCCEEDED" | "FAILED")
+      attr_accessor status_details: ::String
+      attr_accessor code_generation_output_format_status_details_map: ::Hash[("CDK_L1" | "CDK_L2" | "TERRAFORM" | "LZA"), Types::CodeGenerationOutputFormatStatusDetails]
+      SENSITIVE: []
+    end
+
+    class NetworkMigrationCodeGenerationSegment
+      attr_accessor job_id: ::String
+      attr_accessor network_migration_execution_id: ::String
+      attr_accessor network_migration_definition_id: ::String
+      attr_accessor segment_id: ::String
+      attr_accessor segment_type: ("WORKLOAD" | "APPLIANCE" | "NETWORK")
+      attr_accessor logical_id: ::String
+      attr_accessor mapper_segment_id: ::String
+      attr_accessor artifacts: ::Array[Types::NetworkMigrationCodeGenerationArtifact]
+      attr_accessor referenced_segments: ::Array[::String]
+      attr_accessor created_at: ::Time
+      SENSITIVE: []
+    end
+
+    class NetworkMigrationDefinition
+      attr_accessor arn: ::String
+      attr_accessor network_migration_definition_id: ::String
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor source_configurations: ::Array[Types::SourceConfiguration]
+      attr_accessor target_s3_configuration: Types::TargetS3Configuration
+      attr_accessor target_network: Types::TargetNetwork
+      attr_accessor target_deployment: ("SINGLE_ACCOUNT" | "MULTI_ACCOUNT")
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor scope_tags: ::Hash[::String, ::String]
+      SENSITIVE: [:tags, :scope_tags]
+    end
+
+    class NetworkMigrationDefinitionSummary
+      attr_accessor network_migration_definition_id: ::String
+      attr_accessor name: ::String
+      attr_accessor source_environment: ("NSX" | "VSPHERE" | "FORTIGATE_FIREWALL" | "PALO_ALTO_FIREWALL" | "CISCO_ACI" | "LOGICAL_MODEL" | "MODELIZE_IT" | "AWS_DISCOVERY_COLLECTOR")
+      attr_accessor arn: ::String
+      attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor scope_tags: ::Hash[::String, ::String]
+      SENSITIVE: [:tags, :scope_tags]
+    end
+
+    class NetworkMigrationDeployedStackDetails
+      attr_accessor status: ("CREATE_COMPLETE" | "CREATE_FAILED" | "CREATE_STARTED" | "DELETE_COMPLETE" | "DELETE_FAILED" | "DELETE_STARTED")
+      attr_accessor stack_physical_id: ::String
+      attr_accessor stack_logical_id: ::String
+      attr_accessor segment_id: ::String
+      attr_accessor target_account: ::String
+      attr_accessor failed_resources: ::Array[Types::NetworkMigrationFailedResourceDetails]
+      SENSITIVE: []
+    end
+
+    class NetworkMigrationDeployerJobDetails
+      attr_accessor job_id: ::String
+      attr_accessor network_migration_execution_id: ::String
+      attr_accessor network_migration_definition_id: ::String
+      attr_accessor created_at: ::Time
+      attr_accessor ended_at: ::Time
+      attr_accessor status: ("PENDING" | "STARTED" | "SUCCEEDED" | "FAILED")
+      attr_accessor status_details: ::String
+      SENSITIVE: []
+    end
+
+    class NetworkMigrationExecution
+      attr_accessor network_migration_definition_id: ::String
+      attr_accessor network_migration_execution_id: ::String
+      attr_accessor status: ("PENDING" | "STARTED" | "SUCCEEDED" | "FAILED")
+      attr_accessor stage: ("MAPPING" | "CODE_GENERATION" | "DEPLOY" | "DEPLOYED_STACKS_DELETION" | "ANALYZE")
+      attr_accessor activity: ("MAPPING" | "MAPPING_UPDATE" | "CODE_GENERATION" | "DEPLOY" | "DEPLOYED_STACKS_DELETION" | "ANALYZE")
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: [:tags]
+    end
+
+    class NetworkMigrationFailedResourceDetails
+      attr_accessor logical_id: ::String
+      attr_accessor status: ("CREATE_FAILED" | "DELETE_FAILED")
+      attr_accessor status_reason: ::String
+      SENSITIVE: []
+    end
+
+    class NetworkMigrationMapperSegment
+      attr_accessor job_id: ::String
+      attr_accessor network_migration_execution_id: ::String
+      attr_accessor network_migration_definition_id: ::String
+      attr_accessor segment_id: ::String
+      attr_accessor segment_type: ("WORKLOAD" | "APPLIANCE")
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor logical_id: ::String
+      attr_accessor checksum: Types::Checksum
+      attr_accessor output_s3_configuration: Types::S3Configuration
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      attr_accessor scope_tags: ::Hash[::String, ::String]
+      attr_accessor target_account: ::String
+      attr_accessor referenced_segments: ::Array[::String]
+      SENSITIVE: [:scope_tags]
+    end
+
+    class NetworkMigrationMapperSegmentConstruct
+      attr_accessor construct_id: ::String
+      attr_accessor construct_type: ::String
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor logical_id: ::String
+      attr_accessor excluded: bool
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      attr_accessor properties: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class NetworkMigrationMappingJobDetails
+      attr_accessor job_id: ::String
+      attr_accessor network_migration_execution_id: ::String
+      attr_accessor network_migration_definition_id: ::String
+      attr_accessor created_at: ::Time
+      attr_accessor ended_at: ::Time
+      attr_accessor status: ("PENDING" | "STARTED" | "SUCCEEDED" | "FAILED")
+      attr_accessor status_details: ::String
+      SENSITIVE: []
+    end
+
+    class NetworkMigrationMappingUpdateJobDetails
+      attr_accessor job_id: ::String
+      attr_accessor network_migration_execution_id: ::String
+      attr_accessor network_migration_definition_id: ::String
+      attr_accessor created_at: ::Time
+      attr_accessor ended_at: ::Time
+      attr_accessor status: ("PENDING" | "STARTED" | "SUCCEEDED" | "FAILED")
+      attr_accessor status_details: ::String
       SENSITIVE: []
     end
 
@@ -879,75 +1443,95 @@ module Aws::Mgn
       SENSITIVE: []
     end
 
+    class OperationUnion
+      attr_accessor merge: Types::MergeOperation
+      attr_accessor split: Types::SplitOperation
+      attr_accessor delete: Types::DeleteOperation
+      attr_accessor update: Types::UpdateOperation
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class Merge < OperationUnion
+      end
+      class Split < OperationUnion
+      end
+      class Delete < OperationUnion
+      end
+      class Update < OperationUnion
+      end
+      class Unknown < OperationUnion
+      end
+    end
+
     class ParticipatingServer
+      attr_accessor source_server_id: ::String
       attr_accessor launch_status: ("PENDING" | "IN_PROGRESS" | "LAUNCHED" | "FAILED" | "TERMINATED")
       attr_accessor launched_ec2_instance_id: ::String
       attr_accessor post_launch_actions_status: Types::PostLaunchActionsStatus
-      attr_accessor source_server_id: ::String
       SENSITIVE: []
     end
 
     class PauseReplicationRequest
-      attr_accessor account_id: ::String
       attr_accessor source_server_id: ::String
+      attr_accessor account_id: ::String
       SENSITIVE: []
     end
 
     class PostLaunchActions
-      attr_accessor cloud_watch_log_group_name: ::String
       attr_accessor deployment: ("TEST_AND_CUTOVER" | "CUTOVER_ONLY" | "TEST_ONLY")
       attr_accessor s3_log_bucket: ::String
       attr_accessor s3_output_key_prefix: ::String
+      attr_accessor cloud_watch_log_group_name: ::String
       attr_accessor ssm_documents: ::Array[Types::SsmDocument]
       SENSITIVE: []
     end
 
     class PostLaunchActionsStatus
-      attr_accessor post_launch_actions_launch_status_list: ::Array[Types::JobPostLaunchActionsLaunchStatus]
       attr_accessor ssm_agent_discovery_datetime: ::String
+      attr_accessor post_launch_actions_launch_status_list: ::Array[Types::JobPostLaunchActionsLaunchStatus]
       SENSITIVE: []
     end
 
     class PutSourceServerActionRequest
-      attr_accessor account_id: ::String
-      attr_accessor action_id: ::String
-      attr_accessor action_name: ::String
-      attr_accessor active: bool
-      attr_accessor category: ("DISASTER_RECOVERY" | "OPERATING_SYSTEM" | "LICENSE_AND_SUBSCRIPTION" | "VALIDATION" | "OBSERVABILITY" | "REFACTORING" | "SECURITY" | "NETWORKING" | "CONFIGURATION" | "BACKUP" | "OTHER")
-      attr_accessor description: ::String
-      attr_accessor document_identifier: ::String
-      attr_accessor document_version: ::String
-      attr_accessor external_parameters: ::Hash[::String, Types::SsmExternalParameter]
-      attr_accessor must_succeed_for_cutover: bool
-      attr_accessor order: ::Integer
-      attr_accessor parameters: ::Hash[::String, ::Array[Types::SsmParameterStoreParameter]]
       attr_accessor source_server_id: ::String
+      attr_accessor action_name: ::String
+      attr_accessor document_identifier: ::String
+      attr_accessor order: ::Integer
+      attr_accessor action_id: ::String
+      attr_accessor document_version: ::String
+      attr_accessor active: bool
       attr_accessor timeout_seconds: ::Integer
+      attr_accessor must_succeed_for_cutover: bool
+      attr_accessor parameters: ::Hash[::String, ::Array[Types::SsmParameterStoreParameter]]
+      attr_accessor external_parameters: ::Hash[::String, Types::SsmExternalParameter]
+      attr_accessor description: ::String
+      attr_accessor category: ("DISASTER_RECOVERY" | "OPERATING_SYSTEM" | "LICENSE_AND_SUBSCRIPTION" | "VALIDATION" | "OBSERVABILITY" | "REFACTORING" | "SECURITY" | "NETWORKING" | "CONFIGURATION" | "BACKUP" | "OTHER")
+      attr_accessor account_id: ::String
       SENSITIVE: []
     end
 
     class PutTemplateActionRequest
-      attr_accessor action_id: ::String
-      attr_accessor action_name: ::String
-      attr_accessor active: bool
-      attr_accessor category: ("DISASTER_RECOVERY" | "OPERATING_SYSTEM" | "LICENSE_AND_SUBSCRIPTION" | "VALIDATION" | "OBSERVABILITY" | "REFACTORING" | "SECURITY" | "NETWORKING" | "CONFIGURATION" | "BACKUP" | "OTHER")
-      attr_accessor description: ::String
-      attr_accessor document_identifier: ::String
-      attr_accessor document_version: ::String
-      attr_accessor external_parameters: ::Hash[::String, Types::SsmExternalParameter]
       attr_accessor launch_configuration_template_id: ::String
-      attr_accessor must_succeed_for_cutover: bool
-      attr_accessor operating_system: ::String
+      attr_accessor action_name: ::String
+      attr_accessor document_identifier: ::String
       attr_accessor order: ::Integer
-      attr_accessor parameters: ::Hash[::String, ::Array[Types::SsmParameterStoreParameter]]
+      attr_accessor action_id: ::String
+      attr_accessor document_version: ::String
+      attr_accessor active: bool
       attr_accessor timeout_seconds: ::Integer
+      attr_accessor must_succeed_for_cutover: bool
+      attr_accessor parameters: ::Hash[::String, ::Array[Types::SsmParameterStoreParameter]]
+      attr_accessor operating_system: ::String
+      attr_accessor external_parameters: ::Hash[::String, Types::SsmExternalParameter]
+      attr_accessor description: ::String
+      attr_accessor category: ("DISASTER_RECOVERY" | "OPERATING_SYSTEM" | "LICENSE_AND_SUBSCRIPTION" | "VALIDATION" | "OBSERVABILITY" | "REFACTORING" | "SECURITY" | "NETWORKING" | "CONFIGURATION" | "BACKUP" | "OTHER")
       SENSITIVE: []
     end
 
     class RemoveSourceServerActionRequest
-      attr_accessor account_id: ::String
-      attr_accessor action_id: ::String
       attr_accessor source_server_id: ::String
+      attr_accessor action_id: ::String
+      attr_accessor account_id: ::String
       SENSITIVE: []
     end
 
@@ -955,8 +1539,8 @@ module Aws::Mgn
     end
 
     class RemoveTemplateActionRequest
-      attr_accessor action_id: ::String
       attr_accessor launch_configuration_template_id: ::String
+      attr_accessor action_id: ::String
       SENSITIVE: []
     end
 
@@ -964,75 +1548,88 @@ module Aws::Mgn
     end
 
     class ReplicationConfiguration
+      attr_accessor source_server_id: ::String
+      attr_accessor name: ::String
+      attr_accessor staging_area_subnet_id: ::String
       attr_accessor associate_default_security_group: bool
-      attr_accessor bandwidth_throttling: ::Integer
-      attr_accessor create_public_ip: bool
-      attr_accessor data_plane_routing: ("PRIVATE_IP" | "PUBLIC_IP")
+      attr_accessor replication_servers_security_groups_i_ds: ::Array[::String]
+      attr_accessor replication_server_instance_type: ::String
+      attr_accessor use_dedicated_replication_server: bool
       attr_accessor default_large_staging_disk_type: ("GP2" | "ST1" | "GP3")
+      attr_accessor replicated_disks: ::Array[Types::ReplicationConfigurationReplicatedDisk]
       attr_accessor ebs_encryption: ("DEFAULT" | "CUSTOM")
       attr_accessor ebs_encryption_key_arn: ::String
-      attr_accessor name: ::String
-      attr_accessor replicated_disks: ::Array[Types::ReplicationConfigurationReplicatedDisk]
-      attr_accessor replication_server_instance_type: ::String
-      attr_accessor replication_servers_security_groups_i_ds: ::Array[::String]
-      attr_accessor source_server_id: ::String
-      attr_accessor staging_area_subnet_id: ::String
+      attr_accessor bandwidth_throttling: ::Integer
+      attr_accessor data_plane_routing: ("PRIVATE_IP" | "PUBLIC_IP")
+      attr_accessor create_public_ip: bool
       attr_accessor staging_area_tags: ::Hash[::String, ::String]
-      attr_accessor use_dedicated_replication_server: bool
       attr_accessor use_fips_endpoint: bool
+      attr_accessor internet_protocol: ("IPV4" | "IPV6")
+      attr_accessor store_snapshot_on_local_zone: bool
+      attr_accessor storage_configuration: Types::StorageConfiguration
       SENSITIVE: [:staging_area_tags]
     end
 
     class ReplicationConfigurationReplicatedDisk
       attr_accessor device_name: ::String
-      attr_accessor iops: ::Integer
       attr_accessor is_boot_disk: bool
-      attr_accessor staging_disk_type: ("AUTO" | "GP2" | "IO1" | "SC1" | "ST1" | "STANDARD" | "GP3" | "IO2")
+      attr_accessor staging_disk_type: ("AUTO" | "GP2" | "IO1" | "SC1" | "ST1" | "STANDARD" | "GP3" | "IO2" | "FSX_ONTAP")
+      attr_accessor iops: ::Integer
       attr_accessor throughput: ::Integer
       SENSITIVE: []
     end
 
     class ReplicationConfigurationTemplate
+      attr_accessor replication_configuration_template_id: ::String
       attr_accessor arn: ::String
+      attr_accessor staging_area_subnet_id: ::String
       attr_accessor associate_default_security_group: bool
-      attr_accessor bandwidth_throttling: ::Integer
-      attr_accessor create_public_ip: bool
-      attr_accessor data_plane_routing: ("PRIVATE_IP" | "PUBLIC_IP")
+      attr_accessor replication_servers_security_groups_i_ds: ::Array[::String]
+      attr_accessor replication_server_instance_type: ::String
+      attr_accessor use_dedicated_replication_server: bool
       attr_accessor default_large_staging_disk_type: ("GP2" | "ST1" | "GP3")
       attr_accessor ebs_encryption: ("DEFAULT" | "CUSTOM")
       attr_accessor ebs_encryption_key_arn: ::String
-      attr_accessor replication_configuration_template_id: ::String
-      attr_accessor replication_server_instance_type: ::String
-      attr_accessor replication_servers_security_groups_i_ds: ::Array[::String]
-      attr_accessor staging_area_subnet_id: ::String
+      attr_accessor bandwidth_throttling: ::Integer
+      attr_accessor data_plane_routing: ("PRIVATE_IP" | "PUBLIC_IP")
+      attr_accessor create_public_ip: bool
       attr_accessor staging_area_tags: ::Hash[::String, ::String]
-      attr_accessor tags: ::Hash[::String, ::String]
-      attr_accessor use_dedicated_replication_server: bool
       attr_accessor use_fips_endpoint: bool
+      attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor internet_protocol: ("IPV4" | "IPV6")
+      attr_accessor store_snapshot_on_local_zone: bool
+      attr_accessor storage_configuration: Types::StorageConfiguration
       SENSITIVE: [:staging_area_tags, :tags]
     end
 
     class ResourceNotFoundException
-      attr_accessor code: ::String
       attr_accessor message: ::String
+      attr_accessor code: ::String
       attr_accessor resource_id: ::String
       attr_accessor resource_type: ::String
       SENSITIVE: []
     end
 
     class ResumeReplicationRequest
-      attr_accessor account_id: ::String
       attr_accessor source_server_id: ::String
+      attr_accessor account_id: ::String
       SENSITIVE: []
     end
 
     class RetryDataReplicationRequest
-      attr_accessor account_id: ::String
       attr_accessor source_server_id: ::String
+      attr_accessor account_id: ::String
       SENSITIVE: []
     end
 
     class S3BucketSource
+      attr_accessor s3_bucket: ::String
+      attr_accessor s3_key: ::String
+      attr_accessor s3_bucket_owner: ::String
+      SENSITIVE: []
+    end
+
+    class S3Configuration
       attr_accessor s3_bucket: ::String
       attr_accessor s3_bucket_owner: ::String
       attr_accessor s3_key: ::String
@@ -1040,59 +1637,72 @@ module Aws::Mgn
     end
 
     class ServiceQuotaExceededException
-      attr_accessor code: ::String
       attr_accessor message: ::String
-      attr_accessor quota_code: ::String
-      attr_accessor quota_value: ::Integer
+      attr_accessor code: ::String
       attr_accessor resource_id: ::String
       attr_accessor resource_type: ::String
       attr_accessor service_code: ::String
+      attr_accessor quota_code: ::String
+      attr_accessor quota_value: ::Integer
+      SENSITIVE: []
+    end
+
+    class SourceConfiguration
+      attr_accessor source_environment: ("NSX" | "VSPHERE" | "FORTIGATE_FIREWALL" | "PALO_ALTO_FIREWALL" | "CISCO_ACI" | "LOGICAL_MODEL" | "MODELIZE_IT" | "AWS_DISCOVERY_COLLECTOR")
+      attr_accessor source_s3_configuration: Types::SourceS3Configuration
       SENSITIVE: []
     end
 
     class SourceProperties
-      attr_accessor cpus: ::Array[Types::CPU]
-      attr_accessor disks: ::Array[Types::Disk]
-      attr_accessor identification_hints: Types::IdentificationHints
       attr_accessor last_updated_date_time: ::String
-      attr_accessor network_interfaces: ::Array[Types::NetworkInterface]
-      attr_accessor os: Types::OS
-      attr_accessor ram_bytes: ::Integer
       attr_accessor recommended_instance_type: ::String
+      attr_accessor identification_hints: Types::IdentificationHints
+      attr_accessor network_interfaces: ::Array[Types::NetworkInterface]
+      attr_accessor disks: ::Array[Types::Disk]
+      attr_accessor cpus: ::Array[Types::CPU]
+      attr_accessor ram_bytes: ::Integer
+      attr_accessor os: Types::OS
+      SENSITIVE: []
+    end
+
+    class SourceS3Configuration
+      attr_accessor s3_bucket: ::String
+      attr_accessor s3_bucket_owner: ::String
+      attr_accessor s3_key: ::String
       SENSITIVE: []
     end
 
     class SourceServer
-      attr_accessor application_id: ::String
-      attr_accessor arn: ::String
-      attr_accessor connector_action: Types::SourceServerConnectorAction
-      attr_accessor data_replication_info: Types::DataReplicationInfo
-      attr_accessor fqdn_for_action_framework: ::String
-      attr_accessor is_archived: bool
-      attr_accessor launched_instance: Types::LaunchedInstance
-      attr_accessor life_cycle: Types::LifeCycle
-      attr_accessor replication_type: ("AGENT_BASED" | "SNAPSHOT_SHIPPING")
-      attr_accessor source_properties: Types::SourceProperties
       attr_accessor source_server_id: ::String
+      attr_accessor arn: ::String
+      attr_accessor is_archived: bool
       attr_accessor tags: ::Hash[::String, ::String]
-      attr_accessor user_provided_id: ::String
+      attr_accessor launched_instance: Types::LaunchedInstance
+      attr_accessor data_replication_info: Types::DataReplicationInfo
+      attr_accessor life_cycle: Types::LifeCycle
+      attr_accessor source_properties: Types::SourceProperties
+      attr_accessor replication_type: ("AGENT_BASED" | "SNAPSHOT_SHIPPING")
       attr_accessor vcenter_client_id: ::String
+      attr_accessor application_id: ::String
+      attr_accessor user_provided_id: ::String
+      attr_accessor fqdn_for_action_framework: ::String
+      attr_accessor connector_action: Types::SourceServerConnectorAction
       SENSITIVE: [:tags]
     end
 
     class SourceServerActionDocument
       attr_accessor action_id: ::String
       attr_accessor action_name: ::String
-      attr_accessor active: bool
-      attr_accessor category: ("DISASTER_RECOVERY" | "OPERATING_SYSTEM" | "LICENSE_AND_SUBSCRIPTION" | "VALIDATION" | "OBSERVABILITY" | "REFACTORING" | "SECURITY" | "NETWORKING" | "CONFIGURATION" | "BACKUP" | "OTHER")
-      attr_accessor description: ::String
       attr_accessor document_identifier: ::String
-      attr_accessor document_version: ::String
-      attr_accessor external_parameters: ::Hash[::String, Types::SsmExternalParameter]
-      attr_accessor must_succeed_for_cutover: bool
       attr_accessor order: ::Integer
-      attr_accessor parameters: ::Hash[::String, ::Array[Types::SsmParameterStoreParameter]]
+      attr_accessor document_version: ::String
+      attr_accessor active: bool
       attr_accessor timeout_seconds: ::Integer
+      attr_accessor must_succeed_for_cutover: bool
+      attr_accessor parameters: ::Hash[::String, ::Array[Types::SsmParameterStoreParameter]]
+      attr_accessor external_parameters: ::Hash[::String, Types::SsmExternalParameter]
+      attr_accessor description: ::String
+      attr_accessor category: ("DISASTER_RECOVERY" | "OPERATING_SYSTEM" | "LICENSE_AND_SUBSCRIPTION" | "VALIDATION" | "OBSERVABILITY" | "REFACTORING" | "SECURITY" | "NETWORKING" | "CONFIGURATION" | "BACKUP" | "OTHER")
       SENSITIVE: []
     end
 
@@ -1102,18 +1712,28 @@ module Aws::Mgn
     end
 
     class SourceServerConnectorAction
-      attr_accessor connector_arn: ::String
       attr_accessor credentials_secret_arn: ::String
+      attr_accessor connector_arn: ::String
+      SENSITIVE: []
+    end
+
+    class SplitConstruct
+      attr_accessor cidr_block: ::String
+      SENSITIVE: []
+    end
+
+    class SplitOperation
+      attr_accessor split_constructs: ::Array[Types::SplitConstruct]
       SENSITIVE: []
     end
 
     class SsmDocument
       attr_accessor action_name: ::String
-      attr_accessor external_parameters: ::Hash[::String, Types::SsmExternalParameter]
-      attr_accessor must_succeed_for_cutover: bool
-      attr_accessor parameters: ::Hash[::String, ::Array[Types::SsmParameterStoreParameter]]
       attr_accessor ssm_document_name: ::String
       attr_accessor timeout_seconds: ::Integer
+      attr_accessor must_succeed_for_cutover: bool
+      attr_accessor parameters: ::Hash[::String, ::Array[Types::SsmParameterStoreParameter]]
+      attr_accessor external_parameters: ::Hash[::String, Types::SsmExternalParameter]
       SENSITIVE: []
     end
 
@@ -1129,15 +1749,15 @@ module Aws::Mgn
     end
 
     class SsmParameterStoreParameter
+      attr_accessor parameter_type: ("STRING" | "SECURE_STRING")
       attr_accessor parameter_name: ::String
-      attr_accessor parameter_type: ("STRING")
       SENSITIVE: []
     end
 
     class StartCutoverRequest
-      attr_accessor account_id: ::String
       attr_accessor source_server_i_ds: ::Array[::String]
       attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor account_id: ::String
       SENSITIVE: [:tags]
     end
 
@@ -1148,9 +1768,10 @@ module Aws::Mgn
 
     class StartExportRequest
       attr_accessor s3_bucket: ::String
-      attr_accessor s3_bucket_owner: ::String
       attr_accessor s3_key: ::String
-      SENSITIVE: []
+      attr_accessor s3_bucket_owner: ::String
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: [:tags]
     end
 
     class StartExportResponse
@@ -1158,10 +1779,24 @@ module Aws::Mgn
       SENSITIVE: []
     end
 
+    class StartImportFileEnrichmentRequest
+      attr_accessor client_token: ::String
+      attr_accessor s3_bucket_source: Types::EnrichmentSourceS3Configuration
+      attr_accessor s3_bucket_target: Types::EnrichmentTargetS3Configuration
+      attr_accessor ip_assignment_strategy: ("STATIC" | "DYNAMIC")
+      SENSITIVE: []
+    end
+
+    class StartImportFileEnrichmentResponse
+      attr_accessor job_id: ::String
+      SENSITIVE: []
+    end
+
     class StartImportRequest
       attr_accessor client_token: ::String
       attr_accessor s3_bucket_source: Types::S3BucketSource
-      SENSITIVE: []
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: [:tags]
     end
 
     class StartImportResponse
@@ -1169,16 +1804,90 @@ module Aws::Mgn
       SENSITIVE: []
     end
 
+    class StartNetworkMigrationAnalysisRequest
+      attr_accessor network_migration_execution_id: ::String
+      attr_accessor network_migration_definition_id: ::String
+      SENSITIVE: []
+    end
+
+    class StartNetworkMigrationAnalysisResponse
+      attr_accessor job_id: ::String
+      SENSITIVE: []
+    end
+
+    class StartNetworkMigrationCodeGenerationRequest
+      attr_accessor network_migration_execution_id: ::String
+      attr_accessor network_migration_definition_id: ::String
+      attr_accessor code_generation_output_format_types: ::Array[("CDK_L1" | "CDK_L2" | "TERRAFORM" | "LZA")]
+      SENSITIVE: []
+    end
+
+    class StartNetworkMigrationCodeGenerationResponse
+      attr_accessor job_id: ::String
+      SENSITIVE: []
+    end
+
+    class StartNetworkMigrationDeployerJobResponse
+      attr_accessor job_id: ::String
+      SENSITIVE: []
+    end
+
+    class StartNetworkMigrationDeploymentRequest
+      attr_accessor network_migration_execution_id: ::String
+      attr_accessor network_migration_definition_id: ::String
+      SENSITIVE: []
+    end
+
+    class StartNetworkMigrationMappingRequest
+      attr_accessor network_migration_execution_id: ::String
+      attr_accessor network_migration_definition_id: ::String
+      attr_accessor security_group_mapping_strategy: ("MAP" | "SKIP" | "MAP_DHCP")
+      SENSITIVE: []
+    end
+
+    class StartNetworkMigrationMappingResponse
+      attr_accessor job_id: ::String
+      SENSITIVE: []
+    end
+
+    class StartNetworkMigrationMappingUpdateConstruct
+      attr_accessor segment_id: ::String
+      attr_accessor construct_id: ::String
+      attr_accessor construct_type: ::String
+      attr_accessor operation: Types::OperationUnion
+      SENSITIVE: []
+    end
+
+    class StartNetworkMigrationMappingUpdateRequest
+      attr_accessor network_migration_execution_id: ::String
+      attr_accessor network_migration_definition_id: ::String
+      attr_accessor constructs: ::Array[Types::StartNetworkMigrationMappingUpdateConstruct]
+      attr_accessor segments: ::Array[Types::StartNetworkMigrationMappingUpdateSegment]
+      SENSITIVE: []
+    end
+
+    class StartNetworkMigrationMappingUpdateResponse
+      attr_accessor job_id: ::String
+      SENSITIVE: []
+    end
+
+    class StartNetworkMigrationMappingUpdateSegment
+      attr_accessor segment_id: ::String
+      attr_accessor target_account: ::String
+      attr_accessor scope_tags: ::Hash[::String, ::String]
+      SENSITIVE: [:scope_tags]
+    end
+
     class StartReplicationRequest
-      attr_accessor account_id: ::String
       attr_accessor source_server_id: ::String
+      attr_accessor account_id: ::String
       SENSITIVE: []
     end
 
     class StartTestRequest
-      attr_accessor account_id: ::String
       attr_accessor source_server_i_ds: ::Array[::String]
       attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor account_id: ::String
       SENSITIVE: [:tags]
     end
 
@@ -1188,8 +1897,14 @@ module Aws::Mgn
     end
 
     class StopReplicationRequest
-      attr_accessor account_id: ::String
       attr_accessor source_server_id: ::String
+      attr_accessor account_id: ::String
+      SENSITIVE: []
+    end
+
+    class StorageConfiguration
+      attr_accessor storage_type: ("EBS" | "FSX_ONTAP")
+      attr_accessor fsx_ontap_configuration: Types::FsxOntapConfiguration
       SENSITIVE: []
     end
 
@@ -1199,20 +1914,48 @@ module Aws::Mgn
       SENSITIVE: [:tags]
     end
 
+    class TargetNetwork
+      attr_accessor topology: ("ISOLATED_VPC" | "HUB_AND_SPOKE")
+      attr_accessor inbound_cidr: ::String
+      attr_accessor outbound_cidr: ::String
+      attr_accessor inspection_cidr: ::String
+      SENSITIVE: []
+    end
+
+    class TargetNetworkUpdate
+      attr_accessor topology: ("ISOLATED_VPC" | "HUB_AND_SPOKE")
+      attr_accessor inbound_cidr: ::String
+      attr_accessor outbound_cidr: ::String
+      attr_accessor inspection_cidr: ::String
+      SENSITIVE: []
+    end
+
+    class TargetS3Configuration
+      attr_accessor s3_bucket: ::String
+      attr_accessor s3_bucket_owner: ::String
+      SENSITIVE: []
+    end
+
+    class TargetS3ConfigurationUpdate
+      attr_accessor s3_bucket: ::String
+      attr_accessor s3_bucket_owner: ::String
+      SENSITIVE: []
+    end
+
     class TemplateActionDocument
       attr_accessor action_id: ::String
       attr_accessor action_name: ::String
-      attr_accessor active: bool
-      attr_accessor category: ("DISASTER_RECOVERY" | "OPERATING_SYSTEM" | "LICENSE_AND_SUBSCRIPTION" | "VALIDATION" | "OBSERVABILITY" | "REFACTORING" | "SECURITY" | "NETWORKING" | "CONFIGURATION" | "BACKUP" | "OTHER")
-      attr_accessor description: ::String
       attr_accessor document_identifier: ::String
-      attr_accessor document_version: ::String
-      attr_accessor external_parameters: ::Hash[::String, Types::SsmExternalParameter]
-      attr_accessor must_succeed_for_cutover: bool
-      attr_accessor operating_system: ::String
       attr_accessor order: ::Integer
-      attr_accessor parameters: ::Hash[::String, ::Array[Types::SsmParameterStoreParameter]]
+      attr_accessor document_version: ::String
+      attr_accessor active: bool
       attr_accessor timeout_seconds: ::Integer
+      attr_accessor must_succeed_for_cutover: bool
+      attr_accessor parameters: ::Hash[::String, ::Array[Types::SsmParameterStoreParameter]]
+      attr_accessor operating_system: ::String
+      attr_accessor external_parameters: ::Hash[::String, Types::SsmExternalParameter]
+      attr_accessor description: ::String
+      attr_accessor category: ("DISASTER_RECOVERY" | "OPERATING_SYSTEM" | "LICENSE_AND_SUBSCRIPTION" | "VALIDATION" | "OBSERVABILITY" | "REFACTORING" | "SECURITY" | "NETWORKING" | "CONFIGURATION" | "BACKUP" | "OTHER")
       SENSITIVE: []
     end
 
@@ -1222,9 +1965,9 @@ module Aws::Mgn
     end
 
     class TerminateTargetInstancesRequest
-      attr_accessor account_id: ::String
       attr_accessor source_server_i_ds: ::Array[::String]
       attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor account_id: ::String
       SENSITIVE: [:tags]
     end
 
@@ -1235,27 +1978,27 @@ module Aws::Mgn
 
     class ThrottlingException
       attr_accessor message: ::String
+      attr_accessor service_code: ::String
       attr_accessor quota_code: ::String
       attr_accessor retry_after_seconds: ::String
-      attr_accessor service_code: ::String
       SENSITIVE: []
     end
 
     class UnarchiveApplicationRequest
-      attr_accessor account_id: ::String
       attr_accessor application_id: ::String
+      attr_accessor account_id: ::String
       SENSITIVE: []
     end
 
     class UnarchiveWaveRequest
-      attr_accessor account_id: ::String
       attr_accessor wave_id: ::String
+      attr_accessor account_id: ::String
       SENSITIVE: []
     end
 
     class UninitializedAccountException
-      attr_accessor code: ::String
       attr_accessor message: ::String
+      attr_accessor code: ::String
       SENSITIVE: []
     end
 
@@ -1266,10 +2009,10 @@ module Aws::Mgn
     end
 
     class UpdateApplicationRequest
-      attr_accessor account_id: ::String
       attr_accessor application_id: ::String
-      attr_accessor description: ::String
       attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor account_id: ::String
       SENSITIVE: []
     end
 
@@ -1281,145 +2024,183 @@ module Aws::Mgn
     end
 
     class UpdateLaunchConfigurationRequest
-      attr_accessor account_id: ::String
-      attr_accessor boot_mode: ("LEGACY_BIOS" | "UEFI" | "USE_SOURCE")
+      attr_accessor source_server_id: ::String
+      attr_accessor name: ::String
+      attr_accessor launch_disposition: ("STOPPED" | "STARTED")
+      attr_accessor target_instance_type_right_sizing_method: ("NONE" | "BASIC")
       attr_accessor copy_private_ip: bool
       attr_accessor copy_tags: bool
-      attr_accessor enable_map_auto_tagging: bool
-      attr_accessor launch_disposition: ("STOPPED" | "STARTED")
       attr_accessor licensing: Types::Licensing
-      attr_accessor map_auto_tagging_mpe_id: ::String
-      attr_accessor name: ::String
+      attr_accessor boot_mode: ("LEGACY_BIOS" | "UEFI" | "USE_SOURCE")
       attr_accessor post_launch_actions: Types::PostLaunchActions
-      attr_accessor source_server_id: ::String
-      attr_accessor target_instance_type_right_sizing_method: ("NONE" | "BASIC")
+      attr_accessor enable_map_auto_tagging: bool
+      attr_accessor map_auto_tagging_mpe_id: ::String
+      attr_accessor account_id: ::String
       SENSITIVE: []
     end
 
     class UpdateLaunchConfigurationTemplateRequest
-      attr_accessor associate_public_ip_address: bool
-      attr_accessor boot_mode: ("LEGACY_BIOS" | "UEFI" | "USE_SOURCE")
-      attr_accessor copy_private_ip: bool
-      attr_accessor copy_tags: bool
-      attr_accessor enable_map_auto_tagging: bool
-      attr_accessor large_volume_conf: Types::LaunchTemplateDiskConf
       attr_accessor launch_configuration_template_id: ::String
-      attr_accessor launch_disposition: ("STOPPED" | "STARTED")
-      attr_accessor licensing: Types::Licensing
-      attr_accessor map_auto_tagging_mpe_id: ::String
       attr_accessor post_launch_actions: Types::PostLaunchActions
-      attr_accessor small_volume_conf: Types::LaunchTemplateDiskConf
-      attr_accessor small_volume_max_size: ::Integer
+      attr_accessor enable_map_auto_tagging: bool
+      attr_accessor map_auto_tagging_mpe_id: ::String
+      attr_accessor launch_disposition: ("STOPPED" | "STARTED")
       attr_accessor target_instance_type_right_sizing_method: ("NONE" | "BASIC")
+      attr_accessor copy_private_ip: bool
+      attr_accessor associate_public_ip_address: bool
+      attr_accessor copy_tags: bool
+      attr_accessor licensing: Types::Licensing
+      attr_accessor boot_mode: ("LEGACY_BIOS" | "UEFI" | "USE_SOURCE")
+      attr_accessor small_volume_max_size: ::Integer
+      attr_accessor small_volume_conf: Types::LaunchTemplateDiskConf
+      attr_accessor large_volume_conf: Types::LaunchTemplateDiskConf
+      attr_accessor enable_parameters_encryption: bool
+      attr_accessor parameters_encryption_key: ::String
+      SENSITIVE: []
+    end
+
+    class UpdateNetworkMigrationDefinitionRequest
+      attr_accessor network_migration_definition_id: ::String
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor source_configurations: ::Array[Types::SourceConfiguration]
+      attr_accessor target_s3_configuration: Types::TargetS3ConfigurationUpdate
+      attr_accessor target_network: Types::TargetNetworkUpdate
+      attr_accessor target_deployment: ("SINGLE_ACCOUNT" | "MULTI_ACCOUNT")
+      attr_accessor scope_tags: ::Hash[::String, ::String]
+      SENSITIVE: [:scope_tags]
+    end
+
+    class UpdateNetworkMigrationMapperSegmentRequest
+      attr_accessor network_migration_definition_id: ::String
+      attr_accessor network_migration_execution_id: ::String
+      attr_accessor segment_id: ::String
+      attr_accessor scope_tags: ::Hash[::String, ::String]
+      SENSITIVE: [:scope_tags]
+    end
+
+    class UpdateOperation
+      attr_accessor name: ::String
+      attr_accessor excluded: bool
+      attr_accessor properties: ::Hash[::String, ::String]
       SENSITIVE: []
     end
 
     class UpdateReplicationConfigurationRequest
-      attr_accessor account_id: ::String
+      attr_accessor source_server_id: ::String
+      attr_accessor name: ::String
+      attr_accessor staging_area_subnet_id: ::String
       attr_accessor associate_default_security_group: bool
-      attr_accessor bandwidth_throttling: ::Integer
-      attr_accessor create_public_ip: bool
-      attr_accessor data_plane_routing: ("PRIVATE_IP" | "PUBLIC_IP")
+      attr_accessor replication_servers_security_groups_i_ds: ::Array[::String]
+      attr_accessor replication_server_instance_type: ::String
+      attr_accessor use_dedicated_replication_server: bool
       attr_accessor default_large_staging_disk_type: ("GP2" | "ST1" | "GP3")
+      attr_accessor replicated_disks: ::Array[Types::ReplicationConfigurationReplicatedDisk]
       attr_accessor ebs_encryption: ("DEFAULT" | "CUSTOM")
       attr_accessor ebs_encryption_key_arn: ::String
-      attr_accessor name: ::String
-      attr_accessor replicated_disks: ::Array[Types::ReplicationConfigurationReplicatedDisk]
-      attr_accessor replication_server_instance_type: ::String
-      attr_accessor replication_servers_security_groups_i_ds: ::Array[::String]
-      attr_accessor source_server_id: ::String
-      attr_accessor staging_area_subnet_id: ::String
+      attr_accessor bandwidth_throttling: ::Integer
+      attr_accessor data_plane_routing: ("PRIVATE_IP" | "PUBLIC_IP")
+      attr_accessor create_public_ip: bool
       attr_accessor staging_area_tags: ::Hash[::String, ::String]
-      attr_accessor use_dedicated_replication_server: bool
       attr_accessor use_fips_endpoint: bool
+      attr_accessor account_id: ::String
+      attr_accessor internet_protocol: ("IPV4" | "IPV6")
+      attr_accessor store_snapshot_on_local_zone: bool
+      attr_accessor storage_configuration: Types::StorageConfiguration
       SENSITIVE: [:staging_area_tags]
     end
 
     class UpdateReplicationConfigurationTemplateRequest
+      attr_accessor replication_configuration_template_id: ::String
       attr_accessor arn: ::String
+      attr_accessor staging_area_subnet_id: ::String
       attr_accessor associate_default_security_group: bool
-      attr_accessor bandwidth_throttling: ::Integer
-      attr_accessor create_public_ip: bool
-      attr_accessor data_plane_routing: ("PRIVATE_IP" | "PUBLIC_IP")
+      attr_accessor replication_servers_security_groups_i_ds: ::Array[::String]
+      attr_accessor replication_server_instance_type: ::String
+      attr_accessor use_dedicated_replication_server: bool
       attr_accessor default_large_staging_disk_type: ("GP2" | "ST1" | "GP3")
       attr_accessor ebs_encryption: ("DEFAULT" | "CUSTOM")
       attr_accessor ebs_encryption_key_arn: ::String
-      attr_accessor replication_configuration_template_id: ::String
-      attr_accessor replication_server_instance_type: ::String
-      attr_accessor replication_servers_security_groups_i_ds: ::Array[::String]
-      attr_accessor staging_area_subnet_id: ::String
+      attr_accessor bandwidth_throttling: ::Integer
+      attr_accessor data_plane_routing: ("PRIVATE_IP" | "PUBLIC_IP")
+      attr_accessor create_public_ip: bool
       attr_accessor staging_area_tags: ::Hash[::String, ::String]
-      attr_accessor use_dedicated_replication_server: bool
       attr_accessor use_fips_endpoint: bool
+      attr_accessor internet_protocol: ("IPV4" | "IPV6")
+      attr_accessor store_snapshot_on_local_zone: bool
+      attr_accessor storage_configuration: Types::StorageConfiguration
       SENSITIVE: [:staging_area_tags]
     end
 
     class UpdateSourceServerReplicationTypeRequest
-      attr_accessor account_id: ::String
-      attr_accessor replication_type: ("AGENT_BASED" | "SNAPSHOT_SHIPPING")
       attr_accessor source_server_id: ::String
+      attr_accessor replication_type: ("AGENT_BASED" | "SNAPSHOT_SHIPPING")
+      attr_accessor account_id: ::String
       SENSITIVE: []
     end
 
     class UpdateSourceServerRequest
       attr_accessor account_id: ::String
-      attr_accessor connector_action: Types::SourceServerConnectorAction
       attr_accessor source_server_id: ::String
+      attr_accessor connector_action: Types::SourceServerConnectorAction
+      attr_accessor user_provided_id: ::String
+      attr_accessor fqdn_for_action_framework: ::String
+      attr_accessor platform: ::String
       SENSITIVE: []
     end
 
     class UpdateWaveRequest
-      attr_accessor account_id: ::String
-      attr_accessor description: ::String
-      attr_accessor name: ::String
       attr_accessor wave_id: ::String
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor account_id: ::String
       SENSITIVE: []
     end
 
     class ValidationException
-      attr_accessor code: ::String
-      attr_accessor field_list: ::Array[Types::ValidationExceptionField]
       attr_accessor message: ::String
+      attr_accessor code: ::String
       attr_accessor reason: ("unknownOperation" | "cannotParse" | "fieldValidationFailed" | "other")
+      attr_accessor field_list: ::Array[Types::ValidationExceptionField]
       SENSITIVE: []
     end
 
     class ValidationExceptionField
-      attr_accessor message: ::String
       attr_accessor name: ::String
+      attr_accessor message: ::String
       SENSITIVE: []
     end
 
     class VcenterClient
+      attr_accessor vcenter_client_id: ::String
       attr_accessor arn: ::String
-      attr_accessor datacenter_name: ::String
       attr_accessor hostname: ::String
+      attr_accessor vcenter_uuid: ::String
+      attr_accessor datacenter_name: ::String
       attr_accessor last_seen_datetime: ::String
       attr_accessor source_server_tags: ::Hash[::String, ::String]
       attr_accessor tags: ::Hash[::String, ::String]
-      attr_accessor vcenter_client_id: ::String
-      attr_accessor vcenter_uuid: ::String
       SENSITIVE: [:source_server_tags, :tags]
     end
 
     class Wave
+      attr_accessor wave_id: ::String
       attr_accessor arn: ::String
-      attr_accessor creation_date_time: ::String
+      attr_accessor name: ::String
       attr_accessor description: ::String
       attr_accessor is_archived: bool
-      attr_accessor last_modified_date_time: ::String
-      attr_accessor name: ::String
-      attr_accessor tags: ::Hash[::String, ::String]
       attr_accessor wave_aggregated_status: Types::WaveAggregatedStatus
-      attr_accessor wave_id: ::String
+      attr_accessor creation_date_time: ::String
+      attr_accessor last_modified_date_time: ::String
+      attr_accessor tags: ::Hash[::String, ::String]
       SENSITIVE: [:tags]
     end
 
     class WaveAggregatedStatus
-      attr_accessor health_status: ("HEALTHY" | "LAGGING" | "ERROR")
       attr_accessor last_update_date_time: ::String
-      attr_accessor progress_status: ("NOT_STARTED" | "IN_PROGRESS" | "COMPLETED")
       attr_accessor replication_started_date_time: ::String
+      attr_accessor health_status: ("HEALTHY" | "LAGGING" | "ERROR")
+      attr_accessor progress_status: ("NOT_STARTED" | "IN_PROGRESS" | "COMPLETED")
       attr_accessor total_applications: ::Integer
       SENSITIVE: []
     end

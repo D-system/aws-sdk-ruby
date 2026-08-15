@@ -105,6 +105,8 @@ module Aws::Neptune
   # * {InvalidSubnet}
   # * {InvalidVPCNetworkStateFault}
   # * {KMSKeyNotAccessibleFault}
+  # * {NetworkTypeNotSupportedFault}
+  #    * This error class is not used. `NetworkTypeNotSupported` is used during parsing instead.
   # * {OptionGroupNotFoundFault}
   # * {ProvisionedIopsNotAvailableInAZFault}
   # * {ResourceNotFoundFault}
@@ -134,7 +136,6 @@ module Aws::Neptune
   #
   # Additionally, error classes are dynamically generated for service errors based on the error code
   # if they are not defined above.
-  # Some existing error classes may use a different class name than the one documented.
   module Errors
 
     extend Aws::Errors::DynamicErrors
@@ -706,6 +707,18 @@ module Aws::Neptune
       # @param [Seahorse::Client::RequestContext] context
       # @param [String] message
       # @param [Aws::Neptune::Types::KMSKeyNotAccessibleFault] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+    end
+
+    # @deprecated This error class is not used during parsing.
+    #   Please use `NetworkTypeNotSupported` instead.
+    class NetworkTypeNotSupportedFault < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::Neptune::Types::NetworkTypeNotSupportedFault] data
       def initialize(context, message, data = Aws::EmptyStructure.new)
         super(context, message, data)
       end

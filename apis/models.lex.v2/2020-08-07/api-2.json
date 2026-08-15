@@ -354,6 +354,22 @@
         {"shape":"InternalServerException"}
       ]
     },
+    "DeleteBotAnalyzerRecommendation":{
+      "name":"DeleteBotAnalyzerRecommendation",
+      "http":{
+        "method":"DELETE",
+        "requestUri":"/bots/{botId}/botanalyzer/{botAnalyzerRequestId}/",
+        "responseCode":204
+      },
+      "input":{"shape":"DeleteBotAnalyzerRecommendationRequest"},
+      "output":{"shape":"DeleteBotAnalyzerRecommendationResponse"},
+      "errors":[
+        {"shape":"ThrottlingException"},
+        {"shape":"ValidationException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"InternalServerException"}
+      ]
+    },
     "DeleteBotLocale":{
       "name":"DeleteBotLocale",
       "http":{
@@ -605,6 +621,22 @@
       "errors":[
         {"shape":"ThrottlingException"},
         {"shape":"ServiceQuotaExceededException"},
+        {"shape":"ValidationException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"InternalServerException"}
+      ]
+    },
+    "DescribeBotAnalyzerRecommendation":{
+      "name":"DescribeBotAnalyzerRecommendation",
+      "http":{
+        "method":"POST",
+        "requestUri":"/bots/{botId}/botanalyzer/describe/{botAnalyzerRequestId}/",
+        "responseCode":200
+      },
+      "input":{"shape":"DescribeBotAnalyzerRecommendationRequest"},
+      "output":{"shape":"DescribeBotAnalyzerRecommendationResponse"},
+      "errors":[
+        {"shape":"ThrottlingException"},
         {"shape":"ValidationException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"InternalServerException"}
@@ -958,6 +990,22 @@
         {"shape":"ThrottlingException"},
         {"shape":"ServiceQuotaExceededException"},
         {"shape":"ValidationException"},
+        {"shape":"InternalServerException"}
+      ]
+    },
+    "ListBotAnalyzerHistory":{
+      "name":"ListBotAnalyzerHistory",
+      "http":{
+        "method":"POST",
+        "requestUri":"/bots/{botId}/botanalyzer/history/",
+        "responseCode":200
+      },
+      "input":{"shape":"ListBotAnalyzerHistoryRequest"},
+      "output":{"shape":"ListBotAnalyzerHistoryResponse"},
+      "errors":[
+        {"shape":"ThrottlingException"},
+        {"shape":"ValidationException"},
+        {"shape":"ResourceNotFoundException"},
         {"shape":"InternalServerException"}
       ]
     },
@@ -1435,6 +1483,23 @@
         {"shape":"ResourceNotFoundException"}
       ]
     },
+    "StartBotAnalyzer":{
+      "name":"StartBotAnalyzer",
+      "http":{
+        "method":"POST",
+        "requestUri":"/bots/{botId}/botanalyzer/",
+        "responseCode":202
+      },
+      "input":{"shape":"StartBotAnalyzerRequest"},
+      "output":{"shape":"StartBotAnalyzerResponse"},
+      "errors":[
+        {"shape":"ThrottlingException"},
+        {"shape":"ValidationException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ConflictException"},
+        {"shape":"InternalServerException"}
+      ]
+    },
     "StartBotRecommendation":{
       "name":"StartBotRecommendation",
       "http":{
@@ -1528,6 +1593,22 @@
         {"shape":"InternalServerException"}
       ],
       "idempotent":true
+    },
+    "StopBotAnalyzer":{
+      "name":"StopBotAnalyzer",
+      "http":{
+        "method":"PUT",
+        "requestUri":"/bots/{botId}/botanalyzer/{botAnalyzerRequestId}/stop/",
+        "responseCode":200
+      },
+      "input":{"shape":"StopBotAnalyzerRequest"},
+      "output":{"shape":"StopBotAnalyzerResponse"},
+      "errors":[
+        {"shape":"ThrottlingException"},
+        {"shape":"ValidationException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"InternalServerException"}
+      ]
     },
     "StopBotRecommendation":{
       "name":"StopBotRecommendation",
@@ -1887,6 +1968,10 @@
       "type":"string",
       "max":1011,
       "min":1
+    },
+    "AnalysisScope":{
+      "type":"string",
+      "enum":["BotLocale"]
     },
     "AnalyticsBinByList":{
       "type":"list",
@@ -2557,6 +2642,13 @@
       "enum":["UtteranceTimestamp"]
     },
     "AnswerField":{"type":"string"},
+    "AssistedNluMode":{
+      "type":"string",
+      "enum":[
+        "Primary",
+        "Fallback"
+      ]
+    },
     "AssociatedTranscript":{
       "type":"structure",
       "members":{
@@ -2615,6 +2707,42 @@
       "max":1024,
       "min":1,
       "pattern":"^s3://([a-z0-9\\\\.-]+)/(.+)$"
+    },
+    "AudioFillerDelayInMilliseconds":{
+      "type":"integer",
+      "box":true
+    },
+    "AudioFillerDeliveryDelayInMilliseconds":{
+      "type":"integer",
+      "box":true
+    },
+    "AudioFillerDurationInMilliseconds":{
+      "type":"integer",
+      "box":true
+    },
+    "AudioFillerSettings":{
+      "type":"structure",
+      "members":{
+        "enabled":{"shape":"Boolean"},
+        "audioType":{"shape":"AudioFillerType"},
+        "startDelayInMilliseconds":{"shape":"AudioFillerDelayInMilliseconds"},
+        "minimumPlayDurationInMilliseconds":{"shape":"AudioFillerDurationInMilliseconds"},
+        "responseDeliveryDelayInMilliseconds":{"shape":"AudioFillerDeliveryDelayInMilliseconds"}
+      }
+    },
+    "AudioFillerType":{
+      "type":"string",
+      "enum":[
+        "MELODY_CHIPPER_CHIME",
+        "MELODY_CURIOUS_CRAWL",
+        "MELODY_RISING_RIPPLE",
+        "MELODY_PATIENT_PING",
+        "MELODY_PONDERING_PONG",
+        "TYPING_KINETIC_KEYS",
+        "TYPING_QUIET_QWERTY"
+      ],
+      "max":64,
+      "min":1
     },
     "AudioLogDestination":{
       "type":"structure",
@@ -2937,6 +3065,51 @@
         "localeId":{"shape":"LocaleId"}
       }
     },
+    "BotAnalyzerHistoryList":{
+      "type":"list",
+      "member":{"shape":"BotAnalyzerHistorySummary"}
+    },
+    "BotAnalyzerHistorySummary":{
+      "type":"structure",
+      "required":[
+        "botAnalyzerStatus",
+        "botAnalyzerRequestId"
+      ],
+      "members":{
+        "botAnalyzerStatus":{"shape":"BotAnalyzerStatus"},
+        "creationDateTime":{"shape":"Timestamp"},
+        "botAnalyzerRequestId":{"shape":"UUID"}
+      }
+    },
+    "BotAnalyzerRecommendation":{
+      "type":"structure",
+      "required":[
+        "issueLocation",
+        "priority",
+        "issueDescription",
+        "proposedFix"
+      ],
+      "members":{
+        "issueLocation":{"shape":"IssueLocation"},
+        "priority":{"shape":"Priority"},
+        "issueDescription":{"shape":"Description"},
+        "proposedFix":{"shape":"Description"}
+      }
+    },
+    "BotAnalyzerRecommendationList":{
+      "type":"list",
+      "member":{"shape":"BotAnalyzerRecommendation"}
+    },
+    "BotAnalyzerStatus":{
+      "type":"string",
+      "enum":[
+        "Processing",
+        "Available",
+        "Failed",
+        "Stopping",
+        "Stopped"
+      ]
+    },
     "BotExportSpecification":{
       "type":"structure",
       "required":[
@@ -2993,6 +3166,7 @@
         "botName":{"shape":"Name"},
         "roleArn":{"shape":"RoleArn"},
         "dataPrivacy":{"shape":"DataPrivacy"},
+        "errorLogSettings":{"shape":"ErrorLogSettings"},
         "idleSessionTTLInSeconds":{"shape":"SessionTTL"},
         "botTags":{"shape":"TagMap"},
         "testBotAliasTags":{"shape":"TagMap"}
@@ -3069,7 +3243,11 @@
         "botVersion":{"shape":"DraftBotVersion"},
         "localeId":{"shape":"LocaleId"},
         "nluIntentConfidenceThreshold":{"shape":"ConfidenceThreshold"},
-        "voiceSettings":{"shape":"VoiceSettings"}
+        "voiceSettings":{"shape":"VoiceSettings"},
+        "speechRecognitionSettings":{"shape":"SpeechRecognitionSettings"},
+        "speechDetectionSensitivity":{"shape":"SpeechDetectionSensitivity"},
+        "unifiedSpeechSettings":{"shape":"UnifiedSpeechSettings"},
+        "audioFillerSettings":{"shape":"AudioFillerSettings"}
       }
     },
     "BotLocaleSortAttribute":{
@@ -3796,7 +3974,11 @@
         "description":{"shape":"Description"},
         "nluIntentConfidenceThreshold":{"shape":"ConfidenceThreshold"},
         "voiceSettings":{"shape":"VoiceSettings"},
-        "generativeAISettings":{"shape":"GenerativeAISettings"}
+        "unifiedSpeechSettings":{"shape":"UnifiedSpeechSettings"},
+        "audioFillerSettings":{"shape":"AudioFillerSettings"},
+        "speechRecognitionSettings":{"shape":"SpeechRecognitionSettings"},
+        "generativeAISettings":{"shape":"GenerativeAISettings"},
+        "speechDetectionSensitivity":{"shape":"SpeechDetectionSensitivity"}
       }
     },
     "CreateBotLocaleResponse":{
@@ -3809,9 +3991,13 @@
         "description":{"shape":"Description"},
         "nluIntentConfidenceThreshold":{"shape":"ConfidenceThreshold"},
         "voiceSettings":{"shape":"VoiceSettings"},
+        "unifiedSpeechSettings":{"shape":"UnifiedSpeechSettings"},
+        "audioFillerSettings":{"shape":"AudioFillerSettings"},
+        "speechRecognitionSettings":{"shape":"SpeechRecognitionSettings"},
         "botLocaleStatus":{"shape":"BotLocaleStatus"},
         "creationDateTime":{"shape":"Timestamp"},
-        "generativeAISettings":{"shape":"GenerativeAISettings"}
+        "generativeAISettings":{"shape":"GenerativeAISettings"},
+        "speechDetectionSensitivity":{"shape":"SpeechDetectionSensitivity"}
       }
     },
     "CreateBotReplicaRequest":{
@@ -3856,7 +4042,8 @@
         "botTags":{"shape":"TagMap"},
         "testBotAliasTags":{"shape":"TagMap"},
         "botType":{"shape":"BotType"},
-        "botMembers":{"shape":"BotMembers"}
+        "botMembers":{"shape":"BotMembers"},
+        "errorLogSettings":{"shape":"ErrorLogSettings"}
       }
     },
     "CreateBotResponse":{
@@ -3873,7 +4060,8 @@
         "botTags":{"shape":"TagMap"},
         "testBotAliasTags":{"shape":"TagMap"},
         "botType":{"shape":"BotType"},
-        "botMembers":{"shape":"BotMembers"}
+        "botMembers":{"shape":"BotMembers"},
+        "errorLogSettings":{"shape":"ErrorLogSettings"}
       }
     },
     "CreateBotVersionRequest":{
@@ -3941,6 +4129,7 @@
       ],
       "members":{
         "intentName":{"shape":"Name"},
+        "intentDisplayName":{"shape":"DisplayName"},
         "description":{"shape":"Description"},
         "parentIntentSignature":{"shape":"IntentSignature"},
         "sampleUtterances":{"shape":"SampleUtterancesList"},
@@ -3967,7 +4156,8 @@
           "locationName":"localeId"
         },
         "initialResponseSetting":{"shape":"InitialResponseSetting"},
-        "qnAIntentConfiguration":{"shape":"QnAIntentConfiguration"}
+        "qnAIntentConfiguration":{"shape":"QnAIntentConfiguration"},
+        "qInConnectIntentConfiguration":{"shape":"QInConnectIntentConfiguration"}
       }
     },
     "CreateIntentResponse":{
@@ -3975,6 +4165,7 @@
       "members":{
         "intentId":{"shape":"Id"},
         "intentName":{"shape":"Name"},
+        "intentDisplayName":{"shape":"DisplayName"},
         "description":{"shape":"Description"},
         "parentIntentSignature":{"shape":"IntentSignature"},
         "sampleUtterances":{"shape":"SampleUtterancesList"},
@@ -3990,7 +4181,8 @@
         "localeId":{"shape":"LocaleId"},
         "creationDateTime":{"shape":"Timestamp"},
         "initialResponseSetting":{"shape":"InitialResponseSetting"},
-        "qnAIntentConfiguration":{"shape":"QnAIntentConfiguration"}
+        "qnAIntentConfiguration":{"shape":"QnAIntentConfiguration"},
+        "qInConnectIntentConfiguration":{"shape":"QInConnectIntentConfiguration"}
       }
     },
     "CreateResourcePolicyRequest":{
@@ -4183,8 +4375,7 @@
     },
     "CreateUploadUrlRequest":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "CreateUploadUrlResponse":{
       "type":"structure",
@@ -4192,6 +4383,11 @@
         "importId":{"shape":"Id"},
         "uploadUrl":{"shape":"PresignedS3Url"}
       }
+    },
+    "CustomDisambiguationMessage":{
+      "type":"string",
+      "max":1000,
+      "min":1
     },
     "CustomPayload":{
       "type":"structure",
@@ -4310,6 +4506,20 @@
         "endDateTime":{"shape":"Timestamp"}
       }
     },
+    "DeepgramModelId":{
+      "type":"string",
+      "max":32,
+      "min":1,
+      "pattern":"[A-Za-z0-9-_]+"
+    },
+    "DeepgramSpeechModelConfig":{
+      "type":"structure",
+      "required":["apiTokenSecretArn"],
+      "members":{
+        "apiTokenSecretArn":{"shape":"SecretsManagerSecretArn"},
+        "modelId":{"shape":"DeepgramModelId"}
+      }
+    },
     "DefaultConditionalBranch":{
       "type":"structure",
       "members":{
@@ -4348,6 +4558,29 @@
         "botId":{"shape":"Id"},
         "botAliasStatus":{"shape":"BotAliasStatus"}
       }
+    },
+    "DeleteBotAnalyzerRecommendationRequest":{
+      "type":"structure",
+      "required":[
+        "botId",
+        "botAnalyzerRequestId"
+      ],
+      "members":{
+        "botId":{
+          "shape":"Id",
+          "location":"uri",
+          "locationName":"botId"
+        },
+        "botAnalyzerRequestId":{
+          "shape":"UUID",
+          "location":"uri",
+          "locationName":"botAnalyzerRequestId"
+        }
+      }
+    },
+    "DeleteBotAnalyzerRecommendationResponse":{
+      "type":"structure",
+      "members":{}
     },
     "DeleteBotLocaleRequest":{
       "type":"structure",
@@ -4733,8 +4966,7 @@
     },
     "DeleteUtterancesResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DescribeBotAliasRequest":{
       "type":"structure",
@@ -4773,6 +5005,39 @@
         "parentBotNetworks":{"shape":"ParentBotNetworks"}
       }
     },
+    "DescribeBotAnalyzerRecommendationRequest":{
+      "type":"structure",
+      "required":[
+        "botId",
+        "botAnalyzerRequestId"
+      ],
+      "members":{
+        "botId":{
+          "shape":"Id",
+          "location":"uri",
+          "locationName":"botId"
+        },
+        "botAnalyzerRequestId":{
+          "shape":"UUID",
+          "location":"uri",
+          "locationName":"botAnalyzerRequestId"
+        },
+        "nextToken":{"shape":"NextToken"},
+        "maxResults":{"shape":"MaxResults"}
+      }
+    },
+    "DescribeBotAnalyzerRecommendationResponse":{
+      "type":"structure",
+      "members":{
+        "botId":{"shape":"Id"},
+        "botVersion":{"shape":"DraftBotVersion"},
+        "localeId":{"shape":"LocaleId"},
+        "botAnalyzerStatus":{"shape":"BotAnalyzerStatus"},
+        "creationDateTime":{"shape":"Timestamp"},
+        "botAnalyzerRecommendationList":{"shape":"BotAnalyzerRecommendationList"},
+        "nextToken":{"shape":"NextToken"}
+      }
+    },
     "DescribeBotLocaleRequest":{
       "type":"structure",
       "required":[
@@ -4808,6 +5073,9 @@
         "description":{"shape":"Description"},
         "nluIntentConfidenceThreshold":{"shape":"ConfidenceThreshold"},
         "voiceSettings":{"shape":"VoiceSettings"},
+        "unifiedSpeechSettings":{"shape":"UnifiedSpeechSettings"},
+        "audioFillerSettings":{"shape":"AudioFillerSettings"},
+        "speechRecognitionSettings":{"shape":"SpeechRecognitionSettings"},
         "intentsCount":{"shape":"ResourceCount"},
         "slotTypesCount":{"shape":"ResourceCount"},
         "botLocaleStatus":{"shape":"BotLocaleStatus"},
@@ -4817,7 +5085,8 @@
         "lastBuildSubmittedDateTime":{"shape":"Timestamp"},
         "botLocaleHistoryEvents":{"shape":"BotLocaleHistoryEventsList"},
         "recommendedActions":{"shape":"RecommendedActions"},
-        "generativeAISettings":{"shape":"GenerativeAISettings"}
+        "generativeAISettings":{"shape":"GenerativeAISettings"},
+        "speechDetectionSensitivity":{"shape":"SpeechDetectionSensitivity"}
       }
     },
     "DescribeBotRecommendationRequest":{
@@ -4969,7 +5238,8 @@
         "lastUpdatedDateTime":{"shape":"Timestamp"},
         "botType":{"shape":"BotType"},
         "botMembers":{"shape":"BotMembers"},
-        "failureReasons":{"shape":"FailureReasons"}
+        "failureReasons":{"shape":"FailureReasons"},
+        "errorLogSettings":{"shape":"ErrorLogSettings"}
       }
     },
     "DescribeBotVersionRequest":{
@@ -5130,6 +5400,7 @@
       "members":{
         "intentId":{"shape":"Id"},
         "intentName":{"shape":"Name"},
+        "intentDisplayName":{"shape":"DisplayName"},
         "description":{"shape":"Description"},
         "parentIntentSignature":{"shape":"IntentSignature"},
         "sampleUtterances":{"shape":"SampleUtterancesList"},
@@ -5147,7 +5418,8 @@
         "creationDateTime":{"shape":"Timestamp"},
         "lastUpdatedDateTime":{"shape":"Timestamp"},
         "initialResponseSetting":{"shape":"InitialResponseSetting"},
-        "qnAIntentConfiguration":{"shape":"QnAIntentConfiguration"}
+        "qnAIntentConfiguration":{"shape":"QnAIntentConfiguration"},
+        "qInConnectIntentConfiguration":{"shape":"QInConnectIntentConfiguration"}
       }
     },
     "DescribeResourcePolicyRequest":{
@@ -5380,7 +5652,7 @@
     },
     "Description":{
       "type":"string",
-      "max":200,
+      "max":2000,
       "min":0
     },
     "DescriptiveBotBuilderSpecification":{
@@ -5443,6 +5715,11 @@
         "sessionAttributes":{"shape":"StringMap"}
       }
     },
+    "DisplayName":{
+      "type":"string",
+      "max":100,
+      "min":1
+    },
     "DomainEndpoint":{
       "type":"string",
       "pattern":"^(http|https):\\/\\/+[^\\s]+[\\w]"
@@ -5485,6 +5762,13 @@
         "RESOURCE_ALREADY_EXISTS",
         "INTERNAL_SERVER_FAILURE"
       ]
+    },
+    "ErrorLogSettings":{
+      "type":"structure",
+      "required":["enabled"],
+      "members":{
+        "enabled":{"shape":"BoxedBoolean"}
+      }
     },
     "ErrorMessage":{"type":"string"},
     "ExactResponseFields":{
@@ -6033,6 +6317,15 @@
         "elicitationCodeHook":{"shape":"ElicitationCodeHookInvocationSetting"}
       }
     },
+    "IntentDisambiguationSettings":{
+      "type":"structure",
+      "required":["enabled"],
+      "members":{
+        "enabled":{"shape":"Enabled"},
+        "maxDisambiguationIntents":{"shape":"MaxDisambiguationIntents"},
+        "customDisambiguationMessage":{"shape":"CustomDisambiguationMessage"}
+      }
+    },
     "IntentFilter":{
       "type":"structure",
       "required":[
@@ -6135,6 +6428,7 @@
       "members":{
         "intentId":{"shape":"Id"},
         "intentName":{"shape":"Name"},
+        "intentDisplayName":{"shape":"DisplayName"},
         "description":{"shape":"Description"},
         "parentIntentSignature":{"shape":"IntentSignature"},
         "inputContexts":{"shape":"InputContextsList"},
@@ -6164,6 +6458,14 @@
     "InvokedIntentSamples":{
       "type":"list",
       "member":{"shape":"InvokedIntentSample"}
+    },
+    "IssueLocation":{
+      "type":"structure",
+      "members":{
+        "botLocale":{"shape":"LocaleId"},
+        "intentId":{"shape":"Id"},
+        "slotId":{"shape":"Id"}
+      }
     },
     "ItemId":{
       "type":"string",
@@ -6302,6 +6604,31 @@
         "botAliasSummaries":{"shape":"BotAliasSummaryList"},
         "nextToken":{"shape":"NextToken"},
         "botId":{"shape":"Id"}
+      }
+    },
+    "ListBotAnalyzerHistoryRequest":{
+      "type":"structure",
+      "required":["botId"],
+      "members":{
+        "botId":{
+          "shape":"Id",
+          "location":"uri",
+          "locationName":"botId"
+        },
+        "localeId":{"shape":"LocaleId"},
+        "botVersion":{"shape":"DraftBotVersion"},
+        "nextToken":{"shape":"NextToken"},
+        "maxResults":{"shape":"MaxResults"}
+      }
+    },
+    "ListBotAnalyzerHistoryResponse":{
+      "type":"structure",
+      "members":{
+        "botId":{"shape":"Id"},
+        "localeId":{"shape":"LocaleId"},
+        "botVersion":{"shape":"DraftBotVersion"},
+        "botAnalyzerHistoryList":{"shape":"BotAnalyzerHistoryList"},
+        "nextToken":{"shape":"NextToken"}
       }
     },
     "ListBotLocalesRequest":{
@@ -7103,6 +7430,12 @@
       "type":"string",
       "max":1024
     },
+    "MaxDisambiguationIntents":{
+      "type":"integer",
+      "box":true,
+      "max":5,
+      "min":2
+    },
     "MaxResults":{
       "type":"integer",
       "box":true,
@@ -7187,6 +7520,15 @@
       "min":0
     },
     "NextToken":{"type":"string"},
+    "NluImprovementSpecification":{
+      "type":"structure",
+      "required":["enabled"],
+      "members":{
+        "enabled":{"shape":"Enabled"},
+        "assistedNluMode":{"shape":"AssistedNluMode"},
+        "intentDisambiguationSettings":{"shape":"IntentDisambiguationSettings"}
+      }
+    },
     "NonEmptyString":{
       "type":"string",
       "min":1
@@ -7404,6 +7746,14 @@
       "type":"list",
       "member":{"shape":"Principal"}
     },
+    "Priority":{
+      "type":"string",
+      "enum":[
+        "High",
+        "Medium",
+        "Low"
+      ]
+    },
     "PriorityValue":{
       "type":"integer",
       "max":100,
@@ -7452,6 +7802,23 @@
         "allowInterrupt":{"shape":"BoxedBoolean"},
         "messageSelectionStrategy":{"shape":"MessageSelectionStrategy"},
         "promptAttemptsSpecification":{"shape":"PromptAttemptsSpecificationMap"}
+      }
+    },
+    "QInConnectAssistantARN":{
+      "type":"string",
+      "pattern":"^arn:[a-z-]*?:wisdom:[a-z0-9-]*?:[0-9]{12}:[a-z-]*?/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(?:/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}){0,2}$"
+    },
+    "QInConnectAssistantConfiguration":{
+      "type":"structure",
+      "required":["assistantArn"],
+      "members":{
+        "assistantArn":{"shape":"QInConnectAssistantARN"}
+      }
+    },
+    "QInConnectIntentConfiguration":{
+      "type":"structure",
+      "members":{
+        "qInConnectAssistantConfiguration":{"shape":"QInConnectAssistantConfiguration"}
       }
     },
     "QnAIntentConfiguration":{
@@ -7584,7 +7951,8 @@
     "RuntimeSettings":{
       "type":"structure",
       "members":{
-        "slotResolutionImprovement":{"shape":"SlotResolutionImprovementSpecification"}
+        "slotResolutionImprovement":{"shape":"SlotResolutionImprovementSpecification"},
+        "nluImprovement":{"shape":"NluImprovementSpecification"}
       }
     },
     "S3BucketArn":{
@@ -7724,6 +8092,12 @@
         "Ascending",
         "Descending"
       ]
+    },
+    "SecretsManagerSecretArn":{
+      "type":"string",
+      "max":2048,
+      "min":20,
+      "pattern":"^arn:aws[A-Za-z-]*:secretsmanager:[a-z0-9-]{1,20}:[0-9]{12}:secret:[A-Za-z0-9/_+=.@-]{1,512}-[A-Za-z0-9]{6}$"
     },
     "SentimentAnalysisSettings":{
       "type":"structure",
@@ -8154,6 +8528,71 @@
         "valueElicitationSetting":{"shape":"SubSlotValueElicitationSetting"}
       }
     },
+    "SpeechDetectionSensitivity":{
+      "type":"string",
+      "enum":[
+        "Default",
+        "HighNoiseTolerance",
+        "MaximumNoiseTolerance"
+      ]
+    },
+    "SpeechFoundationModel":{
+      "type":"structure",
+      "required":["modelArn"],
+      "members":{
+        "modelArn":{"shape":"BedrockModelArn"},
+        "voiceId":{"shape":"VoiceId"}
+      }
+    },
+    "SpeechModelConfig":{
+      "type":"structure",
+      "members":{
+        "deepgramConfig":{"shape":"DeepgramSpeechModelConfig"}
+      }
+    },
+    "SpeechModelPreference":{
+      "type":"string",
+      "enum":[
+        "Standard",
+        "Neural",
+        "Deepgram"
+      ]
+    },
+    "SpeechRecognitionSettings":{
+      "type":"structure",
+      "members":{
+        "speechModelPreference":{"shape":"SpeechModelPreference"},
+        "speechModelConfig":{"shape":"SpeechModelConfig"}
+      }
+    },
+    "StartBotAnalyzerRequest":{
+      "type":"structure",
+      "required":[
+        "botId",
+        "analysisScope"
+      ],
+      "members":{
+        "botId":{
+          "shape":"Id",
+          "location":"uri",
+          "locationName":"botId"
+        },
+        "analysisScope":{"shape":"AnalysisScope"},
+        "localeId":{"shape":"LocaleId"},
+        "botVersion":{"shape":"DraftBotVersion"}
+      }
+    },
+    "StartBotAnalyzerResponse":{
+      "type":"structure",
+      "members":{
+        "botId":{"shape":"Id"},
+        "botVersion":{"shape":"DraftBotVersion"},
+        "localeId":{"shape":"LocaleId"},
+        "botAnalyzerStatus":{"shape":"BotAnalyzerStatus"},
+        "botAnalyzerRequestId":{"shape":"UUID"},
+        "creationDateTime":{"shape":"Timestamp"}
+      }
+    },
     "StartBotRecommendationRequest":{
       "type":"structure",
       "required":[
@@ -8342,6 +8781,35 @@
       "max":900,
       "min":1
     },
+    "StopBotAnalyzerRequest":{
+      "type":"structure",
+      "required":[
+        "botId",
+        "botAnalyzerRequestId"
+      ],
+      "members":{
+        "botId":{
+          "shape":"Id",
+          "location":"uri",
+          "locationName":"botId"
+        },
+        "botAnalyzerRequestId":{
+          "shape":"UUID",
+          "location":"uri",
+          "locationName":"botAnalyzerRequestId"
+        }
+      }
+    },
+    "StopBotAnalyzerResponse":{
+      "type":"structure",
+      "members":{
+        "botId":{"shape":"Id"},
+        "botVersion":{"shape":"DraftBotVersion"},
+        "localeId":{"shape":"LocaleId"},
+        "botAnalyzerStatus":{"shape":"BotAnalyzerStatus"},
+        "botAnalyzerRequestId":{"shape":"UUID"}
+      }
+    },
     "StopBotRecommendationRequest":{
       "type":"structure",
       "required":[
@@ -8477,8 +8945,7 @@
     },
     "TagResourceResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "TagValue":{
       "type":"string",
@@ -8925,6 +9392,19 @@
         "userTurn":{"shape":"UserTurnSpecification"}
       }
     },
+    "UUID":{
+      "type":"string",
+      "max":36,
+      "min":36,
+      "pattern":"[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"
+    },
+    "UnifiedSpeechSettings":{
+      "type":"structure",
+      "required":["speechFoundationModel"],
+      "members":{
+        "speechFoundationModel":{"shape":"SpeechFoundationModel"}
+      }
+    },
     "UntagResourceRequest":{
       "type":"structure",
       "required":[
@@ -8946,8 +9426,7 @@
     },
     "UntagResourceResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "UpdateBotAliasRequest":{
       "type":"structure",
@@ -9018,7 +9497,11 @@
         "description":{"shape":"Description"},
         "nluIntentConfidenceThreshold":{"shape":"ConfidenceThreshold"},
         "voiceSettings":{"shape":"VoiceSettings"},
-        "generativeAISettings":{"shape":"GenerativeAISettings"}
+        "unifiedSpeechSettings":{"shape":"UnifiedSpeechSettings"},
+        "audioFillerSettings":{"shape":"AudioFillerSettings"},
+        "speechRecognitionSettings":{"shape":"SpeechRecognitionSettings"},
+        "generativeAISettings":{"shape":"GenerativeAISettings"},
+        "speechDetectionSensitivity":{"shape":"SpeechDetectionSensitivity"}
       }
     },
     "UpdateBotLocaleResponse":{
@@ -9031,12 +9514,16 @@
         "description":{"shape":"Description"},
         "nluIntentConfidenceThreshold":{"shape":"ConfidenceThreshold"},
         "voiceSettings":{"shape":"VoiceSettings"},
+        "unifiedSpeechSettings":{"shape":"UnifiedSpeechSettings"},
+        "audioFillerSettings":{"shape":"AudioFillerSettings"},
+        "speechRecognitionSettings":{"shape":"SpeechRecognitionSettings"},
         "botLocaleStatus":{"shape":"BotLocaleStatus"},
         "failureReasons":{"shape":"FailureReasons"},
         "creationDateTime":{"shape":"Timestamp"},
         "lastUpdatedDateTime":{"shape":"Timestamp"},
         "recommendedActions":{"shape":"RecommendedActions"},
-        "generativeAISettings":{"shape":"GenerativeAISettings"}
+        "generativeAISettings":{"shape":"GenerativeAISettings"},
+        "speechDetectionSensitivity":{"shape":"SpeechDetectionSensitivity"}
       }
     },
     "UpdateBotRecommendationRequest":{
@@ -9107,7 +9594,8 @@
         "dataPrivacy":{"shape":"DataPrivacy"},
         "idleSessionTTLInSeconds":{"shape":"SessionTTL"},
         "botType":{"shape":"BotType"},
-        "botMembers":{"shape":"BotMembers"}
+        "botMembers":{"shape":"BotMembers"},
+        "errorLogSettings":{"shape":"ErrorLogSettings"}
       }
     },
     "UpdateBotResponse":{
@@ -9123,7 +9611,8 @@
         "creationDateTime":{"shape":"Timestamp"},
         "lastUpdatedDateTime":{"shape":"Timestamp"},
         "botType":{"shape":"BotType"},
-        "botMembers":{"shape":"BotMembers"}
+        "botMembers":{"shape":"BotMembers"},
+        "errorLogSettings":{"shape":"ErrorLogSettings"}
       }
     },
     "UpdateCustomVocabularyItemsList":{
@@ -9171,6 +9660,7 @@
           "locationName":"intentId"
         },
         "intentName":{"shape":"Name"},
+        "intentDisplayName":{"shape":"DisplayName"},
         "description":{"shape":"Description"},
         "parentIntentSignature":{"shape":"IntentSignature"},
         "sampleUtterances":{"shape":"SampleUtterancesList"},
@@ -9198,7 +9688,8 @@
           "locationName":"localeId"
         },
         "initialResponseSetting":{"shape":"InitialResponseSetting"},
-        "qnAIntentConfiguration":{"shape":"QnAIntentConfiguration"}
+        "qnAIntentConfiguration":{"shape":"QnAIntentConfiguration"},
+        "qInConnectIntentConfiguration":{"shape":"QInConnectIntentConfiguration"}
       }
     },
     "UpdateIntentResponse":{
@@ -9206,6 +9697,7 @@
       "members":{
         "intentId":{"shape":"Id"},
         "intentName":{"shape":"Name"},
+        "intentDisplayName":{"shape":"DisplayName"},
         "description":{"shape":"Description"},
         "parentIntentSignature":{"shape":"IntentSignature"},
         "sampleUtterances":{"shape":"SampleUtterancesList"},
@@ -9223,7 +9715,8 @@
         "creationDateTime":{"shape":"Timestamp"},
         "lastUpdatedDateTime":{"shape":"Timestamp"},
         "initialResponseSetting":{"shape":"InitialResponseSetting"},
-        "qnAIntentConfiguration":{"shape":"QnAIntentConfiguration"}
+        "qnAIntentConfiguration":{"shape":"QnAIntentConfiguration"},
+        "qInConnectIntentConfiguration":{"shape":"QInConnectIntentConfiguration"}
       }
     },
     "UpdateResourcePolicyRequest":{
@@ -9614,8 +10107,8 @@
       "type":"structure",
       "required":["voiceId"],
       "members":{
-        "voiceId":{"shape":"VoiceId"},
-        "engine":{"shape":"VoiceEngine"}
+        "engine":{"shape":"VoiceEngine"},
+        "voiceId":{"shape":"VoiceId"}
       }
     },
     "WaitAndContinueSpecification":{

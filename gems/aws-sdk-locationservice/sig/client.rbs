@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -117,15 +118,7 @@ module Aws
       def batch_evaluate_geofences: (
                                       collection_name: ::String,
                                       device_position_updates: Array[
-                                        {
-                                          device_id: ::String,
-                                          sample_time: ::Time,
-                                          position: Array[::Float],
-                                          accuracy: {
-                                            horizontal: ::Float
-                                          }?,
-                                          position_properties: Hash[::String, ::String]?
-                                        },
+                                        Params::device_position_update
                                       ]
                                     ) -> _BatchEvaluateGeofencesResponseSuccess
                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _BatchEvaluateGeofencesResponseSuccess
@@ -153,20 +146,9 @@ module Aws
                                 entries: Array[
                                   {
                                     geofence_id: ::String,
-                                    geometry: {
-                                      polygon: Array[
-                                        Array[
-                                          Array[::Float],
-                                        ],
-                                      ]?,
-                                      circle: {
-                                        center: Array[::Float],
-                                        radius: ::Float
-                                      }?,
-                                      geobuf: ::String?
-                                    },
+                                    geometry: Params::geofence_geometry,
                                     geofence_properties: Hash[::String, ::String]?
-                                  },
+                                  }
                                 ]
                               ) -> _BatchPutGeofenceResponseSuccess
                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _BatchPutGeofenceResponseSuccess
@@ -179,15 +161,7 @@ module Aws
       def batch_update_device_position: (
                                           tracker_name: ::String,
                                           updates: Array[
-                                            {
-                                              device_id: ::String,
-                                              sample_time: ::Time,
-                                              position: Array[::Float],
-                                              accuracy: {
-                                                horizontal: ::Float
-                                              }?,
-                                              position_properties: Hash[::String, ::String]?
-                                            },
+                                            Params::device_position_update
                                           ]
                                         ) -> _BatchUpdateDevicePositionResponseSuccess
                                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _BatchUpdateDevicePositionResponseSuccess
@@ -203,7 +177,7 @@ module Aws
                              departure_position: Array[::Float],
                              destination_position: Array[::Float],
                              ?waypoint_positions: Array[
-                               Array[::Float],
+                               Array[::Float]
                              ],
                              ?travel_mode: ("Car" | "Truck" | "Walking" | "Bicycle" | "Motorcycle"),
                              ?departure_time: ::Time,
@@ -214,20 +188,7 @@ module Aws
                                avoid_ferries: bool?,
                                avoid_tolls: bool?
                              },
-                             ?truck_mode_options: {
-                               avoid_ferries: bool?,
-                               avoid_tolls: bool?,
-                               dimensions: {
-                                 length: ::Float?,
-                                 height: ::Float?,
-                                 width: ::Float?,
-                                 unit: ("Meters" | "Feet")?
-                               }?,
-                               weight: {
-                                 total: ::Float?,
-                                 unit: ("Kilograms" | "Pounds")?
-                               }?
-                             },
+                             ?truck_mode_options: Params::calculate_route_truck_mode_options,
                              ?arrival_time: ::Time,
                              ?optimize_for: ("FastestRoute" | "ShortestRoute"),
                              ?key: ::String
@@ -245,10 +206,10 @@ module Aws
       def calculate_route_matrix: (
                                     calculator_name: ::String,
                                     departure_positions: Array[
-                                      Array[::Float],
+                                      Array[::Float]
                                     ],
                                     destination_positions: Array[
-                                      Array[::Float],
+                                      Array[::Float]
                                     ],
                                     ?travel_mode: ("Car" | "Truck" | "Walking" | "Bicycle" | "Motorcycle"),
                                     ?departure_time: ::Time,
@@ -258,23 +219,22 @@ module Aws
                                       avoid_ferries: bool?,
                                       avoid_tolls: bool?
                                     },
-                                    ?truck_mode_options: {
-                                      avoid_ferries: bool?,
-                                      avoid_tolls: bool?,
-                                      dimensions: {
-                                        length: ::Float?,
-                                        height: ::Float?,
-                                        width: ::Float?,
-                                        unit: ("Meters" | "Feet")?
-                                      }?,
-                                      weight: {
-                                        total: ::Float?,
-                                        unit: ("Kilograms" | "Pounds")?
-                                      }?
-                                    },
+                                    ?truck_mode_options: Params::calculate_route_truck_mode_options,
                                     ?key: ::String
                                   ) -> _CalculateRouteMatrixResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CalculateRouteMatrixResponseSuccess
+
+      interface _CancelJobResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CancelJobResponse]
+        def job_arn: () -> ::String
+        def job_id: () -> ::String
+        def status: () -> ("Pending" | "Running" | "Completed" | "Failed" | "Cancelling" | "Cancelled")
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/LocationService/Client.html#cancel_job-instance_method
+      def cancel_job: (
+                        job_id: ::String
+                      ) -> _CancelJobResponseSuccess
+                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CancelJobResponseSuccess
 
       interface _CreateGeofenceCollectionResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::CreateGeofenceCollectionResponse]
@@ -303,11 +263,7 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/LocationService/Client.html#create_key-instance_method
       def create_key: (
                         key_name: ::String,
-                        restrictions: {
-                          allow_actions: Array[::String],
-                          allow_resources: Array[::String],
-                          allow_referers: Array[::String]?
-                        },
+                        restrictions: Params::api_key_restrictions,
                         ?description: ::String,
                         ?expire_time: ::Time,
                         ?no_expiry: bool,
@@ -636,6 +592,28 @@ module Aws
                         ) -> _GetGeofenceResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetGeofenceResponseSuccess
 
+      interface _GetJobResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetJobResponse]
+        def action: () -> ("ValidateAddress")
+        def action_options: () -> Types::JobActionOptions
+        def created_at: () -> ::Time
+        def ended_at: () -> ::Time
+        def execution_role_arn: () -> ::String
+        def input_options: () -> Types::JobInputOptions
+        def job_arn: () -> ::String
+        def job_id: () -> ::String
+        def name: () -> ::String
+        def output_options: () -> Types::JobOutputOptions
+        def status: () -> ("Pending" | "Running" | "Completed" | "Failed" | "Cancelling" | "Cancelled")
+        def updated_at: () -> ::Time
+        def tags: () -> ::Hash[::String, ::String]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/LocationService/Client.html#get_job-instance_method
+      def get_job: (
+                     job_id: ::String
+                   ) -> _GetJobResponseSuccess
+                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetJobResponseSuccess
+
       interface _GetMapGlyphsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetMapGlyphsResponse]
         def blob: () -> ::IO
@@ -720,8 +698,8 @@ module Aws
                                    ?filter_geometry: {
                                      polygon: Array[
                                        Array[
-                                         Array[::Float],
-                                       ],
+                                         Array[::Float]
+                                       ]
                                      ]?
                                    }
                                  ) -> _ListDevicePositionsResponseSuccess
@@ -751,6 +729,21 @@ module Aws
                             ?max_results: ::Integer
                           ) -> _ListGeofencesResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListGeofencesResponseSuccess
+
+      interface _ListJobsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListJobsResponse]
+        def entries: () -> ::Array[Types::ListJobsResponseEntry]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/LocationService/Client.html#list_jobs-instance_method
+      def list_jobs: (
+                       ?filter: {
+                         job_status: ("Pending" | "Running" | "Completed" | "Failed" | "Cancelling" | "Cancelled")?
+                       },
+                       ?max_results: ::Integer,
+                       ?next_token: ::String
+                     ) -> _ListJobsResponseSuccess
+                   | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListJobsResponseSuccess
 
       interface _ListKeysResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListKeysResponse]
@@ -848,18 +841,7 @@ module Aws
       def put_geofence: (
                           collection_name: ::String,
                           geofence_id: ::String,
-                          geometry: {
-                            polygon: Array[
-                              Array[
-                                Array[::Float],
-                              ],
-                            ]?,
-                            circle: {
-                              center: Array[::Float],
-                              radius: ::Float
-                            }?,
-                            geobuf: ::String?
-                          },
+                          geometry: Params::geofence_geometry,
                           ?geofence_properties: Hash[::String, ::String]
                         ) -> _PutGeofenceResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PutGeofenceResponseSuccess
@@ -917,6 +899,36 @@ module Aws
                                        ) -> _SearchPlaceIndexForTextResponseSuccess
                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _SearchPlaceIndexForTextResponseSuccess
 
+      interface _StartJobResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::StartJobResponse]
+        def created_at: () -> ::Time
+        def job_arn: () -> ::String
+        def job_id: () -> ::String
+        def status: () -> ("Pending" | "Running" | "Completed" | "Failed" | "Cancelling" | "Cancelled")
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/LocationService/Client.html#start_job-instance_method
+      def start_job: (
+                       ?client_token: ::String,
+                       action: ("ValidateAddress"),
+                       ?action_options: {
+                         validate_address: {
+                           additional_features: Array[("Position" | "CountrySpecificAttributes")]?
+                         }?
+                       },
+                       execution_role_arn: ::String,
+                       input_options: {
+                         location: ::String,
+                         format: ("Parquet")
+                       },
+                       ?name: ::String,
+                       output_options: {
+                         format: ("Parquet"),
+                         location: ::String
+                       },
+                       ?tags: Hash[::String, ::String]
+                     ) -> _StartJobResponseSuccess
+                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartJobResponseSuccess
+
       interface _TagResourceResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::TagResourceResponse]
       end
@@ -965,11 +977,7 @@ module Aws
                         ?expire_time: ::Time,
                         ?no_expiry: bool,
                         ?force_update: bool,
-                        ?restrictions: {
-                          allow_actions: Array[::String],
-                          allow_resources: Array[::String],
-                          allow_referers: Array[::String]?
-                        }
+                        ?restrictions: Params::api_key_restrictions
                       ) -> _UpdateKeyResponseSuccess
                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateKeyResponseSuccess
 
@@ -1063,7 +1071,7 @@ module Aws
                                         {
                                           mac_address: ::String,
                                           rss: ::Integer
-                                        },
+                                        }
                                       ]?,
                                       cell_signals: {
                                         lte_cell_details: Array[
@@ -1082,20 +1090,26 @@ module Aws
                                                 pci: ::Integer,
                                                 rsrp: ::Integer?,
                                                 rsrq: ::Float?
-                                              },
+                                              }
                                             ]?,
                                             timing_advance: ::Integer?,
                                             nr_capable: bool?,
                                             rsrp: ::Integer?,
                                             rsrq: ::Float?,
                                             tac: ::Integer?
-                                          },
+                                          }
                                         ]
                                       }?
                                     },
                                     ?distance_unit: ("Kilometers" | "Miles")
                                   ) -> _VerifyDevicePositionResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _VerifyDevicePositionResponseSuccess
+
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/LocationService/Client.html#wait_until-instance_method
+      def wait_until: (:job_completed waiter_name, 
+                    job_id: ::String
+                  ) -> Client::_GetJobResponseSuccess
+                    | (:job_completed waiter_name, Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> Client::_GetJobResponseSuccess
     end
   end
 end

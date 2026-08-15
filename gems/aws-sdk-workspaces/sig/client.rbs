@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -131,7 +132,7 @@ module Aws
                                   {
                                     ip_rule: ::String?,
                                     rule_desc: ::String?
-                                  },
+                                  }
                                 ]
                               ) -> _AuthorizeIpRulesResponseSuccess
                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _AuthorizeIpRulesResponseSuccess
@@ -150,7 +151,7 @@ module Aws
                                     {
                                       key: ::String,
                                       value: ::String?
-                                    },
+                                    }
                                   ]
                                 ) -> _CopyWorkspaceImageResponseSuccess
                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CopyWorkspaceImageResponseSuccess
@@ -189,7 +190,7 @@ module Aws
                                        {
                                          key: ::String,
                                          value: ::String?
-                                       },
+                                       }
                                      ]
                                    ) -> _CreateConnectionAliasResponseSuccess
                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateConnectionAliasResponseSuccess
@@ -206,13 +207,13 @@ module Aws
                                {
                                  ip_rule: ::String?,
                                  rule_desc: ::String?
-                               },
+                               }
                              ],
                              ?tags: Array[
                                {
                                  key: ::String,
                                  value: ::String?
-                               },
+                               }
                              ]
                            ) -> _CreateIpGroupResponseSuccess
                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateIpGroupResponseSuccess
@@ -234,10 +235,10 @@ module Aws
                                              {
                                                key: ::String,
                                                value: ::String?
-                                             },
+                                             }
                                            ]?,
                                            data_replication: ("NO_REPLICATION" | "PRIMARY_AS_SOURCE")?
-                                         },
+                                         }
                                        ]
                                      ) -> _CreateStandbyWorkspacesResponseSuccess
                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateStandbyWorkspacesResponseSuccess
@@ -252,7 +253,7 @@ module Aws
                            {
                              key: ::String,
                              value: ::String?
-                           },
+                           }
                          ]
                        ) -> _CreateTagsResponseSuccess
                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateTagsResponseSuccess
@@ -270,7 +271,7 @@ module Aws
                                               {
                                                 key: ::String,
                                                 value: ::String?
-                                              },
+                                              }
                                             ]
                                           ) -> _CreateUpdatedWorkspaceImageResponseSuccess
                                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateUpdatedWorkspaceImageResponseSuccess
@@ -285,7 +286,7 @@ module Aws
                                      bundle_description: ::String,
                                      image_id: ::String,
                                      compute_type: {
-                                       name: ("VALUE" | "STANDARD" | "PERFORMANCE" | "POWER" | "GRAPHICS" | "POWERPRO" | "GENERALPURPOSE_4XLARGE" | "GENERALPURPOSE_8XLARGE" | "GRAPHICSPRO" | "GRAPHICS_G4DN" | "GRAPHICSPRO_G4DN")?
+                                       name: ("VALUE" | "STANDARD" | "PERFORMANCE" | "POWER" | "GRAPHICS" | "POWERPRO" | "GENERALPURPOSE_4XLARGE" | "GENERALPURPOSE_8XLARGE" | "GRAPHICSPRO" | "GRAPHICS_G4DN" | "GRAPHICSPRO_G4DN" | "GRAPHICS_G6_XLARGE" | "GRAPHICS_G6_2XLARGE" | "GRAPHICS_G6_4XLARGE" | "GRAPHICS_G6_8XLARGE" | "GRAPHICS_G6_16XLARGE" | "GRAPHICS_GR6_4XLARGE" | "GRAPHICS_GR6_8XLARGE" | "GRAPHICS_G6F_LARGE" | "GRAPHICS_G6F_XLARGE" | "GRAPHICS_G6F_2XLARGE" | "GRAPHICS_G6F_4XLARGE" | "GRAPHICS_GR6F_4XLARGE")?
                                      },
                                      user_storage: {
                                        capacity: ::String
@@ -297,7 +298,7 @@ module Aws
                                        {
                                          key: ::String,
                                          value: ::String?
-                                       },
+                                       }
                                      ]
                                    ) -> _CreateWorkspaceBundleResponseSuccess
                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateWorkspaceBundleResponseSuccess
@@ -322,7 +323,7 @@ module Aws
                                       {
                                         key: ::String,
                                         value: ::String?
-                                      },
+                                      }
                                     ]
                                   ) -> _CreateWorkspaceImageResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateWorkspaceImageResponseSuccess
@@ -342,27 +343,16 @@ module Aws
                                    volume_encryption_key: ::String?,
                                    user_volume_encryption_enabled: bool?,
                                    root_volume_encryption_enabled: bool?,
-                                   workspace_properties: {
-                                     running_mode: ("AUTO_STOP" | "ALWAYS_ON" | "MANUAL")?,
-                                     running_mode_auto_stop_timeout_in_minutes: ::Integer?,
-                                     root_volume_size_gib: ::Integer?,
-                                     user_volume_size_gib: ::Integer?,
-                                     compute_type_name: ("VALUE" | "STANDARD" | "PERFORMANCE" | "POWER" | "GRAPHICS" | "POWERPRO" | "GENERALPURPOSE_4XLARGE" | "GENERALPURPOSE_8XLARGE" | "GRAPHICSPRO" | "GRAPHICS_G4DN" | "GRAPHICSPRO_G4DN")?,
-                                     protocols: Array[("PCOIP" | "WSP")]?,
-                                     operating_system_name: ("AMAZON_LINUX_2" | "UBUNTU_18_04" | "UBUNTU_20_04" | "UBUNTU_22_04" | "UNKNOWN" | "WINDOWS_10" | "WINDOWS_11" | "WINDOWS_7" | "WINDOWS_SERVER_2016" | "WINDOWS_SERVER_2019" | "WINDOWS_SERVER_2022" | "RHEL_8" | "ROCKY_8")?,
-                                     global_accelerator: {
-                                       mode: ("ENABLED_AUTO" | "DISABLED" | "INHERITED"),
-                                       preferred_protocol: ("TCP" | "NONE" | "INHERITED")?
-                                     }?
-                                   }?,
+                                   workspace_properties: Params::workspace_properties?,
                                    tags: Array[
                                      {
                                        key: ::String,
                                        value: ::String?
-                                     },
+                                     }
                                    ]?,
-                                   workspace_name: ::String?
-                                 },
+                                   workspace_name: ::String?,
+                                   ipv_6_address: ::String?
+                                 }
                                ]
                              ) -> _CreateWorkspacesResponseSuccess
                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateWorkspacesResponseSuccess
@@ -384,7 +374,7 @@ module Aws
                                       {
                                         key: ::String,
                                         value: ::String?
-                                      },
+                                      }
                                     ],
                                     ?application_settings: {
                                       status: ("DISABLED" | "ENABLED"),
@@ -394,7 +384,8 @@ module Aws
                                       disconnect_timeout_in_seconds: ::Integer?,
                                       idle_disconnect_timeout_in_seconds: ::Integer?,
                                       max_user_duration_in_seconds: ::Integer?
-                                    }
+                                    },
+                                    ?running_mode: ("AUTO_STOP" | "ALWAYS_ON")
                                   ) -> _CreateWorkspacesPoolResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateWorkspacesPoolResponseSuccess
 
@@ -500,6 +491,7 @@ module Aws
         def dedicated_tenancy_support: () -> ("ENABLED" | "DISABLED")
         def dedicated_tenancy_management_cidr_range: () -> ::String
         def dedicated_tenancy_account_type: () -> ("SOURCE_ACCOUNT" | "TARGET_ACCOUNT")
+        def message: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/WorkSpaces/Client.html#describe_account-instance_method
       def describe_account: (
@@ -539,9 +531,9 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/WorkSpaces/Client.html#describe_applications-instance_method
       def describe_applications: (
                                    ?application_ids: Array[::String],
-                                   ?compute_type_names: Array[("VALUE" | "STANDARD" | "PERFORMANCE" | "POWER" | "GRAPHICS" | "POWERPRO" | "GENERALPURPOSE_4XLARGE" | "GENERALPURPOSE_8XLARGE" | "GRAPHICSPRO" | "GRAPHICS_G4DN" | "GRAPHICSPRO_G4DN")],
+                                   ?compute_type_names: Array[("VALUE" | "STANDARD" | "PERFORMANCE" | "POWER" | "GRAPHICS" | "POWERPRO" | "GENERALPURPOSE_4XLARGE" | "GENERALPURPOSE_8XLARGE" | "GRAPHICSPRO" | "GRAPHICS_G4DN" | "GRAPHICSPRO_G4DN" | "GRAPHICS_G6_XLARGE" | "GRAPHICS_G6_2XLARGE" | "GRAPHICS_G6_4XLARGE" | "GRAPHICS_G6_8XLARGE" | "GRAPHICS_G6_16XLARGE" | "GRAPHICS_GR6_4XLARGE" | "GRAPHICS_GR6_8XLARGE" | "GRAPHICS_G6F_LARGE" | "GRAPHICS_G6F_XLARGE" | "GRAPHICS_G6F_2XLARGE" | "GRAPHICS_G6F_4XLARGE" | "GRAPHICS_GR6F_4XLARGE")],
                                    ?license_type: ("LICENSED" | "UNLICENSED"),
-                                   ?operating_system_names: Array[("AMAZON_LINUX_2" | "UBUNTU_18_04" | "UBUNTU_20_04" | "UBUNTU_22_04" | "UNKNOWN" | "WINDOWS_10" | "WINDOWS_11" | "WINDOWS_7" | "WINDOWS_SERVER_2016" | "WINDOWS_SERVER_2019" | "WINDOWS_SERVER_2022" | "RHEL_8" | "ROCKY_8")],
+                                   ?operating_system_names: Array[("AMAZON_LINUX_2" | "UBUNTU_18_04" | "UBUNTU_20_04" | "UBUNTU_22_04" | "UNKNOWN" | "WINDOWS_10" | "WINDOWS_11" | "WINDOWS_7" | "WINDOWS_SERVER_2016" | "WINDOWS_SERVER_2019" | "WINDOWS_SERVER_2022" | "WINDOWS_SERVER_2025" | "RHEL_8" | "ROCKY_8")],
                                    ?owner: ::String,
                                    ?max_results: ::Integer,
                                    ?next_token: ::String
@@ -625,6 +617,25 @@ module Aws
                                        ) -> _DescribeConnectionAliasesResponseSuccess
                                      | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeConnectionAliasesResponseSuccess
 
+      interface _DescribeCustomWorkspaceImageImportResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DescribeCustomWorkspaceImageImportResult]
+        def image_id: () -> ::String
+        def infrastructure_configuration_arn: () -> ::String
+        def state: () -> ("PENDING" | "IN_PROGRESS" | "PROCESSING_SOURCE_IMAGE" | "IMAGE_TESTING_START" | "UPDATING_OPERATING_SYSTEM" | "IMAGE_COMPATIBILITY_CHECKING" | "IMAGE_TESTING_GENERALIZATION" | "CREATING_TEST_INSTANCE" | "INSTALLING_COMPONENTS" | "GENERALIZING" | "VALIDATING" | "PUBLISHING" | "COMPLETED" | "ERROR")
+        def state_message: () -> ::String
+        def progress_percentage: () -> ::Integer
+        def created: () -> ::Time
+        def last_updated_time: () -> ::Time
+        def image_source: () -> Types::ImageSourceIdentifier
+        def image_builder_instance_id: () -> ::String
+        def error_details: () -> ::Array[Types::CustomWorkspaceImageImportErrorDetails]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/WorkSpaces/Client.html#describe_custom_workspace_image_import-instance_method
+      def describe_custom_workspace_image_import: (
+                                                    image_id: ::String
+                                                  ) -> _DescribeCustomWorkspaceImageImportResponseSuccess
+                                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeCustomWorkspaceImageImportResponseSuccess
+
       interface _DescribeImageAssociationsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DescribeImageAssociationsResult]
         def associations: () -> ::Array[Types::ImageResourceAssociation]
@@ -698,7 +709,7 @@ module Aws
                                               {
                                                 name: ("USER_IDENTITY_TYPE" | "WORKSPACE_TYPE"),
                                                 values: Array[::String]
-                                              },
+                                              }
                                             ]
                                           ) -> _DescribeWorkspaceDirectoriesResponseSuccess
                                         | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeWorkspaceDirectoriesResponseSuccess
@@ -798,7 +809,7 @@ module Aws
                                            name: ("PoolName"),
                                            values: Array[::String],
                                            operator: ("EQUALS" | "NOTEQUALS" | "CONTAINS" | "NOTCONTAINS")
-                                         },
+                                         }
                                        ],
                                        ?limit: ::Integer,
                                        ?next_token: ::String
@@ -905,6 +916,34 @@ module Aws
                                   ) -> _ImportClientBrandingResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ImportClientBrandingResponseSuccess
 
+      interface _ImportCustomWorkspaceImageResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ImportCustomWorkspaceImageResult]
+        def image_id: () -> ::String
+        def state: () -> ("PENDING" | "IN_PROGRESS" | "PROCESSING_SOURCE_IMAGE" | "IMAGE_TESTING_START" | "UPDATING_OPERATING_SYSTEM" | "IMAGE_COMPATIBILITY_CHECKING" | "IMAGE_TESTING_GENERALIZATION" | "CREATING_TEST_INSTANCE" | "INSTALLING_COMPONENTS" | "GENERALIZING" | "VALIDATING" | "PUBLISHING" | "COMPLETED" | "ERROR")
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/WorkSpaces/Client.html#import_custom_workspace_image-instance_method
+      def import_custom_workspace_image: (
+                                           image_name: ::String,
+                                           image_description: ::String,
+                                           compute_type: ("BASE" | "GRAPHICS_G4DN" | "GRAPHICS_G6"),
+                                           protocol: ("PCOIP" | "DCV" | "BYOP"),
+                                           image_source: {
+                                             ec2_import_task_id: ::String?,
+                                             image_build_version_arn: ::String?,
+                                             ec2_image_id: ::String?
+                                           },
+                                           infrastructure_configuration_arn: ::String,
+                                           platform: ("WINDOWS"),
+                                           os_version: ("Windows_10" | "Windows_11"),
+                                           ?tags: Array[
+                                             {
+                                               key: ::String,
+                                               value: ::String?
+                                             }
+                                           ]
+                                         ) -> _ImportCustomWorkspaceImageResponseSuccess
+                                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ImportCustomWorkspaceImageResponseSuccess
+
       interface _ImportWorkspaceImageResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ImportWorkspaceImageResult]
         def image_id: () -> ::String
@@ -919,7 +958,7 @@ module Aws
                                       {
                                         key: ::String,
                                         value: ::String?
-                                      },
+                                      }
                                     ],
                                     ?applications: Array[("Microsoft_Office_2016" | "Microsoft_Office_2019")]
                                   ) -> _ImportWorkspaceImageResponseSuccess
@@ -965,6 +1004,7 @@ module Aws
 
       interface _ModifyAccountResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ModifyAccountResult]
+        def message: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/WorkSpaces/Client.html#modify_account-instance_method
       def modify_account: (
@@ -995,7 +1035,8 @@ module Aws
                                       resource_id: ::String,
                                       client_properties: {
                                         reconnect_enabled: ("ENABLED" | "DISABLED")?,
-                                        log_upload_enabled: ("ENABLED" | "DISABLED")?
+                                        log_upload_enabled: ("ENABLED" | "DISABLED")?,
+                                        client_experience_policy: ::String?
                                       }
                                     ) -> _ModifyClientPropertiesResponseSuccess
                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ModifyClientPropertiesResponseSuccess
@@ -1054,13 +1095,13 @@ module Aws
                                                action: ("CLIPBOARD_COPY_FROM_LOCAL_DEVICE" | "CLIPBOARD_COPY_TO_LOCAL_DEVICE" | "PRINTING_TO_LOCAL_DEVICE" | "SMART_CARD"),
                                                permission: ("ENABLED" | "DISABLED"),
                                                maximum_length: ::Integer?
-                                             },
+                                             }
                                            ]?,
                                            storage_connectors: Array[
                                              {
                                                connector_type: ("HOME_FOLDER"),
                                                status: ("ENABLED" | "DISABLED")
-                                             },
+                                             }
                                            ]?,
                                            global_accelerator: {
                                              mode: ("ENABLED_AUTO" | "DISABLED"),
@@ -1085,7 +1126,16 @@ module Aws
                                                   device_type_chrome_os: ("ALLOW" | "DENY")?,
                                                   device_type_zero_client: ("ALLOW" | "DENY")?,
                                                   device_type_linux: ("ALLOW" | "DENY")?,
-                                                  device_type_work_spaces_thin_client: ("ALLOW" | "DENY")?
+                                                  device_type_work_spaces_thin_client: ("ALLOW" | "DENY")?,
+                                                  access_endpoint_config: {
+                                                    access_endpoints: Array[
+                                                      {
+                                                        access_endpoint_type: ("STREAMING_WSP")?,
+                                                        vpc_endpoint_id: ::String?
+                                                      }
+                                                    ],
+                                                    internet_fallback_protocols: Array[("PCOIP")]?
+                                                  }?
                                                 }
                                               ) -> _ModifyWorkspaceAccessPropertiesResponseSuccess
                                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ModifyWorkspaceAccessPropertiesResponseSuccess
@@ -1097,7 +1147,6 @@ module Aws
       def modify_workspace_creation_properties: (
                                                   resource_id: ::String,
                                                   workspace_creation_properties: {
-                                                    enable_work_docs: bool?,
                                                     enable_internet_access: bool?,
                                                     default_ou: ::String?,
                                                     custom_security_group_id: ::String?,
@@ -1114,19 +1163,7 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/WorkSpaces/Client.html#modify_workspace_properties-instance_method
       def modify_workspace_properties: (
                                          workspace_id: ::String,
-                                         ?workspace_properties: {
-                                           running_mode: ("AUTO_STOP" | "ALWAYS_ON" | "MANUAL")?,
-                                           running_mode_auto_stop_timeout_in_minutes: ::Integer?,
-                                           root_volume_size_gib: ::Integer?,
-                                           user_volume_size_gib: ::Integer?,
-                                           compute_type_name: ("VALUE" | "STANDARD" | "PERFORMANCE" | "POWER" | "GRAPHICS" | "POWERPRO" | "GENERALPURPOSE_4XLARGE" | "GENERALPURPOSE_8XLARGE" | "GRAPHICSPRO" | "GRAPHICS_G4DN" | "GRAPHICSPRO_G4DN")?,
-                                           protocols: Array[("PCOIP" | "WSP")]?,
-                                           operating_system_name: ("AMAZON_LINUX_2" | "UBUNTU_18_04" | "UBUNTU_20_04" | "UBUNTU_22_04" | "UNKNOWN" | "WINDOWS_10" | "WINDOWS_11" | "WINDOWS_7" | "WINDOWS_SERVER_2016" | "WINDOWS_SERVER_2019" | "WINDOWS_SERVER_2022" | "RHEL_8" | "ROCKY_8")?,
-                                           global_accelerator: {
-                                             mode: ("ENABLED_AUTO" | "DISABLED" | "INHERITED"),
-                                             preferred_protocol: ("TCP" | "NONE" | "INHERITED")?
-                                           }?
-                                         },
+                                         ?workspace_properties: Params::workspace_properties,
                                          ?data_replication: ("NO_REPLICATION" | "PRIMARY_AS_SOURCE")
                                        ) -> _ModifyWorkspacePropertiesResponseSuccess
                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ModifyWorkspacePropertiesResponseSuccess
@@ -1150,7 +1187,7 @@ module Aws
                                reboot_workspace_requests: Array[
                                  {
                                    workspace_id: ::String
-                                 },
+                                 }
                                ]
                              ) -> _RebootWorkspacesResponseSuccess
                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _RebootWorkspacesResponseSuccess
@@ -1164,7 +1201,7 @@ module Aws
                                 rebuild_workspace_requests: Array[
                                   {
                                     workspace_id: ::String
-                                  },
+                                  }
                                 ]
                               ) -> _RebuildWorkspacesResponseSuccess
                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _RebuildWorkspacesResponseSuccess
@@ -1178,14 +1215,13 @@ module Aws
       def register_workspace_directory: (
                                           ?directory_id: ::String,
                                           ?subnet_ids: Array[::String],
-                                          ?enable_work_docs: bool,
                                           ?enable_self_service: bool,
                                           ?tenancy: ("DEDICATED" | "SHARED"),
                                           ?tags: Array[
                                             {
                                               key: ::String,
                                               value: ::String?
-                                            },
+                                            }
                                           ],
                                           ?workspace_directory_name: ::String,
                                           ?workspace_directory_description: ::String,
@@ -1242,7 +1278,7 @@ module Aws
                               start_workspace_requests: Array[
                                 {
                                   workspace_id: ::String?
-                                },
+                                }
                               ]
                             ) -> _StartWorkspacesResponseSuccess
                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartWorkspacesResponseSuccess
@@ -1265,7 +1301,7 @@ module Aws
                              stop_workspace_requests: Array[
                                {
                                  workspace_id: ::String?
-                               },
+                               }
                              ]
                            ) -> _StopWorkspacesResponseSuccess
                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StopWorkspacesResponseSuccess
@@ -1288,7 +1324,7 @@ module Aws
                                   terminate_workspace_requests: Array[
                                     {
                                       workspace_id: ::String
-                                    },
+                                    }
                                   ]
                                 ) -> _TerminateWorkspacesResponseSuccess
                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _TerminateWorkspacesResponseSuccess
@@ -1346,7 +1382,7 @@ module Aws
                                         {
                                           ip_rule: ::String?,
                                           rule_desc: ::String?
-                                        },
+                                        }
                                       ]
                                     ) -> _UpdateRulesOfIpGroupResponseSuccess
                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateRulesOfIpGroupResponseSuccess
@@ -1393,7 +1429,8 @@ module Aws
                                       disconnect_timeout_in_seconds: ::Integer?,
                                       idle_disconnect_timeout_in_seconds: ::Integer?,
                                       max_user_duration_in_seconds: ::Integer?
-                                    }
+                                    },
+                                    ?running_mode: ("AUTO_STOP" | "ALWAYS_ON")
                                   ) -> _UpdateWorkspacesPoolResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateWorkspacesPoolResponseSuccess
     end

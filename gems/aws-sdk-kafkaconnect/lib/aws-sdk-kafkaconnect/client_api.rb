@@ -90,6 +90,7 @@ module Aws::KafkaConnect
     LogDelivery = Shapes::StructureShape.new(name: 'LogDelivery')
     LogDeliveryDescription = Shapes::StructureShape.new(name: 'LogDeliveryDescription')
     MaxResults = Shapes::IntegerShape.new(name: 'MaxResults')
+    NetworkType = Shapes::StringShape.new(name: 'NetworkType')
     NotFoundException = Shapes::StructureShape.new(name: 'NotFoundException')
     Plugin = Shapes::StructureShape.new(name: 'Plugin')
     PluginDescription = Shapes::StructureShape.new(name: 'PluginDescription')
@@ -164,6 +165,7 @@ module Aws::KafkaConnect
     AutoScaling.add_member(:min_worker_count, Shapes::ShapeRef.new(shape: __integer, required: true, location_name: "minWorkerCount"))
     AutoScaling.add_member(:scale_in_policy, Shapes::ShapeRef.new(shape: ScaleInPolicy, location_name: "scaleInPolicy"))
     AutoScaling.add_member(:scale_out_policy, Shapes::ShapeRef.new(shape: ScaleOutPolicy, location_name: "scaleOutPolicy"))
+    AutoScaling.add_member(:max_autoscaling_task_count, Shapes::ShapeRef.new(shape: __integer, location_name: "maxAutoscalingTaskCount"))
     AutoScaling.struct_class = Types::AutoScaling
 
     AutoScalingDescription.add_member(:max_worker_count, Shapes::ShapeRef.new(shape: __integer, location_name: "maxWorkerCount"))
@@ -171,6 +173,7 @@ module Aws::KafkaConnect
     AutoScalingDescription.add_member(:min_worker_count, Shapes::ShapeRef.new(shape: __integer, location_name: "minWorkerCount"))
     AutoScalingDescription.add_member(:scale_in_policy, Shapes::ShapeRef.new(shape: ScaleInPolicyDescription, location_name: "scaleInPolicy"))
     AutoScalingDescription.add_member(:scale_out_policy, Shapes::ShapeRef.new(shape: ScaleOutPolicyDescription, location_name: "scaleOutPolicy"))
+    AutoScalingDescription.add_member(:max_autoscaling_task_count, Shapes::ShapeRef.new(shape: __integer, location_name: "maxAutoscalingTaskCount"))
     AutoScalingDescription.struct_class = Types::AutoScalingDescription
 
     AutoScalingUpdate.add_member(:max_worker_count, Shapes::ShapeRef.new(shape: __integer, required: true, location_name: "maxWorkerCount"))
@@ -178,6 +181,7 @@ module Aws::KafkaConnect
     AutoScalingUpdate.add_member(:min_worker_count, Shapes::ShapeRef.new(shape: __integer, required: true, location_name: "minWorkerCount"))
     AutoScalingUpdate.add_member(:scale_in_policy, Shapes::ShapeRef.new(shape: ScaleInPolicyUpdate, required: true, location_name: "scaleInPolicy"))
     AutoScalingUpdate.add_member(:scale_out_policy, Shapes::ShapeRef.new(shape: ScaleOutPolicyUpdate, required: true, location_name: "scaleOutPolicy"))
+    AutoScalingUpdate.add_member(:max_autoscaling_task_count, Shapes::ShapeRef.new(shape: __integer, location_name: "maxAutoscalingTaskCount"))
     AutoScalingUpdate.struct_class = Types::AutoScalingUpdate
 
     BadRequestException.add_member(:message, Shapes::ShapeRef.new(shape: __string, location_name: "message"))
@@ -235,6 +239,7 @@ module Aws::KafkaConnect
     ConnectorSummary.add_member(:kafka_cluster_encryption_in_transit, Shapes::ShapeRef.new(shape: KafkaClusterEncryptionInTransitDescription, location_name: "kafkaClusterEncryptionInTransit"))
     ConnectorSummary.add_member(:kafka_connect_version, Shapes::ShapeRef.new(shape: __string, location_name: "kafkaConnectVersion"))
     ConnectorSummary.add_member(:log_delivery, Shapes::ShapeRef.new(shape: LogDeliveryDescription, location_name: "logDelivery"))
+    ConnectorSummary.add_member(:network_type, Shapes::ShapeRef.new(shape: NetworkType, location_name: "networkType"))
     ConnectorSummary.add_member(:plugins, Shapes::ShapeRef.new(shape: __listOfPluginDescription, location_name: "plugins"))
     ConnectorSummary.add_member(:service_execution_role_arn, Shapes::ShapeRef.new(shape: __string, location_name: "serviceExecutionRoleArn"))
     ConnectorSummary.add_member(:worker_configuration, Shapes::ShapeRef.new(shape: WorkerConfigurationDescription, location_name: "workerConfiguration"))
@@ -249,6 +254,7 @@ module Aws::KafkaConnect
     CreateConnectorRequest.add_member(:kafka_cluster_encryption_in_transit, Shapes::ShapeRef.new(shape: KafkaClusterEncryptionInTransit, required: true, location_name: "kafkaClusterEncryptionInTransit"))
     CreateConnectorRequest.add_member(:kafka_connect_version, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "kafkaConnectVersion"))
     CreateConnectorRequest.add_member(:log_delivery, Shapes::ShapeRef.new(shape: LogDelivery, location_name: "logDelivery"))
+    CreateConnectorRequest.add_member(:network_type, Shapes::ShapeRef.new(shape: NetworkType, location_name: "networkType"))
     CreateConnectorRequest.add_member(:plugins, Shapes::ShapeRef.new(shape: __listOfPlugin, required: true, location_name: "plugins"))
     CreateConnectorRequest.add_member(:service_execution_role_arn, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "serviceExecutionRoleArn"))
     CreateConnectorRequest.add_member(:worker_configuration, Shapes::ShapeRef.new(shape: WorkerConfiguration, location_name: "workerConfiguration"))
@@ -375,6 +381,7 @@ module Aws::KafkaConnect
     DescribeConnectorResponse.add_member(:kafka_cluster_encryption_in_transit, Shapes::ShapeRef.new(shape: KafkaClusterEncryptionInTransitDescription, location_name: "kafkaClusterEncryptionInTransit"))
     DescribeConnectorResponse.add_member(:kafka_connect_version, Shapes::ShapeRef.new(shape: __string, location_name: "kafkaConnectVersion"))
     DescribeConnectorResponse.add_member(:log_delivery, Shapes::ShapeRef.new(shape: LogDeliveryDescription, location_name: "logDelivery"))
+    DescribeConnectorResponse.add_member(:network_type, Shapes::ShapeRef.new(shape: NetworkType, location_name: "networkType"))
     DescribeConnectorResponse.add_member(:plugins, Shapes::ShapeRef.new(shape: __listOfPluginDescription, location_name: "plugins"))
     DescribeConnectorResponse.add_member(:service_execution_role_arn, Shapes::ShapeRef.new(shape: __string, location_name: "serviceExecutionRoleArn"))
     DescribeConnectorResponse.add_member(:worker_configuration, Shapes::ShapeRef.new(shape: WorkerConfigurationDescription, location_name: "workerConfiguration"))
@@ -674,8 +681,8 @@ module Aws::KafkaConnect
         o.http_request_uri = "/v1/connectors"
         o.input = Shapes::ShapeRef.new(shape: CreateConnectorRequest)
         o.output = Shapes::ShapeRef.new(shape: CreateConnectorResponse)
-        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
         o.errors << Shapes::ShapeRef.new(shape: ForbiddenException)
         o.errors << Shapes::ShapeRef.new(shape: ServiceUnavailableException)
@@ -690,8 +697,8 @@ module Aws::KafkaConnect
         o.http_request_uri = "/v1/custom-plugins"
         o.input = Shapes::ShapeRef.new(shape: CreateCustomPluginRequest)
         o.output = Shapes::ShapeRef.new(shape: CreateCustomPluginResponse)
-        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
         o.errors << Shapes::ShapeRef.new(shape: ForbiddenException)
         o.errors << Shapes::ShapeRef.new(shape: ServiceUnavailableException)
@@ -706,8 +713,8 @@ module Aws::KafkaConnect
         o.http_request_uri = "/v1/worker-configurations"
         o.input = Shapes::ShapeRef.new(shape: CreateWorkerConfigurationRequest)
         o.output = Shapes::ShapeRef.new(shape: CreateWorkerConfigurationResponse)
-        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
         o.errors << Shapes::ShapeRef.new(shape: ForbiddenException)
         o.errors << Shapes::ShapeRef.new(shape: ServiceUnavailableException)
@@ -926,8 +933,8 @@ module Aws::KafkaConnect
         o.http_request_uri = "/v1/tags/{resourceArn}"
         o.input = Shapes::ShapeRef.new(shape: TagResourceRequest)
         o.output = Shapes::ShapeRef.new(shape: TagResourceResponse)
-        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
         o.errors << Shapes::ShapeRef.new(shape: ForbiddenException)
         o.errors << Shapes::ShapeRef.new(shape: ServiceUnavailableException)

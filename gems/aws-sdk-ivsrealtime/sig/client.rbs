@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -106,6 +107,7 @@ module Aws
                                          ?attributes: Hash[::String, ::String],
                                          ingest_protocol: ("RTMP" | "RTMPS"),
                                          ?insecure_ingest: bool,
+                                         ?redundant_ingest: bool,
                                          ?tags: Hash[::String, ::String]
                                        ) -> _CreateIngestConfigurationResponseSuccess
                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateIngestConfigurationResponseSuccess
@@ -138,22 +140,10 @@ module Aws
                               user_id: ::String?,
                               attributes: Hash[::String, ::String]?,
                               capabilities: Array[("PUBLISH" | "SUBSCRIBE")]?
-                            },
+                            }
                           ],
                           ?tags: Hash[::String, ::String],
-                          ?auto_participant_recording_configuration: {
-                            storage_configuration_arn: ::String,
-                            media_types: Array[("AUDIO_VIDEO" | "AUDIO_ONLY" | "NONE")]?,
-                            thumbnail_configuration: {
-                              target_interval_seconds: ::Integer?,
-                              storage: Array[("SEQUENTIAL" | "LATEST")]?,
-                              recording_mode: ("INTERVAL" | "DISABLED")?
-                            }?,
-                            recording_reconnect_window_seconds: ::Integer?,
-                            hls_configuration: {
-                              target_segment_duration_seconds: ::Integer?
-                            }?
-                          }
+                          ?auto_participant_recording_configuration: Params::auto_participant_recording_configuration
                         ) -> _CreateStageResponseSuccess
                       | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateStageResponseSuccess
 
@@ -378,6 +368,20 @@ module Aws
                                    ) -> _ListParticipantEventsResponseSuccess
                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListParticipantEventsResponseSuccess
 
+      interface _ListParticipantReplicasResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListParticipantReplicasResponse]
+        def replicas: () -> ::Array[Types::ParticipantReplica]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/IVSRealTime/Client.html#list_participant_replicas-instance_method
+      def list_participant_replicas: (
+                                       source_stage_arn: ::String,
+                                       participant_id: ::String,
+                                       ?next_token: ::String,
+                                       ?max_results: ::Integer
+                                     ) -> _ListParticipantReplicasResponseSuccess
+                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListParticipantReplicasResponseSuccess
+
       interface _ListParticipantsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListParticipantsResponse]
         def participants: () -> ::Array[Types::ParticipantSummary]
@@ -469,7 +473,8 @@ module Aws
                                    omit_stopped_video: bool?,
                                    video_aspect_ratio: ("AUTO" | "VIDEO" | "SQUARE" | "PORTRAIT")?,
                                    video_fill_mode: ("FILL" | "COVER" | "CONTAIN")?,
-                                   grid_gap: ::Integer?
+                                   grid_gap: ::Integer?,
+                                   participant_order_attribute: ::String?
                                  }?,
                                  pip: {
                                    featured_participant_attribute: ::String?,
@@ -481,7 +486,8 @@ module Aws
                                    pip_offset: ::Integer?,
                                    pip_position: ("TOP_LEFT" | "TOP_RIGHT" | "BOTTOM_LEFT" | "BOTTOM_RIGHT")?,
                                    pip_width: ::Integer?,
-                                   pip_height: ::Integer?
+                                   pip_height: ::Integer?,
+                                   participant_order_attribute: ::String?
                                  }?
                                },
                                destinations: Array[
@@ -504,14 +510,34 @@ module Aws
                                        {
                                          target_interval_seconds: ::Integer?,
                                          storage: Array[("SEQUENTIAL" | "LATEST")]?
-                                       },
+                                       }
                                      ]?
                                    }?
-                                 },
+                                 }
                                ],
                                ?tags: Hash[::String, ::String]
                              ) -> _StartCompositionResponseSuccess
                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartCompositionResponseSuccess
+
+      interface _StartParticipantReplicationResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::StartParticipantReplicationResponse]
+        def access_control_allow_origin: () -> ::String
+        def access_control_expose_headers: () -> ::String
+        def cache_control: () -> ::String
+        def content_security_policy: () -> ::String
+        def strict_transport_security: () -> ::String
+        def x_content_type_options: () -> ::String
+        def x_frame_options: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/IVSRealTime/Client.html#start_participant_replication-instance_method
+      def start_participant_replication: (
+                                           source_stage_arn: ::String,
+                                           destination_stage_arn: ::String,
+                                           participant_id: ::String,
+                                           ?reconnect_window_seconds: ::Integer,
+                                           ?attributes: Hash[::String, ::String]
+                                         ) -> _StartParticipantReplicationResponseSuccess
+                                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartParticipantReplicationResponseSuccess
 
       interface _StopCompositionResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::StopCompositionResponse]
@@ -521,6 +547,24 @@ module Aws
                               arn: ::String
                             ) -> _StopCompositionResponseSuccess
                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StopCompositionResponseSuccess
+
+      interface _StopParticipantReplicationResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::StopParticipantReplicationResponse]
+        def access_control_allow_origin: () -> ::String
+        def access_control_expose_headers: () -> ::String
+        def cache_control: () -> ::String
+        def content_security_policy: () -> ::String
+        def strict_transport_security: () -> ::String
+        def x_content_type_options: () -> ::String
+        def x_frame_options: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/IVSRealTime/Client.html#stop_participant_replication-instance_method
+      def stop_participant_replication: (
+                                          source_stage_arn: ::String,
+                                          destination_stage_arn: ::String,
+                                          participant_id: ::String
+                                        ) -> _StopParticipantReplicationResponseSuccess
+                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StopParticipantReplicationResponseSuccess
 
       interface _TagResourceResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::TagResourceResponse]
@@ -549,7 +593,8 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/IVSRealTime/Client.html#update_ingest_configuration-instance_method
       def update_ingest_configuration: (
                                          arn: ::String,
-                                         ?stage_arn: ::String
+                                         ?stage_arn: ::String,
+                                         ?redundant_ingest: bool
                                        ) -> _UpdateIngestConfigurationResponseSuccess
                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateIngestConfigurationResponseSuccess
 
@@ -561,19 +606,7 @@ module Aws
       def update_stage: (
                           arn: ::String,
                           ?name: ::String,
-                          ?auto_participant_recording_configuration: {
-                            storage_configuration_arn: ::String,
-                            media_types: Array[("AUDIO_VIDEO" | "AUDIO_ONLY" | "NONE")]?,
-                            thumbnail_configuration: {
-                              target_interval_seconds: ::Integer?,
-                              storage: Array[("SEQUENTIAL" | "LATEST")]?,
-                              recording_mode: ("INTERVAL" | "DISABLED")?
-                            }?,
-                            recording_reconnect_window_seconds: ::Integer?,
-                            hls_configuration: {
-                              target_segment_duration_seconds: ::Integer?
-                            }?
-                          }
+                          ?auto_participant_recording_configuration: Params::auto_participant_recording_configuration
                         ) -> _UpdateStageResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateStageResponseSuccess
     end

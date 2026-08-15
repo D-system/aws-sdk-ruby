@@ -275,6 +275,15 @@ module Aws::LexModelsV2
       SENSITIVE: []
     end
 
+    class AudioFillerSettings
+      attr_accessor enabled: bool
+      attr_accessor audio_type: ("MELODY_CHIPPER_CHIME" | "MELODY_CURIOUS_CRAWL" | "MELODY_RISING_RIPPLE" | "MELODY_PATIENT_PING" | "MELODY_PONDERING_PONG" | "TYPING_KINETIC_KEYS" | "TYPING_QUIET_QWERTY")
+      attr_accessor start_delay_in_milliseconds: ::Integer
+      attr_accessor minimum_play_duration_in_milliseconds: ::Integer
+      attr_accessor response_delivery_delay_in_milliseconds: ::Integer
+      SENSITIVE: []
+    end
+
     class AudioLogDestination
       attr_accessor s3_bucket: Types::S3BucketLogDestination
       SENSITIVE: []
@@ -411,6 +420,21 @@ module Aws::LexModelsV2
       SENSITIVE: []
     end
 
+    class BotAnalyzerHistorySummary
+      attr_accessor bot_analyzer_status: ("Processing" | "Available" | "Failed" | "Stopping" | "Stopped")
+      attr_accessor creation_date_time: ::Time
+      attr_accessor bot_analyzer_request_id: ::String
+      SENSITIVE: []
+    end
+
+    class BotAnalyzerRecommendation
+      attr_accessor issue_location: Types::IssueLocation
+      attr_accessor priority: ("High" | "Medium" | "Low")
+      attr_accessor issue_description: ::String
+      attr_accessor proposed_fix: ::String
+      SENSITIVE: []
+    end
+
     class BotExportSpecification
       attr_accessor bot_id: ::String
       attr_accessor bot_version: ::String
@@ -428,6 +452,7 @@ module Aws::LexModelsV2
       attr_accessor bot_name: ::String
       attr_accessor role_arn: ::String
       attr_accessor data_privacy: Types::DataPrivacy
+      attr_accessor error_log_settings: Types::ErrorLogSettings
       attr_accessor idle_session_ttl_in_seconds: ::Integer
       attr_accessor bot_tags: ::Hash[::String, ::String]
       attr_accessor test_bot_alias_tags: ::Hash[::String, ::String]
@@ -460,6 +485,10 @@ module Aws::LexModelsV2
       attr_accessor locale_id: ::String
       attr_accessor nlu_intent_confidence_threshold: ::Float
       attr_accessor voice_settings: Types::VoiceSettings
+      attr_accessor speech_recognition_settings: Types::SpeechRecognitionSettings
+      attr_accessor speech_detection_sensitivity: ("Default" | "HighNoiseTolerance" | "MaximumNoiseTolerance")
+      attr_accessor unified_speech_settings: Types::UnifiedSpeechSettings
+      attr_accessor audio_filler_settings: Types::AudioFillerSettings
       SENSITIVE: []
     end
 
@@ -754,7 +783,11 @@ module Aws::LexModelsV2
       attr_accessor description: ::String
       attr_accessor nlu_intent_confidence_threshold: ::Float
       attr_accessor voice_settings: Types::VoiceSettings
+      attr_accessor unified_speech_settings: Types::UnifiedSpeechSettings
+      attr_accessor audio_filler_settings: Types::AudioFillerSettings
+      attr_accessor speech_recognition_settings: Types::SpeechRecognitionSettings
       attr_accessor generative_ai_settings: Types::GenerativeAISettings
+      attr_accessor speech_detection_sensitivity: ("Default" | "HighNoiseTolerance" | "MaximumNoiseTolerance")
       SENSITIVE: []
     end
 
@@ -766,9 +799,13 @@ module Aws::LexModelsV2
       attr_accessor description: ::String
       attr_accessor nlu_intent_confidence_threshold: ::Float
       attr_accessor voice_settings: Types::VoiceSettings
+      attr_accessor unified_speech_settings: Types::UnifiedSpeechSettings
+      attr_accessor audio_filler_settings: Types::AudioFillerSettings
+      attr_accessor speech_recognition_settings: Types::SpeechRecognitionSettings
       attr_accessor bot_locale_status: ("Creating" | "Building" | "Built" | "ReadyExpressTesting" | "Failed" | "Deleting" | "NotBuilt" | "Importing" | "Processing")
       attr_accessor creation_date_time: ::Time
       attr_accessor generative_ai_settings: Types::GenerativeAISettings
+      attr_accessor speech_detection_sensitivity: ("Default" | "HighNoiseTolerance" | "MaximumNoiseTolerance")
       SENSITIVE: []
     end
 
@@ -797,6 +834,7 @@ module Aws::LexModelsV2
       attr_accessor test_bot_alias_tags: ::Hash[::String, ::String]
       attr_accessor bot_type: ("Bot" | "BotNetwork")
       attr_accessor bot_members: ::Array[Types::BotMember]
+      attr_accessor error_log_settings: Types::ErrorLogSettings
       SENSITIVE: []
     end
 
@@ -813,6 +851,7 @@ module Aws::LexModelsV2
       attr_accessor test_bot_alias_tags: ::Hash[::String, ::String]
       attr_accessor bot_type: ("Bot" | "BotNetwork")
       attr_accessor bot_members: ::Array[Types::BotMember]
+      attr_accessor error_log_settings: Types::ErrorLogSettings
       SENSITIVE: []
     end
 
@@ -851,6 +890,7 @@ module Aws::LexModelsV2
 
     class CreateIntentRequest
       attr_accessor intent_name: ::String
+      attr_accessor intent_display_name: ::String
       attr_accessor description: ::String
       attr_accessor parent_intent_signature: ::String
       attr_accessor sample_utterances: ::Array[Types::SampleUtterance]
@@ -866,12 +906,14 @@ module Aws::LexModelsV2
       attr_accessor locale_id: ::String
       attr_accessor initial_response_setting: Types::InitialResponseSetting
       attr_accessor qn_a_intent_configuration: Types::QnAIntentConfiguration
+      attr_accessor q_in_connect_intent_configuration: Types::QInConnectIntentConfiguration
       SENSITIVE: []
     end
 
     class CreateIntentResponse
       attr_accessor intent_id: ::String
       attr_accessor intent_name: ::String
+      attr_accessor intent_display_name: ::String
       attr_accessor description: ::String
       attr_accessor parent_intent_signature: ::String
       attr_accessor sample_utterances: ::Array[Types::SampleUtterance]
@@ -888,6 +930,7 @@ module Aws::LexModelsV2
       attr_accessor creation_date_time: ::Time
       attr_accessor initial_response_setting: Types::InitialResponseSetting
       attr_accessor qn_a_intent_configuration: Types::QnAIntentConfiguration
+      attr_accessor q_in_connect_intent_configuration: Types::QInConnectIntentConfiguration
       SENSITIVE: []
     end
 
@@ -1063,6 +1106,12 @@ module Aws::LexModelsV2
       SENSITIVE: []
     end
 
+    class DeepgramSpeechModelConfig
+      attr_accessor api_token_secret_arn: ::String
+      attr_accessor model_id: ::String
+      SENSITIVE: []
+    end
+
     class DefaultConditionalBranch
       attr_accessor next_step: Types::DialogState
       attr_accessor response: Types::ResponseSpecification
@@ -1081,6 +1130,15 @@ module Aws::LexModelsV2
       attr_accessor bot_id: ::String
       attr_accessor bot_alias_status: ("Creating" | "Available" | "Deleting" | "Failed")
       SENSITIVE: []
+    end
+
+    class DeleteBotAnalyzerRecommendationRequest
+      attr_accessor bot_id: ::String
+      attr_accessor bot_analyzer_request_id: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteBotAnalyzerRecommendationResponse < Aws::EmptyStructure
     end
 
     class DeleteBotLocaleRequest
@@ -1263,6 +1321,25 @@ module Aws::LexModelsV2
       SENSITIVE: []
     end
 
+    class DescribeBotAnalyzerRecommendationRequest
+      attr_accessor bot_id: ::String
+      attr_accessor bot_analyzer_request_id: ::String
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      SENSITIVE: []
+    end
+
+    class DescribeBotAnalyzerRecommendationResponse
+      attr_accessor bot_id: ::String
+      attr_accessor bot_version: ::String
+      attr_accessor locale_id: ::String
+      attr_accessor bot_analyzer_status: ("Processing" | "Available" | "Failed" | "Stopping" | "Stopped")
+      attr_accessor creation_date_time: ::Time
+      attr_accessor bot_analyzer_recommendation_list: ::Array[Types::BotAnalyzerRecommendation]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
     class DescribeBotLocaleRequest
       attr_accessor bot_id: ::String
       attr_accessor bot_version: ::String
@@ -1278,6 +1355,9 @@ module Aws::LexModelsV2
       attr_accessor description: ::String
       attr_accessor nlu_intent_confidence_threshold: ::Float
       attr_accessor voice_settings: Types::VoiceSettings
+      attr_accessor unified_speech_settings: Types::UnifiedSpeechSettings
+      attr_accessor audio_filler_settings: Types::AudioFillerSettings
+      attr_accessor speech_recognition_settings: Types::SpeechRecognitionSettings
       attr_accessor intents_count: ::Integer
       attr_accessor slot_types_count: ::Integer
       attr_accessor bot_locale_status: ("Creating" | "Building" | "Built" | "ReadyExpressTesting" | "Failed" | "Deleting" | "NotBuilt" | "Importing" | "Processing")
@@ -1288,6 +1368,7 @@ module Aws::LexModelsV2
       attr_accessor bot_locale_history_events: ::Array[Types::BotLocaleHistoryEvent]
       attr_accessor recommended_actions: ::Array[::String]
       attr_accessor generative_ai_settings: Types::GenerativeAISettings
+      attr_accessor speech_detection_sensitivity: ("Default" | "HighNoiseTolerance" | "MaximumNoiseTolerance")
       SENSITIVE: []
     end
 
@@ -1371,6 +1452,7 @@ module Aws::LexModelsV2
       attr_accessor bot_type: ("Bot" | "BotNetwork")
       attr_accessor bot_members: ::Array[Types::BotMember]
       attr_accessor failure_reasons: ::Array[::String]
+      attr_accessor error_log_settings: Types::ErrorLogSettings
       SENSITIVE: []
     end
 
@@ -1460,6 +1542,7 @@ module Aws::LexModelsV2
     class DescribeIntentResponse
       attr_accessor intent_id: ::String
       attr_accessor intent_name: ::String
+      attr_accessor intent_display_name: ::String
       attr_accessor description: ::String
       attr_accessor parent_intent_signature: ::String
       attr_accessor sample_utterances: ::Array[Types::SampleUtterance]
@@ -1478,6 +1561,7 @@ module Aws::LexModelsV2
       attr_accessor last_updated_date_time: ::Time
       attr_accessor initial_response_setting: Types::InitialResponseSetting
       attr_accessor qn_a_intent_configuration: Types::QnAIntentConfiguration
+      attr_accessor q_in_connect_intent_configuration: Types::QInConnectIntentConfiguration
       SENSITIVE: []
     end
 
@@ -1665,6 +1749,11 @@ module Aws::LexModelsV2
       attr_accessor bot_locale_export_password: ::String
       attr_accessor associated_transcripts_password: ::String
       SENSITIVE: [:bot_locale_export_password, :associated_transcripts_password]
+    end
+
+    class ErrorLogSettings
+      attr_accessor enabled: bool
+      SENSITIVE: []
     end
 
     class ExactResponseFields
@@ -1917,6 +2006,13 @@ module Aws::LexModelsV2
       SENSITIVE: []
     end
 
+    class IntentDisambiguationSettings
+      attr_accessor enabled: bool
+      attr_accessor max_disambiguation_intents: ::Integer
+      attr_accessor custom_disambiguation_message: ::String
+      SENSITIVE: []
+    end
+
     class IntentFilter
       attr_accessor name: ("IntentName")
       attr_accessor values: ::Array[::String]
@@ -1956,6 +2052,7 @@ module Aws::LexModelsV2
     class IntentSummary
       attr_accessor intent_id: ::String
       attr_accessor intent_name: ::String
+      attr_accessor intent_display_name: ::String
       attr_accessor description: ::String
       attr_accessor parent_intent_signature: ::String
       attr_accessor input_contexts: ::Array[Types::InputContext]
@@ -1971,6 +2068,13 @@ module Aws::LexModelsV2
 
     class InvokedIntentSample
       attr_accessor intent_name: ::String
+      SENSITIVE: []
+    end
+
+    class IssueLocation
+      attr_accessor bot_locale: ::String
+      attr_accessor intent_id: ::String
+      attr_accessor slot_id: ::String
       SENSITIVE: []
     end
 
@@ -2047,6 +2151,24 @@ module Aws::LexModelsV2
       attr_accessor bot_alias_summaries: ::Array[Types::BotAliasSummary]
       attr_accessor next_token: ::String
       attr_accessor bot_id: ::String
+      SENSITIVE: []
+    end
+
+    class ListBotAnalyzerHistoryRequest
+      attr_accessor bot_id: ::String
+      attr_accessor locale_id: ::String
+      attr_accessor bot_version: ::String
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListBotAnalyzerHistoryResponse
+      attr_accessor bot_id: ::String
+      attr_accessor locale_id: ::String
+      attr_accessor bot_version: ::String
+      attr_accessor bot_analyzer_history_list: ::Array[Types::BotAnalyzerHistorySummary]
+      attr_accessor next_token: ::String
       SENSITIVE: []
     end
 
@@ -2554,6 +2676,13 @@ module Aws::LexModelsV2
       SENSITIVE: []
     end
 
+    class NluImprovementSpecification
+      attr_accessor enabled: bool
+      attr_accessor assisted_nlu_mode: ("Primary" | "Fallback")
+      attr_accessor intent_disambiguation_settings: Types::IntentDisambiguationSettings
+      SENSITIVE: []
+    end
+
     class ObfuscationSetting
       attr_accessor obfuscation_setting_type: ("None" | "DefaultObfuscation")
       SENSITIVE: []
@@ -2658,6 +2787,16 @@ module Aws::LexModelsV2
       SENSITIVE: []
     end
 
+    class QInConnectAssistantConfiguration
+      attr_accessor assistant_arn: ::String
+      SENSITIVE: []
+    end
+
+    class QInConnectIntentConfiguration
+      attr_accessor q_in_connect_assistant_configuration: Types::QInConnectAssistantConfiguration
+      SENSITIVE: []
+    end
+
     class QnAIntentConfiguration
       attr_accessor data_source_configuration: Types::DataSourceConfiguration
       attr_accessor bedrock_model_configuration: Types::BedrockModelSpecification
@@ -2714,6 +2853,7 @@ module Aws::LexModelsV2
 
     class RuntimeSettings
       attr_accessor slot_resolution_improvement: Types::SlotResolutionImprovementSpecification
+      attr_accessor nlu_improvement: Types::NluImprovementSpecification
       SENSITIVE: []
     end
 
@@ -2961,6 +3101,41 @@ module Aws::LexModelsV2
       SENSITIVE: []
     end
 
+    class SpeechFoundationModel
+      attr_accessor model_arn: ::String
+      attr_accessor voice_id: ::String
+      SENSITIVE: []
+    end
+
+    class SpeechModelConfig
+      attr_accessor deepgram_config: Types::DeepgramSpeechModelConfig
+      SENSITIVE: []
+    end
+
+    class SpeechRecognitionSettings
+      attr_accessor speech_model_preference: ("Standard" | "Neural" | "Deepgram")
+      attr_accessor speech_model_config: Types::SpeechModelConfig
+      SENSITIVE: []
+    end
+
+    class StartBotAnalyzerRequest
+      attr_accessor bot_id: ::String
+      attr_accessor analysis_scope: ("BotLocale")
+      attr_accessor locale_id: ::String
+      attr_accessor bot_version: ::String
+      SENSITIVE: []
+    end
+
+    class StartBotAnalyzerResponse
+      attr_accessor bot_id: ::String
+      attr_accessor bot_version: ::String
+      attr_accessor locale_id: ::String
+      attr_accessor bot_analyzer_status: ("Processing" | "Available" | "Failed" | "Stopping" | "Stopped")
+      attr_accessor bot_analyzer_request_id: ::String
+      attr_accessor creation_date_time: ::Time
+      SENSITIVE: []
+    end
+
     class StartBotRecommendationRequest
       attr_accessor bot_id: ::String
       attr_accessor bot_version: ::String
@@ -3064,6 +3239,21 @@ module Aws::LexModelsV2
       attr_accessor frequency_in_seconds: ::Integer
       attr_accessor timeout_in_seconds: ::Integer
       attr_accessor allow_interrupt: bool
+      SENSITIVE: []
+    end
+
+    class StopBotAnalyzerRequest
+      attr_accessor bot_id: ::String
+      attr_accessor bot_analyzer_request_id: ::String
+      SENSITIVE: []
+    end
+
+    class StopBotAnalyzerResponse
+      attr_accessor bot_id: ::String
+      attr_accessor bot_version: ::String
+      attr_accessor locale_id: ::String
+      attr_accessor bot_analyzer_status: ("Processing" | "Available" | "Failed" | "Stopping" | "Stopped")
+      attr_accessor bot_analyzer_request_id: ::String
       SENSITIVE: []
     end
 
@@ -3290,6 +3480,11 @@ module Aws::LexModelsV2
       SENSITIVE: []
     end
 
+    class UnifiedSpeechSettings
+      attr_accessor speech_foundation_model: Types::SpeechFoundationModel
+      SENSITIVE: []
+    end
+
     class UntagResourceRequest
       attr_accessor resource_arn: ::String
       attr_accessor tag_keys: ::Array[::String]
@@ -3333,7 +3528,11 @@ module Aws::LexModelsV2
       attr_accessor description: ::String
       attr_accessor nlu_intent_confidence_threshold: ::Float
       attr_accessor voice_settings: Types::VoiceSettings
+      attr_accessor unified_speech_settings: Types::UnifiedSpeechSettings
+      attr_accessor audio_filler_settings: Types::AudioFillerSettings
+      attr_accessor speech_recognition_settings: Types::SpeechRecognitionSettings
       attr_accessor generative_ai_settings: Types::GenerativeAISettings
+      attr_accessor speech_detection_sensitivity: ("Default" | "HighNoiseTolerance" | "MaximumNoiseTolerance")
       SENSITIVE: []
     end
 
@@ -3345,12 +3544,16 @@ module Aws::LexModelsV2
       attr_accessor description: ::String
       attr_accessor nlu_intent_confidence_threshold: ::Float
       attr_accessor voice_settings: Types::VoiceSettings
+      attr_accessor unified_speech_settings: Types::UnifiedSpeechSettings
+      attr_accessor audio_filler_settings: Types::AudioFillerSettings
+      attr_accessor speech_recognition_settings: Types::SpeechRecognitionSettings
       attr_accessor bot_locale_status: ("Creating" | "Building" | "Built" | "ReadyExpressTesting" | "Failed" | "Deleting" | "NotBuilt" | "Importing" | "Processing")
       attr_accessor failure_reasons: ::Array[::String]
       attr_accessor creation_date_time: ::Time
       attr_accessor last_updated_date_time: ::Time
       attr_accessor recommended_actions: ::Array[::String]
       attr_accessor generative_ai_settings: Types::GenerativeAISettings
+      attr_accessor speech_detection_sensitivity: ("Default" | "HighNoiseTolerance" | "MaximumNoiseTolerance")
       SENSITIVE: []
     end
 
@@ -3385,6 +3588,7 @@ module Aws::LexModelsV2
       attr_accessor idle_session_ttl_in_seconds: ::Integer
       attr_accessor bot_type: ("Bot" | "BotNetwork")
       attr_accessor bot_members: ::Array[Types::BotMember]
+      attr_accessor error_log_settings: Types::ErrorLogSettings
       SENSITIVE: []
     end
 
@@ -3400,6 +3604,7 @@ module Aws::LexModelsV2
       attr_accessor last_updated_date_time: ::Time
       attr_accessor bot_type: ("Bot" | "BotNetwork")
       attr_accessor bot_members: ::Array[Types::BotMember]
+      attr_accessor error_log_settings: Types::ErrorLogSettings
       SENSITIVE: []
     end
 
@@ -3422,6 +3627,7 @@ module Aws::LexModelsV2
     class UpdateIntentRequest
       attr_accessor intent_id: ::String
       attr_accessor intent_name: ::String
+      attr_accessor intent_display_name: ::String
       attr_accessor description: ::String
       attr_accessor parent_intent_signature: ::String
       attr_accessor sample_utterances: ::Array[Types::SampleUtterance]
@@ -3438,12 +3644,14 @@ module Aws::LexModelsV2
       attr_accessor locale_id: ::String
       attr_accessor initial_response_setting: Types::InitialResponseSetting
       attr_accessor qn_a_intent_configuration: Types::QnAIntentConfiguration
+      attr_accessor q_in_connect_intent_configuration: Types::QInConnectIntentConfiguration
       SENSITIVE: []
     end
 
     class UpdateIntentResponse
       attr_accessor intent_id: ::String
       attr_accessor intent_name: ::String
+      attr_accessor intent_display_name: ::String
       attr_accessor description: ::String
       attr_accessor parent_intent_signature: ::String
       attr_accessor sample_utterances: ::Array[Types::SampleUtterance]
@@ -3462,6 +3670,7 @@ module Aws::LexModelsV2
       attr_accessor last_updated_date_time: ::Time
       attr_accessor initial_response_setting: Types::InitialResponseSetting
       attr_accessor qn_a_intent_configuration: Types::QnAIntentConfiguration
+      attr_accessor q_in_connect_intent_configuration: Types::QInConnectIntentConfiguration
       SENSITIVE: []
     end
 
@@ -3684,8 +3893,8 @@ module Aws::LexModelsV2
     end
 
     class VoiceSettings
-      attr_accessor voice_id: ::String
       attr_accessor engine: ("standard" | "neural" | "long-form" | "generative")
+      attr_accessor voice_id: ::String
       SENSITIVE: []
     end
 

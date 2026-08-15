@@ -53,6 +53,45 @@ module Aws::WorkSpaces
       include Aws::Structure
     end
 
+    # Describes the access type and endpoint for a WorkSpace.
+    #
+    # @!attribute [rw] access_endpoint_type
+    #   Indicates the type of access endpoint.
+    #   @return [String]
+    #
+    # @!attribute [rw] vpc_endpoint_id
+    #   Indicates the VPC endpoint to use for access.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/workspaces-2015-04-08/AccessEndpoint AWS API Documentation
+    #
+    class AccessEndpoint < Struct.new(
+      :access_endpoint_type,
+      :vpc_endpoint_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Describes the access endpoint configuration for a WorkSpace.
+    #
+    # @!attribute [rw] access_endpoints
+    #   Indicates a list of access endpoints associated with this directory.
+    #   @return [Array<Types::AccessEndpoint>]
+    #
+    # @!attribute [rw] internet_fallback_protocols
+    #   Indicates a list of protocols that fallback to using the public
+    #   Internet when streaming over a VPC endpoint is not available.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/workspaces-2015-04-08/AccessEndpointConfig AWS API Documentation
+    #
+    class AccessEndpointConfig < Struct.new(
+      :access_endpoints,
+      :internet_fallback_protocols)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Information about about the account link.
     #
     # @!attribute [rw] account_link_id
@@ -507,11 +546,19 @@ module Aws::WorkSpaces
     #   the specified directory.
     #   @return [String]
     #
+    # @!attribute [rw] client_experience_policy
+    #   The client experience policy that determines which client experience
+    #   the user sees. Administrators can set this policy to control the
+    #   client experience for users in a directory. Valid values include
+    #   `FORCE_CLASSIC`, `FORCE_UI_2026`, and `USER_CHOICE`.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/workspaces-2015-04-08/ClientProperties AWS API Documentation
     #
     class ClientProperties < Struct.new(
       :reconnect_enabled,
-      :log_upload_enabled)
+      :log_upload_enabled,
+      :client_experience_policy)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -569,7 +616,7 @@ module Aws::WorkSpaces
       include Aws::Structure
     end
 
-    # Describes an Amazon Connect client add-in.
+    # Describes an Connect Customer client add-in.
     #
     # @!attribute [rw] add_in_id
     #   The client add-in identifier.
@@ -789,7 +836,7 @@ module Aws::WorkSpaces
     #   @return [String]
     #
     # @!attribute [rw] url
-    #   The endpoint URL of the Amazon Connect client add-in.
+    #   The endpoint URL of the Connect Customer client add-in.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/workspaces-2015-04-08/CreateConnectClientAddInRequest AWS API Documentation
@@ -1168,6 +1215,10 @@ module Aws::WorkSpaces
     #   Indicates the timeout settings of the pool.
     #   @return [Types::TimeoutSettings]
     #
+    # @!attribute [rw] running_mode
+    #   The running mode for the pool.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/workspaces-2015-04-08/CreateWorkspacesPoolRequest AWS API Documentation
     #
     class CreateWorkspacesPoolRequest < Struct.new(
@@ -1178,7 +1229,8 @@ module Aws::WorkSpaces
       :capacity,
       :tags,
       :application_settings,
-      :timeout_settings)
+      :timeout_settings,
+      :running_mode)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1225,6 +1277,26 @@ module Aws::WorkSpaces
     class CreateWorkspacesResult < Struct.new(
       :failed_requests,
       :pending_requests)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Describes in-depth details about the error. These details include the
+    # possible causes of the error and troubleshooting information.
+    #
+    # @!attribute [rw] error_code
+    #   The error code that is returned for the image import.
+    #   @return [String]
+    #
+    # @!attribute [rw] error_message
+    #   The text of the error message that is returned for the image import.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/workspaces-2015-04-08/CustomWorkspaceImageImportErrorDetails AWS API Documentation
+    #
+    class CustomWorkspaceImageImportErrorDetails < Struct.new(
+      :error_code,
+      :error_message)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1382,10 +1454,6 @@ module Aws::WorkSpaces
     #
     # [1]: https://docs.aws.amazon.com/workspaces/latest/adminguide/update-directory-details.html
     #
-    # @!attribute [rw] enable_work_docs
-    #   Specifies whether the directory is enabled for Amazon WorkDocs.
-    #   @return [Boolean]
-    #
     # @!attribute [rw] enable_internet_access
     #   Specifies whether to automatically assign an Elastic public IP
     #   address to WorkSpaces in this directory by default. If enabled, the
@@ -1440,7 +1508,6 @@ module Aws::WorkSpaces
     # @see http://docs.aws.amazon.com/goto/WebAPI/workspaces-2015-04-08/DefaultWorkspaceCreationProperties AWS API Documentation
     #
     class DefaultWorkspaceCreationProperties < Struct.new(
-      :enable_work_docs,
       :enable_internet_access,
       :default_ou,
       :custom_security_group_id,
@@ -1716,12 +1783,17 @@ module Aws::WorkSpaces
     #   The type of linked account.
     #   @return [String]
     #
+    # @!attribute [rw] message
+    #   The text message to describe the status of BYOL.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/workspaces-2015-04-08/DescribeAccountResult AWS API Documentation
     #
     class DescribeAccountResult < Struct.new(
       :dedicated_tenancy_support,
       :dedicated_tenancy_management_cidr_range,
-      :dedicated_tenancy_account_type)
+      :dedicated_tenancy_account_type,
+      :message)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2066,6 +2138,78 @@ module Aws::WorkSpaces
     class DescribeConnectionAliasesResult < Struct.new(
       :connection_aliases,
       :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] image_id
+    #   The identifier of the WorkSpace image.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/workspaces-2015-04-08/DescribeCustomWorkspaceImageImportRequest AWS API Documentation
+    #
+    class DescribeCustomWorkspaceImageImportRequest < Struct.new(
+      :image_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] image_id
+    #   The identifier of the WorkSpace image.
+    #   @return [String]
+    #
+    # @!attribute [rw] infrastructure_configuration_arn
+    #   The infrastructure configuration ARN that specifies how the
+    #   WorkSpace image is built.
+    #   @return [String]
+    #
+    # @!attribute [rw] state
+    #   The state of the WorkSpace image.
+    #   @return [String]
+    #
+    # @!attribute [rw] state_message
+    #   The state message of the WorkSpace image import workflow.
+    #   @return [String]
+    #
+    # @!attribute [rw] progress_percentage
+    #   The estimated progress percentage of the WorkSpace image import
+    #   workflow.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] created
+    #   The timestamp when the WorkSpace image import was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] last_updated_time
+    #   The timestamp when the WorkSpace image import was last updated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] image_source
+    #   Describes the image import source.
+    #   @return [Types::ImageSourceIdentifier]
+    #
+    # @!attribute [rw] image_builder_instance_id
+    #   The image builder instance ID of the WorkSpace image.
+    #   @return [String]
+    #
+    # @!attribute [rw] error_details
+    #   Describes in-depth details about the error. These details include
+    #   the possible causes of the error and troubleshooting information.
+    #   @return [Array<Types::CustomWorkspaceImageImportErrorDetails>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/workspaces-2015-04-08/DescribeCustomWorkspaceImageImportResult AWS API Documentation
+    #
+    class DescribeCustomWorkspaceImageImportResult < Struct.new(
+      :image_id,
+      :infrastructure_configuration_arn,
+      :state,
+      :state_message,
+      :progress_percentage,
+      :created,
+      :last_updated_time,
+      :image_source,
+      :image_builder_instance_id,
+      :error_details)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2987,6 +3131,42 @@ module Aws::WorkSpaces
       include Aws::Structure
     end
 
+    # Describes the image import source.
+    #
+    # @note ImageSourceIdentifier is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @note ImageSourceIdentifier is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of ImageSourceIdentifier corresponding to the set member.
+    #
+    # @!attribute [rw] ec2_import_task_id
+    #   The EC2 import task ID to import the image from the Amazon EC2 VM
+    #   import process.
+    #   @return [String]
+    #
+    # @!attribute [rw] image_build_version_arn
+    #   The ARN of the EC2 Image Builder image.
+    #   @return [String]
+    #
+    # @!attribute [rw] ec2_image_id
+    #   The identifier of the EC2 image.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/workspaces-2015-04-08/ImageSourceIdentifier AWS API Documentation
+    #
+    class ImageSourceIdentifier < Struct.new(
+      :ec2_import_task_id,
+      :image_build_version_arn,
+      :ec2_image_id,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class Ec2ImportTaskId < ImageSourceIdentifier; end
+      class ImageBuildVersionArn < ImageSourceIdentifier; end
+      class Ec2ImageId < ImageSourceIdentifier; end
+      class Unknown < ImageSourceIdentifier; end
+    end
+
     # @!attribute [rw] resource_id
     #   The directory identifier of the WorkSpace for which you want to
     #   import client branding.
@@ -3063,6 +3243,78 @@ module Aws::WorkSpaces
       :device_type_ios,
       :device_type_linux,
       :device_type_web)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] image_name
+    #   The name of the WorkSpace image.
+    #   @return [String]
+    #
+    # @!attribute [rw] image_description
+    #   The description of the WorkSpace image.
+    #   @return [String]
+    #
+    # @!attribute [rw] compute_type
+    #   The supported compute type for the WorkSpace image.
+    #   @return [String]
+    #
+    # @!attribute [rw] protocol
+    #   The supported protocol for the WorkSpace image. Windows 11 does not
+    #   support PCOIP protocol.
+    #   @return [String]
+    #
+    # @!attribute [rw] image_source
+    #   The options for image import source.
+    #   @return [Types::ImageSourceIdentifier]
+    #
+    # @!attribute [rw] infrastructure_configuration_arn
+    #   The infrastructure configuration ARN that specifies how the
+    #   WorkSpace image is built.
+    #   @return [String]
+    #
+    # @!attribute [rw] platform
+    #   The platform for the WorkSpace image source.
+    #   @return [String]
+    #
+    # @!attribute [rw] os_version
+    #   The OS version for the WorkSpace image source.
+    #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   The resource tags. Each WorkSpaces resource can have a maximum of 50
+    #   tags.
+    #   @return [Array<Types::Tag>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/workspaces-2015-04-08/ImportCustomWorkspaceImageRequest AWS API Documentation
+    #
+    class ImportCustomWorkspaceImageRequest < Struct.new(
+      :image_name,
+      :image_description,
+      :compute_type,
+      :protocol,
+      :image_source,
+      :infrastructure_configuration_arn,
+      :platform,
+      :os_version,
+      :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] image_id
+    #   The identifier of the WorkSpace image.
+    #   @return [String]
+    #
+    # @!attribute [rw] state
+    #   The state of the WorkSpace image.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/workspaces-2015-04-08/ImportCustomWorkspaceImageResult AWS API Documentation
+    #
+    class ImportCustomWorkspaceImageResult < Struct.new(
+      :image_id,
+      :state)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3167,6 +3419,20 @@ module Aws::WorkSpaces
     # @see http://docs.aws.amazon.com/goto/WebAPI/workspaces-2015-04-08/InternalServerException AWS API Documentation
     #
     class InternalServerException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Two or more of the selected parameter values cannot be used together.
+    #
+    # @!attribute [rw] message
+    #   The exception error message.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/workspaces-2015-04-08/InvalidParameterCombinationException AWS API Documentation
+    #
+    class InvalidParameterCombinationException < Struct.new(
       :message)
       SENSITIVE = []
       include Aws::Structure
@@ -3596,9 +3862,17 @@ module Aws::WorkSpaces
       include Aws::Structure
     end
 
+    # @!attribute [rw] message
+    #   The text message to describe the status of BYOL modification.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/workspaces-2015-04-08/ModifyAccountResult AWS API Documentation
     #
-    class ModifyAccountResult < Aws::EmptyStructure; end
+    class ModifyAccountResult < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
 
     # @!attribute [rw] resource_id
     #   The resource identifiers, in the form of directory IDs.
@@ -4045,13 +4319,6 @@ module Aws::WorkSpaces
     #   OperationNotSupportedException error.
     #   @return [Array<String>]
     #
-    # @!attribute [rw] enable_work_docs
-    #   Indicates whether Amazon WorkDocs is enabled or disabled. If you
-    #   have enabled this parameter and WorkDocs is not available in the
-    #   Region, you will receive an OperationNotSupportedException error.
-    #   Set `EnableWorkDocs` to disabled, and try again.
-    #   @return [Boolean]
-    #
     # @!attribute [rw] enable_self_service
     #   Indicates whether self-service capabilities are enabled or disabled.
     #   @return [Boolean]
@@ -4108,7 +4375,6 @@ module Aws::WorkSpaces
     class RegisterWorkspaceDirectoryRequest < Struct.new(
       :directory_id,
       :subnet_ids,
-      :enable_work_docs,
       :enable_self_service,
       :tenancy,
       :tags,
@@ -4865,7 +5131,7 @@ module Aws::WorkSpaces
     #   @return [String]
     #
     # @!attribute [rw] url
-    #   The endpoint URL of the Amazon Connect client add-in.
+    #   The endpoint URL of the Connect Customer client add-in.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/workspaces-2015-04-08/UpdateConnectClientAddInRequest AWS API Documentation
@@ -5034,6 +5300,11 @@ module Aws::WorkSpaces
     #   Indicates the timeout settings of the specified pool.
     #   @return [Types::TimeoutSettings]
     #
+    # @!attribute [rw] running_mode
+    #   The desired running mode for the pool. The running mode can only be
+    #   updated when the pool is in a stopped state.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/workspaces-2015-04-08/UpdateWorkspacesPoolRequest AWS API Documentation
     #
     class UpdateWorkspacesPoolRequest < Struct.new(
@@ -5043,7 +5314,8 @@ module Aws::WorkSpaces
       :directory_id,
       :capacity,
       :application_settings,
-      :timeout_settings)
+      :timeout_settings,
+      :running_mode)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5200,6 +5472,10 @@ module Aws::WorkSpaces
     #   The IP address of the WorkSpace.
     #   @return [String]
     #
+    # @!attribute [rw] ipv_6_address
+    #   The IPv6 address of the WorkSpace.
+    #   @return [String]
+    #
     # @!attribute [rw] state
     #   The operational state of the WorkSpace.
     #
@@ -5329,6 +5605,7 @@ module Aws::WorkSpaces
       :directory_id,
       :user_name,
       :ip_address,
+      :ipv_6_address,
       :state,
       :bundle_id,
       :subnet_id,
@@ -5401,6 +5678,10 @@ module Aws::WorkSpaces
     #   WorkSpaces Thin Client.
     #   @return [String]
     #
+    # @!attribute [rw] access_endpoint_config
+    #   Specifies the configuration for accessing the WorkSpace.
+    #   @return [Types::AccessEndpointConfig]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/workspaces-2015-04-08/WorkspaceAccessProperties AWS API Documentation
     #
     class WorkspaceAccessProperties < Struct.new(
@@ -5412,7 +5693,8 @@ module Aws::WorkSpaces
       :device_type_chrome_os,
       :device_type_zero_client,
       :device_type_linux,
-      :device_type_work_spaces_thin_client)
+      :device_type_work_spaces_thin_client,
+      :access_endpoint_config)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5530,30 +5812,6 @@ module Aws::WorkSpaces
     #
     # [1]: https://docs.aws.amazon.com/workspaces/latest/adminguide/update-directory-details.html
     #
-    # @!attribute [rw] enable_work_docs
-    #   Indicates whether Amazon WorkDocs is enabled for your WorkSpaces.
-    #
-    #   <note markdown="1"> If WorkDocs is already enabled for a WorkSpaces directory and you
-    #   disable it, new WorkSpaces launched in the directory will not have
-    #   WorkDocs enabled. However, WorkDocs remains enabled for any existing
-    #   WorkSpaces, unless you either disable users' access to WorkDocs or
-    #   you delete the WorkDocs site. To disable users' access to WorkDocs,
-    #   see [Disabling Users][1] in the *Amazon WorkDocs Administration
-    #   Guide*. To delete a WorkDocs site, see [Deleting a Site][2] in the
-    #   *Amazon WorkDocs Administration Guide*.
-    #
-    #    If you enable WorkDocs on a directory that already has existing
-    #   WorkSpaces, the existing WorkSpaces and any new WorkSpaces that are
-    #   launched in the directory will have WorkDocs enabled.
-    #
-    #    </note>
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/workdocs/latest/adminguide/inactive-user.html
-    #   [2]: https://docs.aws.amazon.com/workdocs/latest/adminguide/manage-sites.html
-    #   @return [Boolean]
-    #
     # @!attribute [rw] enable_internet_access
     #   Indicates whether internet access is enabled for your WorkSpaces.
     #   @return [Boolean]
@@ -5603,7 +5861,6 @@ module Aws::WorkSpaces
     # @see http://docs.aws.amazon.com/goto/WebAPI/workspaces-2015-04-08/WorkspaceCreationProperties AWS API Documentation
     #
     class WorkspaceCreationProperties < Struct.new(
-      :enable_work_docs,
       :enable_internet_access,
       :default_ou,
       :custom_security_group_id,
@@ -5640,6 +5897,10 @@ module Aws::WorkSpaces
     #
     # @!attribute [rw] dns_ip_addresses
     #   The IP addresses of the DNS servers for the directory.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] dns_ipv_6_addresses
+    #   The IPv6 addresses of the DNS servers for the directory.
     #   @return [Array<String>]
     #
     # @!attribute [rw] customer_user_name
@@ -5767,6 +6028,7 @@ module Aws::WorkSpaces
       :registration_code,
       :subnet_ids,
       :dns_ip_addresses,
+      :dns_ipv_6_addresses,
       :customer_user_name,
       :iam_role_id,
       :directory_type,
@@ -5940,8 +6202,8 @@ module Aws::WorkSpaces
     #     or `DCV` (formerly WSP).
     #
     #   * Unavailable for Windows 7 WorkSpaces and WorkSpaces using
-    #     GPU-based bundles (Graphics, GraphicsPro, Graphics.g4dn, and
-    #     GraphicsPro.g4dn).
+    #     GPU-based bundles (Graphics, GraphicsPro, Graphics.g4dn,
+    #     GraphicsPro.g4dn, and Graphics.g6).
     #
     #    </note>
     #
@@ -6029,6 +6291,10 @@ module Aws::WorkSpaces
     #    </note>
     #   @return [String]
     #
+    # @!attribute [rw] ipv_6_address
+    #   The IPv6 address for the WorkSpace.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/workspaces-2015-04-08/WorkspaceRequest AWS API Documentation
     #
     class WorkspaceRequest < Struct.new(
@@ -6040,7 +6306,8 @@ module Aws::WorkSpaces
       :root_volume_encryption_enabled,
       :workspace_properties,
       :tags,
-      :workspace_name)
+      :workspace_name,
+      :ipv_6_address)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6155,7 +6422,7 @@ module Aws::WorkSpaces
     #   @return [Types::CapacityStatus]
     #
     # @!attribute [rw] pool_name
-    #   The name of the pool,
+    #   The name of the pool.
     #   @return [String]
     #
     # @!attribute [rw] description
@@ -6194,6 +6461,10 @@ module Aws::WorkSpaces
     #   connected to a new session with a new pool instance.
     #   @return [Types::TimeoutSettings]
     #
+    # @!attribute [rw] running_mode
+    #   The running mode of the pool.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/workspaces-2015-04-08/WorkspacesPool AWS API Documentation
     #
     class WorkspacesPool < Struct.new(
@@ -6208,7 +6479,8 @@ module Aws::WorkSpaces
       :directory_id,
       :errors,
       :application_settings,
-      :timeout_settings)
+      :timeout_settings,
+      :running_mode)
       SENSITIVE = []
       include Aws::Structure
     end

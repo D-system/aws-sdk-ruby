@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -79,40 +80,40 @@ module Aws
 
       interface _ArchiveApplicationResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::Application]
-        def application_aggregated_status: () -> Types::ApplicationAggregatedStatus
         def application_id: () -> ::String
         def arn: () -> ::String
-        def creation_date_time: () -> ::String
+        def name: () -> ::String
         def description: () -> ::String
         def is_archived: () -> bool
+        def application_aggregated_status: () -> Types::ApplicationAggregatedStatus
+        def creation_date_time: () -> ::String
         def last_modified_date_time: () -> ::String
-        def name: () -> ::String
         def tags: () -> ::Hash[::String, ::String]
         def wave_id: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#archive_application-instance_method
       def archive_application: (
-                                 ?account_id: ::String,
-                                 application_id: ::String
+                                 application_id: ::String,
+                                 ?account_id: ::String
                                ) -> _ArchiveApplicationResponseSuccess
                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ArchiveApplicationResponseSuccess
 
       interface _ArchiveWaveResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::Wave]
+        def wave_id: () -> ::String
         def arn: () -> ::String
-        def creation_date_time: () -> ::String
+        def name: () -> ::String
         def description: () -> ::String
         def is_archived: () -> bool
-        def last_modified_date_time: () -> ::String
-        def name: () -> ::String
-        def tags: () -> ::Hash[::String, ::String]
         def wave_aggregated_status: () -> Types::WaveAggregatedStatus
-        def wave_id: () -> ::String
+        def creation_date_time: () -> ::String
+        def last_modified_date_time: () -> ::String
+        def tags: () -> ::Hash[::String, ::String]
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#archive_wave-instance_method
       def archive_wave: (
-                          ?account_id: ::String,
-                          wave_id: ::String
+                          wave_id: ::String,
+                          ?account_id: ::String
                         ) -> _ArchiveWaveResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ArchiveWaveResponseSuccess
 
@@ -121,9 +122,9 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#associate_applications-instance_method
       def associate_applications: (
-                                    ?account_id: ::String,
+                                    wave_id: ::String,
                                     application_i_ds: Array[::String],
-                                    wave_id: ::String
+                                    ?account_id: ::String
                                   ) -> _AssociateApplicationsResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _AssociateApplicationsResponseSuccess
 
@@ -132,211 +133,243 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#associate_source_servers-instance_method
       def associate_source_servers: (
-                                      ?account_id: ::String,
                                       application_id: ::String,
-                                      source_server_i_ds: Array[::String]
+                                      source_server_i_ds: Array[::String],
+                                      ?account_id: ::String
                                     ) -> _AssociateSourceServersResponseSuccess
                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _AssociateSourceServersResponseSuccess
 
       interface _ChangeServerLifeCycleStateResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::SourceServer]
-        def application_id: () -> ::String
-        def arn: () -> ::String
-        def connector_action: () -> Types::SourceServerConnectorAction
-        def data_replication_info: () -> Types::DataReplicationInfo
-        def fqdn_for_action_framework: () -> ::String
-        def is_archived: () -> bool
-        def launched_instance: () -> Types::LaunchedInstance
-        def life_cycle: () -> Types::LifeCycle
-        def replication_type: () -> ("AGENT_BASED" | "SNAPSHOT_SHIPPING")
-        def source_properties: () -> Types::SourceProperties
         def source_server_id: () -> ::String
+        def arn: () -> ::String
+        def is_archived: () -> bool
         def tags: () -> ::Hash[::String, ::String]
-        def user_provided_id: () -> ::String
+        def launched_instance: () -> Types::LaunchedInstance
+        def data_replication_info: () -> Types::DataReplicationInfo
+        def life_cycle: () -> Types::LifeCycle
+        def source_properties: () -> Types::SourceProperties
+        def replication_type: () -> ("AGENT_BASED" | "SNAPSHOT_SHIPPING")
         def vcenter_client_id: () -> ::String
+        def application_id: () -> ::String
+        def user_provided_id: () -> ::String
+        def fqdn_for_action_framework: () -> ::String
+        def connector_action: () -> Types::SourceServerConnectorAction
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#change_server_life_cycle_state-instance_method
       def change_server_life_cycle_state: (
-                                            ?account_id: ::String,
+                                            source_server_id: ::String,
                                             life_cycle: {
                                               state: ("READY_FOR_TEST" | "READY_FOR_CUTOVER" | "CUTOVER")
                                             },
-                                            source_server_id: ::String
+                                            ?account_id: ::String
                                           ) -> _ChangeServerLifeCycleStateResponseSuccess
                                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ChangeServerLifeCycleStateResponseSuccess
 
       interface _CreateApplicationResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::Application]
-        def application_aggregated_status: () -> Types::ApplicationAggregatedStatus
         def application_id: () -> ::String
         def arn: () -> ::String
-        def creation_date_time: () -> ::String
+        def name: () -> ::String
         def description: () -> ::String
         def is_archived: () -> bool
+        def application_aggregated_status: () -> Types::ApplicationAggregatedStatus
+        def creation_date_time: () -> ::String
         def last_modified_date_time: () -> ::String
-        def name: () -> ::String
         def tags: () -> ::Hash[::String, ::String]
         def wave_id: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#create_application-instance_method
       def create_application: (
-                                ?account_id: ::String,
-                                ?description: ::String,
                                 name: ::String,
-                                ?tags: Hash[::String, ::String]
+                                ?description: ::String,
+                                ?tags: Hash[::String, ::String],
+                                ?account_id: ::String
                               ) -> _CreateApplicationResponseSuccess
                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateApplicationResponseSuccess
 
       interface _CreateConnectorResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::Connector]
-        def arn: () -> ::String
         def connector_id: () -> ::String
         def name: () -> ::String
-        def ssm_command_config: () -> Types::ConnectorSsmCommandConfig
         def ssm_instance_id: () -> ::String
+        def arn: () -> ::String
         def tags: () -> ::Hash[::String, ::String]
+        def ssm_command_config: () -> Types::ConnectorSsmCommandConfig
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#create_connector-instance_method
       def create_connector: (
                               name: ::String,
-                              ?ssm_command_config: {
-                                cloud_watch_log_group_name: ::String?,
-                                cloud_watch_output_enabled: bool,
-                                output_s3_bucket_name: ::String?,
-                                s3_output_enabled: bool
-                              },
                               ssm_instance_id: ::String,
-                              ?tags: Hash[::String, ::String]
+                              ?tags: Hash[::String, ::String],
+                              ?ssm_command_config: {
+                                s3_output_enabled: bool,
+                                output_s3_bucket_name: ::String?,
+                                cloud_watch_output_enabled: bool,
+                                cloud_watch_log_group_name: ::String?
+                              }
                             ) -> _CreateConnectorResponseSuccess
                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateConnectorResponseSuccess
 
       interface _CreateLaunchConfigurationTemplateResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::LaunchConfigurationTemplate]
-        def arn: () -> ::String
-        def associate_public_ip_address: () -> bool
-        def boot_mode: () -> ("LEGACY_BIOS" | "UEFI" | "USE_SOURCE")
-        def copy_private_ip: () -> bool
-        def copy_tags: () -> bool
-        def ec2_launch_template_id: () -> ::String
-        def enable_map_auto_tagging: () -> bool
-        def large_volume_conf: () -> Types::LaunchTemplateDiskConf
         def launch_configuration_template_id: () -> ::String
-        def launch_disposition: () -> ("STOPPED" | "STARTED")
-        def licensing: () -> Types::Licensing
-        def map_auto_tagging_mpe_id: () -> ::String
+        def arn: () -> ::String
         def post_launch_actions: () -> Types::PostLaunchActions
-        def small_volume_conf: () -> Types::LaunchTemplateDiskConf
-        def small_volume_max_size: () -> ::Integer
+        def enable_map_auto_tagging: () -> bool
+        def map_auto_tagging_mpe_id: () -> ::String
         def tags: () -> ::Hash[::String, ::String]
+        def ec2_launch_template_id: () -> ::String
+        def launch_disposition: () -> ("STOPPED" | "STARTED")
         def target_instance_type_right_sizing_method: () -> ("NONE" | "BASIC")
+        def copy_private_ip: () -> bool
+        def associate_public_ip_address: () -> bool
+        def copy_tags: () -> bool
+        def licensing: () -> Types::Licensing
+        def boot_mode: () -> ("LEGACY_BIOS" | "UEFI" | "USE_SOURCE")
+        def small_volume_max_size: () -> ::Integer
+        def small_volume_conf: () -> Types::LaunchTemplateDiskConf
+        def large_volume_conf: () -> Types::LaunchTemplateDiskConf
+        def enable_parameters_encryption: () -> bool
+        def parameters_encryption_key: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#create_launch_configuration_template-instance_method
       def create_launch_configuration_template: (
-                                                  ?associate_public_ip_address: bool,
-                                                  ?boot_mode: ("LEGACY_BIOS" | "UEFI" | "USE_SOURCE"),
-                                                  ?copy_private_ip: bool,
-                                                  ?copy_tags: bool,
+                                                  ?post_launch_actions: Params::post_launch_actions,
                                                   ?enable_map_auto_tagging: bool,
-                                                  ?large_volume_conf: {
-                                                    iops: ::Integer?,
-                                                    throughput: ::Integer?,
-                                                    volume_type: ("io1" | "io2" | "gp3" | "gp2" | "st1" | "sc1" | "standard")?
-                                                  },
+                                                  ?map_auto_tagging_mpe_id: ::String,
+                                                  ?tags: Hash[::String, ::String],
                                                   ?launch_disposition: ("STOPPED" | "STARTED"),
+                                                  ?target_instance_type_right_sizing_method: ("NONE" | "BASIC"),
+                                                  ?copy_private_ip: bool,
+                                                  ?associate_public_ip_address: bool,
+                                                  ?copy_tags: bool,
                                                   ?licensing: {
                                                     os_byol: bool?
                                                   },
-                                                  ?map_auto_tagging_mpe_id: ::String,
-                                                  ?post_launch_actions: {
-                                                    cloud_watch_log_group_name: ::String?,
-                                                    deployment: ("TEST_AND_CUTOVER" | "CUTOVER_ONLY" | "TEST_ONLY")?,
-                                                    s3_log_bucket: ::String?,
-                                                    s3_output_key_prefix: ::String?,
-                                                    ssm_documents: Array[
-                                                      {
-                                                        action_name: ::String,
-                                                        external_parameters: Hash[::String, {
-                                                            dynamic_path: ::String?
-                                                          }]?,
-                                                        must_succeed_for_cutover: bool?,
-                                                        parameters: Hash[::String, Array[
-                                                            {
-                                                              parameter_name: ::String,
-                                                              parameter_type: ("STRING")
-                                                            },
-                                                          ]]?,
-                                                        ssm_document_name: ::String,
-                                                        timeout_seconds: ::Integer?
-                                                      },
-                                                    ]?
-                                                  },
-                                                  ?small_volume_conf: {
-                                                    iops: ::Integer?,
-                                                    throughput: ::Integer?,
-                                                    volume_type: ("io1" | "io2" | "gp3" | "gp2" | "st1" | "sc1" | "standard")?
-                                                  },
+                                                  ?boot_mode: ("LEGACY_BIOS" | "UEFI" | "USE_SOURCE"),
                                                   ?small_volume_max_size: ::Integer,
-                                                  ?tags: Hash[::String, ::String],
-                                                  ?target_instance_type_right_sizing_method: ("NONE" | "BASIC")
+                                                  ?small_volume_conf: {
+                                                    volume_type: ("io1" | "io2" | "gp3" | "gp2" | "st1" | "sc1" | "standard")?,
+                                                    iops: ::Integer?,
+                                                    throughput: ::Integer?
+                                                  },
+                                                  ?large_volume_conf: {
+                                                    volume_type: ("io1" | "io2" | "gp3" | "gp2" | "st1" | "sc1" | "standard")?,
+                                                    iops: ::Integer?,
+                                                    throughput: ::Integer?
+                                                  },
+                                                  ?enable_parameters_encryption: bool,
+                                                  ?parameters_encryption_key: ::String
                                                 ) -> _CreateLaunchConfigurationTemplateResponseSuccess
                                               | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateLaunchConfigurationTemplateResponseSuccess
 
+      interface _CreateNetworkMigrationDefinitionResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::NetworkMigrationDefinition]
+        def arn: () -> ::String
+        def network_migration_definition_id: () -> ::String
+        def name: () -> ::String
+        def description: () -> ::String
+        def source_configurations: () -> ::Array[Types::SourceConfiguration]
+        def target_s3_configuration: () -> Types::TargetS3Configuration
+        def target_network: () -> Types::TargetNetwork
+        def target_deployment: () -> ("SINGLE_ACCOUNT" | "MULTI_ACCOUNT")
+        def created_at: () -> ::Time
+        def updated_at: () -> ::Time
+        def tags: () -> ::Hash[::String, ::String]
+        def scope_tags: () -> ::Hash[::String, ::String]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#create_network_migration_definition-instance_method
+      def create_network_migration_definition: (
+                                                 name: ::String,
+                                                 ?description: ::String,
+                                                 ?source_configurations: Array[
+                                                   Params::source_configuration
+                                                 ],
+                                                 target_s3_configuration: {
+                                                   s3_bucket: ::String,
+                                                   s3_bucket_owner: ::String
+                                                 },
+                                                 target_network: {
+                                                   topology: ("ISOLATED_VPC" | "HUB_AND_SPOKE"),
+                                                   inbound_cidr: ::String?,
+                                                   outbound_cidr: ::String?,
+                                                   inspection_cidr: ::String?
+                                                 },
+                                                 ?target_deployment: ("SINGLE_ACCOUNT" | "MULTI_ACCOUNT"),
+                                                 ?tags: Hash[::String, ::String],
+                                                 ?scope_tags: Hash[::String, ::String]
+                                               ) -> _CreateNetworkMigrationDefinitionResponseSuccess
+                                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateNetworkMigrationDefinitionResponseSuccess
+
       interface _CreateReplicationConfigurationTemplateResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ReplicationConfigurationTemplate]
+        def replication_configuration_template_id: () -> ::String
         def arn: () -> ::String
+        def staging_area_subnet_id: () -> ::String
         def associate_default_security_group: () -> bool
-        def bandwidth_throttling: () -> ::Integer
-        def create_public_ip: () -> bool
-        def data_plane_routing: () -> ("PRIVATE_IP" | "PUBLIC_IP")
+        def replication_servers_security_groups_i_ds: () -> ::Array[::String]
+        def replication_server_instance_type: () -> ::String
+        def use_dedicated_replication_server: () -> bool
         def default_large_staging_disk_type: () -> ("GP2" | "ST1" | "GP3")
         def ebs_encryption: () -> ("DEFAULT" | "CUSTOM")
         def ebs_encryption_key_arn: () -> ::String
-        def replication_configuration_template_id: () -> ::String
-        def replication_server_instance_type: () -> ::String
-        def replication_servers_security_groups_i_ds: () -> ::Array[::String]
-        def staging_area_subnet_id: () -> ::String
+        def bandwidth_throttling: () -> ::Integer
+        def data_plane_routing: () -> ("PRIVATE_IP" | "PUBLIC_IP")
+        def create_public_ip: () -> bool
         def staging_area_tags: () -> ::Hash[::String, ::String]
-        def tags: () -> ::Hash[::String, ::String]
-        def use_dedicated_replication_server: () -> bool
         def use_fips_endpoint: () -> bool
+        def tags: () -> ::Hash[::String, ::String]
+        def internet_protocol: () -> ("IPV4" | "IPV6")
+        def store_snapshot_on_local_zone: () -> bool
+        def storage_configuration: () -> Types::StorageConfiguration
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#create_replication_configuration_template-instance_method
       def create_replication_configuration_template: (
+                                                       staging_area_subnet_id: ::String,
                                                        associate_default_security_group: bool,
-                                                       bandwidth_throttling: ::Integer,
-                                                       create_public_ip: bool,
-                                                       data_plane_routing: ("PRIVATE_IP" | "PUBLIC_IP"),
+                                                       replication_servers_security_groups_i_ds: Array[::String],
+                                                       replication_server_instance_type: ::String,
+                                                       use_dedicated_replication_server: bool,
                                                        default_large_staging_disk_type: ("GP2" | "ST1" | "GP3"),
                                                        ebs_encryption: ("DEFAULT" | "CUSTOM"),
                                                        ?ebs_encryption_key_arn: ::String,
-                                                       replication_server_instance_type: ::String,
-                                                       replication_servers_security_groups_i_ds: Array[::String],
-                                                       staging_area_subnet_id: ::String,
+                                                       bandwidth_throttling: ::Integer,
+                                                       data_plane_routing: ("PRIVATE_IP" | "PUBLIC_IP"),
+                                                       create_public_ip: bool,
                                                        staging_area_tags: Hash[::String, ::String],
+                                                       ?use_fips_endpoint: bool,
                                                        ?tags: Hash[::String, ::String],
-                                                       use_dedicated_replication_server: bool,
-                                                       ?use_fips_endpoint: bool
+                                                       ?internet_protocol: ("IPV4" | "IPV6"),
+                                                       ?store_snapshot_on_local_zone: bool,
+                                                       ?storage_configuration: {
+                                                         storage_type: ("EBS" | "FSX_ONTAP"),
+                                                         fsx_ontap_configuration: {
+                                                           storage_virtual_machine_id: ::String,
+                                                           credentials_secret_arn: ::String
+                                                         }?
+                                                       }
                                                      ) -> _CreateReplicationConfigurationTemplateResponseSuccess
                                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateReplicationConfigurationTemplateResponseSuccess
 
       interface _CreateWaveResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::Wave]
+        def wave_id: () -> ::String
         def arn: () -> ::String
-        def creation_date_time: () -> ::String
+        def name: () -> ::String
         def description: () -> ::String
         def is_archived: () -> bool
-        def last_modified_date_time: () -> ::String
-        def name: () -> ::String
-        def tags: () -> ::Hash[::String, ::String]
         def wave_aggregated_status: () -> Types::WaveAggregatedStatus
-        def wave_id: () -> ::String
+        def creation_date_time: () -> ::String
+        def last_modified_date_time: () -> ::String
+        def tags: () -> ::Hash[::String, ::String]
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#create_wave-instance_method
       def create_wave: (
-                         ?account_id: ::String,
-                         ?description: ::String,
                          name: ::String,
-                         ?tags: Hash[::String, ::String]
+                         ?description: ::String,
+                         ?tags: Hash[::String, ::String],
+                         ?account_id: ::String
                        ) -> _CreateWaveResponseSuccess
                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateWaveResponseSuccess
 
@@ -345,8 +378,8 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#delete_application-instance_method
       def delete_application: (
-                                ?account_id: ::String,
-                                application_id: ::String
+                                application_id: ::String,
+                                ?account_id: ::String
                               ) -> _DeleteApplicationResponseSuccess
                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteApplicationResponseSuccess
 
@@ -361,8 +394,8 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#delete_job-instance_method
       def delete_job: (
-                        ?account_id: ::String,
-                        job_id: ::String
+                        job_id: ::String,
+                        ?account_id: ::String
                       ) -> _DeleteJobResponseSuccess
                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteJobResponseSuccess
 
@@ -374,6 +407,15 @@ module Aws
                                                   launch_configuration_template_id: ::String
                                                 ) -> _DeleteLaunchConfigurationTemplateResponseSuccess
                                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteLaunchConfigurationTemplateResponseSuccess
+
+      interface _DeleteNetworkMigrationDefinitionResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DeleteNetworkMigrationDefinitionResponse]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#delete_network_migration_definition-instance_method
+      def delete_network_migration_definition: (
+                                                 network_migration_definition_id: ::String
+                                               ) -> _DeleteNetworkMigrationDefinitionResponseSuccess
+                                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteNetworkMigrationDefinitionResponseSuccess
 
       interface _DeleteReplicationConfigurationTemplateResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DeleteReplicationConfigurationTemplateResponse]
@@ -389,8 +431,8 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#delete_source_server-instance_method
       def delete_source_server: (
-                                  ?account_id: ::String,
-                                  source_server_id: ::String
+                                  source_server_id: ::String,
+                                  ?account_id: ::String
                                 ) -> _DeleteSourceServerResponseSuccess
                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteSourceServerResponseSuccess
 
@@ -405,8 +447,8 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#delete_wave-instance_method
       def delete_wave: (
-                         ?account_id: ::String,
-                         wave_id: ::String
+                         wave_id: ::String,
+                         ?account_id: ::String
                        ) -> _DeleteWaveResponseSuccess
                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteWaveResponseSuccess
 
@@ -417,10 +459,10 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#describe_job_log_items-instance_method
       def describe_job_log_items: (
-                                    ?account_id: ::String,
                                     job_id: ::String,
                                     ?max_results: ::Integer,
-                                    ?next_token: ::String
+                                    ?next_token: ::String,
+                                    ?account_id: ::String
                                   ) -> _DescribeJobLogItemsResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeJobLogItemsResponseSuccess
 
@@ -431,14 +473,14 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#describe_jobs-instance_method
       def describe_jobs: (
-                           ?account_id: ::String,
                            ?filters: {
-                             from_date: ::String?,
                              job_i_ds: Array[::String]?,
+                             from_date: ::String?,
                              to_date: ::String?
                            },
                            ?max_results: ::Integer,
-                           ?next_token: ::String
+                           ?next_token: ::String,
+                           ?account_id: ::String
                          ) -> _DescribeJobsResponseSuccess
                        | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeJobsResponseSuccess
 
@@ -462,9 +504,9 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#describe_replication_configuration_templates-instance_method
       def describe_replication_configuration_templates: (
+                                                          ?replication_configuration_template_i_ds: Array[::String],
                                                           ?max_results: ::Integer,
-                                                          ?next_token: ::String,
-                                                          ?replication_configuration_template_i_ds: Array[::String]
+                                                          ?next_token: ::String
                                                         ) -> _DescribeReplicationConfigurationTemplatesResponseSuccess
                                                       | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeReplicationConfigurationTemplatesResponseSuccess
 
@@ -475,16 +517,16 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#describe_source_servers-instance_method
       def describe_source_servers: (
-                                     ?account_id: ::String,
                                      ?filters: {
-                                       application_i_ds: Array[::String]?,
+                                       source_server_i_ds: Array[::String]?,
                                        is_archived: bool?,
-                                       life_cycle_states: Array[("STOPPED" | "NOT_READY" | "READY_FOR_TEST" | "TESTING" | "READY_FOR_CUTOVER" | "CUTTING_OVER" | "CUTOVER" | "DISCONNECTED" | "DISCOVERED" | "PENDING_INSTALLATION")]?,
                                        replication_types: Array[("AGENT_BASED" | "SNAPSHOT_SHIPPING")]?,
-                                       source_server_i_ds: Array[::String]?
+                                       life_cycle_states: Array[("STOPPED" | "NOT_READY" | "READY_FOR_TEST" | "TESTING" | "READY_FOR_CUTOVER" | "CUTTING_OVER" | "CUTOVER" | "DISCONNECTED" | "DISCOVERED" | "PENDING_INSTALLATION")]?,
+                                       application_i_ds: Array[::String]?
                                      },
                                      ?max_results: ::Integer,
-                                     ?next_token: ::String
+                                     ?next_token: ::String,
+                                     ?account_id: ::String
                                    ) -> _DescribeSourceServersResponseSuccess
                                  | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeSourceServersResponseSuccess
 
@@ -505,9 +547,9 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#disassociate_applications-instance_method
       def disassociate_applications: (
-                                       ?account_id: ::String,
+                                       wave_id: ::String,
                                        application_i_ds: Array[::String],
-                                       wave_id: ::String
+                                       ?account_id: ::String
                                      ) -> _DisassociateApplicationsResponseSuccess
                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DisassociateApplicationsResponseSuccess
 
@@ -516,105 +558,142 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#disassociate_source_servers-instance_method
       def disassociate_source_servers: (
-                                         ?account_id: ::String,
                                          application_id: ::String,
-                                         source_server_i_ds: Array[::String]
+                                         source_server_i_ds: Array[::String],
+                                         ?account_id: ::String
                                        ) -> _DisassociateSourceServersResponseSuccess
                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DisassociateSourceServersResponseSuccess
 
       interface _DisconnectFromServiceResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::SourceServer]
-        def application_id: () -> ::String
-        def arn: () -> ::String
-        def connector_action: () -> Types::SourceServerConnectorAction
-        def data_replication_info: () -> Types::DataReplicationInfo
-        def fqdn_for_action_framework: () -> ::String
-        def is_archived: () -> bool
-        def launched_instance: () -> Types::LaunchedInstance
-        def life_cycle: () -> Types::LifeCycle
-        def replication_type: () -> ("AGENT_BASED" | "SNAPSHOT_SHIPPING")
-        def source_properties: () -> Types::SourceProperties
         def source_server_id: () -> ::String
+        def arn: () -> ::String
+        def is_archived: () -> bool
         def tags: () -> ::Hash[::String, ::String]
-        def user_provided_id: () -> ::String
+        def launched_instance: () -> Types::LaunchedInstance
+        def data_replication_info: () -> Types::DataReplicationInfo
+        def life_cycle: () -> Types::LifeCycle
+        def source_properties: () -> Types::SourceProperties
+        def replication_type: () -> ("AGENT_BASED" | "SNAPSHOT_SHIPPING")
         def vcenter_client_id: () -> ::String
+        def application_id: () -> ::String
+        def user_provided_id: () -> ::String
+        def fqdn_for_action_framework: () -> ::String
+        def connector_action: () -> Types::SourceServerConnectorAction
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#disconnect_from_service-instance_method
       def disconnect_from_service: (
-                                     ?account_id: ::String,
-                                     source_server_id: ::String
+                                     source_server_id: ::String,
+                                     ?account_id: ::String
                                    ) -> _DisconnectFromServiceResponseSuccess
                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DisconnectFromServiceResponseSuccess
 
       interface _FinalizeCutoverResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::SourceServer]
-        def application_id: () -> ::String
-        def arn: () -> ::String
-        def connector_action: () -> Types::SourceServerConnectorAction
-        def data_replication_info: () -> Types::DataReplicationInfo
-        def fqdn_for_action_framework: () -> ::String
-        def is_archived: () -> bool
-        def launched_instance: () -> Types::LaunchedInstance
-        def life_cycle: () -> Types::LifeCycle
-        def replication_type: () -> ("AGENT_BASED" | "SNAPSHOT_SHIPPING")
-        def source_properties: () -> Types::SourceProperties
         def source_server_id: () -> ::String
+        def arn: () -> ::String
+        def is_archived: () -> bool
         def tags: () -> ::Hash[::String, ::String]
-        def user_provided_id: () -> ::String
+        def launched_instance: () -> Types::LaunchedInstance
+        def data_replication_info: () -> Types::DataReplicationInfo
+        def life_cycle: () -> Types::LifeCycle
+        def source_properties: () -> Types::SourceProperties
+        def replication_type: () -> ("AGENT_BASED" | "SNAPSHOT_SHIPPING")
         def vcenter_client_id: () -> ::String
+        def application_id: () -> ::String
+        def user_provided_id: () -> ::String
+        def fqdn_for_action_framework: () -> ::String
+        def connector_action: () -> Types::SourceServerConnectorAction
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#finalize_cutover-instance_method
       def finalize_cutover: (
-                              ?account_id: ::String,
-                              source_server_id: ::String
+                              source_server_id: ::String,
+                              ?account_id: ::String
                             ) -> _FinalizeCutoverResponseSuccess
                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _FinalizeCutoverResponseSuccess
 
       interface _GetLaunchConfigurationResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::LaunchConfiguration]
-        def boot_mode: () -> ("LEGACY_BIOS" | "UEFI" | "USE_SOURCE")
+        def source_server_id: () -> ::String
+        def name: () -> ::String
+        def ec2_launch_template_id: () -> ::String
+        def launch_disposition: () -> ("STOPPED" | "STARTED")
+        def target_instance_type_right_sizing_method: () -> ("NONE" | "BASIC")
         def copy_private_ip: () -> bool
         def copy_tags: () -> bool
-        def ec2_launch_template_id: () -> ::String
-        def enable_map_auto_tagging: () -> bool
-        def launch_disposition: () -> ("STOPPED" | "STARTED")
         def licensing: () -> Types::Licensing
-        def map_auto_tagging_mpe_id: () -> ::String
-        def name: () -> ::String
+        def boot_mode: () -> ("LEGACY_BIOS" | "UEFI" | "USE_SOURCE")
         def post_launch_actions: () -> Types::PostLaunchActions
-        def source_server_id: () -> ::String
-        def target_instance_type_right_sizing_method: () -> ("NONE" | "BASIC")
+        def enable_map_auto_tagging: () -> bool
+        def map_auto_tagging_mpe_id: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#get_launch_configuration-instance_method
       def get_launch_configuration: (
-                                      ?account_id: ::String,
-                                      source_server_id: ::String
+                                      source_server_id: ::String,
+                                      ?account_id: ::String
                                     ) -> _GetLaunchConfigurationResponseSuccess
                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetLaunchConfigurationResponseSuccess
 
+      interface _GetNetworkMigrationDefinitionResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::NetworkMigrationDefinition]
+        def arn: () -> ::String
+        def network_migration_definition_id: () -> ::String
+        def name: () -> ::String
+        def description: () -> ::String
+        def source_configurations: () -> ::Array[Types::SourceConfiguration]
+        def target_s3_configuration: () -> Types::TargetS3Configuration
+        def target_network: () -> Types::TargetNetwork
+        def target_deployment: () -> ("SINGLE_ACCOUNT" | "MULTI_ACCOUNT")
+        def created_at: () -> ::Time
+        def updated_at: () -> ::Time
+        def tags: () -> ::Hash[::String, ::String]
+        def scope_tags: () -> ::Hash[::String, ::String]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#get_network_migration_definition-instance_method
+      def get_network_migration_definition: (
+                                              network_migration_definition_id: ::String
+                                            ) -> _GetNetworkMigrationDefinitionResponseSuccess
+                                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetNetworkMigrationDefinitionResponseSuccess
+
+      interface _GetNetworkMigrationMapperSegmentConstructResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetNetworkMigrationMapperSegmentConstructResponse]
+        def construct: () -> Types::NetworkMigrationMapperSegmentConstruct
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#get_network_migration_mapper_segment_construct-instance_method
+      def get_network_migration_mapper_segment_construct: (
+                                                            network_migration_definition_id: ::String,
+                                                            network_migration_execution_id: ::String,
+                                                            segment_id: ::String,
+                                                            construct_id: ::String
+                                                          ) -> _GetNetworkMigrationMapperSegmentConstructResponseSuccess
+                                                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetNetworkMigrationMapperSegmentConstructResponseSuccess
+
       interface _GetReplicationConfigurationResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ReplicationConfiguration]
+        def source_server_id: () -> ::String
+        def name: () -> ::String
+        def staging_area_subnet_id: () -> ::String
         def associate_default_security_group: () -> bool
-        def bandwidth_throttling: () -> ::Integer
-        def create_public_ip: () -> bool
-        def data_plane_routing: () -> ("PRIVATE_IP" | "PUBLIC_IP")
+        def replication_servers_security_groups_i_ds: () -> ::Array[::String]
+        def replication_server_instance_type: () -> ::String
+        def use_dedicated_replication_server: () -> bool
         def default_large_staging_disk_type: () -> ("GP2" | "ST1" | "GP3")
+        def replicated_disks: () -> ::Array[Types::ReplicationConfigurationReplicatedDisk]
         def ebs_encryption: () -> ("DEFAULT" | "CUSTOM")
         def ebs_encryption_key_arn: () -> ::String
-        def name: () -> ::String
-        def replicated_disks: () -> ::Array[Types::ReplicationConfigurationReplicatedDisk]
-        def replication_server_instance_type: () -> ::String
-        def replication_servers_security_groups_i_ds: () -> ::Array[::String]
-        def source_server_id: () -> ::String
-        def staging_area_subnet_id: () -> ::String
+        def bandwidth_throttling: () -> ::Integer
+        def data_plane_routing: () -> ("PRIVATE_IP" | "PUBLIC_IP")
+        def create_public_ip: () -> bool
         def staging_area_tags: () -> ::Hash[::String, ::String]
-        def use_dedicated_replication_server: () -> bool
         def use_fips_endpoint: () -> bool
+        def internet_protocol: () -> ("IPV4" | "IPV6")
+        def store_snapshot_on_local_zone: () -> bool
+        def storage_configuration: () -> Types::StorageConfiguration
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#get_replication_configuration-instance_method
       def get_replication_configuration: (
-                                           ?account_id: ::String,
-                                           source_server_id: ::String
+                                           source_server_id: ::String,
+                                           ?account_id: ::String
                                          ) -> _GetReplicationConfigurationResponseSuccess
                                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetReplicationConfigurationResponseSuccess
 
@@ -633,14 +712,14 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#list_applications-instance_method
       def list_applications: (
-                               ?account_id: ::String,
                                ?filters: {
                                  application_i_ds: Array[::String]?,
                                  is_archived: bool?,
                                  wave_i_ds: Array[::String]?
                                },
                                ?max_results: ::Integer,
-                               ?next_token: ::String
+                               ?next_token: ::String,
+                               ?account_id: ::String
                              ) -> _ListApplicationsResponseSuccess
                            | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListApplicationsResponseSuccess
 
@@ -700,6 +779,21 @@ module Aws
                               ) -> _ListImportErrorsResponseSuccess
                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListImportErrorsResponseSuccess
 
+      interface _ListImportFileEnrichmentsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListImportFileEnrichmentsResponse]
+        def items: () -> ::Array[Types::ImportFileEnrichment]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#list_import_file_enrichments-instance_method
+      def list_import_file_enrichments: (
+                                          ?filters: {
+                                            job_i_ds: Array[::String]?
+                                          },
+                                          ?max_results: ::Integer,
+                                          ?next_token: ::String
+                                        ) -> _ListImportFileEnrichmentsResponseSuccess
+                                      | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListImportFileEnrichmentsResponseSuccess
+
       interface _ListImportsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListImportsResponse]
         def items: () -> ::Array[Types::ImportTask]
@@ -727,6 +821,207 @@ module Aws
                                  ) -> _ListManagedAccountsResponseSuccess
                                | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListManagedAccountsResponseSuccess
 
+      interface _ListNetworkMigrationAnalysesResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListNetworkMigrationAnalysesResponse]
+        def items: () -> ::Array[Types::NetworkMigrationAnalysisJobDetails]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#list_network_migration_analyses-instance_method
+      def list_network_migration_analyses: (
+                                             network_migration_execution_id: ::String,
+                                             network_migration_definition_id: ::String,
+                                             ?filters: {
+                                               job_i_ds: Array[::String]?
+                                             },
+                                             ?max_results: ::Integer,
+                                             ?next_token: ::String
+                                           ) -> _ListNetworkMigrationAnalysesResponseSuccess
+                                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListNetworkMigrationAnalysesResponseSuccess
+
+      interface _ListNetworkMigrationAnalysisResultsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListNetworkMigrationAnalysisResultsResponse]
+        def items: () -> ::Array[Types::NetworkMigrationAnalysisResult]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#list_network_migration_analysis_results-instance_method
+      def list_network_migration_analysis_results: (
+                                                     network_migration_execution_id: ::String,
+                                                     network_migration_definition_id: ::String,
+                                                     ?filters: {
+                                                       vpc_i_ds: Array[::String]?
+                                                     },
+                                                     ?max_results: ::Integer,
+                                                     ?next_token: ::String
+                                                   ) -> _ListNetworkMigrationAnalysisResultsResponseSuccess
+                                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListNetworkMigrationAnalysisResultsResponseSuccess
+
+      interface _ListNetworkMigrationCodeGenerationSegmentsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListNetworkMigrationCodeGenerationSegmentsResponse]
+        def items: () -> ::Array[Types::NetworkMigrationCodeGenerationSegment]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#list_network_migration_code_generation_segments-instance_method
+      def list_network_migration_code_generation_segments: (
+                                                             network_migration_execution_id: ::String,
+                                                             network_migration_definition_id: ::String,
+                                                             ?filters: {
+                                                               segment_i_ds: Array[::String]?
+                                                             },
+                                                             ?max_results: ::Integer,
+                                                             ?next_token: ::String
+                                                           ) -> _ListNetworkMigrationCodeGenerationSegmentsResponseSuccess
+                                                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListNetworkMigrationCodeGenerationSegmentsResponseSuccess
+
+      interface _ListNetworkMigrationCodeGenerationsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListNetworkMigrationCodeGenerationsResponse]
+        def items: () -> ::Array[Types::NetworkMigrationCodeGenerationJobDetails]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#list_network_migration_code_generations-instance_method
+      def list_network_migration_code_generations: (
+                                                     network_migration_execution_id: ::String,
+                                                     network_migration_definition_id: ::String,
+                                                     ?filters: {
+                                                       job_i_ds: Array[::String]?
+                                                     },
+                                                     ?max_results: ::Integer,
+                                                     ?next_token: ::String
+                                                   ) -> _ListNetworkMigrationCodeGenerationsResponseSuccess
+                                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListNetworkMigrationCodeGenerationsResponseSuccess
+
+      interface _ListNetworkMigrationDefinitionsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListNetworkMigrationDefinitionsResponse]
+        def items: () -> ::Array[Types::NetworkMigrationDefinitionSummary]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#list_network_migration_definitions-instance_method
+      def list_network_migration_definitions: (
+                                                ?filters: {
+                                                  network_migration_definition_i_ds: Array[::String]?
+                                                },
+                                                ?next_token: ::String,
+                                                ?max_results: ::Integer
+                                              ) -> _ListNetworkMigrationDefinitionsResponseSuccess
+                                            | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListNetworkMigrationDefinitionsResponseSuccess
+
+      interface _ListNetworkMigrationDeployedStacksResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListNetworkMigrationDeployedStacksResponse]
+        def items: () -> ::Array[Types::NetworkMigrationDeployedStackDetails]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#list_network_migration_deployed_stacks-instance_method
+      def list_network_migration_deployed_stacks: (
+                                                    network_migration_execution_id: ::String,
+                                                    network_migration_definition_id: ::String,
+                                                    ?max_results: ::Integer,
+                                                    ?next_token: ::String
+                                                  ) -> _ListNetworkMigrationDeployedStacksResponseSuccess
+                                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListNetworkMigrationDeployedStacksResponseSuccess
+
+      interface _ListNetworkMigrationDeploymentsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListNetworkMigrationDeployerJobResponse]
+        def items: () -> ::Array[Types::NetworkMigrationDeployerJobDetails]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#list_network_migration_deployments-instance_method
+      def list_network_migration_deployments: (
+                                                network_migration_execution_id: ::String,
+                                                network_migration_definition_id: ::String,
+                                                ?filters: {
+                                                  job_i_ds: Array[::String]?
+                                                },
+                                                ?max_results: ::Integer,
+                                                ?next_token: ::String
+                                              ) -> _ListNetworkMigrationDeploymentsResponseSuccess
+                                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListNetworkMigrationDeploymentsResponseSuccess
+
+      interface _ListNetworkMigrationExecutionsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListNetworkMigrationExecutionsResponse]
+        def items: () -> ::Array[Types::NetworkMigrationExecution]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#list_network_migration_executions-instance_method
+      def list_network_migration_executions: (
+                                               network_migration_definition_id: ::String,
+                                               ?filters: {
+                                                 network_migration_execution_i_ds: Array[::String]?,
+                                                 network_migration_execution_statuses: Array[("PENDING" | "STARTED" | "SUCCEEDED" | "FAILED")]?
+                                               },
+                                               ?next_token: ::String,
+                                               ?max_results: ::Integer
+                                             ) -> _ListNetworkMigrationExecutionsResponseSuccess
+                                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListNetworkMigrationExecutionsResponseSuccess
+
+      interface _ListNetworkMigrationMapperSegmentConstructsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListNetworkMigrationMapperSegmentConstructsResponse]
+        def items: () -> ::Array[Types::NetworkMigrationMapperSegmentConstruct]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#list_network_migration_mapper_segment_constructs-instance_method
+      def list_network_migration_mapper_segment_constructs: (
+                                                              network_migration_execution_id: ::String,
+                                                              network_migration_definition_id: ::String,
+                                                              segment_id: ::String,
+                                                              ?filters: {
+                                                                construct_i_ds: Array[::String]?,
+                                                                construct_types: Array[::String]?
+                                                              },
+                                                              ?max_results: ::Integer,
+                                                              ?next_token: ::String
+                                                            ) -> _ListNetworkMigrationMapperSegmentConstructsResponseSuccess
+                                                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListNetworkMigrationMapperSegmentConstructsResponseSuccess
+
+      interface _ListNetworkMigrationMapperSegmentsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListNetworkMigrationMapperSegmentsResponse]
+        def items: () -> ::Array[Types::NetworkMigrationMapperSegment]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#list_network_migration_mapper_segments-instance_method
+      def list_network_migration_mapper_segments: (
+                                                    network_migration_execution_id: ::String,
+                                                    network_migration_definition_id: ::String,
+                                                    ?filters: {
+                                                      segment_i_ds: Array[::String]?
+                                                    },
+                                                    ?max_results: ::Integer,
+                                                    ?next_token: ::String
+                                                  ) -> _ListNetworkMigrationMapperSegmentsResponseSuccess
+                                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListNetworkMigrationMapperSegmentsResponseSuccess
+
+      interface _ListNetworkMigrationMappingUpdatesResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListNetworkMigrationMappingUpdatesResponse]
+        def items: () -> ::Array[Types::NetworkMigrationMappingUpdateJobDetails]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#list_network_migration_mapping_updates-instance_method
+      def list_network_migration_mapping_updates: (
+                                                    network_migration_execution_id: ::String,
+                                                    network_migration_definition_id: ::String,
+                                                    ?filters: {
+                                                      job_i_ds: Array[::String]?
+                                                    },
+                                                    ?max_results: ::Integer,
+                                                    ?next_token: ::String
+                                                  ) -> _ListNetworkMigrationMappingUpdatesResponseSuccess
+                                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListNetworkMigrationMappingUpdatesResponseSuccess
+
+      interface _ListNetworkMigrationMappingsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListNetworkMigrationMappingsResponse]
+        def items: () -> ::Array[Types::NetworkMigrationMappingJobDetails]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#list_network_migration_mappings-instance_method
+      def list_network_migration_mappings: (
+                                             network_migration_execution_id: ::String,
+                                             network_migration_definition_id: ::String,
+                                             ?filters: {
+                                               job_i_ds: Array[::String]?
+                                             },
+                                             ?max_results: ::Integer,
+                                             ?next_token: ::String
+                                           ) -> _ListNetworkMigrationMappingsResponseSuccess
+                                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListNetworkMigrationMappingsResponseSuccess
+
       interface _ListSourceServerActionsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListSourceServerActionsResponse]
         def items: () -> ::Array[Types::SourceServerActionDocument]
@@ -734,13 +1029,13 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#list_source_server_actions-instance_method
       def list_source_server_actions: (
-                                        ?account_id: ::String,
+                                        source_server_id: ::String,
                                         ?filters: {
                                           action_i_ds: Array[::String]?
                                         },
                                         ?max_results: ::Integer,
                                         ?next_token: ::String,
-                                        source_server_id: ::String
+                                        ?account_id: ::String
                                       ) -> _ListSourceServerActionsResponseSuccess
                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListSourceServerActionsResponseSuccess
 
@@ -761,10 +1056,10 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#list_template_actions-instance_method
       def list_template_actions: (
+                                   launch_configuration_template_id: ::String,
                                    ?filters: {
                                      action_i_ds: Array[::String]?
                                    },
-                                   launch_configuration_template_id: ::String,
                                    ?max_results: ::Integer,
                                    ?next_token: ::String
                                  ) -> _ListTemplateActionsResponseSuccess
@@ -777,61 +1072,61 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#list_waves-instance_method
       def list_waves: (
-                        ?account_id: ::String,
                         ?filters: {
-                          is_archived: bool?,
-                          wave_i_ds: Array[::String]?
+                          wave_i_ds: Array[::String]?,
+                          is_archived: bool?
                         },
                         ?max_results: ::Integer,
-                        ?next_token: ::String
+                        ?next_token: ::String,
+                        ?account_id: ::String
                       ) -> _ListWavesResponseSuccess
                     | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListWavesResponseSuccess
 
       interface _MarkAsArchivedResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::SourceServer]
-        def application_id: () -> ::String
-        def arn: () -> ::String
-        def connector_action: () -> Types::SourceServerConnectorAction
-        def data_replication_info: () -> Types::DataReplicationInfo
-        def fqdn_for_action_framework: () -> ::String
-        def is_archived: () -> bool
-        def launched_instance: () -> Types::LaunchedInstance
-        def life_cycle: () -> Types::LifeCycle
-        def replication_type: () -> ("AGENT_BASED" | "SNAPSHOT_SHIPPING")
-        def source_properties: () -> Types::SourceProperties
         def source_server_id: () -> ::String
+        def arn: () -> ::String
+        def is_archived: () -> bool
         def tags: () -> ::Hash[::String, ::String]
-        def user_provided_id: () -> ::String
+        def launched_instance: () -> Types::LaunchedInstance
+        def data_replication_info: () -> Types::DataReplicationInfo
+        def life_cycle: () -> Types::LifeCycle
+        def source_properties: () -> Types::SourceProperties
+        def replication_type: () -> ("AGENT_BASED" | "SNAPSHOT_SHIPPING")
         def vcenter_client_id: () -> ::String
+        def application_id: () -> ::String
+        def user_provided_id: () -> ::String
+        def fqdn_for_action_framework: () -> ::String
+        def connector_action: () -> Types::SourceServerConnectorAction
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#mark_as_archived-instance_method
       def mark_as_archived: (
-                              ?account_id: ::String,
-                              source_server_id: ::String
+                              source_server_id: ::String,
+                              ?account_id: ::String
                             ) -> _MarkAsArchivedResponseSuccess
                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _MarkAsArchivedResponseSuccess
 
       interface _PauseReplicationResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::SourceServer]
-        def application_id: () -> ::String
-        def arn: () -> ::String
-        def connector_action: () -> Types::SourceServerConnectorAction
-        def data_replication_info: () -> Types::DataReplicationInfo
-        def fqdn_for_action_framework: () -> ::String
-        def is_archived: () -> bool
-        def launched_instance: () -> Types::LaunchedInstance
-        def life_cycle: () -> Types::LifeCycle
-        def replication_type: () -> ("AGENT_BASED" | "SNAPSHOT_SHIPPING")
-        def source_properties: () -> Types::SourceProperties
         def source_server_id: () -> ::String
+        def arn: () -> ::String
+        def is_archived: () -> bool
         def tags: () -> ::Hash[::String, ::String]
-        def user_provided_id: () -> ::String
+        def launched_instance: () -> Types::LaunchedInstance
+        def data_replication_info: () -> Types::DataReplicationInfo
+        def life_cycle: () -> Types::LifeCycle
+        def source_properties: () -> Types::SourceProperties
+        def replication_type: () -> ("AGENT_BASED" | "SNAPSHOT_SHIPPING")
         def vcenter_client_id: () -> ::String
+        def application_id: () -> ::String
+        def user_provided_id: () -> ::String
+        def fqdn_for_action_framework: () -> ::String
+        def connector_action: () -> Types::SourceServerConnectorAction
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#pause_replication-instance_method
       def pause_replication: (
-                               ?account_id: ::String,
-                               source_server_id: ::String
+                               source_server_id: ::String,
+                               ?account_id: ::String
                              ) -> _PauseReplicationResponseSuccess
                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PauseReplicationResponseSuccess
 
@@ -839,40 +1134,40 @@ module Aws
         include ::Seahorse::Client::_ResponseSuccess[Types::SourceServerActionDocument]
         def action_id: () -> ::String
         def action_name: () -> ::String
-        def active: () -> bool
-        def category: () -> ("DISASTER_RECOVERY" | "OPERATING_SYSTEM" | "LICENSE_AND_SUBSCRIPTION" | "VALIDATION" | "OBSERVABILITY" | "REFACTORING" | "SECURITY" | "NETWORKING" | "CONFIGURATION" | "BACKUP" | "OTHER")
-        def description: () -> ::String
         def document_identifier: () -> ::String
-        def document_version: () -> ::String
-        def external_parameters: () -> ::Hash[::String, Types::SsmExternalParameter]
-        def must_succeed_for_cutover: () -> bool
         def order: () -> ::Integer
-        def parameters: () -> ::Hash[::String, ::Array[Types::SsmParameterStoreParameter]]
+        def document_version: () -> ::String
+        def active: () -> bool
         def timeout_seconds: () -> ::Integer
+        def must_succeed_for_cutover: () -> bool
+        def parameters: () -> ::Hash[::String, ::Array[Types::SsmParameterStoreParameter]]
+        def external_parameters: () -> ::Hash[::String, Types::SsmExternalParameter]
+        def description: () -> ::String
+        def category: () -> ("DISASTER_RECOVERY" | "OPERATING_SYSTEM" | "LICENSE_AND_SUBSCRIPTION" | "VALIDATION" | "OBSERVABILITY" | "REFACTORING" | "SECURITY" | "NETWORKING" | "CONFIGURATION" | "BACKUP" | "OTHER")
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#put_source_server_action-instance_method
       def put_source_server_action: (
-                                      ?account_id: ::String,
-                                      action_id: ::String,
+                                      source_server_id: ::String,
                                       action_name: ::String,
-                                      ?active: bool,
-                                      ?category: ("DISASTER_RECOVERY" | "OPERATING_SYSTEM" | "LICENSE_AND_SUBSCRIPTION" | "VALIDATION" | "OBSERVABILITY" | "REFACTORING" | "SECURITY" | "NETWORKING" | "CONFIGURATION" | "BACKUP" | "OTHER"),
-                                      ?description: ::String,
                                       document_identifier: ::String,
+                                      order: ::Integer,
+                                      action_id: ::String,
                                       ?document_version: ::String,
+                                      ?active: bool,
+                                      ?timeout_seconds: ::Integer,
+                                      ?must_succeed_for_cutover: bool,
+                                      ?parameters: Hash[::String, Array[
+                                          {
+                                            parameter_type: ("STRING" | "SECURE_STRING"),
+                                            parameter_name: ::String
+                                          }
+                                        ]],
                                       ?external_parameters: Hash[::String, {
                                           dynamic_path: ::String?
                                         }],
-                                      ?must_succeed_for_cutover: bool,
-                                      order: ::Integer,
-                                      ?parameters: Hash[::String, Array[
-                                          {
-                                            parameter_name: ::String,
-                                            parameter_type: ("STRING")
-                                          },
-                                        ]],
-                                      source_server_id: ::String,
-                                      ?timeout_seconds: ::Integer
+                                      ?description: ::String,
+                                      ?category: ("DISASTER_RECOVERY" | "OPERATING_SYSTEM" | "LICENSE_AND_SUBSCRIPTION" | "VALIDATION" | "OBSERVABILITY" | "REFACTORING" | "SECURITY" | "NETWORKING" | "CONFIGURATION" | "BACKUP" | "OTHER"),
+                                      ?account_id: ::String
                                     ) -> _PutSourceServerActionResponseSuccess
                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PutSourceServerActionResponseSuccess
 
@@ -880,41 +1175,41 @@ module Aws
         include ::Seahorse::Client::_ResponseSuccess[Types::TemplateActionDocument]
         def action_id: () -> ::String
         def action_name: () -> ::String
-        def active: () -> bool
-        def category: () -> ("DISASTER_RECOVERY" | "OPERATING_SYSTEM" | "LICENSE_AND_SUBSCRIPTION" | "VALIDATION" | "OBSERVABILITY" | "REFACTORING" | "SECURITY" | "NETWORKING" | "CONFIGURATION" | "BACKUP" | "OTHER")
-        def description: () -> ::String
         def document_identifier: () -> ::String
-        def document_version: () -> ::String
-        def external_parameters: () -> ::Hash[::String, Types::SsmExternalParameter]
-        def must_succeed_for_cutover: () -> bool
-        def operating_system: () -> ::String
         def order: () -> ::Integer
-        def parameters: () -> ::Hash[::String, ::Array[Types::SsmParameterStoreParameter]]
+        def document_version: () -> ::String
+        def active: () -> bool
         def timeout_seconds: () -> ::Integer
+        def must_succeed_for_cutover: () -> bool
+        def parameters: () -> ::Hash[::String, ::Array[Types::SsmParameterStoreParameter]]
+        def operating_system: () -> ::String
+        def external_parameters: () -> ::Hash[::String, Types::SsmExternalParameter]
+        def description: () -> ::String
+        def category: () -> ("DISASTER_RECOVERY" | "OPERATING_SYSTEM" | "LICENSE_AND_SUBSCRIPTION" | "VALIDATION" | "OBSERVABILITY" | "REFACTORING" | "SECURITY" | "NETWORKING" | "CONFIGURATION" | "BACKUP" | "OTHER")
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#put_template_action-instance_method
       def put_template_action: (
-                                 action_id: ::String,
+                                 launch_configuration_template_id: ::String,
                                  action_name: ::String,
-                                 ?active: bool,
-                                 ?category: ("DISASTER_RECOVERY" | "OPERATING_SYSTEM" | "LICENSE_AND_SUBSCRIPTION" | "VALIDATION" | "OBSERVABILITY" | "REFACTORING" | "SECURITY" | "NETWORKING" | "CONFIGURATION" | "BACKUP" | "OTHER"),
-                                 ?description: ::String,
                                  document_identifier: ::String,
+                                 order: ::Integer,
+                                 action_id: ::String,
                                  ?document_version: ::String,
+                                 ?active: bool,
+                                 ?timeout_seconds: ::Integer,
+                                 ?must_succeed_for_cutover: bool,
+                                 ?parameters: Hash[::String, Array[
+                                     {
+                                       parameter_type: ("STRING" | "SECURE_STRING"),
+                                       parameter_name: ::String
+                                     }
+                                   ]],
+                                 ?operating_system: ::String,
                                  ?external_parameters: Hash[::String, {
                                      dynamic_path: ::String?
                                    }],
-                                 launch_configuration_template_id: ::String,
-                                 ?must_succeed_for_cutover: bool,
-                                 ?operating_system: ::String,
-                                 order: ::Integer,
-                                 ?parameters: Hash[::String, Array[
-                                     {
-                                       parameter_name: ::String,
-                                       parameter_type: ("STRING")
-                                     },
-                                   ]],
-                                 ?timeout_seconds: ::Integer
+                                 ?description: ::String,
+                                 ?category: ("DISASTER_RECOVERY" | "OPERATING_SYSTEM" | "LICENSE_AND_SUBSCRIPTION" | "VALIDATION" | "OBSERVABILITY" | "REFACTORING" | "SECURITY" | "NETWORKING" | "CONFIGURATION" | "BACKUP" | "OTHER")
                                ) -> _PutTemplateActionResponseSuccess
                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PutTemplateActionResponseSuccess
 
@@ -923,9 +1218,9 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#remove_source_server_action-instance_method
       def remove_source_server_action: (
-                                         ?account_id: ::String,
+                                         source_server_id: ::String,
                                          action_id: ::String,
-                                         source_server_id: ::String
+                                         ?account_id: ::String
                                        ) -> _RemoveSourceServerActionResponseSuccess
                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _RemoveSourceServerActionResponseSuccess
 
@@ -934,56 +1229,56 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#remove_template_action-instance_method
       def remove_template_action: (
-                                    action_id: ::String,
-                                    launch_configuration_template_id: ::String
+                                    launch_configuration_template_id: ::String,
+                                    action_id: ::String
                                   ) -> _RemoveTemplateActionResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _RemoveTemplateActionResponseSuccess
 
       interface _ResumeReplicationResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::SourceServer]
-        def application_id: () -> ::String
-        def arn: () -> ::String
-        def connector_action: () -> Types::SourceServerConnectorAction
-        def data_replication_info: () -> Types::DataReplicationInfo
-        def fqdn_for_action_framework: () -> ::String
-        def is_archived: () -> bool
-        def launched_instance: () -> Types::LaunchedInstance
-        def life_cycle: () -> Types::LifeCycle
-        def replication_type: () -> ("AGENT_BASED" | "SNAPSHOT_SHIPPING")
-        def source_properties: () -> Types::SourceProperties
         def source_server_id: () -> ::String
+        def arn: () -> ::String
+        def is_archived: () -> bool
         def tags: () -> ::Hash[::String, ::String]
-        def user_provided_id: () -> ::String
+        def launched_instance: () -> Types::LaunchedInstance
+        def data_replication_info: () -> Types::DataReplicationInfo
+        def life_cycle: () -> Types::LifeCycle
+        def source_properties: () -> Types::SourceProperties
+        def replication_type: () -> ("AGENT_BASED" | "SNAPSHOT_SHIPPING")
         def vcenter_client_id: () -> ::String
+        def application_id: () -> ::String
+        def user_provided_id: () -> ::String
+        def fqdn_for_action_framework: () -> ::String
+        def connector_action: () -> Types::SourceServerConnectorAction
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#resume_replication-instance_method
       def resume_replication: (
-                                ?account_id: ::String,
-                                source_server_id: ::String
+                                source_server_id: ::String,
+                                ?account_id: ::String
                               ) -> _ResumeReplicationResponseSuccess
                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ResumeReplicationResponseSuccess
 
       interface _RetryDataReplicationResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::SourceServer]
-        def application_id: () -> ::String
-        def arn: () -> ::String
-        def connector_action: () -> Types::SourceServerConnectorAction
-        def data_replication_info: () -> Types::DataReplicationInfo
-        def fqdn_for_action_framework: () -> ::String
-        def is_archived: () -> bool
-        def launched_instance: () -> Types::LaunchedInstance
-        def life_cycle: () -> Types::LifeCycle
-        def replication_type: () -> ("AGENT_BASED" | "SNAPSHOT_SHIPPING")
-        def source_properties: () -> Types::SourceProperties
         def source_server_id: () -> ::String
+        def arn: () -> ::String
+        def is_archived: () -> bool
         def tags: () -> ::Hash[::String, ::String]
-        def user_provided_id: () -> ::String
+        def launched_instance: () -> Types::LaunchedInstance
+        def data_replication_info: () -> Types::DataReplicationInfo
+        def life_cycle: () -> Types::LifeCycle
+        def source_properties: () -> Types::SourceProperties
+        def replication_type: () -> ("AGENT_BASED" | "SNAPSHOT_SHIPPING")
         def vcenter_client_id: () -> ::String
+        def application_id: () -> ::String
+        def user_provided_id: () -> ::String
+        def fqdn_for_action_framework: () -> ::String
+        def connector_action: () -> Types::SourceServerConnectorAction
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#retry_data_replication-instance_method
       def retry_data_replication: (
-                                    ?account_id: ::String,
-                                    source_server_id: ::String
+                                    source_server_id: ::String,
+                                    ?account_id: ::String
                                   ) -> _RetryDataReplicationResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _RetryDataReplicationResponseSuccess
 
@@ -993,9 +1288,9 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#start_cutover-instance_method
       def start_cutover: (
-                           ?account_id: ::String,
                            source_server_i_ds: Array[::String],
-                           ?tags: Hash[::String, ::String]
+                           ?tags: Hash[::String, ::String],
+                           ?account_id: ::String
                          ) -> _StartCutoverResponseSuccess
                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartCutoverResponseSuccess
 
@@ -1006,8 +1301,9 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#start_export-instance_method
       def start_export: (
                           s3_bucket: ::String,
+                          s3_key: ::String,
                           ?s3_bucket_owner: ::String,
-                          s3_key: ::String
+                          ?tags: Hash[::String, ::String]
                         ) -> _StartExportResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartExportResponseSuccess
 
@@ -1020,33 +1316,150 @@ module Aws
                           ?client_token: ::String,
                           s3_bucket_source: {
                             s3_bucket: ::String,
-                            s3_bucket_owner: ::String?,
-                            s3_key: ::String
-                          }
+                            s3_key: ::String,
+                            s3_bucket_owner: ::String?
+                          },
+                          ?tags: Hash[::String, ::String]
                         ) -> _StartImportResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartImportResponseSuccess
 
+      interface _StartImportFileEnrichmentResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::StartImportFileEnrichmentResponse]
+        def job_id: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#start_import_file_enrichment-instance_method
+      def start_import_file_enrichment: (
+                                          ?client_token: ::String,
+                                          s3_bucket_source: {
+                                            s3_bucket: ::String,
+                                            s3_bucket_owner: ::String,
+                                            s3_key: ::String
+                                          },
+                                          s3_bucket_target: {
+                                            s3_bucket: ::String,
+                                            s3_bucket_owner: ::String,
+                                            s3_key: ::String
+                                          },
+                                          ?ip_assignment_strategy: ("STATIC" | "DYNAMIC")
+                                        ) -> _StartImportFileEnrichmentResponseSuccess
+                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartImportFileEnrichmentResponseSuccess
+
+      interface _StartNetworkMigrationAnalysisResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::StartNetworkMigrationAnalysisResponse]
+        def job_id: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#start_network_migration_analysis-instance_method
+      def start_network_migration_analysis: (
+                                              network_migration_execution_id: ::String,
+                                              network_migration_definition_id: ::String
+                                            ) -> _StartNetworkMigrationAnalysisResponseSuccess
+                                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartNetworkMigrationAnalysisResponseSuccess
+
+      interface _StartNetworkMigrationCodeGenerationResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::StartNetworkMigrationCodeGenerationResponse]
+        def job_id: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#start_network_migration_code_generation-instance_method
+      def start_network_migration_code_generation: (
+                                                     network_migration_execution_id: ::String,
+                                                     network_migration_definition_id: ::String,
+                                                     ?code_generation_output_format_types: Array[("CDK_L1" | "CDK_L2" | "TERRAFORM" | "LZA")]
+                                                   ) -> _StartNetworkMigrationCodeGenerationResponseSuccess
+                                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartNetworkMigrationCodeGenerationResponseSuccess
+
+      interface _StartNetworkMigrationDeploymentResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::StartNetworkMigrationDeployerJobResponse]
+        def job_id: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#start_network_migration_deployment-instance_method
+      def start_network_migration_deployment: (
+                                                network_migration_execution_id: ::String,
+                                                network_migration_definition_id: ::String
+                                              ) -> _StartNetworkMigrationDeploymentResponseSuccess
+                                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartNetworkMigrationDeploymentResponseSuccess
+
+      interface _StartNetworkMigrationMappingResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::StartNetworkMigrationMappingResponse]
+        def job_id: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#start_network_migration_mapping-instance_method
+      def start_network_migration_mapping: (
+                                             network_migration_execution_id: ::String,
+                                             network_migration_definition_id: ::String,
+                                             ?security_group_mapping_strategy: ("MAP" | "SKIP" | "MAP_DHCP")
+                                           ) -> _StartNetworkMigrationMappingResponseSuccess
+                                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartNetworkMigrationMappingResponseSuccess
+
+      interface _StartNetworkMigrationMappingUpdateResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::StartNetworkMigrationMappingUpdateResponse]
+        def job_id: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#start_network_migration_mapping_update-instance_method
+      def start_network_migration_mapping_update: (
+                                                    network_migration_execution_id: ::String,
+                                                    network_migration_definition_id: ::String,
+                                                    ?constructs: Array[
+                                                      {
+                                                        segment_id: ::String,
+                                                        construct_id: ::String,
+                                                        construct_type: ::String,
+                                                        operation: {
+                                                          merge: {
+                                                            merge_constructs: Array[
+                                                              {
+                                                                segment_id: ::String?,
+                                                                construct_id: ::String?
+                                                              }
+                                                            ]?
+                                                          }?,
+                                                          split: {
+                                                            split_constructs: Array[
+                                                              {
+                                                                cidr_block: ::String?
+                                                              }
+                                                            ]?
+                                                          }?,
+                                                          delete: {
+                                                          }?,
+                                                          update: {
+                                                            name: ::String?,
+                                                            excluded: bool?,
+                                                            properties: Hash[::String, ::String]?
+                                                          }?
+                                                        }?
+                                                      }
+                                                    ],
+                                                    ?segments: Array[
+                                                      {
+                                                        segment_id: ::String,
+                                                        target_account: ::String?,
+                                                        scope_tags: Hash[::String, ::String]?
+                                                      }
+                                                    ]
+                                                  ) -> _StartNetworkMigrationMappingUpdateResponseSuccess
+                                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartNetworkMigrationMappingUpdateResponseSuccess
+
       interface _StartReplicationResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::SourceServer]
-        def application_id: () -> ::String
-        def arn: () -> ::String
-        def connector_action: () -> Types::SourceServerConnectorAction
-        def data_replication_info: () -> Types::DataReplicationInfo
-        def fqdn_for_action_framework: () -> ::String
-        def is_archived: () -> bool
-        def launched_instance: () -> Types::LaunchedInstance
-        def life_cycle: () -> Types::LifeCycle
-        def replication_type: () -> ("AGENT_BASED" | "SNAPSHOT_SHIPPING")
-        def source_properties: () -> Types::SourceProperties
         def source_server_id: () -> ::String
+        def arn: () -> ::String
+        def is_archived: () -> bool
         def tags: () -> ::Hash[::String, ::String]
-        def user_provided_id: () -> ::String
+        def launched_instance: () -> Types::LaunchedInstance
+        def data_replication_info: () -> Types::DataReplicationInfo
+        def life_cycle: () -> Types::LifeCycle
+        def source_properties: () -> Types::SourceProperties
+        def replication_type: () -> ("AGENT_BASED" | "SNAPSHOT_SHIPPING")
         def vcenter_client_id: () -> ::String
+        def application_id: () -> ::String
+        def user_provided_id: () -> ::String
+        def fqdn_for_action_framework: () -> ::String
+        def connector_action: () -> Types::SourceServerConnectorAction
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#start_replication-instance_method
       def start_replication: (
-                               ?account_id: ::String,
-                               source_server_id: ::String
+                               source_server_id: ::String,
+                               ?account_id: ::String
                              ) -> _StartReplicationResponseSuccess
                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartReplicationResponseSuccess
 
@@ -1056,33 +1469,33 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#start_test-instance_method
       def start_test: (
-                        ?account_id: ::String,
                         source_server_i_ds: Array[::String],
-                        ?tags: Hash[::String, ::String]
+                        ?tags: Hash[::String, ::String],
+                        ?account_id: ::String
                       ) -> _StartTestResponseSuccess
                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartTestResponseSuccess
 
       interface _StopReplicationResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::SourceServer]
-        def application_id: () -> ::String
-        def arn: () -> ::String
-        def connector_action: () -> Types::SourceServerConnectorAction
-        def data_replication_info: () -> Types::DataReplicationInfo
-        def fqdn_for_action_framework: () -> ::String
-        def is_archived: () -> bool
-        def launched_instance: () -> Types::LaunchedInstance
-        def life_cycle: () -> Types::LifeCycle
-        def replication_type: () -> ("AGENT_BASED" | "SNAPSHOT_SHIPPING")
-        def source_properties: () -> Types::SourceProperties
         def source_server_id: () -> ::String
+        def arn: () -> ::String
+        def is_archived: () -> bool
         def tags: () -> ::Hash[::String, ::String]
-        def user_provided_id: () -> ::String
+        def launched_instance: () -> Types::LaunchedInstance
+        def data_replication_info: () -> Types::DataReplicationInfo
+        def life_cycle: () -> Types::LifeCycle
+        def source_properties: () -> Types::SourceProperties
+        def replication_type: () -> ("AGENT_BASED" | "SNAPSHOT_SHIPPING")
         def vcenter_client_id: () -> ::String
+        def application_id: () -> ::String
+        def user_provided_id: () -> ::String
+        def fqdn_for_action_framework: () -> ::String
+        def connector_action: () -> Types::SourceServerConnectorAction
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#stop_replication-instance_method
       def stop_replication: (
-                              ?account_id: ::String,
-                              source_server_id: ::String
+                              source_server_id: ::String,
+                              ?account_id: ::String
                             ) -> _StopReplicationResponseSuccess
                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StopReplicationResponseSuccess
 
@@ -1099,48 +1512,48 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#terminate_target_instances-instance_method
       def terminate_target_instances: (
-                                        ?account_id: ::String,
                                         source_server_i_ds: Array[::String],
-                                        ?tags: Hash[::String, ::String]
+                                        ?tags: Hash[::String, ::String],
+                                        ?account_id: ::String
                                       ) -> _TerminateTargetInstancesResponseSuccess
                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _TerminateTargetInstancesResponseSuccess
 
       interface _UnarchiveApplicationResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::Application]
-        def application_aggregated_status: () -> Types::ApplicationAggregatedStatus
         def application_id: () -> ::String
         def arn: () -> ::String
-        def creation_date_time: () -> ::String
+        def name: () -> ::String
         def description: () -> ::String
         def is_archived: () -> bool
+        def application_aggregated_status: () -> Types::ApplicationAggregatedStatus
+        def creation_date_time: () -> ::String
         def last_modified_date_time: () -> ::String
-        def name: () -> ::String
         def tags: () -> ::Hash[::String, ::String]
         def wave_id: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#unarchive_application-instance_method
       def unarchive_application: (
-                                   ?account_id: ::String,
-                                   application_id: ::String
+                                   application_id: ::String,
+                                   ?account_id: ::String
                                  ) -> _UnarchiveApplicationResponseSuccess
                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UnarchiveApplicationResponseSuccess
 
       interface _UnarchiveWaveResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::Wave]
+        def wave_id: () -> ::String
         def arn: () -> ::String
-        def creation_date_time: () -> ::String
+        def name: () -> ::String
         def description: () -> ::String
         def is_archived: () -> bool
-        def last_modified_date_time: () -> ::String
-        def name: () -> ::String
-        def tags: () -> ::Hash[::String, ::String]
         def wave_aggregated_status: () -> Types::WaveAggregatedStatus
-        def wave_id: () -> ::String
+        def creation_date_time: () -> ::String
+        def last_modified_date_time: () -> ::String
+        def tags: () -> ::Hash[::String, ::String]
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#unarchive_wave-instance_method
       def unarchive_wave: (
-                            ?account_id: ::String,
-                            wave_id: ::String
+                            wave_id: ::String,
+                            ?account_id: ::String
                           ) -> _UnarchiveWaveResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UnarchiveWaveResponseSuccess
 
@@ -1153,334 +1566,386 @@ module Aws
 
       interface _UpdateApplicationResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::Application]
-        def application_aggregated_status: () -> Types::ApplicationAggregatedStatus
         def application_id: () -> ::String
         def arn: () -> ::String
-        def creation_date_time: () -> ::String
+        def name: () -> ::String
         def description: () -> ::String
         def is_archived: () -> bool
+        def application_aggregated_status: () -> Types::ApplicationAggregatedStatus
+        def creation_date_time: () -> ::String
         def last_modified_date_time: () -> ::String
-        def name: () -> ::String
         def tags: () -> ::Hash[::String, ::String]
         def wave_id: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#update_application-instance_method
       def update_application: (
-                                ?account_id: ::String,
                                 application_id: ::String,
+                                ?name: ::String,
                                 ?description: ::String,
-                                ?name: ::String
+                                ?account_id: ::String
                               ) -> _UpdateApplicationResponseSuccess
                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateApplicationResponseSuccess
 
       interface _UpdateConnectorResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::Connector]
-        def arn: () -> ::String
         def connector_id: () -> ::String
         def name: () -> ::String
-        def ssm_command_config: () -> Types::ConnectorSsmCommandConfig
         def ssm_instance_id: () -> ::String
+        def arn: () -> ::String
         def tags: () -> ::Hash[::String, ::String]
+        def ssm_command_config: () -> Types::ConnectorSsmCommandConfig
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#update_connector-instance_method
       def update_connector: (
                               connector_id: ::String,
                               ?name: ::String,
                               ?ssm_command_config: {
-                                cloud_watch_log_group_name: ::String?,
-                                cloud_watch_output_enabled: bool,
+                                s3_output_enabled: bool,
                                 output_s3_bucket_name: ::String?,
-                                s3_output_enabled: bool
+                                cloud_watch_output_enabled: bool,
+                                cloud_watch_log_group_name: ::String?
                               }
                             ) -> _UpdateConnectorResponseSuccess
                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateConnectorResponseSuccess
 
       interface _UpdateLaunchConfigurationResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::LaunchConfiguration]
-        def boot_mode: () -> ("LEGACY_BIOS" | "UEFI" | "USE_SOURCE")
+        def source_server_id: () -> ::String
+        def name: () -> ::String
+        def ec2_launch_template_id: () -> ::String
+        def launch_disposition: () -> ("STOPPED" | "STARTED")
+        def target_instance_type_right_sizing_method: () -> ("NONE" | "BASIC")
         def copy_private_ip: () -> bool
         def copy_tags: () -> bool
-        def ec2_launch_template_id: () -> ::String
-        def enable_map_auto_tagging: () -> bool
-        def launch_disposition: () -> ("STOPPED" | "STARTED")
         def licensing: () -> Types::Licensing
-        def map_auto_tagging_mpe_id: () -> ::String
-        def name: () -> ::String
+        def boot_mode: () -> ("LEGACY_BIOS" | "UEFI" | "USE_SOURCE")
         def post_launch_actions: () -> Types::PostLaunchActions
-        def source_server_id: () -> ::String
-        def target_instance_type_right_sizing_method: () -> ("NONE" | "BASIC")
+        def enable_map_auto_tagging: () -> bool
+        def map_auto_tagging_mpe_id: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#update_launch_configuration-instance_method
       def update_launch_configuration: (
-                                         ?account_id: ::String,
-                                         ?boot_mode: ("LEGACY_BIOS" | "UEFI" | "USE_SOURCE"),
+                                         source_server_id: ::String,
+                                         ?name: ::String,
+                                         ?launch_disposition: ("STOPPED" | "STARTED"),
+                                         ?target_instance_type_right_sizing_method: ("NONE" | "BASIC"),
                                          ?copy_private_ip: bool,
                                          ?copy_tags: bool,
-                                         ?enable_map_auto_tagging: bool,
-                                         ?launch_disposition: ("STOPPED" | "STARTED"),
                                          ?licensing: {
                                            os_byol: bool?
                                          },
+                                         ?boot_mode: ("LEGACY_BIOS" | "UEFI" | "USE_SOURCE"),
+                                         ?post_launch_actions: Params::post_launch_actions,
+                                         ?enable_map_auto_tagging: bool,
                                          ?map_auto_tagging_mpe_id: ::String,
-                                         ?name: ::String,
-                                         ?post_launch_actions: {
-                                           cloud_watch_log_group_name: ::String?,
-                                           deployment: ("TEST_AND_CUTOVER" | "CUTOVER_ONLY" | "TEST_ONLY")?,
-                                           s3_log_bucket: ::String?,
-                                           s3_output_key_prefix: ::String?,
-                                           ssm_documents: Array[
-                                             {
-                                               action_name: ::String,
-                                               external_parameters: Hash[::String, {
-                                                   dynamic_path: ::String?
-                                                 }]?,
-                                               must_succeed_for_cutover: bool?,
-                                               parameters: Hash[::String, Array[
-                                                   {
-                                                     parameter_name: ::String,
-                                                     parameter_type: ("STRING")
-                                                   },
-                                                 ]]?,
-                                               ssm_document_name: ::String,
-                                               timeout_seconds: ::Integer?
-                                             },
-                                           ]?
-                                         },
-                                         source_server_id: ::String,
-                                         ?target_instance_type_right_sizing_method: ("NONE" | "BASIC")
+                                         ?account_id: ::String
                                        ) -> _UpdateLaunchConfigurationResponseSuccess
                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateLaunchConfigurationResponseSuccess
 
       interface _UpdateLaunchConfigurationTemplateResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::LaunchConfigurationTemplate]
-        def arn: () -> ::String
-        def associate_public_ip_address: () -> bool
-        def boot_mode: () -> ("LEGACY_BIOS" | "UEFI" | "USE_SOURCE")
-        def copy_private_ip: () -> bool
-        def copy_tags: () -> bool
-        def ec2_launch_template_id: () -> ::String
-        def enable_map_auto_tagging: () -> bool
-        def large_volume_conf: () -> Types::LaunchTemplateDiskConf
         def launch_configuration_template_id: () -> ::String
-        def launch_disposition: () -> ("STOPPED" | "STARTED")
-        def licensing: () -> Types::Licensing
-        def map_auto_tagging_mpe_id: () -> ::String
+        def arn: () -> ::String
         def post_launch_actions: () -> Types::PostLaunchActions
-        def small_volume_conf: () -> Types::LaunchTemplateDiskConf
-        def small_volume_max_size: () -> ::Integer
+        def enable_map_auto_tagging: () -> bool
+        def map_auto_tagging_mpe_id: () -> ::String
         def tags: () -> ::Hash[::String, ::String]
+        def ec2_launch_template_id: () -> ::String
+        def launch_disposition: () -> ("STOPPED" | "STARTED")
         def target_instance_type_right_sizing_method: () -> ("NONE" | "BASIC")
+        def copy_private_ip: () -> bool
+        def associate_public_ip_address: () -> bool
+        def copy_tags: () -> bool
+        def licensing: () -> Types::Licensing
+        def boot_mode: () -> ("LEGACY_BIOS" | "UEFI" | "USE_SOURCE")
+        def small_volume_max_size: () -> ::Integer
+        def small_volume_conf: () -> Types::LaunchTemplateDiskConf
+        def large_volume_conf: () -> Types::LaunchTemplateDiskConf
+        def enable_parameters_encryption: () -> bool
+        def parameters_encryption_key: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#update_launch_configuration_template-instance_method
       def update_launch_configuration_template: (
-                                                  ?associate_public_ip_address: bool,
-                                                  ?boot_mode: ("LEGACY_BIOS" | "UEFI" | "USE_SOURCE"),
-                                                  ?copy_private_ip: bool,
-                                                  ?copy_tags: bool,
-                                                  ?enable_map_auto_tagging: bool,
-                                                  ?large_volume_conf: {
-                                                    iops: ::Integer?,
-                                                    throughput: ::Integer?,
-                                                    volume_type: ("io1" | "io2" | "gp3" | "gp2" | "st1" | "sc1" | "standard")?
-                                                  },
                                                   launch_configuration_template_id: ::String,
+                                                  ?post_launch_actions: Params::post_launch_actions,
+                                                  ?enable_map_auto_tagging: bool,
+                                                  ?map_auto_tagging_mpe_id: ::String,
                                                   ?launch_disposition: ("STOPPED" | "STARTED"),
+                                                  ?target_instance_type_right_sizing_method: ("NONE" | "BASIC"),
+                                                  ?copy_private_ip: bool,
+                                                  ?associate_public_ip_address: bool,
+                                                  ?copy_tags: bool,
                                                   ?licensing: {
                                                     os_byol: bool?
                                                   },
-                                                  ?map_auto_tagging_mpe_id: ::String,
-                                                  ?post_launch_actions: {
-                                                    cloud_watch_log_group_name: ::String?,
-                                                    deployment: ("TEST_AND_CUTOVER" | "CUTOVER_ONLY" | "TEST_ONLY")?,
-                                                    s3_log_bucket: ::String?,
-                                                    s3_output_key_prefix: ::String?,
-                                                    ssm_documents: Array[
-                                                      {
-                                                        action_name: ::String,
-                                                        external_parameters: Hash[::String, {
-                                                            dynamic_path: ::String?
-                                                          }]?,
-                                                        must_succeed_for_cutover: bool?,
-                                                        parameters: Hash[::String, Array[
-                                                            {
-                                                              parameter_name: ::String,
-                                                              parameter_type: ("STRING")
-                                                            },
-                                                          ]]?,
-                                                        ssm_document_name: ::String,
-                                                        timeout_seconds: ::Integer?
-                                                      },
-                                                    ]?
-                                                  },
-                                                  ?small_volume_conf: {
-                                                    iops: ::Integer?,
-                                                    throughput: ::Integer?,
-                                                    volume_type: ("io1" | "io2" | "gp3" | "gp2" | "st1" | "sc1" | "standard")?
-                                                  },
+                                                  ?boot_mode: ("LEGACY_BIOS" | "UEFI" | "USE_SOURCE"),
                                                   ?small_volume_max_size: ::Integer,
-                                                  ?target_instance_type_right_sizing_method: ("NONE" | "BASIC")
+                                                  ?small_volume_conf: {
+                                                    volume_type: ("io1" | "io2" | "gp3" | "gp2" | "st1" | "sc1" | "standard")?,
+                                                    iops: ::Integer?,
+                                                    throughput: ::Integer?
+                                                  },
+                                                  ?large_volume_conf: {
+                                                    volume_type: ("io1" | "io2" | "gp3" | "gp2" | "st1" | "sc1" | "standard")?,
+                                                    iops: ::Integer?,
+                                                    throughput: ::Integer?
+                                                  },
+                                                  ?enable_parameters_encryption: bool,
+                                                  ?parameters_encryption_key: ::String
                                                 ) -> _UpdateLaunchConfigurationTemplateResponseSuccess
                                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateLaunchConfigurationTemplateResponseSuccess
 
+      interface _UpdateNetworkMigrationDefinitionResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::NetworkMigrationDefinition]
+        def arn: () -> ::String
+        def network_migration_definition_id: () -> ::String
+        def name: () -> ::String
+        def description: () -> ::String
+        def source_configurations: () -> ::Array[Types::SourceConfiguration]
+        def target_s3_configuration: () -> Types::TargetS3Configuration
+        def target_network: () -> Types::TargetNetwork
+        def target_deployment: () -> ("SINGLE_ACCOUNT" | "MULTI_ACCOUNT")
+        def created_at: () -> ::Time
+        def updated_at: () -> ::Time
+        def tags: () -> ::Hash[::String, ::String]
+        def scope_tags: () -> ::Hash[::String, ::String]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#update_network_migration_definition-instance_method
+      def update_network_migration_definition: (
+                                                 network_migration_definition_id: ::String,
+                                                 ?name: ::String,
+                                                 ?description: ::String,
+                                                 ?source_configurations: Array[
+                                                   Params::source_configuration
+                                                 ],
+                                                 ?target_s3_configuration: {
+                                                   s3_bucket: ::String?,
+                                                   s3_bucket_owner: ::String?
+                                                 },
+                                                 ?target_network: {
+                                                   topology: ("ISOLATED_VPC" | "HUB_AND_SPOKE")?,
+                                                   inbound_cidr: ::String?,
+                                                   outbound_cidr: ::String?,
+                                                   inspection_cidr: ::String?
+                                                 },
+                                                 ?target_deployment: ("SINGLE_ACCOUNT" | "MULTI_ACCOUNT"),
+                                                 ?scope_tags: Hash[::String, ::String]
+                                               ) -> _UpdateNetworkMigrationDefinitionResponseSuccess
+                                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateNetworkMigrationDefinitionResponseSuccess
+
+      interface _UpdateNetworkMigrationMapperSegmentResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::NetworkMigrationMapperSegment]
+        def job_id: () -> ::String
+        def network_migration_execution_id: () -> ::String
+        def network_migration_definition_id: () -> ::String
+        def segment_id: () -> ::String
+        def segment_type: () -> ("WORKLOAD" | "APPLIANCE")
+        def name: () -> ::String
+        def description: () -> ::String
+        def logical_id: () -> ::String
+        def checksum: () -> Types::Checksum
+        def output_s3_configuration: () -> Types::S3Configuration
+        def created_at: () -> ::Time
+        def updated_at: () -> ::Time
+        def scope_tags: () -> ::Hash[::String, ::String]
+        def target_account: () -> ::String
+        def referenced_segments: () -> ::Array[::String]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#update_network_migration_mapper_segment-instance_method
+      def update_network_migration_mapper_segment: (
+                                                     network_migration_definition_id: ::String,
+                                                     network_migration_execution_id: ::String,
+                                                     segment_id: ::String,
+                                                     ?scope_tags: Hash[::String, ::String]
+                                                   ) -> _UpdateNetworkMigrationMapperSegmentResponseSuccess
+                                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateNetworkMigrationMapperSegmentResponseSuccess
+
       interface _UpdateReplicationConfigurationResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ReplicationConfiguration]
+        def source_server_id: () -> ::String
+        def name: () -> ::String
+        def staging_area_subnet_id: () -> ::String
         def associate_default_security_group: () -> bool
-        def bandwidth_throttling: () -> ::Integer
-        def create_public_ip: () -> bool
-        def data_plane_routing: () -> ("PRIVATE_IP" | "PUBLIC_IP")
+        def replication_servers_security_groups_i_ds: () -> ::Array[::String]
+        def replication_server_instance_type: () -> ::String
+        def use_dedicated_replication_server: () -> bool
         def default_large_staging_disk_type: () -> ("GP2" | "ST1" | "GP3")
+        def replicated_disks: () -> ::Array[Types::ReplicationConfigurationReplicatedDisk]
         def ebs_encryption: () -> ("DEFAULT" | "CUSTOM")
         def ebs_encryption_key_arn: () -> ::String
-        def name: () -> ::String
-        def replicated_disks: () -> ::Array[Types::ReplicationConfigurationReplicatedDisk]
-        def replication_server_instance_type: () -> ::String
-        def replication_servers_security_groups_i_ds: () -> ::Array[::String]
-        def source_server_id: () -> ::String
-        def staging_area_subnet_id: () -> ::String
+        def bandwidth_throttling: () -> ::Integer
+        def data_plane_routing: () -> ("PRIVATE_IP" | "PUBLIC_IP")
+        def create_public_ip: () -> bool
         def staging_area_tags: () -> ::Hash[::String, ::String]
-        def use_dedicated_replication_server: () -> bool
         def use_fips_endpoint: () -> bool
+        def internet_protocol: () -> ("IPV4" | "IPV6")
+        def store_snapshot_on_local_zone: () -> bool
+        def storage_configuration: () -> Types::StorageConfiguration
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#update_replication_configuration-instance_method
       def update_replication_configuration: (
-                                              ?account_id: ::String,
-                                              ?associate_default_security_group: bool,
-                                              ?bandwidth_throttling: ::Integer,
-                                              ?create_public_ip: bool,
-                                              ?data_plane_routing: ("PRIVATE_IP" | "PUBLIC_IP"),
-                                              ?default_large_staging_disk_type: ("GP2" | "ST1" | "GP3"),
-                                              ?ebs_encryption: ("DEFAULT" | "CUSTOM"),
-                                              ?ebs_encryption_key_arn: ::String,
+                                              source_server_id: ::String,
                                               ?name: ::String,
+                                              ?staging_area_subnet_id: ::String,
+                                              ?associate_default_security_group: bool,
+                                              ?replication_servers_security_groups_i_ds: Array[::String],
+                                              ?replication_server_instance_type: ::String,
+                                              ?use_dedicated_replication_server: bool,
+                                              ?default_large_staging_disk_type: ("GP2" | "ST1" | "GP3"),
                                               ?replicated_disks: Array[
                                                 {
                                                   device_name: ::String?,
-                                                  iops: ::Integer?,
                                                   is_boot_disk: bool?,
-                                                  staging_disk_type: ("AUTO" | "GP2" | "IO1" | "SC1" | "ST1" | "STANDARD" | "GP3" | "IO2")?,
+                                                  staging_disk_type: ("AUTO" | "GP2" | "IO1" | "SC1" | "ST1" | "STANDARD" | "GP3" | "IO2" | "FSX_ONTAP")?,
+                                                  iops: ::Integer?,
                                                   throughput: ::Integer?
-                                                },
+                                                }
                                               ],
-                                              ?replication_server_instance_type: ::String,
-                                              ?replication_servers_security_groups_i_ds: Array[::String],
-                                              source_server_id: ::String,
-                                              ?staging_area_subnet_id: ::String,
+                                              ?ebs_encryption: ("DEFAULT" | "CUSTOM"),
+                                              ?ebs_encryption_key_arn: ::String,
+                                              ?bandwidth_throttling: ::Integer,
+                                              ?data_plane_routing: ("PRIVATE_IP" | "PUBLIC_IP"),
+                                              ?create_public_ip: bool,
                                               ?staging_area_tags: Hash[::String, ::String],
-                                              ?use_dedicated_replication_server: bool,
-                                              ?use_fips_endpoint: bool
+                                              ?use_fips_endpoint: bool,
+                                              ?account_id: ::String,
+                                              ?internet_protocol: ("IPV4" | "IPV6"),
+                                              ?store_snapshot_on_local_zone: bool,
+                                              ?storage_configuration: {
+                                                storage_type: ("EBS" | "FSX_ONTAP"),
+                                                fsx_ontap_configuration: {
+                                                  storage_virtual_machine_id: ::String,
+                                                  credentials_secret_arn: ::String
+                                                }?
+                                              }
                                             ) -> _UpdateReplicationConfigurationResponseSuccess
                                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateReplicationConfigurationResponseSuccess
 
       interface _UpdateReplicationConfigurationTemplateResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ReplicationConfigurationTemplate]
+        def replication_configuration_template_id: () -> ::String
         def arn: () -> ::String
+        def staging_area_subnet_id: () -> ::String
         def associate_default_security_group: () -> bool
-        def bandwidth_throttling: () -> ::Integer
-        def create_public_ip: () -> bool
-        def data_plane_routing: () -> ("PRIVATE_IP" | "PUBLIC_IP")
+        def replication_servers_security_groups_i_ds: () -> ::Array[::String]
+        def replication_server_instance_type: () -> ::String
+        def use_dedicated_replication_server: () -> bool
         def default_large_staging_disk_type: () -> ("GP2" | "ST1" | "GP3")
         def ebs_encryption: () -> ("DEFAULT" | "CUSTOM")
         def ebs_encryption_key_arn: () -> ::String
-        def replication_configuration_template_id: () -> ::String
-        def replication_server_instance_type: () -> ::String
-        def replication_servers_security_groups_i_ds: () -> ::Array[::String]
-        def staging_area_subnet_id: () -> ::String
+        def bandwidth_throttling: () -> ::Integer
+        def data_plane_routing: () -> ("PRIVATE_IP" | "PUBLIC_IP")
+        def create_public_ip: () -> bool
         def staging_area_tags: () -> ::Hash[::String, ::String]
-        def tags: () -> ::Hash[::String, ::String]
-        def use_dedicated_replication_server: () -> bool
         def use_fips_endpoint: () -> bool
+        def tags: () -> ::Hash[::String, ::String]
+        def internet_protocol: () -> ("IPV4" | "IPV6")
+        def store_snapshot_on_local_zone: () -> bool
+        def storage_configuration: () -> Types::StorageConfiguration
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#update_replication_configuration_template-instance_method
       def update_replication_configuration_template: (
+                                                       replication_configuration_template_id: ::String,
                                                        ?arn: ::String,
+                                                       ?staging_area_subnet_id: ::String,
                                                        ?associate_default_security_group: bool,
-                                                       ?bandwidth_throttling: ::Integer,
-                                                       ?create_public_ip: bool,
-                                                       ?data_plane_routing: ("PRIVATE_IP" | "PUBLIC_IP"),
+                                                       ?replication_servers_security_groups_i_ds: Array[::String],
+                                                       ?replication_server_instance_type: ::String,
+                                                       ?use_dedicated_replication_server: bool,
                                                        ?default_large_staging_disk_type: ("GP2" | "ST1" | "GP3"),
                                                        ?ebs_encryption: ("DEFAULT" | "CUSTOM"),
                                                        ?ebs_encryption_key_arn: ::String,
-                                                       replication_configuration_template_id: ::String,
-                                                       ?replication_server_instance_type: ::String,
-                                                       ?replication_servers_security_groups_i_ds: Array[::String],
-                                                       ?staging_area_subnet_id: ::String,
+                                                       ?bandwidth_throttling: ::Integer,
+                                                       ?data_plane_routing: ("PRIVATE_IP" | "PUBLIC_IP"),
+                                                       ?create_public_ip: bool,
                                                        ?staging_area_tags: Hash[::String, ::String],
-                                                       ?use_dedicated_replication_server: bool,
-                                                       ?use_fips_endpoint: bool
+                                                       ?use_fips_endpoint: bool,
+                                                       ?internet_protocol: ("IPV4" | "IPV6"),
+                                                       ?store_snapshot_on_local_zone: bool,
+                                                       ?storage_configuration: {
+                                                         storage_type: ("EBS" | "FSX_ONTAP"),
+                                                         fsx_ontap_configuration: {
+                                                           storage_virtual_machine_id: ::String,
+                                                           credentials_secret_arn: ::String
+                                                         }?
+                                                       }
                                                      ) -> _UpdateReplicationConfigurationTemplateResponseSuccess
                                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateReplicationConfigurationTemplateResponseSuccess
 
       interface _UpdateSourceServerResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::SourceServer]
-        def application_id: () -> ::String
-        def arn: () -> ::String
-        def connector_action: () -> Types::SourceServerConnectorAction
-        def data_replication_info: () -> Types::DataReplicationInfo
-        def fqdn_for_action_framework: () -> ::String
-        def is_archived: () -> bool
-        def launched_instance: () -> Types::LaunchedInstance
-        def life_cycle: () -> Types::LifeCycle
-        def replication_type: () -> ("AGENT_BASED" | "SNAPSHOT_SHIPPING")
-        def source_properties: () -> Types::SourceProperties
         def source_server_id: () -> ::String
+        def arn: () -> ::String
+        def is_archived: () -> bool
         def tags: () -> ::Hash[::String, ::String]
-        def user_provided_id: () -> ::String
+        def launched_instance: () -> Types::LaunchedInstance
+        def data_replication_info: () -> Types::DataReplicationInfo
+        def life_cycle: () -> Types::LifeCycle
+        def source_properties: () -> Types::SourceProperties
+        def replication_type: () -> ("AGENT_BASED" | "SNAPSHOT_SHIPPING")
         def vcenter_client_id: () -> ::String
+        def application_id: () -> ::String
+        def user_provided_id: () -> ::String
+        def fqdn_for_action_framework: () -> ::String
+        def connector_action: () -> Types::SourceServerConnectorAction
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#update_source_server-instance_method
       def update_source_server: (
                                   ?account_id: ::String,
+                                  source_server_id: ::String,
                                   ?connector_action: {
-                                    connector_arn: ::String?,
-                                    credentials_secret_arn: ::String?
+                                    credentials_secret_arn: ::String?,
+                                    connector_arn: ::String?
                                   },
-                                  source_server_id: ::String
+                                  ?user_provided_id: ::String,
+                                  ?fqdn_for_action_framework: ::String,
+                                  ?platform: ::String
                                 ) -> _UpdateSourceServerResponseSuccess
                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateSourceServerResponseSuccess
 
       interface _UpdateSourceServerReplicationTypeResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::SourceServer]
-        def application_id: () -> ::String
-        def arn: () -> ::String
-        def connector_action: () -> Types::SourceServerConnectorAction
-        def data_replication_info: () -> Types::DataReplicationInfo
-        def fqdn_for_action_framework: () -> ::String
-        def is_archived: () -> bool
-        def launched_instance: () -> Types::LaunchedInstance
-        def life_cycle: () -> Types::LifeCycle
-        def replication_type: () -> ("AGENT_BASED" | "SNAPSHOT_SHIPPING")
-        def source_properties: () -> Types::SourceProperties
         def source_server_id: () -> ::String
+        def arn: () -> ::String
+        def is_archived: () -> bool
         def tags: () -> ::Hash[::String, ::String]
-        def user_provided_id: () -> ::String
+        def launched_instance: () -> Types::LaunchedInstance
+        def data_replication_info: () -> Types::DataReplicationInfo
+        def life_cycle: () -> Types::LifeCycle
+        def source_properties: () -> Types::SourceProperties
+        def replication_type: () -> ("AGENT_BASED" | "SNAPSHOT_SHIPPING")
         def vcenter_client_id: () -> ::String
+        def application_id: () -> ::String
+        def user_provided_id: () -> ::String
+        def fqdn_for_action_framework: () -> ::String
+        def connector_action: () -> Types::SourceServerConnectorAction
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#update_source_server_replication_type-instance_method
       def update_source_server_replication_type: (
-                                                   ?account_id: ::String,
+                                                   source_server_id: ::String,
                                                    replication_type: ("AGENT_BASED" | "SNAPSHOT_SHIPPING"),
-                                                   source_server_id: ::String
+                                                   ?account_id: ::String
                                                  ) -> _UpdateSourceServerReplicationTypeResponseSuccess
                                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateSourceServerReplicationTypeResponseSuccess
 
       interface _UpdateWaveResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::Wave]
+        def wave_id: () -> ::String
         def arn: () -> ::String
-        def creation_date_time: () -> ::String
+        def name: () -> ::String
         def description: () -> ::String
         def is_archived: () -> bool
-        def last_modified_date_time: () -> ::String
-        def name: () -> ::String
-        def tags: () -> ::Hash[::String, ::String]
         def wave_aggregated_status: () -> Types::WaveAggregatedStatus
-        def wave_id: () -> ::String
+        def creation_date_time: () -> ::String
+        def last_modified_date_time: () -> ::String
+        def tags: () -> ::Hash[::String, ::String]
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Mgn/Client.html#update_wave-instance_method
       def update_wave: (
-                         ?account_id: ::String,
-                         ?description: ::String,
+                         wave_id: ::String,
                          ?name: ::String,
-                         wave_id: ::String
+                         ?description: ::String,
+                         ?account_id: ::String
                        ) -> _UpdateWaveResponseSuccess
                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateWaveResponseSuccess
     end

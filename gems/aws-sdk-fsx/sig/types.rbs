@@ -8,6 +8,12 @@
 module Aws::FSx
   module Types
 
+    class AccessPointAlreadyOwnedByYou
+      attr_accessor error_code: ::String
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
     class ActiveDirectoryBackupAttributes
       attr_accessor domain_name: ::String
       attr_accessor active_directory_id: ::String
@@ -17,7 +23,7 @@ module Aws::FSx
 
     class ActiveDirectoryError
       attr_accessor active_directory_id: ::String
-      attr_accessor type: ("DOMAIN_NOT_FOUND" | "INCOMPATIBLE_DOMAIN_MODE" | "WRONG_VPC" | "INVALID_DOMAIN_STAGE")
+      attr_accessor type: ("DOMAIN_NOT_FOUND" | "INCOMPATIBLE_DOMAIN_MODE" | "WRONG_VPC" | "INVALID_NETWORK_TYPE" | "INVALID_DOMAIN_STAGE")
       attr_accessor message: ::String
       SENSITIVE: []
     end
@@ -26,13 +32,14 @@ module Aws::FSx
       attr_accessor administrative_action_type: ("FILE_SYSTEM_UPDATE" | "STORAGE_OPTIMIZATION" | "FILE_SYSTEM_ALIAS_ASSOCIATION" | "FILE_SYSTEM_ALIAS_DISASSOCIATION" | "VOLUME_UPDATE" | "SNAPSHOT_UPDATE" | "RELEASE_NFS_V3_LOCKS" | "VOLUME_RESTORE" | "THROUGHPUT_OPTIMIZATION" | "IOPS_OPTIMIZATION" | "STORAGE_TYPE_OPTIMIZATION" | "MISCONFIGURED_STATE_RECOVERY" | "VOLUME_UPDATE_WITH_SNAPSHOT" | "VOLUME_INITIALIZE_WITH_SNAPSHOT" | "DOWNLOAD_DATA_FROM_BACKUP")
       attr_accessor progress_percent: ::Integer
       attr_accessor request_time: ::Time
-      attr_accessor status: ("FAILED" | "IN_PROGRESS" | "PENDING" | "COMPLETED" | "UPDATED_OPTIMIZING" | "OPTIMIZING")
+      attr_accessor status: ("FAILED" | "IN_PROGRESS" | "PENDING" | "COMPLETED" | "UPDATED_OPTIMIZING" | "OPTIMIZING" | "PAUSED" | "CANCELLED")
       attr_accessor target_file_system_values: Types::FileSystem
       attr_accessor failure_details: Types::AdministrativeActionFailureDetails
       attr_accessor target_volume_values: Types::Volume
       attr_accessor target_snapshot_values: Types::Snapshot
       attr_accessor total_transfer_bytes: ::Integer
       attr_accessor remaining_transfer_bytes: ::Integer
+      attr_accessor message: ::String
       SENSITIVE: []
     end
 
@@ -190,6 +197,39 @@ module Aws::FSx
       SENSITIVE: []
     end
 
+    class CreateAndAttachS3AccessPointOntapConfiguration
+      attr_accessor volume_id: ::String
+      attr_accessor file_system_identity: Types::OntapFileSystemIdentity
+      SENSITIVE: []
+    end
+
+    class CreateAndAttachS3AccessPointOpenZFSConfiguration
+      attr_accessor volume_id: ::String
+      attr_accessor file_system_identity: Types::OpenZFSFileSystemIdentity
+      SENSITIVE: []
+    end
+
+    class CreateAndAttachS3AccessPointRequest
+      attr_accessor client_request_token: ::String
+      attr_accessor name: ::String
+      attr_accessor type: ("OPENZFS" | "ONTAP")
+      attr_accessor open_zfs_configuration: Types::CreateAndAttachS3AccessPointOpenZFSConfiguration
+      attr_accessor ontap_configuration: Types::CreateAndAttachS3AccessPointOntapConfiguration
+      attr_accessor s3_access_point: Types::CreateAndAttachS3AccessPointS3Configuration
+      SENSITIVE: []
+    end
+
+    class CreateAndAttachS3AccessPointResponse
+      attr_accessor s3_access_point_attachment: Types::S3AccessPointAttachment
+      SENSITIVE: []
+    end
+
+    class CreateAndAttachS3AccessPointS3Configuration
+      attr_accessor vpc_configuration: Types::S3AccessPointVpcConfiguration
+      attr_accessor policy: ::String
+      SENSITIVE: []
+    end
+
     class CreateBackupRequest
       attr_accessor file_system_id: ::String
       attr_accessor client_request_token: ::String
@@ -278,6 +318,7 @@ module Aws::FSx
       attr_accessor file_system_type_version: ::String
       attr_accessor open_zfs_configuration: Types::CreateFileSystemOpenZFSConfiguration
       attr_accessor storage_capacity: ::Integer
+      attr_accessor network_type: ("IPV4" | "DUAL")
       SENSITIVE: []
     end
 
@@ -303,6 +344,8 @@ module Aws::FSx
       attr_accessor log_configuration: Types::LustreLogCreateConfiguration
       attr_accessor root_squash_configuration: Types::LustreRootSquashConfiguration
       attr_accessor metadata_configuration: Types::CreateFileSystemLustreMetadataConfiguration
+      attr_accessor throughput_capacity: ::Integer
+      attr_accessor data_read_cache_configuration: Types::LustreReadCacheConfiguration
       SENSITIVE: []
     end
 
@@ -325,6 +368,7 @@ module Aws::FSx
       attr_accessor weekly_maintenance_start_time: ::String
       attr_accessor ha_pairs: ::Integer
       attr_accessor throughput_capacity_per_ha_pair: ::Integer
+      attr_accessor endpoint_ipv_6_address_range: ::String
       SENSITIVE: [:fsx_admin_password]
     end
 
@@ -340,6 +384,7 @@ module Aws::FSx
       attr_accessor root_volume_configuration: Types::OpenZFSCreateRootVolumeConfiguration
       attr_accessor preferred_subnet_id: ::String
       attr_accessor endpoint_ip_address_range: ::String
+      attr_accessor endpoint_ipv_6_address_range: ::String
       attr_accessor route_table_ids: ::Array[::String]
       attr_accessor read_cache_configuration: Types::OpenZFSReadCacheConfiguration
       SENSITIVE: []
@@ -359,6 +404,7 @@ module Aws::FSx
       attr_accessor ontap_configuration: Types::CreateFileSystemOntapConfiguration
       attr_accessor file_system_type_version: ::String
       attr_accessor open_zfs_configuration: Types::CreateFileSystemOpenZFSConfiguration
+      attr_accessor network_type: ("IPV4" | "DUAL")
       SENSITIVE: []
     end
 
@@ -380,6 +426,7 @@ module Aws::FSx
       attr_accessor aliases: ::Array[::String]
       attr_accessor audit_log_configuration: Types::WindowsAuditLogCreateConfiguration
       attr_accessor disk_iops_configuration: Types::DiskIopsConfiguration
+      attr_accessor fsrm_configuration: Types::WindowsFsrmConfiguration
       SENSITIVE: []
     end
 
@@ -821,6 +868,20 @@ module Aws::FSx
       SENSITIVE: []
     end
 
+    class DescribeS3AccessPointAttachmentsRequest
+      attr_accessor names: ::Array[::String]
+      attr_accessor filters: ::Array[Types::S3AccessPointAttachmentsFilter]
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeS3AccessPointAttachmentsResponse
+      attr_accessor s3_access_point_attachments: ::Array[Types::S3AccessPointAttachment]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
     class DescribeSharedVpcConfigurationRequest < Aws::EmptyStructure
     end
 
@@ -869,6 +930,18 @@ module Aws::FSx
     class DescribeVolumesResponse
       attr_accessor volumes: ::Array[Types::Volume]
       attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class DetachAndDeleteS3AccessPointRequest
+      attr_accessor client_request_token: ::String
+      attr_accessor name: ::String
+      SENSITIVE: []
+    end
+
+    class DetachAndDeleteS3AccessPointResponse
+      attr_accessor lifecycle: ("AVAILABLE" | "CREATING" | "DELETING" | "UPDATING" | "FAILED" | "MISCONFIGURED")
+      attr_accessor name: ::String
       SENSITIVE: []
     end
 
@@ -999,12 +1072,14 @@ module Aws::FSx
       attr_accessor ontap_configuration: Types::OntapFileSystemConfiguration
       attr_accessor file_system_type_version: ::String
       attr_accessor open_zfs_configuration: Types::OpenZFSFileSystemConfiguration
+      attr_accessor network_type: ("IPV4" | "DUAL")
       SENSITIVE: []
     end
 
     class FileSystemEndpoint
       attr_accessor dns_name: ::String
       attr_accessor ip_addresses: ::Array[::String]
+      attr_accessor ipv_6_addresses: ::Array[::String]
       SENSITIVE: []
     end
 
@@ -1052,6 +1127,12 @@ module Aws::FSx
       SENSITIVE: []
     end
 
+    class InvalidAccessPoint
+      attr_accessor error_code: ::String
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
     class InvalidDataRepositoryType
       attr_accessor message: ::String
       SENSITIVE: []
@@ -1086,6 +1167,12 @@ module Aws::FSx
     end
 
     class InvalidRegion
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class InvalidRequest
+      attr_accessor error_code: ::String
       attr_accessor message: ::String
       SENSITIVE: []
     end
@@ -1128,6 +1215,8 @@ module Aws::FSx
       attr_accessor root_squash_configuration: Types::LustreRootSquashConfiguration
       attr_accessor metadata_configuration: Types::FileSystemLustreMetadataConfiguration
       attr_accessor efa_enabled: bool
+      attr_accessor throughput_capacity: ::Integer
+      attr_accessor data_read_cache_configuration: Types::LustreReadCacheConfiguration
       SENSITIVE: []
     end
 
@@ -1140,6 +1229,12 @@ module Aws::FSx
     class LustreLogCreateConfiguration
       attr_accessor level: ("DISABLED" | "WARN_ONLY" | "ERROR_ONLY" | "WARN_ERROR")
       attr_accessor destination: ::String
+      SENSITIVE: []
+    end
+
+    class LustreReadCacheConfiguration
+      attr_accessor sizing_mode: ("NO_CACHE" | "USER_PROVISIONED" | "PROPORTIONAL_TO_THROUGHPUT_CAPACITY")
+      attr_accessor size_gi_b: ::Integer
       SENSITIVE: []
     end
 
@@ -1191,7 +1286,20 @@ module Aws::FSx
       attr_accessor fsx_admin_password: ::String
       attr_accessor ha_pairs: ::Integer
       attr_accessor throughput_capacity_per_ha_pair: ::Integer
+      attr_accessor endpoint_ipv_6_address_range: ::String
       SENSITIVE: [:fsx_admin_password]
+    end
+
+    class OntapFileSystemIdentity
+      attr_accessor type: ("UNIX" | "WINDOWS")
+      attr_accessor unix_user: Types::OntapUnixFileSystemUser
+      attr_accessor windows_user: Types::OntapWindowsFileSystemUser
+      SENSITIVE: []
+    end
+
+    class OntapUnixFileSystemUser
+      attr_accessor name: ::String
+      SENSITIVE: []
     end
 
     class OntapVolumeConfiguration
@@ -1211,6 +1319,11 @@ module Aws::FSx
       attr_accessor volume_style: ("FLEXVOL" | "FLEXGROUP")
       attr_accessor aggregate_configuration: Types::AggregateConfiguration
       attr_accessor size_in_bytes: ::Integer
+      SENSITIVE: []
+    end
+
+    class OntapWindowsFileSystemUser
+      attr_accessor name: ::String
       SENSITIVE: []
     end
 
@@ -1242,9 +1355,17 @@ module Aws::FSx
       attr_accessor root_volume_id: ::String
       attr_accessor preferred_subnet_id: ::String
       attr_accessor endpoint_ip_address_range: ::String
+      attr_accessor endpoint_ipv_6_address_range: ::String
       attr_accessor route_table_ids: ::Array[::String]
       attr_accessor endpoint_ip_address: ::String
+      attr_accessor endpoint_ipv_6_address: ::String
       attr_accessor read_cache_configuration: Types::OpenZFSReadCacheConfiguration
+      SENSITIVE: []
+    end
+
+    class OpenZFSFileSystemIdentity
+      attr_accessor type: ("POSIX")
+      attr_accessor posix_user: Types::OpenZFSPosixFileSystemUser
       SENSITIVE: []
     end
 
@@ -1256,6 +1377,13 @@ module Aws::FSx
     class OpenZFSOriginSnapshotConfiguration
       attr_accessor snapshot_arn: ::String
       attr_accessor copy_strategy: ("CLONE" | "FULL_COPY" | "INCREMENTAL_COPY")
+      SENSITIVE: []
+    end
+
+    class OpenZFSPosixFileSystemUser
+      attr_accessor uid: ::Integer
+      attr_accessor gid: ::Integer
+      attr_accessor secondary_gids: ::Array[::Integer]
       SENSITIVE: []
     end
 
@@ -1343,6 +1471,53 @@ module Aws::FSx
       SENSITIVE: []
     end
 
+    class S3AccessPoint
+      attr_accessor resource_arn: ::String
+      attr_accessor alias: ::String
+      attr_accessor vpc_configuration: Types::S3AccessPointVpcConfiguration
+      SENSITIVE: []
+    end
+
+    class S3AccessPointAttachment
+      attr_accessor lifecycle: ("AVAILABLE" | "CREATING" | "DELETING" | "UPDATING" | "FAILED" | "MISCONFIGURED")
+      attr_accessor lifecycle_transition_reason: Types::LifecycleTransitionReason
+      attr_accessor creation_time: ::Time
+      attr_accessor name: ::String
+      attr_accessor type: ("OPENZFS" | "ONTAP")
+      attr_accessor open_zfs_configuration: Types::S3AccessPointOpenZFSConfiguration
+      attr_accessor ontap_configuration: Types::S3AccessPointOntapConfiguration
+      attr_accessor s3_access_point: Types::S3AccessPoint
+      SENSITIVE: []
+    end
+
+    class S3AccessPointAttachmentNotFound
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class S3AccessPointAttachmentsFilter
+      attr_accessor name: ("file-system-id" | "volume-id" | "type")
+      attr_accessor values: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class S3AccessPointOntapConfiguration
+      attr_accessor volume_id: ::String
+      attr_accessor file_system_identity: Types::OntapFileSystemIdentity
+      SENSITIVE: []
+    end
+
+    class S3AccessPointOpenZFSConfiguration
+      attr_accessor volume_id: ::String
+      attr_accessor file_system_identity: Types::OpenZFSFileSystemIdentity
+      SENSITIVE: []
+    end
+
+    class S3AccessPointVpcConfiguration
+      attr_accessor vpc_id: ::String
+      SENSITIVE: []
+    end
+
     class S3DataRepositoryConfiguration
       attr_accessor auto_import_policy: Types::AutoImportPolicy
       attr_accessor auto_export_policy: Types::AutoExportPolicy
@@ -1355,6 +1530,7 @@ module Aws::FSx
       attr_accessor file_system_administrators_group: ::String
       attr_accessor user_name: ::String
       attr_accessor dns_ips: ::Array[::String]
+      attr_accessor domain_join_service_account_secret: ::String
       SENSITIVE: []
     end
 
@@ -1365,6 +1541,7 @@ module Aws::FSx
       attr_accessor user_name: ::String
       attr_accessor password: ::String
       attr_accessor dns_ips: ::Array[::String]
+      attr_accessor domain_join_service_account_secret: ::String
       SENSITIVE: [:password]
     end
 
@@ -1375,6 +1552,7 @@ module Aws::FSx
       attr_accessor domain_name: ::String
       attr_accessor organizational_unit_distinguished_name: ::String
       attr_accessor file_system_administrators_group: ::String
+      attr_accessor domain_join_service_account_secret: ::String
       SENSITIVE: [:password]
     end
 
@@ -1479,6 +1657,7 @@ module Aws::FSx
     class SvmEndpoint
       attr_accessor dns_name: ::String
       attr_accessor ip_addresses: ::Array[::String]
+      attr_accessor ipv_6_addresses: ::Array[::String]
       SENSITIVE: []
     end
 
@@ -1508,6 +1687,12 @@ module Aws::FSx
     class TieringPolicy
       attr_accessor cooling_period: ::Integer
       attr_accessor name: ("SNAPSHOT_ONLY" | "AUTO" | "ALL" | "NONE")
+      SENSITIVE: []
+    end
+
+    class TooManyAccessPoints
+      attr_accessor error_code: ::String
+      attr_accessor message: ::String
       SENSITIVE: []
     end
 
@@ -1565,6 +1750,8 @@ module Aws::FSx
       attr_accessor root_squash_configuration: Types::LustreRootSquashConfiguration
       attr_accessor per_unit_storage_throughput: ::Integer
       attr_accessor metadata_configuration: Types::UpdateFileSystemLustreMetadataConfiguration
+      attr_accessor throughput_capacity: ::Integer
+      attr_accessor data_read_cache_configuration: Types::LustreReadCacheConfiguration
       SENSITIVE: []
     end
 
@@ -1585,6 +1772,7 @@ module Aws::FSx
       attr_accessor remove_route_table_ids: ::Array[::String]
       attr_accessor throughput_capacity_per_ha_pair: ::Integer
       attr_accessor ha_pairs: ::Integer
+      attr_accessor endpoint_ipv_6_address_range: ::String
       SENSITIVE: [:fsx_admin_password]
     end
 
@@ -1599,6 +1787,7 @@ module Aws::FSx
       attr_accessor add_route_table_ids: ::Array[::String]
       attr_accessor remove_route_table_ids: ::Array[::String]
       attr_accessor read_cache_configuration: Types::OpenZFSReadCacheConfiguration
+      attr_accessor endpoint_ipv_6_address_range: ::String
       SENSITIVE: []
     end
 
@@ -1612,6 +1801,7 @@ module Aws::FSx
       attr_accessor open_zfs_configuration: Types::UpdateFileSystemOpenZFSConfiguration
       attr_accessor storage_type: ("SSD" | "HDD" | "INTELLIGENT_TIERING")
       attr_accessor file_system_type_version: ::String
+      attr_accessor network_type: ("IPV4" | "DUAL")
       SENSITIVE: []
     end
 
@@ -1628,6 +1818,7 @@ module Aws::FSx
       attr_accessor self_managed_active_directory_configuration: Types::SelfManagedActiveDirectoryConfigurationUpdates
       attr_accessor audit_log_configuration: Types::WindowsAuditLogCreateConfiguration
       attr_accessor disk_iops_configuration: Types::DiskIopsConfiguration
+      attr_accessor fsrm_configuration: Types::WindowsFsrmConfiguration
       SENSITIVE: []
     end
 
@@ -1777,6 +1968,14 @@ module Aws::FSx
       attr_accessor aliases: ::Array[Types::Alias]
       attr_accessor audit_log_configuration: Types::WindowsAuditLogConfiguration
       attr_accessor disk_iops_configuration: Types::DiskIopsConfiguration
+      attr_accessor preferred_file_server_ipv_6: ::String
+      attr_accessor fsrm_configuration: Types::WindowsFsrmConfiguration
+      SENSITIVE: []
+    end
+
+    class WindowsFsrmConfiguration
+      attr_accessor fsrm_service_enabled: bool
+      attr_accessor event_log_destination: ::String
       SENSITIVE: []
     end
   end

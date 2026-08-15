@@ -95,8 +95,8 @@ module Aws::AccessAnalyzer
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::AccessAnalyzer
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::AccessAnalyzer
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::AccessAnalyzer
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::AccessAnalyzer
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::AccessAnalyzer
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::AccessAnalyzer
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::AccessAnalyzer
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -779,7 +783,7 @@ module Aws::AccessAnalyzer
     #
     #   resp = client.check_no_public_access({
     #     policy_document: "AccessCheckPolicyDocument", # required
-    #     resource_type: "AWS::DynamoDB::Table", # required, accepts AWS::DynamoDB::Table, AWS::DynamoDB::Stream, AWS::EFS::FileSystem, AWS::OpenSearchService::Domain, AWS::Kinesis::Stream, AWS::Kinesis::StreamConsumer, AWS::KMS::Key, AWS::Lambda::Function, AWS::S3::Bucket, AWS::S3::AccessPoint, AWS::S3Express::DirectoryBucket, AWS::S3::Glacier, AWS::S3Outposts::Bucket, AWS::S3Outposts::AccessPoint, AWS::SecretsManager::Secret, AWS::SNS::Topic, AWS::SQS::Queue, AWS::IAM::AssumeRolePolicyDocument
+    #     resource_type: "AWS::DynamoDB::Table", # required, accepts AWS::DynamoDB::Table, AWS::DynamoDB::Stream, AWS::EFS::FileSystem, AWS::OpenSearchService::Domain, AWS::Kinesis::Stream, AWS::Kinesis::StreamConsumer, AWS::KMS::Key, AWS::Lambda::Function, AWS::S3::Bucket, AWS::S3::AccessPoint, AWS::S3Express::DirectoryBucket, AWS::S3::Glacier, AWS::S3Outposts::Bucket, AWS::S3Outposts::AccessPoint, AWS::SecretsManager::Secret, AWS::SNS::Topic, AWS::SQS::Queue, AWS::IAM::AssumeRolePolicyDocument, AWS::S3Tables::TableBucket, AWS::ApiGateway::RestApi, AWS::CodeArtifact::Domain, AWS::Backup::BackupVault, AWS::CloudTrail::Dashboard, AWS::CloudTrail::EventDataStore, AWS::S3Tables::Table, AWS::S3Express::AccessPoint
     #   })
     #
     # @example Response structure
@@ -931,6 +935,18 @@ module Aws::AccessAnalyzer
     #         },
     #         s3_express_directory_bucket: {
     #           bucket_policy: "S3ExpressDirectoryBucketPolicy",
+    #           access_points: {
+    #             "S3ExpressDirectoryAccessPointArn" => {
+    #               access_point_policy: "AccessPointPolicy",
+    #               network_origin: {
+    #                 vpc_configuration: {
+    #                   vpc_id: "VpcId", # required
+    #                 },
+    #                 internet_configuration: {
+    #                 },
+    #               },
+    #             },
+    #           },
     #         },
     #         dynamodb_stream: {
     #           stream_policy: "DynamodbStreamPolicy",
@@ -962,10 +978,9 @@ module Aws::AccessAnalyzer
     #   The name of the analyzer to create.
     #
     # @option params [required, String] :type
-    #   The type of analyzer to create. Only `ACCOUNT`, `ORGANIZATION`,
-    #   `ACCOUNT_UNUSED_ACCESS`, and `ORGANIZATION_UNUSED_ACCESS` analyzers
-    #   are supported. You can create only one analyzer per account per
-    #   Region. You can create up to 5 analyzers per organization per Region.
+    #   The type of analyzer to create. You can create only one analyzer per
+    #   account per Region. You can create up to 5 analyzers per organization
+    #   per Region.
     #
     # @option params [Array<Types::InlineArchiveRule>] :archive_rules
     #   Specifies the archive rules to add for the analyzer. Archive rules
@@ -992,7 +1007,9 @@ module Aws::AccessAnalyzer
     # @option params [Types::AnalyzerConfiguration] :configuration
     #   Specifies the configuration of the analyzer. If the analyzer is an
     #   unused access analyzer, the specified scope of unused access is used
-    #   for the configuration.
+    #   for the configuration. If the analyzer is an internal access analyzer,
+    #   the specified internal access analysis rules are used for the
+    #   configuration.
     #
     # @return [Types::CreateAnalyzerResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1001,8 +1018,8 @@ module Aws::AccessAnalyzer
     # @example Request syntax with placeholder values
     #
     #   resp = client.create_analyzer({
-    #     analyzer_name: "Name", # required
-    #     type: "ACCOUNT", # required, accepts ACCOUNT, ORGANIZATION, ACCOUNT_UNUSED_ACCESS, ORGANIZATION_UNUSED_ACCESS
+    #     analyzer_name: "AnalyzerName", # required
+    #     type: "ACCOUNT", # required, accepts ACCOUNT, ORGANIZATION, ACCOUNT_UNUSED_ACCESS, ORGANIZATION_UNUSED_ACCESS, ACCOUNT_INTERNAL_ACCESS, ORGANIZATION_INTERNAL_ACCESS
     #     archive_rules: [
     #       {
     #         rule_name: "Name", # required
@@ -1032,6 +1049,17 @@ module Aws::AccessAnalyzer
     #                   "String" => "String",
     #                 },
     #               ],
+    #             },
+    #           ],
+    #         },
+    #       },
+    #       internal_access: {
+    #         analysis_rule: {
+    #           inclusions: [
+    #             {
+    #               account_ids: ["String"],
+    #               resource_types: ["AWS::S3::Bucket"], # accepts AWS::S3::Bucket, AWS::IAM::Role, AWS::SQS::Queue, AWS::Lambda::Function, AWS::Lambda::LayerVersion, AWS::KMS::Key, AWS::SecretsManager::Secret, AWS::EFS::FileSystem, AWS::EC2::Snapshot, AWS::ECR::Repository, AWS::RDS::DBSnapshot, AWS::RDS::DBClusterSnapshot, AWS::SNS::Topic, AWS::S3Express::DirectoryBucket, AWS::DynamoDB::Table, AWS::DynamoDB::Stream, AWS::IAM::User
+    #               resource_arns: ["String"],
     #             },
     #           ],
     #         },
@@ -1083,7 +1111,7 @@ module Aws::AccessAnalyzer
     # @example Request syntax with placeholder values
     #
     #   resp = client.create_archive_rule({
-    #     analyzer_name: "Name", # required
+    #     analyzer_name: "AnalyzerName", # required
     #     rule_name: "Name", # required
     #     filter: { # required
     #       "String" => {
@@ -1102,6 +1130,99 @@ module Aws::AccessAnalyzer
     # @param [Hash] params ({})
     def create_archive_rule(params = {}, options = {})
       req = build_request(:create_archive_rule, params)
+      req.send_request(options)
+    end
+
+    # Creates a service-linked analyzer managed by an Amazon Web Services
+    # service. This operation can only be invoked by authorized Amazon Web
+    # Services services. Direct customer invocation returns
+    # `AccessDeniedException`.
+    #
+    # Service-linked analyzers enable Amazon Web Services services to create
+    # and manage analyzers on behalf of customers. The lifecycle of these
+    # analyzers is managed by the calling service.
+    #
+    # @option params [required, String] :type
+    #   The type of analyzer to create. Valid values are
+    #   `ACCOUNT_UNUSED_ACCESS` and `ORGANIZATION_UNUSED_ACCESS`.
+    #
+    # @option params [Array<Types::InlineArchiveRule>] :archive_rules
+    #   Specifies the archive rules to add for the analyzer. Archive rules
+    #   automatically archive findings that meet the criteria you define for
+    #   the rule.
+    #
+    # @option params [String] :client_token
+    #   A client token.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
+    #
+    # @option params [Types::AnalyzerConfiguration] :configuration
+    #   Specifies the configuration of the analyzer. The specified scope of
+    #   unused access is used for the configuration.
+    #
+    # @return [Types::CreateServiceLinkedAnalyzerResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreateServiceLinkedAnalyzerResponse#arn #arn} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_service_linked_analyzer({
+    #     type: "ACCOUNT", # required, accepts ACCOUNT, ORGANIZATION, ACCOUNT_UNUSED_ACCESS, ORGANIZATION_UNUSED_ACCESS, ACCOUNT_INTERNAL_ACCESS, ORGANIZATION_INTERNAL_ACCESS
+    #     archive_rules: [
+    #       {
+    #         rule_name: "Name", # required
+    #         filter: { # required
+    #           "String" => {
+    #             eq: ["String"],
+    #             neq: ["String"],
+    #             contains: ["String"],
+    #             exists: false,
+    #           },
+    #         },
+    #       },
+    #     ],
+    #     client_token: "String",
+    #     configuration: {
+    #       unused_access: {
+    #         unused_access_age: 1,
+    #         analysis_rule: {
+    #           exclusions: [
+    #             {
+    #               account_ids: ["String"],
+    #               resource_tags: [
+    #                 {
+    #                   "String" => "String",
+    #                 },
+    #               ],
+    #             },
+    #           ],
+    #         },
+    #       },
+    #       internal_access: {
+    #         analysis_rule: {
+    #           inclusions: [
+    #             {
+    #               account_ids: ["String"],
+    #               resource_types: ["AWS::S3::Bucket"], # accepts AWS::S3::Bucket, AWS::IAM::Role, AWS::SQS::Queue, AWS::Lambda::Function, AWS::Lambda::LayerVersion, AWS::KMS::Key, AWS::SecretsManager::Secret, AWS::EFS::FileSystem, AWS::EC2::Snapshot, AWS::ECR::Repository, AWS::RDS::DBSnapshot, AWS::RDS::DBClusterSnapshot, AWS::SNS::Topic, AWS::S3Express::DirectoryBucket, AWS::DynamoDB::Table, AWS::DynamoDB::Stream, AWS::IAM::User
+    #               resource_arns: ["String"],
+    #             },
+    #           ],
+    #         },
+    #       },
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.arn #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/accessanalyzer-2019-11-01/CreateServiceLinkedAnalyzer AWS API Documentation
+    #
+    # @overload create_service_linked_analyzer(params = {})
+    # @param [Hash] params ({})
+    def create_service_linked_analyzer(params = {}, options = {})
+      req = build_request(:create_service_linked_analyzer, params)
       req.send_request(options)
     end
 
@@ -1124,7 +1245,7 @@ module Aws::AccessAnalyzer
     # @example Request syntax with placeholder values
     #
     #   resp = client.delete_analyzer({
-    #     analyzer_name: "Name", # required
+    #     analyzer_name: "AnalyzerName", # required
     #     client_token: "String",
     #   })
     #
@@ -1157,7 +1278,7 @@ module Aws::AccessAnalyzer
     # @example Request syntax with placeholder values
     #
     #   resp = client.delete_archive_rule({
-    #     analyzer_name: "Name", # required
+    #     analyzer_name: "AnalyzerName", # required
     #     rule_name: "Name", # required
     #     client_token: "String",
     #   })
@@ -1168,6 +1289,43 @@ module Aws::AccessAnalyzer
     # @param [Hash] params ({})
     def delete_archive_rule(params = {}, options = {})
       req = build_request(:delete_archive_rule, params)
+      req.send_request(options)
+    end
+
+    # Deletes a service-linked analyzer. This operation can be invoked by
+    # both authorized Amazon Web Services services and customers.
+    #
+    # When invoked by a customer, IAM Access Analyzer performs a callback to
+    # the managing service to verify whether the analyzer is still in use
+    # and can be deleted. If the service indicates the analyzer is still in
+    # use, the deletion is rejected with `ConflictException`.
+    #
+    # @option params [required, String] :analyzer_name
+    #   The name of the service-linked analyzer to delete. Service-linked
+    #   analyzer names follow the format
+    #   `_AccessAnalyzerFor{ServiceName}-{Id}`.
+    #
+    # @option params [String] :client_token
+    #   A client token.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_service_linked_analyzer({
+    #     analyzer_name: "AnalyzerName", # required
+    #     client_token: "String",
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/accessanalyzer-2019-11-01/DeleteServiceLinkedAnalyzer AWS API Documentation
+    #
+    # @overload delete_service_linked_analyzer(params = {})
+    # @param [Hash] params ({})
+    def delete_service_linked_analyzer(params = {}, options = {})
+      req = build_request(:delete_service_linked_analyzer, params)
       req.send_request(options)
     end
 
@@ -1295,6 +1453,9 @@ module Aws::AccessAnalyzer
     #   resp.access_preview.configurations["ConfigurationsMapKey"].sns_topic.topic_policy #=> String
     #   resp.access_preview.configurations["ConfigurationsMapKey"].sqs_queue.queue_policy #=> String
     #   resp.access_preview.configurations["ConfigurationsMapKey"].s3_express_directory_bucket.bucket_policy #=> String
+    #   resp.access_preview.configurations["ConfigurationsMapKey"].s3_express_directory_bucket.access_points #=> Hash
+    #   resp.access_preview.configurations["ConfigurationsMapKey"].s3_express_directory_bucket.access_points["S3ExpressDirectoryAccessPointArn"].access_point_policy #=> String
+    #   resp.access_preview.configurations["ConfigurationsMapKey"].s3_express_directory_bucket.access_points["S3ExpressDirectoryAccessPointArn"].network_origin.vpc_configuration.vpc_id #=> String
     #   resp.access_preview.configurations["ConfigurationsMapKey"].dynamodb_stream.stream_policy #=> String
     #   resp.access_preview.configurations["ConfigurationsMapKey"].dynamodb_table.table_policy #=> String
     #   resp.access_preview.created_at #=> Time
@@ -1311,6 +1472,10 @@ module Aws::AccessAnalyzer
     end
 
     # Retrieves information about a resource that was analyzed.
+    #
+    # <note markdown="1"> This action is supported only for external access analyzers.
+    #
+    #  </note>
     #
     # @option params [required, String] :analyzer_arn
     #   The [ARN of the analyzer][1] to retrieve information from.
@@ -1370,14 +1535,14 @@ module Aws::AccessAnalyzer
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_analyzer({
-    #     analyzer_name: "Name", # required
+    #     analyzer_name: "AnalyzerName", # required
     #   })
     #
     # @example Response structure
     #
     #   resp.analyzer.arn #=> String
     #   resp.analyzer.name #=> String
-    #   resp.analyzer.type #=> String, one of "ACCOUNT", "ORGANIZATION", "ACCOUNT_UNUSED_ACCESS", "ORGANIZATION_UNUSED_ACCESS"
+    #   resp.analyzer.type #=> String, one of "ACCOUNT", "ORGANIZATION", "ACCOUNT_UNUSED_ACCESS", "ORGANIZATION_UNUSED_ACCESS", "ACCOUNT_INTERNAL_ACCESS", "ORGANIZATION_INTERNAL_ACCESS"
     #   resp.analyzer.created_at #=> Time
     #   resp.analyzer.last_resource_analyzed #=> String
     #   resp.analyzer.last_resource_analyzed_at #=> Time
@@ -1392,6 +1557,14 @@ module Aws::AccessAnalyzer
     #   resp.analyzer.configuration.unused_access.analysis_rule.exclusions[0].resource_tags #=> Array
     #   resp.analyzer.configuration.unused_access.analysis_rule.exclusions[0].resource_tags[0] #=> Hash
     #   resp.analyzer.configuration.unused_access.analysis_rule.exclusions[0].resource_tags[0]["String"] #=> String
+    #   resp.analyzer.configuration.internal_access.analysis_rule.inclusions #=> Array
+    #   resp.analyzer.configuration.internal_access.analysis_rule.inclusions[0].account_ids #=> Array
+    #   resp.analyzer.configuration.internal_access.analysis_rule.inclusions[0].account_ids[0] #=> String
+    #   resp.analyzer.configuration.internal_access.analysis_rule.inclusions[0].resource_types #=> Array
+    #   resp.analyzer.configuration.internal_access.analysis_rule.inclusions[0].resource_types[0] #=> String, one of "AWS::S3::Bucket", "AWS::IAM::Role", "AWS::SQS::Queue", "AWS::Lambda::Function", "AWS::Lambda::LayerVersion", "AWS::KMS::Key", "AWS::SecretsManager::Secret", "AWS::EFS::FileSystem", "AWS::EC2::Snapshot", "AWS::ECR::Repository", "AWS::RDS::DBSnapshot", "AWS::RDS::DBClusterSnapshot", "AWS::SNS::Topic", "AWS::S3Express::DirectoryBucket", "AWS::DynamoDB::Table", "AWS::DynamoDB::Stream", "AWS::IAM::User"
+    #   resp.analyzer.configuration.internal_access.analysis_rule.inclusions[0].resource_arns #=> Array
+    #   resp.analyzer.configuration.internal_access.analysis_rule.inclusions[0].resource_arns[0] #=> String
+    #   resp.analyzer.managed_by #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/accessanalyzer-2019-11-01/GetAnalyzer AWS API Documentation
     #
@@ -1424,7 +1597,7 @@ module Aws::AccessAnalyzer
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_archive_rule({
-    #     analyzer_name: "Name", # required
+    #     analyzer_name: "AnalyzerName", # required
     #     rule_name: "Name", # required
     #   })
     #
@@ -1455,6 +1628,11 @@ module Aws::AccessAnalyzer
     # GetFindingV2 both use `access-analyzer:GetFinding` in the `Action`
     # element of an IAM policy statement. You must have permission to
     # perform the `access-analyzer:GetFinding` action.
+    #
+    # <note markdown="1"> GetFinding is supported only for external access analyzers. You must
+    # use GetFindingV2 for internal and unused access analyzers.
+    #
+    #  </note>
     #
     # @option params [required, String] :analyzer_arn
     #   The [ARN of the analyzer][1] that generated the finding.
@@ -1499,7 +1677,7 @@ module Aws::AccessAnalyzer
     #   resp.finding.sources[0].type #=> String, one of "POLICY", "BUCKET_ACL", "S3_ACCESS_POINT", "S3_ACCESS_POINT_ACCOUNT"
     #   resp.finding.sources[0].detail.access_point_arn #=> String
     #   resp.finding.sources[0].detail.access_point_account #=> String
-    #   resp.finding.resource_control_policy_restriction #=> String, one of "APPLICABLE", "FAILED_TO_EVALUATE_RCP", "NOT_APPLICABLE"
+    #   resp.finding.resource_control_policy_restriction #=> String, one of "APPLICABLE", "FAILED_TO_EVALUATE_RCP", "NOT_APPLICABLE", "APPLIED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/accessanalyzer-2019-11-01/GetFinding AWS API Documentation
     #
@@ -1715,6 +1893,21 @@ module Aws::AccessAnalyzer
     #   resp.status #=> String, one of "ACTIVE", "ARCHIVED", "RESOLVED"
     #   resp.updated_at #=> Time
     #   resp.finding_details #=> Array
+    #   resp.finding_details[0].internal_access_details.action #=> Array
+    #   resp.finding_details[0].internal_access_details.action[0] #=> String
+    #   resp.finding_details[0].internal_access_details.condition #=> Hash
+    #   resp.finding_details[0].internal_access_details.condition["String"] #=> String
+    #   resp.finding_details[0].internal_access_details.principal #=> Hash
+    #   resp.finding_details[0].internal_access_details.principal["String"] #=> String
+    #   resp.finding_details[0].internal_access_details.principal_owner_account #=> String
+    #   resp.finding_details[0].internal_access_details.access_type #=> String, one of "INTRA_ACCOUNT", "INTRA_ORG"
+    #   resp.finding_details[0].internal_access_details.principal_type #=> String, one of "IAM_ROLE", "IAM_USER"
+    #   resp.finding_details[0].internal_access_details.sources #=> Array
+    #   resp.finding_details[0].internal_access_details.sources[0].type #=> String, one of "POLICY", "BUCKET_ACL", "S3_ACCESS_POINT", "S3_ACCESS_POINT_ACCOUNT"
+    #   resp.finding_details[0].internal_access_details.sources[0].detail.access_point_arn #=> String
+    #   resp.finding_details[0].internal_access_details.sources[0].detail.access_point_account #=> String
+    #   resp.finding_details[0].internal_access_details.resource_control_policy_restriction #=> String, one of "APPLICABLE", "FAILED_TO_EVALUATE_RCP", "NOT_APPLICABLE", "APPLIED"
+    #   resp.finding_details[0].internal_access_details.service_control_policy_restriction #=> String, one of "APPLICABLE", "FAILED_TO_EVALUATE_SCP", "NOT_APPLICABLE", "APPLIED"
     #   resp.finding_details[0].external_access_details.action #=> Array
     #   resp.finding_details[0].external_access_details.action[0] #=> String
     #   resp.finding_details[0].external_access_details.condition #=> Hash
@@ -1726,7 +1919,7 @@ module Aws::AccessAnalyzer
     #   resp.finding_details[0].external_access_details.sources[0].type #=> String, one of "POLICY", "BUCKET_ACL", "S3_ACCESS_POINT", "S3_ACCESS_POINT_ACCOUNT"
     #   resp.finding_details[0].external_access_details.sources[0].detail.access_point_arn #=> String
     #   resp.finding_details[0].external_access_details.sources[0].detail.access_point_account #=> String
-    #   resp.finding_details[0].external_access_details.resource_control_policy_restriction #=> String, one of "APPLICABLE", "FAILED_TO_EVALUATE_RCP", "NOT_APPLICABLE"
+    #   resp.finding_details[0].external_access_details.resource_control_policy_restriction #=> String, one of "APPLICABLE", "FAILED_TO_EVALUATE_RCP", "NOT_APPLICABLE", "APPLIED"
     #   resp.finding_details[0].unused_permission_details.actions #=> Array
     #   resp.finding_details[0].unused_permission_details.actions[0].action #=> String
     #   resp.finding_details[0].unused_permission_details.actions[0].last_accessed #=> Time
@@ -1736,7 +1929,7 @@ module Aws::AccessAnalyzer
     #   resp.finding_details[0].unused_iam_user_access_key_details.last_accessed #=> Time
     #   resp.finding_details[0].unused_iam_role_details.last_accessed #=> Time
     #   resp.finding_details[0].unused_iam_user_password_details.last_accessed #=> Time
-    #   resp.finding_type #=> String, one of "ExternalAccess", "UnusedIAMRole", "UnusedIAMUserAccessKey", "UnusedIAMUserPassword", "UnusedPermission"
+    #   resp.finding_type #=> String, one of "ExternalAccess", "UnusedIAMRole", "UnusedIAMUserAccessKey", "UnusedIAMUserPassword", "UnusedPermission", "InternalAccess"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/accessanalyzer-2019-11-01/GetFindingV2 AWS API Documentation
     #
@@ -1774,9 +1967,17 @@ module Aws::AccessAnalyzer
     #   resp.findings_statistics[0].external_access_findings_statistics.resource_type_statistics #=> Hash
     #   resp.findings_statistics[0].external_access_findings_statistics.resource_type_statistics["ResourceType"].total_active_public #=> Integer
     #   resp.findings_statistics[0].external_access_findings_statistics.resource_type_statistics["ResourceType"].total_active_cross_account #=> Integer
+    #   resp.findings_statistics[0].external_access_findings_statistics.resource_type_statistics["ResourceType"].total_active_errors #=> Integer
     #   resp.findings_statistics[0].external_access_findings_statistics.total_active_findings #=> Integer
     #   resp.findings_statistics[0].external_access_findings_statistics.total_archived_findings #=> Integer
     #   resp.findings_statistics[0].external_access_findings_statistics.total_resolved_findings #=> Integer
+    #   resp.findings_statistics[0].internal_access_findings_statistics.resource_type_statistics #=> Hash
+    #   resp.findings_statistics[0].internal_access_findings_statistics.resource_type_statistics["ResourceType"].total_active_findings #=> Integer
+    #   resp.findings_statistics[0].internal_access_findings_statistics.resource_type_statistics["ResourceType"].total_resolved_findings #=> Integer
+    #   resp.findings_statistics[0].internal_access_findings_statistics.resource_type_statistics["ResourceType"].total_archived_findings #=> Integer
+    #   resp.findings_statistics[0].internal_access_findings_statistics.total_active_findings #=> Integer
+    #   resp.findings_statistics[0].internal_access_findings_statistics.total_archived_findings #=> Integer
+    #   resp.findings_statistics[0].internal_access_findings_statistics.total_resolved_findings #=> Integer
     #   resp.findings_statistics[0].unused_access_findings_statistics.unused_access_type_statistics #=> Array
     #   resp.findings_statistics[0].unused_access_findings_statistics.unused_access_type_statistics[0].unused_access_type #=> String
     #   resp.findings_statistics[0].unused_access_findings_statistics.unused_access_type_statistics[0].total #=> Integer
@@ -1936,7 +2137,7 @@ module Aws::AccessAnalyzer
     #   resp.findings[0].sources[0].type #=> String, one of "POLICY", "BUCKET_ACL", "S3_ACCESS_POINT", "S3_ACCESS_POINT_ACCOUNT"
     #   resp.findings[0].sources[0].detail.access_point_arn #=> String
     #   resp.findings[0].sources[0].detail.access_point_account #=> String
-    #   resp.findings[0].resource_control_policy_restriction #=> String, one of "APPLICABLE", "FAILED_TO_EVALUATE_RCP", "NOT_APPLICABLE"
+    #   resp.findings[0].resource_control_policy_restriction #=> String, one of "APPLICABLE", "FAILED_TO_EVALUATE_RCP", "NOT_APPLICABLE", "APPLIED"
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/accessanalyzer-2019-11-01/ListAccessPreviewFindings AWS API Documentation
@@ -2073,7 +2274,7 @@ module Aws::AccessAnalyzer
     #   resp = client.list_analyzers({
     #     next_token: "Token",
     #     max_results: 1,
-    #     type: "ACCOUNT", # accepts ACCOUNT, ORGANIZATION, ACCOUNT_UNUSED_ACCESS, ORGANIZATION_UNUSED_ACCESS
+    #     type: "ACCOUNT", # accepts ACCOUNT, ORGANIZATION, ACCOUNT_UNUSED_ACCESS, ORGANIZATION_UNUSED_ACCESS, ACCOUNT_INTERNAL_ACCESS, ORGANIZATION_INTERNAL_ACCESS
     #   })
     #
     # @example Response structure
@@ -2081,7 +2282,7 @@ module Aws::AccessAnalyzer
     #   resp.analyzers #=> Array
     #   resp.analyzers[0].arn #=> String
     #   resp.analyzers[0].name #=> String
-    #   resp.analyzers[0].type #=> String, one of "ACCOUNT", "ORGANIZATION", "ACCOUNT_UNUSED_ACCESS", "ORGANIZATION_UNUSED_ACCESS"
+    #   resp.analyzers[0].type #=> String, one of "ACCOUNT", "ORGANIZATION", "ACCOUNT_UNUSED_ACCESS", "ORGANIZATION_UNUSED_ACCESS", "ACCOUNT_INTERNAL_ACCESS", "ORGANIZATION_INTERNAL_ACCESS"
     #   resp.analyzers[0].created_at #=> Time
     #   resp.analyzers[0].last_resource_analyzed #=> String
     #   resp.analyzers[0].last_resource_analyzed_at #=> Time
@@ -2096,6 +2297,14 @@ module Aws::AccessAnalyzer
     #   resp.analyzers[0].configuration.unused_access.analysis_rule.exclusions[0].resource_tags #=> Array
     #   resp.analyzers[0].configuration.unused_access.analysis_rule.exclusions[0].resource_tags[0] #=> Hash
     #   resp.analyzers[0].configuration.unused_access.analysis_rule.exclusions[0].resource_tags[0]["String"] #=> String
+    #   resp.analyzers[0].configuration.internal_access.analysis_rule.inclusions #=> Array
+    #   resp.analyzers[0].configuration.internal_access.analysis_rule.inclusions[0].account_ids #=> Array
+    #   resp.analyzers[0].configuration.internal_access.analysis_rule.inclusions[0].account_ids[0] #=> String
+    #   resp.analyzers[0].configuration.internal_access.analysis_rule.inclusions[0].resource_types #=> Array
+    #   resp.analyzers[0].configuration.internal_access.analysis_rule.inclusions[0].resource_types[0] #=> String, one of "AWS::S3::Bucket", "AWS::IAM::Role", "AWS::SQS::Queue", "AWS::Lambda::Function", "AWS::Lambda::LayerVersion", "AWS::KMS::Key", "AWS::SecretsManager::Secret", "AWS::EFS::FileSystem", "AWS::EC2::Snapshot", "AWS::ECR::Repository", "AWS::RDS::DBSnapshot", "AWS::RDS::DBClusterSnapshot", "AWS::SNS::Topic", "AWS::S3Express::DirectoryBucket", "AWS::DynamoDB::Table", "AWS::DynamoDB::Stream", "AWS::IAM::User"
+    #   resp.analyzers[0].configuration.internal_access.analysis_rule.inclusions[0].resource_arns #=> Array
+    #   resp.analyzers[0].configuration.internal_access.analysis_rule.inclusions[0].resource_arns[0] #=> String
+    #   resp.analyzers[0].managed_by #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/accessanalyzer-2019-11-01/ListAnalyzers AWS API Documentation
@@ -2128,7 +2337,7 @@ module Aws::AccessAnalyzer
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_archive_rules({
-    #     analyzer_name: "Name", # required
+    #     analyzer_name: "AnalyzerName", # required
     #     next_token: "Token",
     #     max_results: 1,
     #   })
@@ -2167,6 +2376,11 @@ module Aws::AccessAnalyzer
     # To learn about filter keys that you can use to retrieve a list of
     # findings, see [IAM Access Analyzer filter keys][1] in the **IAM User
     # Guide**.
+    #
+    # <note markdown="1"> ListFindings is supported only for external access analyzers. You must
+    # use ListFindingsV2 for internal and unused access analyzers.
+    #
+    #  </note>
     #
     #
     #
@@ -2241,7 +2455,7 @@ module Aws::AccessAnalyzer
     #   resp.findings[0].sources[0].type #=> String, one of "POLICY", "BUCKET_ACL", "S3_ACCESS_POINT", "S3_ACCESS_POINT_ACCOUNT"
     #   resp.findings[0].sources[0].detail.access_point_arn #=> String
     #   resp.findings[0].sources[0].detail.access_point_account #=> String
-    #   resp.findings[0].resource_control_policy_restriction #=> String, one of "APPLICABLE", "FAILED_TO_EVALUATE_RCP", "NOT_APPLICABLE"
+    #   resp.findings[0].resource_control_policy_restriction #=> String, one of "APPLICABLE", "FAILED_TO_EVALUATE_RCP", "NOT_APPLICABLE", "APPLIED"
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/accessanalyzer-2019-11-01/ListFindings AWS API Documentation
@@ -2325,7 +2539,7 @@ module Aws::AccessAnalyzer
     #   resp.findings[0].resource_owner_account #=> String
     #   resp.findings[0].status #=> String, one of "ACTIVE", "ARCHIVED", "RESOLVED"
     #   resp.findings[0].updated_at #=> Time
-    #   resp.findings[0].finding_type #=> String, one of "ExternalAccess", "UnusedIAMRole", "UnusedIAMUserAccessKey", "UnusedIAMUserPassword", "UnusedPermission"
+    #   resp.findings[0].finding_type #=> String, one of "ExternalAccess", "UnusedIAMRole", "UnusedIAMUserAccessKey", "UnusedIAMUserPassword", "UnusedPermission", "InternalAccess"
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/accessanalyzer-2019-11-01/ListFindingsV2 AWS API Documentation
@@ -2478,6 +2692,10 @@ module Aws::AccessAnalyzer
     # Immediately starts a scan of the policies applied to the specified
     # resource.
     #
+    # <note markdown="1"> This action is supported only for external access analyzers.
+    #
+    #  </note>
+    #
     # @option params [required, String] :analyzer_arn
     #   The [ARN of the analyzer][1] to use to scan the policies applied to
     #   the specified resource.
@@ -2569,6 +2787,10 @@ module Aws::AccessAnalyzer
 
     # Modifies the configuration of an existing analyzer.
     #
+    # <note markdown="1"> This action is not supported for external access analyzers.
+    #
+    #  </note>
+    #
     # @option params [required, String] :analyzer_name
     #   The name of the analyzer to modify.
     #
@@ -2583,7 +2805,7 @@ module Aws::AccessAnalyzer
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_analyzer({
-    #     analyzer_name: "Name", # required
+    #     analyzer_name: "AnalyzerName", # required
     #     configuration: {
     #       unused_access: {
     #         unused_access_age: 1,
@@ -2600,6 +2822,17 @@ module Aws::AccessAnalyzer
     #           ],
     #         },
     #       },
+    #       internal_access: {
+    #         analysis_rule: {
+    #           inclusions: [
+    #             {
+    #               account_ids: ["String"],
+    #               resource_types: ["AWS::S3::Bucket"], # accepts AWS::S3::Bucket, AWS::IAM::Role, AWS::SQS::Queue, AWS::Lambda::Function, AWS::Lambda::LayerVersion, AWS::KMS::Key, AWS::SecretsManager::Secret, AWS::EFS::FileSystem, AWS::EC2::Snapshot, AWS::ECR::Repository, AWS::RDS::DBSnapshot, AWS::RDS::DBClusterSnapshot, AWS::SNS::Topic, AWS::S3Express::DirectoryBucket, AWS::DynamoDB::Table, AWS::DynamoDB::Stream, AWS::IAM::User
+    #               resource_arns: ["String"],
+    #             },
+    #           ],
+    #         },
+    #       },
     #     },
     #   })
     #
@@ -2612,6 +2845,13 @@ module Aws::AccessAnalyzer
     #   resp.configuration.unused_access.analysis_rule.exclusions[0].resource_tags #=> Array
     #   resp.configuration.unused_access.analysis_rule.exclusions[0].resource_tags[0] #=> Hash
     #   resp.configuration.unused_access.analysis_rule.exclusions[0].resource_tags[0]["String"] #=> String
+    #   resp.configuration.internal_access.analysis_rule.inclusions #=> Array
+    #   resp.configuration.internal_access.analysis_rule.inclusions[0].account_ids #=> Array
+    #   resp.configuration.internal_access.analysis_rule.inclusions[0].account_ids[0] #=> String
+    #   resp.configuration.internal_access.analysis_rule.inclusions[0].resource_types #=> Array
+    #   resp.configuration.internal_access.analysis_rule.inclusions[0].resource_types[0] #=> String, one of "AWS::S3::Bucket", "AWS::IAM::Role", "AWS::SQS::Queue", "AWS::Lambda::Function", "AWS::Lambda::LayerVersion", "AWS::KMS::Key", "AWS::SecretsManager::Secret", "AWS::EFS::FileSystem", "AWS::EC2::Snapshot", "AWS::ECR::Repository", "AWS::RDS::DBSnapshot", "AWS::RDS::DBClusterSnapshot", "AWS::SNS::Topic", "AWS::S3Express::DirectoryBucket", "AWS::DynamoDB::Table", "AWS::DynamoDB::Stream", "AWS::IAM::User"
+    #   resp.configuration.internal_access.analysis_rule.inclusions[0].resource_arns #=> Array
+    #   resp.configuration.internal_access.analysis_rule.inclusions[0].resource_arns[0] #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/accessanalyzer-2019-11-01/UpdateAnalyzer AWS API Documentation
     #
@@ -2645,7 +2885,7 @@ module Aws::AccessAnalyzer
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_archive_rule({
-    #     analyzer_name: "Name", # required
+    #     analyzer_name: "AnalyzerName", # required
     #     rule_name: "Name", # required
     #     filter: { # required
     #       "String" => {
@@ -2826,7 +3066,7 @@ module Aws::AccessAnalyzer
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-accessanalyzer'
-      context[:gem_version] = '1.68.0'
+      context[:gem_version] = '1.94.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

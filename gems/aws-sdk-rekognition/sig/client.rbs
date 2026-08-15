@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -104,22 +105,8 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Rekognition/Client.html#compare_faces-instance_method
       def compare_faces: (
-                           source_image: {
-                             bytes: ::String?,
-                             s3_object: {
-                               bucket: ::String?,
-                               name: ::String?,
-                               version: ::String?
-                             }?
-                           },
-                           target_image: {
-                             bytes: ::String?,
-                             s3_object: {
-                               bucket: ::String?,
-                               name: ::String?,
-                               version: ::String?
-                             }?
-                           },
+                           source_image: Params::image,
+                           target_image: Params::image,
                            ?similarity_threshold: ::Float,
                            ?quality_filter: ("NONE" | "AUTO" | "LOW" | "MEDIUM" | "HIGH")
                          ) -> _CompareFacesResponseSuccess
@@ -191,7 +178,16 @@ module Aws
                                               s3_bucket: ::String,
                                               s3_key_prefix: ::String?
                                             }?,
-                                            audit_images_limit: ::Integer?
+                                            audit_images_limit: ::Integer?,
+                                            challenge_preferences: Array[
+                                              {
+                                                type: ("FaceMovementAndLightChallenge" | "FaceMovementChallenge"),
+                                                versions: {
+                                                  minimum: ::String?,
+                                                  maximum: ::String?
+                                                }?
+                                              }
+                                            ]?
                                           },
                                           ?client_request_token: ::String
                                         ) -> _CreateFaceLivenessSessionResponseSuccess
@@ -224,28 +220,12 @@ module Aws
                                     },
                                     ?training_data: {
                                       assets: Array[
-                                        {
-                                          ground_truth_manifest: {
-                                            s3_object: {
-                                              bucket: ::String?,
-                                              name: ::String?,
-                                              version: ::String?
-                                            }?
-                                          }?
-                                        },
+                                        Params::asset
                                       ]?
                                     },
                                     ?testing_data: {
                                       assets: Array[
-                                        {
-                                          ground_truth_manifest: {
-                                            s3_object: {
-                                              bucket: ::String?,
-                                              name: ::String?,
-                                              version: ::String?
-                                            }?
-                                          }?
-                                        },
+                                        Params::asset
                                       ]?,
                                       auto_create: bool?
                                     },
@@ -298,20 +278,7 @@ module Aws
                                      },
                                      ?kms_key_id: ::String,
                                      ?regions_of_interest: Array[
-                                       {
-                                         bounding_box: {
-                                           width: ::Float?,
-                                           height: ::Float?,
-                                           left: ::Float?,
-                                           top: ::Float?
-                                         }?,
-                                         polygon: Array[
-                                           {
-                                             x: ::Float?,
-                                             y: ::Float?
-                                           },
-                                         ]?
-                                       },
+                                       Params::region_of_interest
                                      ],
                                      ?data_sharing_preference: {
                                        opt_in: bool
@@ -494,14 +461,7 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Rekognition/Client.html#detect_custom_labels-instance_method
       def detect_custom_labels: (
                                   project_version_arn: ::String,
-                                  image: {
-                                    bytes: ::String?,
-                                    s3_object: {
-                                      bucket: ::String?,
-                                      name: ::String?,
-                                      version: ::String?
-                                    }?
-                                  },
+                                  image: Params::image,
                                   ?max_results: ::Integer,
                                   ?min_confidence: ::Float
                                 ) -> _DetectCustomLabelsResponseSuccess
@@ -514,14 +474,7 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Rekognition/Client.html#detect_faces-instance_method
       def detect_faces: (
-                          image: {
-                            bytes: ::String?,
-                            s3_object: {
-                              bucket: ::String?,
-                              name: ::String?,
-                              version: ::String?
-                            }?
-                          },
+                          image: Params::image,
                           ?attributes: Array[("DEFAULT" | "ALL" | "AGE_RANGE" | "BEARD" | "EMOTIONS" | "EYE_DIRECTION" | "EYEGLASSES" | "EYES_OPEN" | "GENDER" | "MOUTH_OPEN" | "MUSTACHE" | "FACE_OCCLUDED" | "SMILE" | "SUNGLASSES")]
                         ) -> _DetectFacesResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DetectFacesResponseSuccess
@@ -535,14 +488,7 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Rekognition/Client.html#detect_labels-instance_method
       def detect_labels: (
-                           image: {
-                             bytes: ::String?,
-                             s3_object: {
-                               bucket: ::String?,
-                               name: ::String?,
-                               version: ::String?
-                             }?
-                           },
+                           image: Params::image,
                            ?max_labels: ::Integer,
                            ?min_confidence: ::Float,
                            ?features: Array[("GENERAL_LABELS" | "IMAGE_PROPERTIES")],
@@ -570,14 +516,7 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Rekognition/Client.html#detect_moderation_labels-instance_method
       def detect_moderation_labels: (
-                                      image: {
-                                        bytes: ::String?,
-                                        s3_object: {
-                                          bucket: ::String?,
-                                          name: ::String?,
-                                          version: ::String?
-                                        }?
-                                      },
+                                      image: Params::image,
                                       ?min_confidence: ::Float,
                                       ?human_loop_config: {
                                         human_loop_name: ::String,
@@ -598,14 +537,7 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Rekognition/Client.html#detect_protective_equipment-instance_method
       def detect_protective_equipment: (
-                                         image: {
-                                           bytes: ::String?,
-                                           s3_object: {
-                                             bucket: ::String?,
-                                             name: ::String?,
-                                             version: ::String?
-                                           }?
-                                         },
+                                         image: Params::image,
                                          ?summarization_attributes: {
                                            min_confidence: ::Float,
                                            required_equipment_types: Array[("FACE_COVER" | "HAND_COVER" | "HEAD_COVER")]
@@ -620,14 +552,7 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Rekognition/Client.html#detect_text-instance_method
       def detect_text: (
-                         image: {
-                           bytes: ::String?,
-                           s3_object: {
-                             bucket: ::String?,
-                             name: ::String?,
-                             version: ::String?
-                           }?
-                         },
+                         image: Params::image,
                          ?filters: {
                            word_filter: {
                              min_confidence: ::Float?,
@@ -635,20 +560,7 @@ module Aws
                              min_bounding_box_width: ::Float?
                            }?,
                            regions_of_interest: Array[
-                             {
-                               bounding_box: {
-                                 width: ::Float?,
-                                 height: ::Float?,
-                                 left: ::Float?,
-                                 top: ::Float?
-                               }?,
-                               polygon: Array[
-                                 {
-                                   x: ::Float?,
-                                   y: ::Float?
-                                 },
-                               ]?
-                             },
+                             Params::region_of_interest
                            ]?
                          }
                        ) -> _DetectTextResponseSuccess
@@ -677,7 +589,7 @@ module Aws
                                         datasets: Array[
                                           {
                                             arn: ::String
-                                          },
+                                          }
                                         ]
                                       ) -> _DistributeDatasetEntriesResponseSuccess
                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DistributeDatasetEntriesResponseSuccess
@@ -763,6 +675,7 @@ module Aws
         def confidence: () -> ::Float
         def reference_image: () -> Types::AuditImage
         def audit_images: () -> ::Array[Types::AuditImage]
+        def challenge: () -> Types::Challenge
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Rekognition/Client.html#get_face_liveness_session_results-instance_method
       def get_face_liveness_session_results: (
@@ -905,14 +818,7 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Rekognition/Client.html#index_faces-instance_method
       def index_faces: (
                          collection_id: ::String,
-                         image: {
-                           bytes: ::String?,
-                           s3_object: {
-                             bucket: ::String?,
-                             name: ::String?,
-                             version: ::String?
-                           }?
-                         },
+                         image: Params::image,
                          ?external_image_id: ::String,
                          ?detection_attributes: Array[("DEFAULT" | "ALL" | "AGE_RANGE" | "BEARD" | "EMOTIONS" | "EYE_DIRECTION" | "EYEGLASSES" | "EYES_OPEN" | "GENDER" | "MOUTH_OPEN" | "MUSTACHE" | "FACE_OCCLUDED" | "SMILE" | "SUNGLASSES")],
                          ?max_faces: ::Integer,
@@ -1060,14 +966,7 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Rekognition/Client.html#recognize_celebrities-instance_method
       def recognize_celebrities: (
-                                   image: {
-                                     bytes: ::String?,
-                                     s3_object: {
-                                       bucket: ::String?,
-                                       name: ::String?,
-                                       version: ::String?
-                                     }?
-                                   }
+                                   image: Params::image
                                  ) -> _RecognizeCelebritiesResponseSuccess
                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _RecognizeCelebritiesResponseSuccess
 
@@ -1096,14 +995,7 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Rekognition/Client.html#search_faces_by_image-instance_method
       def search_faces_by_image: (
                                    collection_id: ::String,
-                                   image: {
-                                     bytes: ::String?,
-                                     s3_object: {
-                                       bucket: ::String?,
-                                       name: ::String?,
-                                       version: ::String?
-                                     }?
-                                   },
+                                   image: Params::image,
                                    ?max_faces: ::Integer,
                                    ?face_match_threshold: ::Float,
                                    ?quality_filter: ("NONE" | "AUTO" | "LOW" | "MEDIUM" | "HIGH")
@@ -1137,14 +1029,7 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Rekognition/Client.html#search_users_by_image-instance_method
       def search_users_by_image: (
                                    collection_id: ::String,
-                                   image: {
-                                     bytes: ::String?,
-                                     s3_object: {
-                                       bucket: ::String?,
-                                       name: ::String?,
-                                       version: ::String?
-                                     }?
-                                   },
+                                   image: Params::image,
                                    ?user_match_threshold: ::Float,
                                    ?max_users: ::Integer,
                                    ?quality_filter: ("NONE" | "AUTO" | "LOW" | "MEDIUM" | "HIGH")
@@ -1418,20 +1303,7 @@ module Aws
                                       min_bounding_box_width: ::Float?
                                     }?,
                                     regions_of_interest: Array[
-                                      {
-                                        bounding_box: {
-                                          width: ::Float?,
-                                          height: ::Float?,
-                                          left: ::Float?,
-                                          top: ::Float?
-                                        }?,
-                                        polygon: Array[
-                                          {
-                                            x: ::Float?,
-                                            y: ::Float?
-                                          },
-                                        ]?
-                                      },
+                                      Params::region_of_interest
                                     ]?
                                   }
                                 ) -> _StartTextDetectionResponseSuccess
@@ -1501,20 +1373,7 @@ module Aws
                                        }?
                                      },
                                      ?regions_of_interest_for_update: Array[
-                                       {
-                                         bounding_box: {
-                                           width: ::Float?,
-                                           height: ::Float?,
-                                           left: ::Float?,
-                                           top: ::Float?
-                                         }?,
-                                         polygon: Array[
-                                           {
-                                             x: ::Float?,
-                                             y: ::Float?
-                                           },
-                                         ]?
-                                       },
+                                       Params::region_of_interest
                                      ],
                                      ?data_sharing_preference_for_update: {
                                        opt_in: bool
